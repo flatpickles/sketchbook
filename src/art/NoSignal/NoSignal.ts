@@ -4,13 +4,19 @@ const TestEnumType = {
     Third: 2
 } as const;
 
+enum TestEnum {
+    First,
+    Second,
+    Third
+}
+
 export default class NoSignal {
     testString = 'original value';
     testFn = () => {
         console.log('testFn');
     };
     testBool = true;
-    testEnum = TestEnumType.First;
+    testEnum: TestEnum = TestEnum.Second;
     testNumericArray = [4.5, 6.5];
     testFiles: File[] = [];
 
@@ -18,6 +24,8 @@ export default class NoSignal {
 
     constructor() {
         console.log('Loaded: No Signal');
+        // console.log(canvas);
+        console.log(this.testEnum);
     }
 
     update() {

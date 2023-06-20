@@ -1,7 +1,7 @@
 import type { PageLoad } from './$types';
 
 export const load: PageLoad = (() => {
-    const projects = import.meta.glob('/art/**/*.ts');
+    const projects = import.meta.glob('/src/art/**/*.ts');
     console.log(projects);
     for (const path in projects) {
         // Project files are named the same as their containing folder
