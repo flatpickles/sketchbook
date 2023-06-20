@@ -6,7 +6,9 @@ Sketchbook is:
 -   A creative format
 -   A publishing surface
 
-This is Sketchbook 2, an evolution of the [Sketchbook]() project. It has been fully rebuilt from the original, with the intent of being easily forkable, customizable, and usable by other artists. PRs welcome!
+This is Sketchbook 2, an evolution of the [original Sketchbook project](). Sketchbook 2 has been rebuilt from scratch, with the intent of being easily forkable, customizable, and usable by other artists.
+
+Pull requests and issues are welcome!
 
 ## Basic Concepts
 
@@ -20,13 +22,33 @@ Each project within Sketchbook has its own collection of "params", i.e. paramete
 
 ### Presets
 
+Each project within Sketchbook may optionally display a series of "presets", each of which is simply a curated collection of param
+
 ## Using Sketchbook
 
-Sketchbook is designed to be easy to deploy with your own projects, and unopinionated about how you may be working.
+Sketchbook is designed to be easy to deploy with your own projects, and unopinionated about how you may be working. As long as you're building for the web and drawing stuff on an HTML canvas, you should be able to use Sketchbook however you see fit.
 
-## Recommended Workflow
+### Project Directories
 
-[todo]
+Each project is contained within its own directory, within `src/art`. Project directories can contain any number of supporting files, though they must also contain a TypeScript (or JavaScript) file, named with the name of the Project, and exporting a default class definition with the same name as well. If my project is named "NoSignal", I'll make sure to export a class named `NoSignal` from `src/art/NoSignal/NoSignal.ts`.
+
+Project directories may also contain two other Sketchbook particulars: a `config.json` file, and a `presets` subdirectory. Configuration files are described in detail below. The JSON files within the presets directory will automatically be displayed as available presets for the project, and file names (without the ".json") will be used as preset display names.
+
+### Project Files
+
+Exported project classes must be subclasses of the `Project` class, defined in `src/lib/Project.ts`. The `Project` class definition is extremely simple, including only a constructor (passed a `HTMLCanvasElement` reference) and an `update` method. Your project can use the canvas reference for drawing, and expect that `update` will be called whenever any parameters are changed.
+
+Speaking of parameters, they are simply defined as instance properties; Sketchbook will create user-adjustable parameter UIs for any instance properties that it sees defined on each project class. This means that if you're creating instance properties for internal reference, you must declare them as [private class members](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/Private_class_fields).
+
+For a simple demo project, please see the annotated example within `src/art`!
+
+### Recommended Setup Steps
+
+Clone, push Vercel, clear out `src/art`, etc...
+
+### Development Workflow
+
+Svelte, npm run dev, etc..
 
 ## Global Configuration
 
