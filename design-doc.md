@@ -140,8 +140,13 @@ Config files are optional, as are each of the properties you may include. All pr
 
 Options (and parenthesized defaults) for the project are as follows:
 
--   `title`: The display name for the project.
--   `date`: The date displayed for the project
+-   `title` (_class name_): The display name for the project, used in the project list and in the project details overlay. Optionally used for sorting.
+-   `date` (`undefined`): The date displayed for the project, used in the project details overlay (no date displayed if undefined). Optionally used for sorting.
+-   `description`: (`undefined`): The description displayed for the project, used in the project details overlay (no description displayed if undefined).
+-   `default_preset` (`undefined`):
+-   `live`
+-   `groups`
+-   `experimental`
 
 ### `params` config:
 

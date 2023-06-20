@@ -1,1 +1,57 @@
-{}
+{
+    "project": {
+        "title": "Demo Project",
+        "date": "2023-06-17",
+        "description": "This is the description for a demo project, that will show up alongside the artwork. HTML tags may be used, e.g. for <a href='http://zombo.com'>links</a>.",
+        "default_preset": "Preset Name",
+        "live": true,
+        "groups": ["Plotter Art"],
+        "experimental": false
+    },
+    "params": {
+        "numberParam": {
+            "name": "Number Param",
+            "min": 0,
+            "max": 1,
+            "step": 0.01,
+            "live": true,
+            "style": "slider",
+            "options": []
+        },
+        "numericArrayParam": {
+            "names": ["W", "H"],
+            "min": 0,
+            "max": 1,
+            "step": 0.01,
+            "live": true,
+            "style": "field"
+        },
+        "stringParam": {
+            "name": "String Param",
+            "style": "single",
+            "live": true
+        },
+        "booleanParam": {
+            "name": "Boolean Param",
+            "enables": ["stringParam", "functionParam"]
+        },
+        "functionParam": {
+            "name": "Function Param"
+        },
+        "filesParam": {
+            "name": "File Input",
+            "multiple": false,
+            "accept": "image/*"
+        }
+    },
+    "param_sections": [
+        {
+            "name": "Section One",
+            "params": ["stringParam", "numberParam"]
+        },
+        {
+            "name": "Section Two",
+            "params": ["booleanParam", "functionParam"]
+        }
+    ]
+}

@@ -1,8 +1,4 @@
-const TestEnumType = {
-    First: 0,
-    Second: 1,
-    Third: 2
-} as const;
+import Project from '$lib/base/Project';
 
 enum TestEnum {
     First,
@@ -10,7 +6,7 @@ enum TestEnum {
     Third
 }
 
-export default class NoSignal {
+export default class NoSignal extends Project {
     testString = 'original value';
     testFn = () => {
         console.log('testFn');
@@ -22,7 +18,9 @@ export default class NoSignal {
 
     #privateField = 'this cannot be seen from the outside';
 
-    constructor() {
+    constructor(canvas: HTMLCanvasElement) {
+        super(canvas);
+
         console.log('Loaded: No Signal');
         // console.log(canvas);
         console.log(this.testEnum);

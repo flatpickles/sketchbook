@@ -16,6 +16,9 @@ Todo:
 MVP stretch goals:
 
 -   Link previews
+-   API:
+    -   Project list (names, dates, metadata)
+    -   Link preview images
 -   Easy "export snapshot" (photo) option
 -   Key commands
     -   Hide/show panels
