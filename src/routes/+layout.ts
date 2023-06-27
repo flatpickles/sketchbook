@@ -1,9 +1,11 @@
 import type { PageLoad } from './$types';
 
-import { Loader } from '$lib/base/Loader';
+import ProjectLoader from '$lib/base/ProjectLoader';
 
-export const load: PageLoad = (() => {
-    console.log(Loader.availableProjects);
+export const load: PageLoad = (async () => {
+    const loader = new ProjectLoader();
+    const projects = await loader.loadAvailableProjects();
+    console.log(projects);
     return {
         post: {}
     };

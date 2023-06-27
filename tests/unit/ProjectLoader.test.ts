@@ -1,7 +1,7 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeAll, afterAll } from 'vitest';
 
-import { SketchbookLoader } from '$lib/base/Loader';
 import ProjectConfig from '$lib/base/ProjectConfig';
+import ProjectLoader from '$lib/base/ProjectLoader';
 import * as fileProviders from '$lib/base/BundledFileProviders';
 
 // Use TestProjects directory for loading tests
@@ -11,16 +11,26 @@ vi.spyOn(fileProviders, 'importProjectClassFiles').mockReturnValue(testProjects)
 vi.spyOn(fileProviders, 'importProjectConfigFiles').mockReturnValue(testConfigs);
 
 // Initialize some useful stuff
-const testLoader = new SketchbookLoader();
+const testLoader: ProjectLoader = new ProjectLoader();
 const defaultConfig = new ProjectConfig('Defaults');
 
-describe('loading project configs', () => {
+describe('loading project configs', async () => {
+    const availableProjects = await testLoader.loadAvailableProjects();
+
+    beforeAll(() => {
+        vi.restoreAllMocks();
+    });
+
+    afterAll(() => {
+        vi.restoreAllMocks();
+    });
+
     it('has correct number of available projects', () => {
-        expect(Object.values(testLoader.availableProjects).length).toBe(2);
+        expect(Object.values(availableProjects).length).toBe(2);
     });
 
     it('correctly configures a project without a config file', () => {
-        const project = testLoader.availableProjects['NoConfig'];
+        const project = availableProjects['NoConfig'];
         expect(project).toBeDefined();
         expect(project?.project.title).toEqual('NoConfig');
         expect(project?.project.date).toEqual(defaultConfig.project.date);
@@ -31,7 +41,7 @@ describe('loading project configs', () => {
     });
 
     it('correctly configures a project with a config file', () => {
-        const project = testLoader.availableProjects['ConfigAndSupport'];
+        const project = availableProjects['ConfigAndSupport'];
         expect(project).toBeDefined();
         expect(project?.project.title).toEqual('Config and Support');
         expect(project?.project.date).toEqual(new Date('2023-06-27'));
@@ -43,16 +53,16 @@ describe('loading project configs', () => {
     });
 
     it('does not import a project without a properly named class file', () => {
-        const project = testLoader.availableProjects['NoClassFile'];
+        const project = availableProjects['NoClassFile'];
         expect(project).toBeUndefined();
     });
-});
 
-describe('loading parameter configs', () => {
     it('does not load parameter configs until prompted', () => {
-        for (const project of Object.values(testLoader.availableProjects)) {
+        for (const project of Object.values(availableProjects)) {
             expect(Object.values(project.params).length).toEqual(0);
             expect(Object.values(project.paramSections).length).toEqual(0);
         }
     });
 });
+
+// describe('loading parameter configs', () => {});

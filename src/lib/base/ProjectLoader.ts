@@ -2,15 +2,10 @@ import { importProjectClassFiles, importProjectConfigFiles } from './BundledFile
 import Project from './Project';
 import ProjectConfig from './ProjectConfig';
 
-export class SketchbookLoader {
-    public availableProjects: Record<string, ProjectConfig> = {};
-    #projectImports: Record<string, () => Promise<unknown>> = {};
+export default class ProjectLoader {
+    public async loadAvailableProjects(): Promise<Record<string, ProjectConfig>> {
+        const availableProjects: Record<string, ProjectConfig> = {};
 
-    public constructor() {
-        this.#loadProjectData();
-    }
-
-    async #loadProjectData(): Promise<void> {
         // Collect projects from class files
         const projectFiles = importProjectClassFiles();
         for (const path in projectFiles) {
@@ -23,12 +18,8 @@ export class SketchbookLoader {
             if (projectKey && pathComponents.indexOf(projectKey) < 0) continue;
 
             // Create a new config for this project
-            if (this.availableProjects[projectKey])
-                throw new Error('Loader: Duplicate project key.');
-            this.availableProjects[projectKey] = new ProjectConfig(projectKey);
-
-            // Store the module import function for later use
-            this.#projectImports[projectKey] = projectFiles[path];
+            if (availableProjects[projectKey]) throw new Error('Loader: Duplicate project key.');
+            availableProjects[projectKey] = new ProjectConfig(projectKey);
         }
 
         // Collect projects from config files
@@ -40,12 +31,13 @@ export class SketchbookLoader {
             if (!projectKey) throw new Error('Loader: Failure to parse project key from path.');
 
             // Ignore config files without an associated project class file
-            if (!this.availableProjects[projectKey]) continue;
+            if (!availableProjects[projectKey]) continue;
 
             // Deserialize the config file into a ProjectConfig object
             const module = await configFiles[path]();
-            this.availableProjects[projectKey].loadProjectConfig(module);
+            availableProjects[projectKey].loadProjectConfig(module);
         }
+        return availableProjects;
     }
 
     public async loadProject(key: string): Promise<Project> {
@@ -71,5 +63,3 @@ export class SketchbookLoader {
         */
     }
 }
-
-export const Loader = new SketchbookLoader();
