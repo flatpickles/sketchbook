@@ -9,60 +9,41 @@ export class SketchbookLoader {
         this.#loadProjectData();
     }
 
-    #loadProjectData(): void {
-        // Collect projects from config files
-        const configFiles = import.meta.glob('/src/art/*/config.json');
-        for (const path in configFiles) {
-            // Find the project key from the path
-            const pathComponents = path.split('/');
-            const projectKey = pathComponents.pop()?.split('.')[0];
-            if (!projectKey) throw new Error('Loader: Failure to parse project key from path.');
-
-            // Deserialize the config file into a ProjectConfig object
-            configFiles[path]().then((module: unknown) => {
-                const configObject = ProjectConfig.from(module);
-                this.availableProjects[projectKey] = configObject;
-
-                // TODO NEXT: sort out data references here;
-                // collect and keep track of modules somehow
-                // load modules & parameters as requested (by key)
-
-                // import(`/src/art/${projectKey}/${projectKey}.ts`).then((module: unknown) => {
-                //     console.log(module);
-                // });
-
-                // const test = import.meta.glob(`/src/art/${projectKey}/index.ts`, {
-                //     eager: true
-                // }).default;
-
-                // console.log(test);
-                // this.projectList[projectKey] = {
-                //     config: config,
-                //     classImport: import.meta.glob(`/src/art/${projectKey}/${projectKey}.ts`, { eager: true }).default,
-                // }
-            });
-        }
-
+    async #loadProjectData(): Promise<void> {
         // Collect projects from class files
         const projectFiles = import.meta.glob('/src/art/*/*.ts');
         for (const path in projectFiles) {
-            // Find the project key from the path
+            // Find the project key from the file name
             const pathComponents = path.split('/');
             const projectKey = pathComponents.pop()?.split('.')[0];
             if (!projectKey) throw new Error('Loader: Failure to parse project key from path.');
 
-            // Project files are named the same as their containing folder
+            // Project files are named the same as their containing folder; skip other files
             if (projectKey && pathComponents.indexOf(projectKey) < 0) continue;
 
-            // If we don't already have a config for this project, create one
-            if (!this.availableProjects[projectKey]) {
-                const freshConfig = new ProjectConfig();
-                freshConfig.project.title = projectKey;
-                this.availableProjects[projectKey] = freshConfig;
-            }
+            // Create a new config for this project
+            if (this.availableProjects[projectKey])
+                throw new Error('Loader: Duplicate project key.');
+            this.availableProjects[projectKey] = new ProjectConfig(projectKey);
 
             // Store the import function for later use
             this.#projectImports[projectKey] = projectFiles[path];
+        }
+
+        // Collect projects from config files
+        const configFiles = import.meta.glob('/src/art/*/config.json');
+        for (const path in configFiles) {
+            // Find the project key from the directory name
+            const pathComponents = path.split('/');
+            const projectKey = pathComponents[pathComponents.length - 2];
+            if (!projectKey) throw new Error('Loader: Failure to parse project key from path.');
+
+            // Ignore config files without an associated project class file
+            if (!this.availableProjects[projectKey]) continue;
+
+            // Deserialize the config file into a ProjectConfig object
+            const module = await configFiles[path]();
+            this.availableProjects[projectKey].loadProjectConfig(module);
         }
     }
 

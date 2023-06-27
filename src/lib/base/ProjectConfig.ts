@@ -49,28 +49,34 @@ export default class ProjectConfig {
     #rawData: any;
 
     /**
+     * Create a new ProjectConfig object.
+     * @param title - optional title for the project
+     */
+    constructor(title?: string) {
+        if (title) this.project.title = title;
+    }
+
+    /**
      * Deserialize a project config object from a JSON object.
      * @param data - object derived from imported JSON data, matching the ProjectConfig interface
      * @returns a ProjectConfig object
      */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    public static from(data: any): ProjectConfig {
-        const config = new ProjectConfig();
-        config.#rawData = data;
+    public loadProjectConfig(data: any) {
+        this.#rawData = data;
         if (data.project) {
             const dataProject = data.project;
-            if (dataProject.title) config.project.title = dataProject.title;
-            if (dataProject.date) config.project.date = new Date(dataProject.date);
-            if (dataProject.description) config.project.description = dataProject.description;
+            if (dataProject.title) this.project.title = dataProject.title;
+            if (dataProject.date) this.project.date = new Date(dataProject.date);
+            if (dataProject.description) this.project.description = dataProject.description;
             if (dataProject.defaultPresetName)
-                config.project.defaultPresetName = dataProject.defaultPresetName;
+                this.project.defaultPresetName = dataProject.defaultPresetName;
             if (dataProject.liveUpdates !== undefined)
-                config.project.liveUpdates = dataProject.liveUpdates;
-            if (dataProject.groups) config.project.groups = dataProject.groups;
+                this.project.liveUpdates = dataProject.liveUpdates;
+            if (dataProject.groups) this.project.groups = dataProject.groups;
             if (dataProject.experimental !== undefined)
-                config.project.experimental = dataProject.experimental;
+                this.project.experimental = dataProject.experimental;
         }
-        return config;
     }
 
     /**
@@ -78,7 +84,7 @@ export default class ProjectConfig {
      * referencing the already loaded raw config data, if available.
      * @param object - the Project object to load params from
      */
-    public loadParams(object: Project) {
+    public loadParamsConfig(object: Project) {
         if (this.#rawData && this.#rawData.params) {
             const dataParams = this.#rawData.params;
             for (const key in dataParams) {
