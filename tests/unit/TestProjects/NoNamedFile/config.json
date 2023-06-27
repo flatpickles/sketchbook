@@ -1,8 +1,8 @@
 {
     "project": {
-        "title": "Test Project 1",
+        "title": "No Named File",
         "date": "2023-06-27",
-        "description": "This is the description for a test project.",
+        "description": "This test project doesn't have a properly named 'NoNamedFile' file/class within it, so it won't be listed.",
         "liveUpdates": true,
         "groups": ["Test"],
         "experimental": false

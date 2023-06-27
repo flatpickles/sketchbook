@@ -1,11 +1,11 @@
 {
     "project": {
-        "title": "Test Project 1",
+        "title": "Config and Support",
         "date": "2023-06-27",
-        "description": "This is the description for a test project.",
-        "liveUpdates": true,
+        "description": "This project has both a config file and a supporting TS file.",
+        "liveUpdates": false,
         "groups": ["Test"],
-        "experimental": false
+        "experimental": true
     },
     "params": {
         "testNumber": {
