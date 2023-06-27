@@ -1,3 +1,4 @@
+import { importProjectClassFiles, importProjectConfigFiles } from './BundledFileProviders';
 import Project from './Project';
 import ProjectConfig from './ProjectConfig';
 
@@ -11,7 +12,7 @@ export class SketchbookLoader {
 
     async #loadProjectData(): Promise<void> {
         // Collect projects from class files
-        const projectFiles = import.meta.glob('/src/art/*/*.ts');
+        const projectFiles = importProjectClassFiles();
         for (const path in projectFiles) {
             // Find the project key from the file name
             const pathComponents = path.split('/');
@@ -26,12 +27,12 @@ export class SketchbookLoader {
                 throw new Error('Loader: Duplicate project key.');
             this.availableProjects[projectKey] = new ProjectConfig(projectKey);
 
-            // Store the import function for later use
+            // Store the module import function for later use
             this.#projectImports[projectKey] = projectFiles[path];
         }
 
         // Collect projects from config files
-        const configFiles = import.meta.glob('/src/art/*/config.json');
+        const configFiles = importProjectConfigFiles();
         for (const path in configFiles) {
             // Find the project key from the directory name
             const pathComponents = path.split('/');
@@ -51,6 +52,8 @@ export class SketchbookLoader {
         const canvas = document.createElement('canvas');
         const project = new Project(canvas);
         return project;
+
+        // TODO: Implement this
 
         /*
         // Get the base Project properties to exclude (todo - do this once only)

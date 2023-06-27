@@ -1,0 +1,27 @@
+{
+    "project": {
+        "title": "Test Project 1",
+        "date": "2023-06-27",
+        "description": "This is the description for a test project.",
+        "liveUpdates": true,
+        "groups": ["Test"],
+        "experimental": false
+    },
+    "params": {
+        "testNumber": {
+            "name": "Number Param",
+            "min": 0,
+            "max": 1,
+            "step": 0.01,
+            "liveUpdates": true,
+            "style": "slider",
+            "options": []
+        },
+        "testBoolean": {
+            "name": "Boolean Param",
+            "liveUpdates": true,
+            "enables": []
+        }
+    },
+    "param_sections": []
+}
