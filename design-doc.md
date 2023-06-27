@@ -36,7 +36,7 @@ Project directories may also contain two other Sketchbook particulars: a `config
 
 ### Project Files
 
-Exported project classes must be subclasses of the `Project` class, defined in `src/lib/Project.ts`. The `Project` class definition is extremely simple, including only a constructor (passed a `HTMLCanvasElement` reference) and an `update` method. Your project can use the canvas reference for drawing, and expect that `update` will be called whenever any parameters are changed.
+Exported project classes must be subclasses of the `Project` class, defined in `src/lib/base/Project.ts`. The `Project` class definition is extremely simple, including only a constructor (passed a `HTMLCanvasElement` reference) and an `update` method. Your project can use the canvas reference for drawing, and expect that `update` will be called whenever any parameters are changed.
 
 Speaking of parameters, they are simply defined as instance properties; Sketchbook will create user-adjustable parameter UIs for any instance properties that it sees defined on each project class. This means that if you're creating instance properties for internal reference, you must declare them as [private class members](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/Private_class_fields).
 
@@ -62,9 +62,9 @@ Svelte, npm run dev, etc..
     "subtitle": "by <a href='http://flatpickles.com'>flatpickles</a>",
     "description": "This is a collection of programmatic art pieces. Code and details <a href='https://github.com/flatpickles/sketchbook'>here</a>.",
     "sorting": "date",
-    "default_group": "Uncategorized",
-    "store_param_values": true,
-    "store_project_selection": true
+    "defaultGroup": "Uncategorized",
+    "storeParamValues": true,
+    "storeProjectSelection": true
 }
 ```
 
@@ -82,8 +82,8 @@ Config files are optional, as are each of the properties you may include. All pr
         "title": "Demo Project",
         "date": "2023-06-17",
         "description": "This is the description for a demo project, that will show up alongside the artwork. HTML tags may be used, e.g. for <a href='http://zombo.com'>links</a>.",
-        "default_preset": "Preset Name",
-        "live": true,
+        "defaultPresetName": "Preset Name",
+        "liveUpdates": true,
         "groups": ["Plotter Art"],
         "experimental": false
     },
@@ -93,22 +93,23 @@ Config files are optional, as are each of the properties you may include. All pr
             "min": 0,
             "max": 1,
             "step": 0.01,
-            "live": true,
+            "liveUpdates": true,
             "style": "slider",
             "options": []
         },
         "numericArrayParam": {
+            "name": "Dimensions",
             "names": ["W", "H"],
             "min": 0,
             "max": 1,
             "step": 0.01,
-            "live": true,
+            "liveUpdates": true,
             "style": "field"
         },
         "stringParam": {
             "name": "String Param",
             "style": "single",
-            "live": true
+            "liveUpdates": true
         },
         "booleanParam": {
             "name": "Boolean Param",
@@ -123,7 +124,7 @@ Config files are optional, as are each of the properties you may include. All pr
             "accept": "image/*"
         }
     },
-    "param_sections": [
+    "paramSections": [
         {
             "name": "Section One",
             "params": ["stringParam", "numberParam"]
@@ -143,10 +144,10 @@ Options (and parenthesized defaults) for the project are as follows:
 -   `title` (_class name_): The display name for the project, used in the project list and in the project details overlay. Optionally used for sorting.
 -   `date` (`undefined`): The date displayed for the project, used in the project details overlay (no date displayed if undefined). Optionally used for sorting.
 -   `description`: (`undefined`): The description displayed for the project, used in the project details overlay (no description displayed if undefined).
--   `default_preset` (`undefined`):
--   `live`
--   `groups`
--   `experimental`
+-   `defaultPresetName` (`undefined`):
+-   `liveUpdates` (`true`)
+-   `groups` ([])
+-   `experimental` (`false`)
 
 ### `params` config:
 
@@ -166,18 +167,19 @@ Options (and parenthesized defaults) for each type are as follows:
     -   `min` (0): Minimum value.
     -   `max` (1): Maximum value.
     -   `step` (0.01): Freehand input is snapped to an increment of this value, and slider displays use this as their step value.
-    -   `live` (`project.live`): When true, values will update as they're changed; when false, sketchbook will wait for field blur or mouse up. This will override the configured `project.live` value, i.e. that will be used as its default.
+    -   `liveUpdates` (`project.liveUpdates`): When true, values will update as they're changed; when false, sketchbook will wait for field blur or mouse up. This will override the configured `project.liveUpdates` value, i.e. that will be used as its default.
     -   `style` ("slider"): A string indicating the display style for this param. Options include:
         -   "slider": Show a range slider allowing the user to set via dragging.
         -   "field": Show an input field allowing the user to type a number.
         -   "selection": Show a dropdown selector with several options, as described below. This is particularly useful when defining a corresponding project class property as a custom TypeScript enum.
     -   `options` ([]): When using the "selection" style, this array of strings will be used for the list of selection options, and the param value will be set to the index in this list when selection occurs.
 -   **Numeric array:**
-    -   `names` (_[property names]_): An array with names for each of the parameters in index order. Must be the same length as the associated property.
+    = `name` (_[property name]_)
+    -   `names` (_[1, 2, ...]_): An array with names for each of the parameters in index order. Must be the same length as the associated property.
     -   `style` ("field") as above, though without a "selection" option and with a different default (as noted).
-    -   `min`, `max`, `step`, and `live` as above.
+    -   `min`, `max`, `step`, and `liveUpdates` as above.
 -   **String:**
-    -   `name` and `live` as above.
+    -   `name` and `liveUpdates` as above.
     -   `style` ("single"): A string indicating the display style for this param. Options include:
         -   "single": A single-line text field input.
         -   "multi": A multi-line text field input.
@@ -191,6 +193,6 @@ Options (and parenthesized defaults) for each type are as follows:
     -   `multiple` (false): Whether the user is allowed to select multiple files.
     -   `accept` ("\*/\*"): Optionally limit the types of files that the user can choose from the presented file selection dialog.
 
-### `param_sections` config:
+### `paramSections` config:
 
 [todo]
