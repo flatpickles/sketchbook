@@ -78,7 +78,7 @@ export default class ProjectConfig {
      * referencing the already loaded raw config data, if available.
      * @param object - the Project object to load params from
      */
-    public loadParamsFrom(object: Project) {
+    public loadParams(object: Project) {
         if (this.#rawData && this.#rawData.params) {
             const dataParams = this.#rawData.params;
             for (const key in dataParams) {

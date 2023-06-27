@@ -1,13 +1,8 @@
 import Project from './Project';
 import ProjectConfig from './ProjectConfig';
 
-interface ProjectData {
-    config: ProjectConfig;
-    classImport: () => Promise<unknown>;
-}
-
 export class SketchbookLoader {
-    public projects: Record<string, ProjectData> = {};
+    public availableProjects: Record<string, ProjectConfig> = {};
     #projectImports: Record<string, () => Promise<unknown>> = {};
 
     public constructor() {
@@ -15,17 +10,18 @@ export class SketchbookLoader {
     }
 
     #loadProjectData(): void {
-        // Load project config data
+        // Collect projects from config files
         const configFiles = import.meta.glob('/src/art/*/config.json');
         for (const path in configFiles) {
-            // Project keys are the names of the containing folders
+            // Find the project key from the path
             const pathComponents = path.split('/');
             const projectKey = pathComponents.pop()?.split('.')[0];
             if (!projectKey) throw new Error('Loader: Failure to parse project key from path.');
+
+            // Deserialize the config file into a ProjectConfig object
             configFiles[path]().then((module: unknown) => {
                 const configObject = ProjectConfig.from(module);
-                // config.project.date = new Date(config.project.date); // Convert date string to Date object
-                console.log(configObject);
+                this.availableProjects[projectKey] = configObject;
 
                 // TODO NEXT: sort out data references here;
                 // collect and keep track of modules somehow
@@ -47,14 +43,26 @@ export class SketchbookLoader {
             });
         }
 
-        // Load typescript imports
-        const projects = import.meta.glob('/src/art/*/*.ts');
-        console.log(projects);
-        for (const path in projects) {
-            // Project files are named the same as their containing folder
+        // Collect projects from class files
+        const projectFiles = import.meta.glob('/src/art/*/*.ts');
+        for (const path in projectFiles) {
+            // Find the project key from the path
             const pathComponents = path.split('/');
-            const name = pathComponents.pop()?.split('.')[0];
-            if (name && pathComponents.indexOf(name) < 0) continue;
+            const projectKey = pathComponents.pop()?.split('.')[0];
+            if (!projectKey) throw new Error('Loader: Failure to parse project key from path.');
+
+            // Project files are named the same as their containing folder
+            if (projectKey && pathComponents.indexOf(projectKey) < 0) continue;
+
+            // If we don't already have a config for this project, create one
+            if (!this.availableProjects[projectKey]) {
+                const freshConfig = new ProjectConfig();
+                freshConfig.project.title = projectKey;
+                this.availableProjects[projectKey] = freshConfig;
+            }
+
+            // Store the import function for later use
+            this.#projectImports[projectKey] = projectFiles[path];
         }
     }
 
