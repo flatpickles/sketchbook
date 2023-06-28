@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeAll, afterAll } from 'vitest';
 
 import ProjectConfig from '$lib/base/ProjectConfig';
 import ProjectLoader from '$lib/base/ProjectLoader';
-import * as fileProviders from '$lib/base/BundledFileProviders';
+import * as fileProviders from '$lib/base/FileProviders';
 
 // Use TestProjects directory for loading tests
 const testProjects = import.meta.glob('/tests/unit/TestProjects/*/*.ts');
