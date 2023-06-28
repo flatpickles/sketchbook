@@ -1,14 +1,28 @@
 import { importProjectClassFiles, importProjectConfigFiles } from './BundledFileProviders';
-import Project from './Project';
+import type Project from './Project';
 import ProjectConfig from './ProjectConfig';
 
+interface ProjectTuple {
+    project: Project;
+    config: ProjectConfig;
+}
+
 export default class ProjectLoader {
+    #projectClassFiles: Record<string, () => Promise<unknown>> | undefined;
+    #projectConfigFiles: Record<string, () => Promise<unknown>> | undefined;
+
+    /**
+     * Load a collection of available projects. The returned ProjectConfig objects will
+     * not be fully hydrated with project parameters, as the project class file must be
+     * loaded to determine these.
+     * @returns A map of project keys to ProjectConfig objects.
+     */
     public async loadAvailableProjects(): Promise<Record<string, ProjectConfig>> {
         const availableProjects: Record<string, ProjectConfig> = {};
 
         // Collect projects from class files
-        const projectFiles = importProjectClassFiles();
-        for (const path in projectFiles) {
+        this.#projectClassFiles = this.#projectClassFiles ?? importProjectClassFiles();
+        for (const path in this.#projectClassFiles) {
             // Find the project key from the file name
             const pathComponents = path.split('/');
             const projectKey = pathComponents.pop()?.split('.')[0];
@@ -23,8 +37,8 @@ export default class ProjectLoader {
         }
 
         // Collect projects from config files
-        const configFiles = importProjectConfigFiles();
-        for (const path in configFiles) {
+        this.#projectConfigFiles = this.#projectConfigFiles ?? importProjectConfigFiles();
+        for (const path in this.#projectConfigFiles) {
             // Find the project key from the directory name
             const pathComponents = path.split('/');
             const projectKey = pathComponents[pathComponents.length - 2];
@@ -34,32 +48,57 @@ export default class ProjectLoader {
             if (!availableProjects[projectKey]) continue;
 
             // Deserialize the config file into a ProjectConfig object
-            const module = await configFiles[path]();
+            const module = await this.#projectConfigFiles[path]();
             availableProjects[projectKey].loadProjectConfig(module);
         }
         return availableProjects;
     }
 
-    public async loadProject(key: string): Promise<Project> {
-        const canvas = document.createElement('canvas');
-        const project = new Project(canvas);
-        return project;
+    /**
+     * Fully load the project corresponding to a particular project key.
+     * @param key - the project key.
+     * @returns A tuple containing the Project object and a fully hydrated ProjectConfig object.
+     */
+    public async loadProject(
+        key: string,
+        displayCanvas?: HTMLCanvasElement
+    ): Promise<ProjectTuple | null> {
+        // Load bundled files if not already loaded
+        this.#projectClassFiles = this.#projectClassFiles ?? importProjectClassFiles();
+        this.#projectConfigFiles = this.#projectConfigFiles ?? importProjectConfigFiles();
 
-        // TODO: Implement this
+        // Instantiate the proper project class
+        const classFilePath = Object.keys(this.#projectClassFiles).filter((path) => {
+            const pathComponents = path.split('/');
+            const projectKey = pathComponents.pop()?.split('.')[0];
+            return projectKey === key;
+        })[0];
+        if (!classFilePath) return null;
+        const classModule = (await this.#projectClassFiles[classFilePath]()) as {
+            // Matching the Project constructor...
+            default: new (canvas: HTMLCanvasElement | undefined) => Project;
+        };
+        const project = new classModule.default(displayCanvas);
 
-        /*
-        // Get the base Project properties to exclude (todo - do this once only)
-        const templateProject = new Project();
-        const baseProperties = Object.getOwnPropertyNames(templateProject);
+        // Create config with config file (if any)
+        const configFilePath = Object.keys(this.#projectConfigFiles).filter((path) => {
+            const pathComponents = path.split('/');
+            const projectKey = pathComponents[pathComponents.length - 2];
+            return projectKey === key;
+        })[0];
+        const config = new ProjectConfig(key);
+        if (configFilePath) {
+            const configModule = await this.#projectConfigFiles[configFilePath]();
+            config.loadProjectConfig(configModule);
+        }
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        projects[path]().then((module: any) => {
-            const instance = new module.default();
-            const paramKeys = Object.getOwnPropertyNames(instance).filter(
-                (key) => baseProperties.indexOf(key) < 0
-            );
-            console.log(paramKeys);
-        });
-        */
+        // Update config with params in project
+        config.loadParamsConfig(project);
+
+        // Return tuple
+        return {
+            project,
+            config
+        };
     }
 }

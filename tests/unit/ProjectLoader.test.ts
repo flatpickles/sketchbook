@@ -60,7 +60,6 @@ describe('loading project configs', async () => {
     it('does not load parameter configs until prompted', () => {
         for (const project of Object.values(availableProjects)) {
             expect(Object.values(project.params).length).toEqual(0);
-            expect(Object.values(project.paramSections).length).toEqual(0);
         }
     });
 });

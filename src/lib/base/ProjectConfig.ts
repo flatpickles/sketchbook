@@ -1,23 +1,5 @@
-import type Project from './Project';
-
-class ParamConfig {
-    name = 'Untitled';
-}
-
-class NumberParamConfig extends ParamConfig {
-    min = 0;
-    max = 1;
-    step = 0.01;
-    liveUpdates = true;
-    style = 'slider'; // todo: enum
-    options: string[] = [];
-}
-
-class BooleanParamConfig extends ParamConfig {
-    enables: string[] = [];
-}
-
-// todo: other param types
+import Project from './Project';
+import type { ParamConfig } from './ParamConfig';
 
 export class ProjectProjectConfig {
     title = 'Untitled';
@@ -29,21 +11,9 @@ export class ProjectProjectConfig {
     experimental = false;
 }
 
-export class ProjectParamsConfig {
-    [key: string]: ParamConfig;
-}
-
-export class ProjectParamSectionsConfig {
-    [key: string]: {
-        name: string;
-        params: string[];
-    };
-}
-
 export default class ProjectConfig {
     project = new ProjectProjectConfig();
-    params = new ProjectParamsConfig();
-    paramSections = new ProjectParamSectionsConfig();
+    params: ParamConfig[] = [];
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     #rawData: any;
@@ -85,20 +55,30 @@ export default class ProjectConfig {
      * @param object - the Project object to load params from
      */
     public loadParamsConfig(object: Project) {
-        if (this.#rawData && this.#rawData.params) {
-            const dataParams = this.#rawData.params;
-            for (const key in dataParams) {
-                const dataParam = dataParams[key];
-                // todo
-                console.log(dataParam);
-            }
-        }
-        if (this.#rawData && this.#rawData.paramSections) {
-            const dataParamSections = this.#rawData.paramSections;
-            for (const key in dataParamSections) {
-                const dataParamSection = dataParamSections[key];
-                // todo
-                console.log(dataParamSection);
+        // Get the list of params from the Project object
+        const templateProject = new Project();
+        const baseProperties = Object.getOwnPropertyNames(templateProject);
+        const paramKeys = Object.getOwnPropertyNames(object).filter(
+            (key) => baseProperties.indexOf(key) < 0
+        );
+
+        // Create ParamConfig objects for each param, using config data if available
+        for (const key of paramKeys) {
+            // Get config data if available
+            // todo: use this.#rawData.params[key]
+
+            const propertyDescriptor = Object.getOwnPropertyDescriptor(object, key);
+            if (!propertyDescriptor || !propertyDescriptor.value)
+                throw new Error('Property descriptor not found');
+            if (typeof propertyDescriptor.value === 'number') {
+                console.log(key, 'is a number');
+            } else if (typeof propertyDescriptor.value === 'boolean') {
+                console.log(key, 'is a boolean');
+            } else if (typeof propertyDescriptor.value === 'string') {
+                console.log(key, 'is a string');
+            } else if (typeof propertyDescriptor.value === 'object') {
+                // todo: function, array, file, etc...
+                console.log(key, 'is an object');
             }
         }
     }

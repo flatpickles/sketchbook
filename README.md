@@ -3,6 +3,8 @@
 Todo:
 
 -   Color parameters! Three-element numeric array...
+-   Rework tech design for parameter sections - `section` string defined for each parameter
+
 -   Build basic panels & UI for architecture validation
 -   Validate canvas-sketch usage with current spec
 -   Read through old notes and absorb in design doc
