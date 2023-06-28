@@ -1,4 +1,4 @@
-import { importProjectClassFiles, importProjectConfigFiles } from './BundledFileProviders';
+import { importProjectClassFiles, importProjectConfigFiles } from './FileProviders';
 import type Project from './Project';
 import ProjectConfig from './ProjectConfig';
 

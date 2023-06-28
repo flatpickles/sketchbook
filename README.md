@@ -1,8 +1,11 @@
 (readme could be the design-doc eventually, for now this is freeform)
 
-Todo:
+Todo / WIP notes:
 
+-   We don't need ProjectModel & ParamModel classes, probably
 -   Color parameters! Three-element numeric array...
+-   Code coverage...
+-   Better error messaging for config file parsing throughout
 -   Rework tech design for parameter sections - `section` string defined for each parameter
 
 -   Build basic panels & UI for architecture validation

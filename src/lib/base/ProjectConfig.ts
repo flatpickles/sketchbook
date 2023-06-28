@@ -1,5 +1,5 @@
 import Project from './Project';
-import type { ParamConfig } from './ParamConfig';
+import { ParamConfig } from './ParamConfig';
 
 export class ProjectProjectConfig {
     title = 'Untitled';
@@ -13,7 +13,7 @@ export class ProjectProjectConfig {
 
 export default class ProjectConfig {
     project = new ProjectProjectConfig();
-    params: ParamConfig[] = [];
+    params: Record<string, ParamConfig> = {};
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     #rawData: any;
@@ -33,6 +33,7 @@ export default class ProjectConfig {
      */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     public loadProjectConfig(data: any) {
+        // todo: same check/copy approach as in ParamConfig
         this.#rawData = data;
         if (data.project) {
             const dataProject = data.project;
@@ -64,22 +65,16 @@ export default class ProjectConfig {
 
         // Create ParamConfig objects for each param, using config data if available
         for (const key of paramKeys) {
-            // Get config data if available
-            // todo: use this.#rawData.params[key]
-
+            // Derive a ParamConfig object
             const propertyDescriptor = Object.getOwnPropertyDescriptor(object, key);
             if (!propertyDescriptor || !propertyDescriptor.value)
-                throw new Error('Property descriptor not found');
-            if (typeof propertyDescriptor.value === 'number') {
-                console.log(key, 'is a number');
-            } else if (typeof propertyDescriptor.value === 'boolean') {
-                console.log(key, 'is a boolean');
-            } else if (typeof propertyDescriptor.value === 'string') {
-                console.log(key, 'is a string');
-            } else if (typeof propertyDescriptor.value === 'object') {
-                // todo: function, array, file, etc...
-                console.log(key, 'is an object');
-            }
+                throw new Error('No param value available.');
+            const paramConfig = ParamConfig.from(
+                propertyDescriptor.value,
+                this.#rawData?.params[key]
+            );
+            // Assign ParamConfig object
+            this.params[key] = paramConfig;
         }
     }
 }
