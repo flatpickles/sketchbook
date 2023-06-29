@@ -17,6 +17,11 @@
             "style": "slider",
             "options": []
         },
+        "testUnusedParam": {
+            "name": "Unused Param",
+            "liveUpdates": true,
+            "enables": []
+        },
         "testBoolean": {
             "name": "Boolean Param",
             "liveUpdates": true,

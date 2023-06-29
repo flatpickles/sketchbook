@@ -35,6 +35,7 @@ MVP stretch goals:
 
 Long-term goals:
 
+-   Canvas zooming & panning
 -   Cloud preset storage
     -   Share presets with _just_ a link
 -   LFOs and/or other sorts of param sidechaining
