@@ -1,7 +1,13 @@
 import Project from './Project';
 import { ParamConfig } from './ParamConfig';
 
-export class ProjectProjectConfig {
+/*
+    todo:
+    - tests
+    - maybe use a "from" method like ParamConfig... why have these objects before loading a config?
+*/
+
+export class ProjectProperties {
     title = 'Untitled';
     date: Date | undefined;
     description: string | undefined;
@@ -12,7 +18,7 @@ export class ProjectProjectConfig {
 }
 
 export default class ProjectConfig {
-    project = new ProjectProjectConfig();
+    props = new ProjectProperties();
     params: Record<string, ParamConfig> = {};
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -23,7 +29,7 @@ export default class ProjectConfig {
      * @param title - optional title for the project
      */
     constructor(title?: string) {
-        if (title) this.project.title = title;
+        if (title) this.props.title = title;
     }
 
     /**
@@ -31,22 +37,24 @@ export default class ProjectConfig {
      * @param data - object derived from imported JSON data, matching the ProjectConfig interface
      * @returns a ProjectConfig object
      */
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    public loadProjectConfig(data: any) {
-        // todo: same check/copy approach as in ParamConfig
-        this.#rawData = data;
-        if (data.project) {
-            const dataProject = data.project;
-            if (dataProject.title) this.project.title = dataProject.title;
-            if (dataProject.date) this.project.date = new Date(dataProject.date);
-            if (dataProject.description) this.project.description = dataProject.description;
-            if (dataProject.defaultPresetName)
-                this.project.defaultPresetName = dataProject.defaultPresetName;
-            if (dataProject.liveUpdates !== undefined)
-                this.project.liveUpdates = dataProject.liveUpdates;
-            if (dataProject.groups) this.project.groups = dataProject.groups;
-            if (dataProject.experimental !== undefined)
-                this.project.experimental = dataProject.experimental;
+    public loadProjectConfig(data: Record<string, unknown>) {
+        const propKeys: string[] = Object.getOwnPropertyNames(this.props);
+        for (const key of propKeys) {
+            if (key === 'date') {
+                // Deserialize date as a Date object
+                if (data[key]) this.props[key] = new Date(data[key] as string);
+            } else if (key === 'params') {
+                // Ignore params here, they must be loaded with a Project object
+                continue;
+            } else if (data[key] !== undefined) {
+                // Copy other properties directly
+                Object.defineProperty(this.props, key, {
+                    value: data[key],
+                    writable: true,
+                    enumerable: true,
+                    configurable: true
+                });
+            }
         }
     }
 

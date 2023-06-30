@@ -30,24 +30,24 @@ describe('loading project configs', async () => {
     it('correctly configures a project without a config file', () => {
         const project = availableProjects['NoConfig'];
         expect(project).toBeDefined();
-        expect(project?.project.title).toEqual('NoConfig');
-        expect(project?.project.date).toEqual(defaultConfig.project.date);
-        expect(project?.project.description).toEqual(defaultConfig.project.description);
-        expect(project?.project.liveUpdates).toEqual(defaultConfig.project.liveUpdates);
-        expect(project?.project.groups).toEqual(defaultConfig.project.groups);
-        expect(project?.project.experimental).toEqual(defaultConfig.project.experimental);
+        expect(project?.props.title).toEqual('NoConfig');
+        expect(project?.props.date).toEqual(defaultConfig.props.date);
+        expect(project?.props.description).toEqual(defaultConfig.props.description);
+        expect(project?.props.liveUpdates).toEqual(defaultConfig.props.liveUpdates);
+        expect(project?.props.groups).toEqual(defaultConfig.props.groups);
+        expect(project?.props.experimental).toEqual(defaultConfig.props.experimental);
     });
 
     it('correctly configures a project with a config file', () => {
         const project = availableProjects['ConfigAndSupport'];
         expect(project).toBeDefined();
-        expect(project?.project.title).toEqual('Config and Support');
-        expect(project?.project.date).toEqual(new Date('2023-06-27'));
-        expect(project?.project.description).toContain('config file');
-        expect(project?.project.liveUpdates).toEqual(false);
-        expect(project?.project.groups).toContain('Test');
-        expect(project?.project.groups.length).toEqual(1);
-        expect(project?.project.experimental).toEqual(true);
+        expect(project?.props.title).toEqual('Config and Support');
+        expect(project?.props.date).toEqual(new Date('2023-06-27'));
+        expect(project?.props.description).toContain('config file');
+        expect(project?.props.liveUpdates).toEqual(false);
+        expect(project?.props.groups).toContain('Test');
+        expect(project?.props.groups.length).toEqual(1);
+        expect(project?.props.experimental).toEqual(true);
     });
 
     it('does not import a project without a properly named class file', () => {
@@ -84,14 +84,14 @@ describe('loading projects', async () => {
         expect(project).toBeInstanceOf(NoConfig);
 
         // Check project config
-        const projectConfig = projectTuple!.config.project;
-        expect(projectConfig).toBeDefined();
-        expect(projectConfig?.title).toEqual('NoConfig');
-        expect(projectConfig?.date).toEqual(defaultConfig.project.date);
-        expect(projectConfig?.description).toEqual(defaultConfig.project.description);
-        expect(projectConfig?.liveUpdates).toEqual(defaultConfig.project.liveUpdates);
-        expect(projectConfig?.groups).toEqual(defaultConfig.project.groups);
-        expect(projectConfig?.experimental).toEqual(defaultConfig.project.experimental);
+        const projectProps = projectTuple!.config.props;
+        expect(projectProps).toBeDefined();
+        expect(projectProps?.title).toEqual('NoConfig');
+        expect(projectProps?.date).toEqual(defaultConfig.props.date);
+        expect(projectProps?.description).toEqual(defaultConfig.props.description);
+        expect(projectProps?.liveUpdates).toEqual(defaultConfig.props.liveUpdates);
+        expect(projectProps?.groups).toEqual(defaultConfig.props.groups);
+        expect(projectProps?.experimental).toEqual(defaultConfig.props.experimental);
 
         // Check params config
         const paramsConfig = projectTuple!.config.params;
@@ -112,15 +112,15 @@ describe('loading projects', async () => {
         expect(project).toBeInstanceOf(ConfigAndSupport);
 
         // Check project config
-        const projectConfig = projectTuple!.config.project;
-        expect(projectConfig).toBeDefined();
-        expect(projectConfig?.title).toEqual('Config and Support');
-        expect(projectConfig?.date).toEqual(new Date('2023-06-27'));
-        expect(projectConfig?.description).toContain('config file');
-        expect(projectConfig?.liveUpdates).toEqual(false);
-        expect(projectConfig?.groups).toContain('Test');
-        expect(projectConfig?.groups.length).toEqual(1);
-        expect(projectConfig?.experimental).toEqual(true);
+        const projectProps = projectTuple!.config.props;
+        expect(projectProps).toBeDefined();
+        expect(projectProps?.title).toEqual('Config and Support');
+        expect(projectProps?.date).toEqual(new Date('2023-06-27'));
+        expect(projectProps?.description).toContain('config file');
+        expect(projectProps?.liveUpdates).toEqual(false);
+        expect(projectProps?.groups).toContain('Test');
+        expect(projectProps?.groups.length).toEqual(1);
+        expect(projectProps?.experimental).toEqual(true);
 
         // Check params config
         const paramsConfig = projectTuple!.config.params;
@@ -130,4 +130,6 @@ describe('loading projects', async () => {
         expect(paramsConfig!['testNumber']).toBeInstanceOf(NumberParamConfig);
         expect(paramsConfig!['testUnusedParam']).toBeUndefined();
     });
+
+    // todo check loading non-existent projects
 });

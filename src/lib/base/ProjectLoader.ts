@@ -8,9 +8,8 @@ export interface ProjectTuple {
 }
 
 export default class ProjectLoader {
-    // Cache imported files for performance
-    #projectClassFiles: Record<string, () => Promise<unknown>> | undefined;
-    #projectConfigFiles: Record<string, () => Promise<unknown>> | undefined;
+    #projectClassFiles = importProjectClassFiles();
+    #projectConfigFiles = importProjectConfigFiles();
 
     /**
      * Load a collection of available projects. The returned ProjectConfig objects will
@@ -22,7 +21,6 @@ export default class ProjectLoader {
         const availableProjects: Record<string, ProjectConfig> = {};
 
         // Collect projects from class files
-        this.#projectClassFiles = this.#projectClassFiles ?? importProjectClassFiles();
         for (const path in this.#projectClassFiles) {
             // Find the project key from the file name
             const projectKey = ProjectLoader.#keyFromProjectPath(path);
@@ -37,7 +35,6 @@ export default class ProjectLoader {
         }
 
         // Collect projects from config files
-        this.#projectConfigFiles = this.#projectConfigFiles ?? importProjectConfigFiles();
         for (const path in this.#projectConfigFiles) {
             // Find the project key from the directory name
             const projectKey = ProjectLoader.#keyFromConfigPath(path);
@@ -47,13 +44,14 @@ export default class ProjectLoader {
 
             // Deserialize the config file into a ProjectConfig object
             const module = await this.#projectConfigFiles[path]();
-            availableProjects[projectKey].loadProjectConfig(module);
+            availableProjects[projectKey].loadProjectConfig(module as Record<string, unknown>);
         }
         return availableProjects;
     }
 
     /**
-     * Fully load the project corresponding to a particular project key.
+     * Fully load the project corresponding to a particular project key. Can be called even when
+     * available projects have not yet been loaded.
      * @param key - the project key.
      * @returns A tuple containing the Project object and a fully hydrated ProjectConfig object.
      */
@@ -61,10 +59,6 @@ export default class ProjectLoader {
         key: string,
         displayCanvas?: HTMLCanvasElement
     ): Promise<ProjectTuple | null> {
-        // Load bundled files if not already loaded
-        this.#projectClassFiles = this.#projectClassFiles ?? importProjectClassFiles();
-        this.#projectConfigFiles = this.#projectConfigFiles ?? importProjectConfigFiles();
-
         // Instantiate the proper project class
         const classFilePath = Object.keys(this.#projectClassFiles).filter((path) => {
             return ProjectLoader.#keyFromProjectPath(path) === key;
@@ -83,7 +77,7 @@ export default class ProjectLoader {
         const config = new ProjectConfig(key);
         if (configFilePath) {
             const configModule = await this.#projectConfigFiles[configFilePath]();
-            config.loadProjectConfig(configModule);
+            config.loadProjectConfig(configModule as Record<string, unknown>);
         }
 
         // Update config with params in project

@@ -6,7 +6,7 @@ export class ParamConfig {
         if (name) this.name = name;
     }
 
-    static from(value: unknown, config?: unknown): ParamConfig {
+    static from(value: unknown, config?: Record<string, unknown>): ParamConfig {
         // Create the proper type for the value
         let param: ParamConfig;
         if (typeof value === 'number') {

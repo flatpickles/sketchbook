@@ -1,12 +1,11 @@
 {
-    "project": {
-        "title": "Demo Project",
-        "date": "2023-06-27",
-        "description": "This is the description for a demo project.",
-        "liveUpdates": true,
-        "groups": ["Demo"],
-        "experimental": false
-    },
+    "title": "Demo Project",
+    "date": "2023-06-27",
+    "description": "This is the description for a demo project.",
+    "liveUpdates": true,
+    "groups": ["Demo"],
+    "experimental": false,
+
     "params": {
         "testNumber": {
             "name": "Number Param",
@@ -22,6 +21,5 @@
             "liveUpdates": true,
             "enables": []
         }
-    },
-    "param_sections": []
+    }
 }

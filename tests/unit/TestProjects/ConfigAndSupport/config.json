@@ -1,12 +1,11 @@
 {
-    "project": {
-        "title": "Config and Support",
-        "date": "2023-06-27",
-        "description": "This project has both a config file and a supporting TS file.",
-        "liveUpdates": false,
-        "groups": ["Test"],
-        "experimental": true
-    },
+    "title": "Config and Support",
+    "date": "2023-06-27",
+    "description": "This project has both a config file and a supporting TS file.",
+    "liveUpdates": false,
+    "groups": ["Test"],
+    "experimental": true,
+
     "params": {
         "testNumber": {
             "name": "Number Param",

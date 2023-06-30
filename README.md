@@ -2,7 +2,7 @@
 
 Todo / WIP notes:
 
--   We don't need ProjectModel & ParamModel classes, probably
+-   update design doc to remove `project` section from project config files
 -   Color parameters! Three-element numeric array...
 -   Code coverage...
 -   Better error messaging for config file parsing throughout

@@ -1,12 +1,11 @@
 {
-    "project": {
-        "title": "No Named File",
-        "date": "2023-06-27",
-        "description": "This test project doesn't have a properly named 'NoNamedFile' file/class within it, so it won't be listed.",
-        "liveUpdates": true,
-        "groups": ["Test"],
-        "experimental": false
-    },
+    "title": "No Named File",
+    "date": "2023-06-27",
+    "description": "This test project doesn't have a properly named 'NoNamedFile' file/class within it, so it won't be listed.",
+    "liveUpdates": true,
+    "groups": ["Test"],
+    "experimental": false,
+
     "params": {
         "testNumber": {
             "name": "Number Param",
