@@ -78,15 +78,13 @@ Config files are optional, as are each of the properties you may include. All pr
 
 ```json
 {
-    "project": {
-        "title": "Demo Project",
-        "date": "2023-06-17",
-        "description": "This is the description for a demo project, that will show up alongside the artwork. HTML tags may be used, e.g. for <a href='http://zombo.com'>links</a>.",
-        "defaultPresetName": "Preset Name",
-        "liveUpdates": true,
-        "groups": ["Plotter Art"],
-        "experimental": false
-    },
+    "title": "Demo Project",
+    "date": "2023-06-17",
+    "description": "This is the description for a demo project, that will show up alongside the artwork. HTML tags may be used, e.g. for <a href='http://zombo.com'>links</a>.",
+    "defaultPresetName": "Preset Name",
+    "liveUpdates": true,
+    "groups": ["Plotter Art"],
+    "experimental": false,
     "params": {
         "numberParam": {
             "name": "Number Param",
@@ -104,40 +102,34 @@ Config files are optional, as are each of the properties you may include. All pr
             "max": 1,
             "step": 0.01,
             "liveUpdates": true,
-            "style": "field"
+            "style": "field",
+            "section": "Section 1"
+        },
+        "booleanParam": {
+            "name": "Boolean Param",
+            "enables": ["stringParam", "functionParam"],
+            "section": "Section 1"
         },
         "stringParam": {
             "name": "String Param",
             "style": "single",
-            "liveUpdates": true
-        },
-        "booleanParam": {
-            "name": "Boolean Param",
-            "enables": ["stringParam", "functionParam"]
+            "liveUpdates": true,
+            "section": "Section 1"
         },
         "functionParam": {
-            "name": "Function Param"
+            "name": "Function Param",
+            "section": "Section 1"
         },
         "filesParam": {
             "name": "File Input",
             "multiple": false,
             "accept": "image/*"
         }
-    },
-    "paramSections": [
-        {
-            "name": "Section One",
-            "params": ["stringParam", "numberParam"]
-        },
-        {
-            "name": "Section Two",
-            "params": ["booleanParam", "functionParam"]
-        }
-    ]
+    }
 }
 ```
 
-### `project` config:
+### Project config:
 
 Options (and parenthesized defaults) for the project are as follows:
 
@@ -148,8 +140,9 @@ Options (and parenthesized defaults) for the project are as follows:
 -   `liveUpdates` (`true`)
 -   `groups` ([])
 -   `experimental` (`false`)
+-   `params` ({}): Parameter configuration for the project, as described below.
 
-### `params` config:
+### Project parameters config:
 
 Parameters are keyed with their associated property name, as defined on the project's main class object. Their types will be inferred from the runtime type of these properties. The following types are available:
 
@@ -172,27 +165,23 @@ Options (and parenthesized defaults) for each type are as follows:
         -   "slider": Show a range slider allowing the user to set via dragging.
         -   "field": Show an input field allowing the user to type a number.
         -   "selection": Show a dropdown selector with several options, as described below. This is particularly useful when defining a corresponding project class property as a custom TypeScript enum.
-    -   `options` ([]): When using the "selection" style, this array of strings will be used for the list of selection options, and the param value will be set to the index in this list when selection occurs.
+    -   `options` (`undefined`): When using the "selection" style, this array of strings will be used for the list of selection options, and the param value will be set to the index in this list when selection occurs.
+    -   `section` (`undefined`): String name for the named section that this param should be grouped within, or undefined if it's a top level param. Params are displayed in the order they are defined in the file unless `section` is defined; sectioned params will be grouped together in the position of the first listed parameter.
 -   **Numeric array:**
-    = `name` (_[property name]_)
-    -   `names` (_[1, 2, ...]_): An array with names for each of the parameters in index order. Must be the same length as the associated property.
+    -   `name`, `min`, `max`, `step`, `liveUpdates`, and `section` as above.
+    -   `names` (_[1, 2, ...]_): An array with names for each of the parameters in index order. Must be the same length as the associated property. `name` will still be displayed to identify the entire numeric array param.
     -   `style` ("field") as above, though without a "selection" option and with a different default (as noted).
-    -   `min`, `max`, `step`, and `liveUpdates` as above.
 -   **String:**
-    -   `name` and `liveUpdates` as above.
+    -   `name`, `liveUpdates`, and `section` as above.
     -   `style` ("single"): A string indicating the display style for this param. Options include:
         -   "single": A single-line text field input.
         -   "multi": A multi-line text field input.
 -   **Boolean:**
-    -   `name` as above.
+    -   `name` and `section` as above.
     -   `enables` ([]): An array of strings, each being a property name (not display name!) for another param within this project. Included params will be disabled when this boolean param is unset. Boolean params may be included without a corresponding project class property, and used only to enable/disable other params.
 -   **Function:**
-    -   `name` as above.
+    -   `name` and `section` as above.
 -   **File:**
-    -   `name` as above.
+    -   `name` and `section` as above.
     -   `multiple` (false): Whether the user is allowed to select multiple files.
     -   `accept` ("\*/\*"): Optionally limit the types of files that the user can choose from the presented file selection dialog.
-
-### `paramSections` config:
-
-[todo]
