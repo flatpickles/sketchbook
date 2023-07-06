@@ -13,6 +13,11 @@ export interface ProjectTuple {
     params: Record<string, ParamConfig>;
 }
 
+type ProjectModule = {
+    // Matching the Project constructor...
+    default: new (canvas: HTMLCanvasElement | undefined) => Project;
+};
+
 export default class ProjectLoader {
     /**
      * Load a collection of available projects as a map of project keys to ProjectConfig objects.
@@ -76,25 +81,22 @@ export default class ProjectLoader {
             return ProjectLoader.#keyFromProjectPath(path) === key;
         })[0];
         if (!classFilePath) return null;
-        const classModule = (await projectClassFiles[classFilePath]()) as {
-            // Matching the Project constructor...
-            default: new (canvas: HTMLCanvasElement | undefined) => Project;
-        };
+        const classModule = (await projectClassFiles[classFilePath]()) as ProjectModule;
         const project = new classModule.default(displayCanvas);
 
         // Create props & params with project and config file (if any)
         const configFilePath = Object.keys(projectConfigFiles).filter((path) => {
             return ProjectLoader.#keyFromConfigPath(path) === key;
         })[0];
-        const configModule = configFilePath
-            ? await projectConfigFiles[configFilePath]()
-            : undefined;
+        const configModule = (
+            configFilePath ? await projectConfigFiles[configFilePath]() : undefined
+        ) as Record<string, unknown> | undefined;
         const props = ProjectConfigFactory.propsFrom(
             configModule as Record<string, unknown> | undefined
         );
         const params = ProjectConfigFactory.paramsFrom(
             project,
-            configModule as Record<string, Record<string, unknown>> | undefined
+            configModule?.params as Record<string, Record<string, unknown>> | undefined
         );
 
         // Assign the project title if unset

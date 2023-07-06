@@ -2,6 +2,7 @@ import Project from '$lib/base/Project';
 
 export default class DemoProject extends Project {
     testNumber = 42;
+    testBoolean = true;
 
     update() {
         if (!this.canvas) throw new Error('Canvas not set');

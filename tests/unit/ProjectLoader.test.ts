@@ -107,6 +107,7 @@ describe('loading specific projects', async () => {
         expect(Object.keys(paramsConfig!).length).toEqual(1);
         expect(paramsConfig!['testNumber']).toBeDefined();
         expect(paramsConfig!['testNumber'].type).toEqual('number');
+        expect(paramsConfig!['testNumber'].name).toEqual('Number Param');
         expect(paramsConfig!['testUnusedParam']).toBeUndefined();
     });
 
