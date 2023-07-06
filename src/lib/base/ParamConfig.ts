@@ -6,7 +6,7 @@ export class ParamConfig {
         if (name) this.name = name;
     }
 
-    static from(value: unknown, config?: Record<string, unknown>): ParamConfig {
+    public static from(value: unknown, data?: Record<string, unknown>): ParamConfig {
         // Create the proper type for the value
         let param: ParamConfig;
         if (typeof value === 'number') {
@@ -18,16 +18,16 @@ export class ParamConfig {
         }
 
         // If the config exists, assign its properties to the param
-        if (config) {
+        if (data) {
             // Check all config fields to make sure they're supported
-            const configKeys = Object.getOwnPropertyNames(config);
+            const configKeys = Object.getOwnPropertyNames(data);
             for (const key of configKeys) {
                 if (Object.getOwnPropertyNames(param).indexOf(key) < 0) {
                     throw new Error(`Unsupported param config field: ${key}`);
                 }
             }
             // Assign the config fields to the param
-            Object.assign(param, config);
+            Object.assign(param, data);
         }
 
         // Return the generated param

@@ -1,12 +1,6 @@
 import Project from './Project';
 import { ParamConfig } from './ParamConfig';
 
-/*
-    todo:
-    - tests
-    - maybe use a "from" method like ParamConfig... why have these objects before loading a config?
-*/
-
 export class ProjectProperties {
     title = 'Untitled';
     date: Date | undefined;
@@ -28,8 +22,9 @@ export default class ProjectConfig {
      * Create a new ProjectConfig object.
      * @param title - optional title for the project
      */
-    constructor(title?: string) {
+    constructor(title?: string, data?: Record<string, unknown>) {
         if (title) this.props.title = title;
+        if (data) this.loadProjectConfig(data);
     }
 
     /**
@@ -56,25 +51,26 @@ export default class ProjectConfig {
                 });
             }
         }
+        this.#rawData = data;
     }
 
     /**
      * Load in the params (and param sections) from a Project object, also
      * referencing the already loaded raw config data, if available.
-     * @param object - the Project object to load params from
+     * @param project - the Project object to load params from
      */
-    public loadParamsConfig(object: Project) {
+    public loadParamsConfig(project: Project) {
         // Get the list of params from the Project object
         const templateProject = new Project();
         const baseProperties = Object.getOwnPropertyNames(templateProject);
-        const paramKeys = Object.getOwnPropertyNames(object).filter(
+        const paramKeys = Object.getOwnPropertyNames(project).filter(
             (key) => baseProperties.indexOf(key) < 0
         );
 
         // Create ParamConfig objects for each param, using config data if available
         for (const key of paramKeys) {
             // Derive a ParamConfig object
-            const propertyDescriptor = Object.getOwnPropertyDescriptor(object, key);
+            const propertyDescriptor = Object.getOwnPropertyDescriptor(project, key);
             if (!propertyDescriptor || !propertyDescriptor.value)
                 throw new Error('No param value available.');
             const paramConfig = ParamConfig.from(
