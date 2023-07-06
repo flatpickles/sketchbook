@@ -15,11 +15,8 @@ const testConfigs = import.meta.glob('/tests/unit/TestProjects/*/config.json');
 vi.spyOn(fileProviders, 'importProjectClassFiles').mockReturnValue(testProjects);
 vi.spyOn(fileProviders, 'importProjectConfigFiles').mockReturnValue(testConfigs);
 
-// Initialize some useful stuff
-const testLoader: ProjectLoader = new ProjectLoader();
-
 describe('loading available projects', async () => {
-    const availableProjects = await testLoader.loadAvailableProjects();
+    const availableProjects = await ProjectLoader.loadAvailableProjects();
 
     it('has correct number of available projects', () => {
         expect(Object.values(availableProjects).length).toBe(2);
@@ -56,7 +53,7 @@ describe('loading available projects', async () => {
 
 describe('loading specific projects', async () => {
     it('loads a project with no config file', async () => {
-        const projectTuple = await testLoader.loadProject('NoConfig');
+        const projectTuple = await ProjectLoader.loadProject('NoConfig');
         expect(projectTuple).toBeDefined();
 
         // Check project class instance
@@ -84,7 +81,7 @@ describe('loading specific projects', async () => {
     });
 
     it('loads a project with a config file', async () => {
-        const projectTuple = await testLoader.loadProject('ConfigAndSupport');
+        const projectTuple = await ProjectLoader.loadProject('ConfigAndSupport');
         expect(projectTuple).toBeDefined();
 
         // Check project class instance
@@ -114,12 +111,12 @@ describe('loading specific projects', async () => {
     });
 
     it('does not load a project without a properly named class file', async () => {
-        const projectTuple = await testLoader.loadProject('NoNamedFile');
+        const projectTuple = await ProjectLoader.loadProject('NoNamedFile');
         expect(projectTuple).toBeNull();
     });
 
     it('does not load a non-existent project', async () => {
-        const projectTuple = await testLoader.loadProject('NonExistent');
+        const projectTuple = await ProjectLoader.loadProject('NonExistent');
         expect(projectTuple).toBeNull();
     });
 });

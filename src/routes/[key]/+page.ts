@@ -1,7 +1,7 @@
 import type { PageLoad } from './$types';
 
 export const load = (async ({ params }) => {
-    const title = params.project_title ?? 'default';
+    const title = params.key ?? 'default';
     return {
         post: {
             title: `Title for ${title} goes here`,
