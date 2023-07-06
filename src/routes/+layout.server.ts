@@ -1,9 +1,9 @@
-import type { PageLoad } from './$types';
+import type { PageServerLoad } from './$types';
 
 import ProjectLoader from '$lib/base/ProjectLoader';
 
-export const load: PageLoad = (async () => {
+export const load: PageServerLoad = (async () => {
     const loader = new ProjectLoader();
     const projects = await loader.loadAvailableProjects();
     return { projects };
-}) satisfies PageLoad;
+}) satisfies PageServerLoad;
