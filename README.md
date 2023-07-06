@@ -2,6 +2,7 @@
 
 Todo / WIP notes:
 
+-   Config classes -> interfaces, so they can be serialized
 -   Color parameters! Three-element numeric array...
 -   Code coverage...
 -   Better error messaging for config file parsing throughout

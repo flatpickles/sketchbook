@@ -3,11 +3,6 @@ import Project from '$lib/base/Project';
 export default class DemoProject extends Project {
     testNumber = 42;
 
-    // constructor(canvas: HTMLCanvasElement) {
-    //     super(canvas);
-    //     console.log(canvas);
-    // }
-
     update() {
         console.log(this.testNumber);
 
