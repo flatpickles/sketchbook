@@ -1,49 +1,48 @@
 import Project from './Project';
 import { type ParamConfig, ParamConfigFactory } from './ParamConfig';
 
-export class ProjectProperties {
-    title = 'Untitled';
-    date: Date | undefined;
-    description: string | undefined;
-    defaultPresetName: string | undefined;
-    liveUpdates = true;
-    groups: string[] = [];
-    experimental = false;
+export interface ProjectProperties {
+    title: string;
+    date?: Date;
+    description?: string;
+    defaultPresetName?: string;
+    liveUpdates?: boolean;
+    groups?: string[];
+    experimental?: boolean;
 }
 
-export default class ProjectConfig {
-    props = new ProjectProperties();
-    params: Record<string, ParamConfig> = {};
+export const ProjectPropertiesDefaults: ProjectProperties = {
+    title: 'Untitled',
+    date: undefined,
+    description: undefined,
+    defaultPresetName: undefined,
+    liveUpdates: true,
+    groups: [],
+    experimental: false
+};
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    #rawData: any;
-
+export class ProjectConfigFactory {
     /**
-     * Create a new ProjectConfig object.
-     * @param title - optional title for the project
+     * Deserialize a project properties object from a JSON object, or create one with default values
+     * if no data is provided.
+     * @param data - object derived from imported JSON data, matching to ProjectProperties
+     * @returns a ProjectProperties object
      */
-    constructor(title?: string, data?: Record<string, unknown>) {
-        if (title) this.props.title = title;
-        if (data) this.loadProjectConfig(data);
-    }
+    public static propsFrom(data?: Record<string, unknown>): ProjectProperties {
+        // Create new properties config object and assign defaults
+        const props = {} as ProjectProperties;
+        Object.assign(props, ProjectPropertiesDefaults);
+        if (!data) return props;
 
-    /**
-     * Deserialize a project config object from a JSON object.
-     * @param data - object derived from imported JSON data, matching the ProjectConfig interface
-     * @returns a ProjectConfig object
-     */
-    public loadProjectConfig(data: Record<string, unknown>) {
-        const propKeys: string[] = Object.getOwnPropertyNames(this.props);
+        // Assign properties from data
+        const propKeys: string[] = Object.getOwnPropertyNames(props);
         for (const key of propKeys) {
             if (key === 'date') {
                 // Deserialize date as a Date object
-                if (data[key]) this.props[key] = new Date(data[key] as string);
-            } else if (key === 'params') {
-                // Ignore params here, they must be loaded with a Project object
-                continue;
+                if (data[key]) props[key] = new Date(data[key] as string);
             } else if (data[key] !== undefined) {
                 // Copy other properties directly
-                Object.defineProperty(this.props, key, {
+                Object.defineProperty(props, key, {
                     value: data[key],
                     writable: true,
                     enumerable: true,
@@ -51,15 +50,21 @@ export default class ProjectConfig {
                 });
             }
         }
-        this.#rawData = data;
+        return props;
     }
 
     /**
-     * Load in the params (and param sections) from a Project object, also
-     * referencing the already loaded raw config data, if available.
+     * Create param config objects from the properties in a Project object, also referencing
+     * config data, if provided.
      * @param project - the Project object to load params from
+     * @param data - optional config data to reference
      */
-    public loadParamsConfig(project: Project) {
+    public static paramsFrom(
+        project: Project,
+        data?: Record<string, Record<string, unknown>>
+    ): Record<string, ParamConfig> {
+        const params: Record<string, ParamConfig> = {};
+
         // Get the list of params from the Project object
         const templateProject = new Project();
         const baseProperties = Object.getOwnPropertyNames(templateProject);
@@ -73,12 +78,11 @@ export default class ProjectConfig {
             const propertyDescriptor = Object.getOwnPropertyDescriptor(project, key);
             if (!propertyDescriptor || !propertyDescriptor.value)
                 throw new Error('No param value available.');
-            const paramConfig = ParamConfigFactory.configFrom(
-                propertyDescriptor.value,
-                this.#rawData?.params[key]
-            );
+            const configData = data ? data[key] : undefined;
+            const paramConfig = ParamConfigFactory.configFrom(propertyDescriptor.value, configData);
             // Assign ParamConfig object
-            this.params[key] = paramConfig;
+            params[key] = paramConfig;
         }
+        return params;
     }
 }

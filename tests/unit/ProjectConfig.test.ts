@@ -1,13 +1,19 @@
 import { describe, it, expect } from 'vitest';
 
-import ProjectConfig from '$lib/base/ProjectConfig';
+import { ProjectConfigFactory, ProjectPropertiesDefaults } from '$lib/base/ProjectConfig';
 import ConfigAndSupport from './TestProjects/ConfigAndSupport/ConfigAndSupport';
 import { type NumberParamConfig, NumberParamConfigDefaults } from '$lib/base/ParamConfig';
 
-describe('creating config objects', () => {
-    it('creates config objects with the correct name', () => {
-        const config = new ProjectConfig('Test');
-        expect(config.props.title).toEqual('Test');
+describe('ProjectConfigFactory.propsFrom', () => {
+    it('creates default props without provided config data', () => {
+        const props = ProjectConfigFactory.propsFrom(undefined);
+        expect(props.title).toEqual(ProjectPropertiesDefaults.title);
+        expect(props.date).toEqual(ProjectPropertiesDefaults.date);
+        expect(props.description).toEqual(ProjectPropertiesDefaults.description);
+        expect(props.defaultPresetName).toEqual(ProjectPropertiesDefaults.defaultPresetName);
+        expect(props.liveUpdates).toEqual(ProjectPropertiesDefaults.liveUpdates);
+        expect(props.groups).toEqual(ProjectPropertiesDefaults.groups);
+        expect(props.experimental).toEqual(ProjectPropertiesDefaults.experimental);
     });
 
     it('creates config objects properly from config data', () => {
@@ -20,36 +26,48 @@ describe('creating config objects', () => {
             groups: ['Test'],
             experimental: true
         };
-        const config = new ProjectConfig('Test', configData);
-        expect(config.props.title).toEqual(configData.title);
-        expect(config.props.date).toEqual(new Date(configData.date));
-        expect(config.props.description).toEqual(configData.description);
-        expect(config.props.defaultPresetName).toEqual(configData.defaultPresetName);
-        expect(config.props.liveUpdates).toEqual(configData.liveUpdates);
-        expect(config.props.groups).toEqual(configData.groups);
-        expect(config.props.experimental).toEqual(configData.experimental);
+        const props = ProjectConfigFactory.propsFrom(configData);
+        expect(props.title).toEqual(configData.title);
+        expect(props.date).toEqual(new Date(configData.date));
+        expect(props.description).toEqual(configData.description);
+        expect(props.defaultPresetName).toEqual(configData.defaultPresetName);
+        expect(props.liveUpdates).toEqual(configData.liveUpdates);
+        expect(props.groups).toEqual(configData.groups);
+        expect(props.experimental).toEqual(configData.experimental);
+    });
+
+    it('creates config objects properly with a mix of defined & default props', () => {
+        const configData = {
+            title: 'Test title',
+            date: '2023-07-06'
+        };
+        const props = ProjectConfigFactory.propsFrom(configData);
+        expect(props.title).toEqual(configData.title);
+        expect(props.date).toEqual(new Date(configData.date));
+        expect(props.description).toEqual(ProjectPropertiesDefaults.description);
+        expect(props.defaultPresetName).toEqual(ProjectPropertiesDefaults.defaultPresetName);
+        expect(props.liveUpdates).toEqual(ProjectPropertiesDefaults.liveUpdates);
+        expect(props.groups).toEqual(ProjectPropertiesDefaults.groups);
+        expect(props.experimental).toEqual(ProjectPropertiesDefaults.experimental);
     });
 });
 
-describe('loading params', () => {
+describe('ProjectConfigFactory.propsFrom', () => {
     it('loads params properly from a project object with param config data', () => {
         // Initialize with sparse config data
         const testProject = new ConfigAndSupport();
-        const testConfig = new ProjectConfig('Test', {
-            params: {
-                testNumber: {
-                    min: 1,
-                    max: 5
-                }
+        const paramData = {
+            testNumber: {
+                min: 1,
+                max: 5
             }
-        });
-        expect(testConfig.params).toEqual({});
+        };
 
         // Load parameters & check that they were loaded properly
-        testConfig.loadParamsConfig(testProject);
-        expect(testConfig.params['testNumber']).toBeDefined();
-        expect(testConfig.params['testNumber'].type).toEqual('number');
-        const numberParam = testConfig.params['testNumber'] as NumberParamConfig;
+        const params = ProjectConfigFactory.paramsFrom(testProject, paramData);
+        expect(params['testNumber']).toBeDefined();
+        expect(params['testNumber'].type).toEqual('number');
+        const numberParam = params['testNumber'] as NumberParamConfig;
         expect(numberParam.min).toEqual(1);
         expect(numberParam.max).toEqual(5);
 
@@ -64,14 +82,12 @@ describe('loading params', () => {
     it('loads params properly from a project object with no param config data', () => {
         // Initialize with no config data
         const testProject = new ConfigAndSupport();
-        const testConfig = new ProjectConfig('Test');
-        expect(testConfig.params).toEqual({});
 
         // Load parameters & check default values
-        testConfig.loadParamsConfig(testProject);
-        expect(testConfig.params['testNumber']).toBeDefined();
-        expect(testConfig.params['testNumber'].type).toEqual('number');
-        const numberParam = testConfig.params['testNumber'] as NumberParamConfig;
+        const params = ProjectConfigFactory.paramsFrom(testProject);
+        expect(params['testNumber']).toBeDefined();
+        expect(params['testNumber'].type).toEqual('number');
+        const numberParam = params['testNumber'] as NumberParamConfig;
         expect(numberParam.name).toEqual(NumberParamConfigDefaults.name);
         expect(numberParam.min).toEqual(NumberParamConfigDefaults.min);
         expect(numberParam.max).toEqual(NumberParamConfigDefaults.max);

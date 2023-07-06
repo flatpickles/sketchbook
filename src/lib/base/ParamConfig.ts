@@ -1,5 +1,10 @@
+export enum ParamType {
+    Number = 'number',
+    Boolean = 'boolean'
+}
+
 export interface ParamConfig {
-    type: 'number' | 'boolean';
+    type: ParamType;
     name: string;
     section?: string;
 }
@@ -16,7 +21,7 @@ export interface NumberParamConfig extends ParamConfig {
 }
 
 export const NumberParamConfigDefaults: NumberParamConfig = {
-    type: 'number',
+    type: ParamType.Number,
     name: 'Untitled Number',
     section: undefined,
 
@@ -36,7 +41,7 @@ export interface BooleanParamConfig extends ParamConfig {
 }
 
 export const BooleanParamConfigDefaults: BooleanParamConfig = {
-    type: 'boolean',
+    type: ParamType.Boolean,
     name: 'Untitled Boolean',
     section: undefined,
 
@@ -49,6 +54,14 @@ export const BooleanParamConfigDefaults: BooleanParamConfig = {
 /* Factory */
 
 export class ParamConfigFactory {
+    /**
+     * Create a config object from a value and an optional config data object (via JSON).
+     * @param value - the value to create a config for
+     * @param data - optional config data to reference
+     * @returns a config object
+     * @throws if the value type is unsupported
+     * @throws if the config data contains unsupported fields
+     */
     public static configFrom(value: unknown, data?: Record<string, unknown>): ParamConfig {
         // Create the proper type for the value and assign defaults
         let param: ParamConfig;

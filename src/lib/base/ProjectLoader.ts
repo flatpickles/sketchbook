@@ -1,10 +1,16 @@
 import { importProjectClassFiles, importProjectConfigFiles } from './FileProviders';
 import type Project from './Project';
-import ProjectConfig from './ProjectConfig';
+import {
+    type ProjectProperties,
+    ProjectConfigFactory,
+    ProjectPropertiesDefaults
+} from './ProjectConfig';
+import type { ParamConfig } from './ParamConfig';
 
 export interface ProjectTuple {
     project: Project;
-    config: ProjectConfig;
+    props: ProjectProperties;
+    params: Record<string, ParamConfig>;
 }
 
 export default class ProjectLoader {
@@ -12,15 +18,23 @@ export default class ProjectLoader {
     #projectConfigFiles = importProjectConfigFiles();
 
     /**
-     * Load a collection of available projects. The returned ProjectConfig objects will
-     * not be fully hydrated with project parameters, as the project class file must be
-     * loaded to determine these.
-     * @returns A map of project keys to ProjectConfig objects.
+     * Load a collection of available projects as a map of project keys to ProjectConfig objects.
+     * @returns A map of project keys to ProjectProperties objects.
      */
-    public async loadAvailableProjects(): Promise<Record<string, ProjectConfig>> {
-        const availableProjects: Record<string, ProjectConfig> = {};
+    public async loadAvailableProjects(): Promise<Record<string, ProjectProperties>> {
+        // Collect configuration data from config files, where available
+        const projectConfigurations: Record<string, Record<string, unknown>> = {};
+        for (const path in this.#projectConfigFiles) {
+            // Find the project key from the directory name
+            const projectKey = ProjectLoader.#keyFromConfigPath(path);
 
-        // Collect projects from class files
+            // Deserialize the config file into a ProjectConfig object
+            const module = await this.#projectConfigFiles[path]();
+            projectConfigurations[projectKey] = module as Record<string, unknown>;
+        }
+
+        // Collect projects from class files and assign config data if any
+        const availableProjects: Record<string, ProjectProperties> = {};
         for (const path in this.#projectClassFiles) {
             // Find the project key from the file name
             const projectKey = ProjectLoader.#keyFromProjectPath(path);
@@ -29,31 +43,24 @@ export default class ProjectLoader {
             const pathComponents = path.split('/');
             if (projectKey && pathComponents.indexOf(projectKey) < 0) continue;
 
-            // Create a new config for this project
-            if (availableProjects[projectKey]) throw new Error('Loader: Duplicate project key.');
-            availableProjects[projectKey] = new ProjectConfig(projectKey);
+            // Create a new config for this project if it doesn't already exist
+            availableProjects[projectKey] = ProjectConfigFactory.propsFrom(
+                projectConfigurations[projectKey]
+            );
+
+            // Assign the project title if unset
+            if (availableProjects[projectKey].title === ProjectPropertiesDefaults.title) {
+                availableProjects[projectKey].title = projectKey;
+            }
         }
 
-        // Collect projects from config files
-        for (const path in this.#projectConfigFiles) {
-            // Find the project key from the directory name
-            const projectKey = ProjectLoader.#keyFromConfigPath(path);
-
-            // Ignore config files without an associated project class file
-            if (!availableProjects[projectKey]) continue;
-
-            // Deserialize the config file into a ProjectConfig object
-            const module = await this.#projectConfigFiles[path]();
-            availableProjects[projectKey].loadProjectConfig(module as Record<string, unknown>);
-        }
         return availableProjects;
     }
 
     /**
-     * Fully load the project corresponding to a particular project key. Can be called even when
-     * available projects have not yet been loaded.
+     * Fully load the project corresponding to a particular project key.
      * @param key - the project key.
-     * @returns A tuple containing the Project object and a fully hydrated ProjectConfig object.
+     * @returns a ProjectTuple object containing the project, its properties, and its params.
      */
     public async loadProject(
         key: string,
@@ -70,23 +77,31 @@ export default class ProjectLoader {
         };
         const project = new classModule.default(displayCanvas);
 
-        // Create config with config file (if any)
+        // Create props & params with project and config file (if any)
         const configFilePath = Object.keys(this.#projectConfigFiles).filter((path) => {
             return ProjectLoader.#keyFromConfigPath(path) === key;
         })[0];
-        const config = new ProjectConfig(key);
-        if (configFilePath) {
-            const configModule = await this.#projectConfigFiles[configFilePath]();
-            config.loadProjectConfig(configModule as Record<string, unknown>);
-        }
+        const configModule = configFilePath
+            ? await this.#projectConfigFiles[configFilePath]()
+            : undefined;
+        const props = ProjectConfigFactory.propsFrom(
+            configModule as Record<string, unknown> | undefined
+        );
+        const params = ProjectConfigFactory.paramsFrom(
+            project,
+            configModule as Record<string, Record<string, unknown>> | undefined
+        );
 
-        // Update config with params in project
-        config.loadParamsConfig(project);
+        // Assign the project title if unset
+        if (props.title === ProjectPropertiesDefaults.title) {
+            props.title = key;
+        }
 
         // Return tuple
         return {
             project,
-            config
+            props,
+            params
         };
     }
 

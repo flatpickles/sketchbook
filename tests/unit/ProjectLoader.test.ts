@@ -2,7 +2,7 @@
 
 import { describe, it, expect, vi } from 'vitest';
 
-import ProjectConfig from '$lib/base/ProjectConfig';
+import { ProjectPropertiesDefaults } from '$lib/base/ProjectConfig';
 import ProjectLoader from '$lib/base/ProjectLoader';
 import * as fileProviders from '$lib/base/FileProviders';
 import Project from '$lib/base/Project';
@@ -17,9 +17,8 @@ vi.spyOn(fileProviders, 'importProjectConfigFiles').mockReturnValue(testConfigs)
 
 // Initialize some useful stuff
 const testLoader: ProjectLoader = new ProjectLoader();
-const defaultConfig = new ProjectConfig('Defaults');
 
-describe('loading project configs', async () => {
+describe('loading available projects', async () => {
     const availableProjects = await testLoader.loadAvailableProjects();
 
     it('has correct number of available projects', () => {
@@ -29,24 +28,24 @@ describe('loading project configs', async () => {
     it('correctly configures a project without a config file', () => {
         const project = availableProjects['NoConfig'];
         expect(project).toBeDefined();
-        expect(project?.props.title).toEqual('NoConfig');
-        expect(project?.props.date).toEqual(defaultConfig.props.date);
-        expect(project?.props.description).toEqual(defaultConfig.props.description);
-        expect(project?.props.liveUpdates).toEqual(defaultConfig.props.liveUpdates);
-        expect(project?.props.groups).toEqual(defaultConfig.props.groups);
-        expect(project?.props.experimental).toEqual(defaultConfig.props.experimental);
+        expect(project?.title).toEqual('NoConfig');
+        expect(project?.date).toEqual(ProjectPropertiesDefaults.date);
+        expect(project?.description).toEqual(ProjectPropertiesDefaults.description);
+        expect(project?.liveUpdates).toEqual(ProjectPropertiesDefaults.liveUpdates);
+        expect(project?.groups).toEqual(ProjectPropertiesDefaults.groups);
+        expect(project?.experimental).toEqual(ProjectPropertiesDefaults.experimental);
     });
 
     it('correctly configures a project with a config file', () => {
         const project = availableProjects['ConfigAndSupport'];
         expect(project).toBeDefined();
-        expect(project?.props.title).toEqual('Config and Support');
-        expect(project?.props.date).toEqual(new Date('2023-06-27'));
-        expect(project?.props.description).toContain('config file');
-        expect(project?.props.liveUpdates).toEqual(false);
-        expect(project?.props.groups).toContain('Test');
-        expect(project?.props.groups.length).toEqual(1);
-        expect(project?.props.experimental).toEqual(true);
+        expect(project?.title).toEqual('Config and Support');
+        expect(project?.date).toEqual(new Date('2023-06-27'));
+        expect(project?.description).toContain('config file');
+        expect(project?.liveUpdates).toEqual(false);
+        expect(project?.groups).toContain('Test');
+        expect(project?.groups?.length).toEqual(1);
+        expect(project?.experimental).toEqual(true);
     });
 
     it('does not import a project without a properly named class file', () => {
@@ -55,23 +54,7 @@ describe('loading project configs', async () => {
     });
 });
 
-describe('loading projects', async () => {
-    const availableProjects = await testLoader.loadAvailableProjects();
-
-    it('does not load parameter configs until prompted', () => {
-        for (const project of Object.values(availableProjects)) {
-            expect(Object.values(project.params).length).toEqual(0);
-        }
-    });
-
-    it('does not change available project configs after loading a project', async () => {
-        await testLoader.loadProject('NoConfig');
-
-        for (const project of Object.values(availableProjects)) {
-            expect(Object.values(project.params).length).toEqual(0);
-        }
-    });
-
+describe('loading specific projects', async () => {
     it('loads a project with no config file', async () => {
         const projectTuple = await testLoader.loadProject('NoConfig');
         expect(projectTuple).toBeDefined();
@@ -83,17 +66,17 @@ describe('loading projects', async () => {
         expect(project).toBeInstanceOf(NoConfig);
 
         // Check project config
-        const projectProps = projectTuple!.config.props;
+        const projectProps = projectTuple!.props;
         expect(projectProps).toBeDefined();
         expect(projectProps?.title).toEqual('NoConfig');
-        expect(projectProps?.date).toEqual(defaultConfig.props.date);
-        expect(projectProps?.description).toEqual(defaultConfig.props.description);
-        expect(projectProps?.liveUpdates).toEqual(defaultConfig.props.liveUpdates);
-        expect(projectProps?.groups).toEqual(defaultConfig.props.groups);
-        expect(projectProps?.experimental).toEqual(defaultConfig.props.experimental);
+        expect(projectProps?.date).toEqual(ProjectPropertiesDefaults.date);
+        expect(projectProps?.description).toEqual(ProjectPropertiesDefaults.description);
+        expect(projectProps?.liveUpdates).toEqual(ProjectPropertiesDefaults.liveUpdates);
+        expect(projectProps?.groups).toEqual(ProjectPropertiesDefaults.groups);
+        expect(projectProps?.experimental).toEqual(ProjectPropertiesDefaults.experimental);
 
         // Check params config
-        const paramsConfig = projectTuple!.config.params;
+        const paramsConfig = projectTuple!.params;
         expect(paramsConfig).toBeDefined();
         expect(Object.keys(paramsConfig!).length).toEqual(1);
         expect(paramsConfig!['testNumber']).toBeDefined();
@@ -111,18 +94,18 @@ describe('loading projects', async () => {
         expect(project).toBeInstanceOf(ConfigAndSupport);
 
         // Check project config
-        const projectProps = projectTuple!.config.props;
+        const projectProps = projectTuple!.props;
         expect(projectProps).toBeDefined();
         expect(projectProps?.title).toEqual('Config and Support');
         expect(projectProps?.date).toEqual(new Date('2023-06-27'));
         expect(projectProps?.description).toContain('config file');
         expect(projectProps?.liveUpdates).toEqual(false);
         expect(projectProps?.groups).toContain('Test');
-        expect(projectProps?.groups.length).toEqual(1);
+        expect(projectProps?.groups?.length).toEqual(1);
         expect(projectProps?.experimental).toEqual(true);
 
         // Check params config
-        const paramsConfig = projectTuple!.config.params;
+        const paramsConfig = projectTuple!.params;
         expect(paramsConfig).toBeDefined();
         expect(Object.keys(paramsConfig!).length).toEqual(1);
         expect(paramsConfig!['testNumber']).toBeDefined();
@@ -130,5 +113,13 @@ describe('loading projects', async () => {
         expect(paramsConfig!['testUnusedParam']).toBeUndefined();
     });
 
-    // todo check loading non-existent projects
+    it('does not load a project without a properly named class file', async () => {
+        const projectTuple = await testLoader.loadProject('NoNamedFile');
+        expect(projectTuple).toBeNull();
+    });
+
+    it('does not load a non-existent project', async () => {
+        const projectTuple = await testLoader.loadProject('NonExistent');
+        expect(projectTuple).toBeNull();
+    });
 });
