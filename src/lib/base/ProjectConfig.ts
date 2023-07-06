@@ -1,5 +1,5 @@
 import Project from './Project';
-import { ParamConfig } from './ParamConfig';
+import { type ParamConfig, ParamConfigFactory } from './ParamConfig';
 
 export class ProjectProperties {
     title = 'Untitled';
@@ -73,7 +73,7 @@ export default class ProjectConfig {
             const propertyDescriptor = Object.getOwnPropertyDescriptor(project, key);
             if (!propertyDescriptor || !propertyDescriptor.value)
                 throw new Error('No param value available.');
-            const paramConfig = ParamConfig.from(
+            const paramConfig = ParamConfigFactory.configFrom(
                 propertyDescriptor.value,
                 this.#rawData?.params[key]
             );

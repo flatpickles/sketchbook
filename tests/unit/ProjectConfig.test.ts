@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 
 import ProjectConfig from '$lib/base/ProjectConfig';
 import ConfigAndSupport from './TestProjects/ConfigAndSupport/ConfigAndSupport';
-import { NumberParamConfig } from '$lib/base/ParamConfig';
+import { type NumberParamConfig, NumberParamConfigDefaults } from '$lib/base/ParamConfig';
 
 describe('creating config objects', () => {
     it('creates config objects with the correct name', () => {
@@ -48,18 +48,17 @@ describe('loading params', () => {
         // Load parameters & check that they were loaded properly
         testConfig.loadParamsConfig(testProject);
         expect(testConfig.params['testNumber']).toBeDefined();
-        expect(testConfig.params['testNumber']).toBeInstanceOf(NumberParamConfig);
+        expect(testConfig.params['testNumber'].type).toEqual('number');
         const numberParam = testConfig.params['testNumber'] as NumberParamConfig;
         expect(numberParam.min).toEqual(1);
         expect(numberParam.max).toEqual(5);
 
         // Check default values
-        const defaultNumber = new NumberParamConfig();
-        expect(numberParam.name).toEqual(defaultNumber.name);
-        expect(numberParam.step).toEqual(defaultNumber.step);
-        expect(numberParam.liveUpdates).toEqual(defaultNumber.liveUpdates);
-        expect(numberParam.style).toEqual(defaultNumber.style);
-        expect(numberParam.options).toEqual(defaultNumber.options);
+        expect(numberParam.name).toEqual(NumberParamConfigDefaults.name);
+        expect(numberParam.step).toEqual(NumberParamConfigDefaults.step);
+        expect(numberParam.liveUpdates).toEqual(NumberParamConfigDefaults.liveUpdates);
+        expect(numberParam.style).toEqual(NumberParamConfigDefaults.style);
+        expect(numberParam.options).toEqual(NumberParamConfigDefaults.options);
     });
 
     it('loads params properly from a project object with no param config data', () => {
@@ -71,15 +70,14 @@ describe('loading params', () => {
         // Load parameters & check default values
         testConfig.loadParamsConfig(testProject);
         expect(testConfig.params['testNumber']).toBeDefined();
-        expect(testConfig.params['testNumber']).toBeInstanceOf(NumberParamConfig);
+        expect(testConfig.params['testNumber'].type).toEqual('number');
         const numberParam = testConfig.params['testNumber'] as NumberParamConfig;
-        const defaultNumber = new NumberParamConfig();
-        expect(numberParam.name).toEqual(defaultNumber.name);
-        expect(numberParam.min).toEqual(defaultNumber.min);
-        expect(numberParam.max).toEqual(defaultNumber.max);
-        expect(numberParam.step).toEqual(defaultNumber.step);
-        expect(numberParam.liveUpdates).toEqual(defaultNumber.liveUpdates);
-        expect(numberParam.style).toEqual(defaultNumber.style);
-        expect(numberParam.options).toEqual(defaultNumber.options);
+        expect(numberParam.name).toEqual(NumberParamConfigDefaults.name);
+        expect(numberParam.min).toEqual(NumberParamConfigDefaults.min);
+        expect(numberParam.max).toEqual(NumberParamConfigDefaults.max);
+        expect(numberParam.step).toEqual(NumberParamConfigDefaults.step);
+        expect(numberParam.liveUpdates).toEqual(NumberParamConfigDefaults.liveUpdates);
+        expect(numberParam.style).toEqual(NumberParamConfigDefaults.style);
+        expect(numberParam.options).toEqual(NumberParamConfigDefaults.options);
     });
 });

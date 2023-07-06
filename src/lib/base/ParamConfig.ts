@@ -1,18 +1,63 @@
-export class ParamConfig {
-    name = 'Untitled';
-    section: string | undefined;
+export interface ParamConfig {
+    type: 'number' | 'boolean';
+    name: string;
+    section?: string;
+}
 
-    constructor(name?: string) {
-        if (name) this.name = name;
-    }
+/* Number param config */
 
-    public static from(value: unknown, data?: Record<string, unknown>): ParamConfig {
-        // Create the proper type for the value
+export interface NumberParamConfig extends ParamConfig {
+    min: number;
+    max: number;
+    step: number;
+    liveUpdates: boolean;
+    style: 'slider' | 'input';
+    options?: string[];
+}
+
+export const NumberParamConfigDefaults: NumberParamConfig = {
+    type: 'number',
+    name: 'Untitled Number',
+    section: undefined,
+
+    min: 0,
+    max: 1,
+    step: 0.01,
+    liveUpdates: true,
+    style: 'slider',
+    options: undefined
+} as const;
+
+/* Boolean param config */
+
+export interface BooleanParamConfig extends ParamConfig {
+    enables?: string[];
+    disables?: string[]; // todo - implement?
+}
+
+export const BooleanParamConfigDefaults: BooleanParamConfig = {
+    type: 'boolean',
+    name: 'Untitled Boolean',
+    section: undefined,
+
+    enables: undefined,
+    disables: undefined
+} as const;
+
+// todo: other param types
+
+/* Factory */
+
+export class ParamConfigFactory {
+    public static configFrom(value: unknown, data?: Record<string, unknown>): ParamConfig {
+        // Create the proper type for the value and assign defaults
         let param: ParamConfig;
         if (typeof value === 'number') {
-            param = new NumberParamConfig();
+            param = {} as NumberParamConfig;
+            Object.assign(param, NumberParamConfigDefaults);
         } else if (typeof value === 'boolean') {
-            param = new BooleanParamConfig();
+            param = {} as BooleanParamConfig;
+            Object.assign(param, BooleanParamConfigDefaults);
         } else {
             throw new Error('Unsupported param type');
         }
@@ -34,18 +79,3 @@ export class ParamConfig {
         return param;
     }
 }
-
-export class NumberParamConfig extends ParamConfig {
-    min = 0;
-    max = 1;
-    step = 0.01;
-    liveUpdates = true;
-    style = 'slider'; // todo: enum
-    options: string[] = [];
-}
-
-export class BooleanParamConfig extends ParamConfig {
-    enables: string[] = [];
-}
-
-// todo: other param types

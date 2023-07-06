@@ -5,7 +5,6 @@ import { describe, it, expect, vi } from 'vitest';
 import ProjectConfig from '$lib/base/ProjectConfig';
 import ProjectLoader from '$lib/base/ProjectLoader';
 import * as fileProviders from '$lib/base/FileProviders';
-import { NumberParamConfig } from '$lib/base/ParamConfig';
 import Project from '$lib/base/Project';
 import ConfigAndSupport from './TestProjects/ConfigAndSupport/ConfigAndSupport';
 import NoConfig from './TestProjects/NoConfig/NoConfig';
@@ -98,7 +97,7 @@ describe('loading projects', async () => {
         expect(paramsConfig).toBeDefined();
         expect(Object.keys(paramsConfig!).length).toEqual(1);
         expect(paramsConfig!['testNumber']).toBeDefined();
-        expect(paramsConfig!['testNumber']).toBeInstanceOf(NumberParamConfig);
+        expect(paramsConfig!['testNumber'].type).toEqual('number');
     });
 
     it('loads a project with a config file', async () => {
@@ -127,7 +126,7 @@ describe('loading projects', async () => {
         expect(paramsConfig).toBeDefined();
         expect(Object.keys(paramsConfig!).length).toEqual(1);
         expect(paramsConfig!['testNumber']).toBeDefined();
-        expect(paramsConfig!['testNumber']).toBeInstanceOf(NumberParamConfig);
+        expect(paramsConfig!['testNumber'].type).toEqual('number');
         expect(paramsConfig!['testUnusedParam']).toBeUndefined();
     });
 
