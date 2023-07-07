@@ -10,8 +10,6 @@
     onMount(() => {
         data.project.canvas = canvasElement;
         data.project.init();
-
-        // todo: move this...
         data.project.update();
     });
 </script>
