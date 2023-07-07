@@ -1,26 +1,31 @@
 <script lang="ts">
-    import type { ProjectTuple } from '$lib/base/ProjectLoader';
-    import Panel from '$lib/components/Panel.svelte';
-    import { onMount } from 'svelte';
     import type { PageData } from './$types';
+    import ProjectDetailPanel from '$lib/components/ProjectDetailPanel.svelte';
 
-    export let data: ProjectTuple;
+    export let data: PageData;
     let canvasElement: HTMLCanvasElement;
 
-    onMount(() => {
-        data.project.canvas = canvasElement;
-        data.project.init();
-        data.project.update();
-    });
+    // Initialize and update the project when loading & changing projects
+    $: {
+        if (canvasElement) {
+            data.project.canvas = canvasElement;
+            data.project.init();
+            data.project.update();
+        }
+    }
 </script>
 
-<canvas bind:this={canvasElement} />
+<svelte:head>
+    <title>{data.props.title}</title>
+</svelte:head>
 
-<Panel>
-    <h1>{data.props.title}</h1>
-    <ul>
-        {#each Object.values(data.params) as param}
-            <li>{param.name}</li>
-        {/each}
-    </ul>
-</Panel>
+<canvas class="main-canvas" bind:this={canvasElement} />
+
+<ProjectDetailPanel projectTuple={data} />
+
+<style lang="scss">
+    .main-canvas {
+        width: 100%;
+        height: 100%;
+    }
+</style>

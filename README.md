@@ -10,6 +10,8 @@ Todo / WIP notes:
 -   Validate canvas-sketch usage with current spec
 -   Read through old notes and absorb in design doc
 
+-   When changing param defaults (assigned in file) what happens? Especially with local storage... param default vals will get confusing...
+
 -   Param UI
     -   Option to reset to default/preset value
     -   Lock parameter value (?)

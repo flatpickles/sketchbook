@@ -1,17 +1,11 @@
 <script lang="ts">
-    import Panel from '$lib/components/Panel.svelte';
-
+    import 'ress';
     import type { PageData } from './$types';
-    import type { ProjectProperties } from '$lib/base/ProjectConfig';
+    import ProjectListPanel from '$lib/components/ProjectListPanel.svelte';
 
     export let data: PageData;
-    let projects: ProjectProperties[] = Object.values(data.projects);
 </script>
 
-<Panel>
-    {#each projects as props}
-        {props.title}
-    {/each}
-</Panel>
+<ProjectListPanel projects={data.projects} />
 
 <slot />

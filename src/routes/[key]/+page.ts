@@ -3,13 +3,15 @@ import { error } from '@sveltejs/kit';
 
 import ProjectLoader from '$lib/base/ProjectLoader';
 
-export const load = (async ({ params, parent }) => {
-    // Collect details & validate
+export const load = (async ({ params }) => {
     const projectKey = params.key;
-    const { projects } = await parent();
     const projectTuple = await ProjectLoader.loadProject(projectKey);
-    if (!projectKey || !projects[projectKey] || !projectTuple) {
+    if (!projectKey || !projectTuple) {
         throw error(404, `No project named "${projectKey}" exists!`);
     }
-    return projectTuple;
+    return {
+        project: projectTuple.project,
+        props: projectTuple.props,
+        params: projectTuple.params
+    };
 }) satisfies PageLoad;
