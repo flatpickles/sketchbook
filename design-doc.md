@@ -36,7 +36,7 @@ Project directories may also contain two other Sketchbook particulars: a `config
 
 ### Project Files
 
-Exported project classes must be subclasses of the `Project` class, defined in `src/lib/base/Project.ts`. The `Project` class definition is extremely simple, including only a constructor (passed a `HTMLCanvasElement` reference) and an `update` method. Your project can use the canvas reference for drawing, and expect that `update` will be called whenever any parameters are changed.
+Exported project classes must be subclasses of the `Project` class, defined in `src/lib/base/Project.ts`. The `Project` class definition is extremely simple, including `init` and `update` methods for you to override, and a `canvas` reference that you can use for drawing. Projects may be instantiated before the DOM is fully loaded, but `canvas` will be defined and ready to use by the time `init` is called. `update` is called whenever any parameters are changed.
 
 Speaking of parameters, they are simply defined as instance properties; Sketchbook will create user-adjustable parameter UIs for any instance properties that it sees defined on each project class. This means that if you're creating instance properties for internal reference, you must declare them as [private class members](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/Private_class_fields).
 

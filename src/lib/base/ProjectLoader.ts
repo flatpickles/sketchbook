@@ -15,7 +15,7 @@ export interface ProjectTuple {
 
 type ProjectModule = {
     // Matching the Project constructor...
-    default: new (canvas: HTMLCanvasElement | undefined) => Project;
+    default: new (canvas?: HTMLCanvasElement) => Project;
 };
 
 export default class ProjectLoader {
@@ -68,10 +68,7 @@ export default class ProjectLoader {
      * @param key - the project key.
      * @returns a ProjectTuple object containing the project, its properties, and its params.
      */
-    public static async loadProject(
-        key: string,
-        displayCanvas?: HTMLCanvasElement
-    ): Promise<ProjectTuple | null> {
+    public static async loadProject(key: string): Promise<ProjectTuple | null> {
         // Load files
         const projectClassFiles = importProjectClassFiles();
         const projectConfigFiles = importProjectConfigFiles();
@@ -81,8 +78,8 @@ export default class ProjectLoader {
             return ProjectLoader.#keyFromProjectPath(path) === key;
         })[0];
         if (!classFilePath) return null;
-        const classModule = (await projectClassFiles[classFilePath]()) as ProjectModule;
-        const project = new classModule.default(displayCanvas);
+        const module = (await projectClassFiles[classFilePath]()) as ProjectModule;
+        const project = new module.default();
 
         // Create props & params with project and config file (if any)
         const configFilePath = Object.keys(projectConfigFiles).filter((path) => {
