@@ -88,7 +88,7 @@ describe('ProjectConfigFactory.propsFrom', () => {
         expect(params['testNumber']).toBeDefined();
         expect(params['testNumber'].type).toEqual('number');
         const numberParam = params['testNumber'] as NumberParamConfig;
-        expect(numberParam.name).toEqual(NumberParamConfigDefaults.name);
+        expect(numberParam.name).toEqual('testNumber');
         expect(numberParam.min).toEqual(NumberParamConfigDefaults.min);
         expect(numberParam.max).toEqual(NumberParamConfigDefaults.max);
         expect(numberParam.step).toEqual(NumberParamConfigDefaults.step);

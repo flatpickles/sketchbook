@@ -77,9 +77,13 @@ export class ProjectConfigFactory {
             // Derive a ParamConfig object
             const propertyDescriptor = Object.getOwnPropertyDescriptor(project, key);
             if (!propertyDescriptor || !propertyDescriptor.value)
-                throw new Error('No param value available.');
+                throw new Error('No param value available: ' + key);
             const configData = data ? data[key] : undefined;
-            const paramConfig = ParamConfigFactory.configFrom(propertyDescriptor.value, configData);
+            const paramConfig = ParamConfigFactory.configFrom(
+                propertyDescriptor.value,
+                key,
+                configData
+            );
             // Assign ParamConfig object
             params[key] = paramConfig;
         }

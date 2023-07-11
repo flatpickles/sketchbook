@@ -16,8 +16,9 @@ describe('ParamConfigFactory', () => {
     });
 
     it('assigns config fields to the param', () => {
-        const param = ParamConfigFactory.configFrom(3, { min: 1, max: 5 });
+        const param = ParamConfigFactory.configFrom(3, 'Unused', { name: 'Name', min: 1, max: 5 });
         const numberParam = param as NumberParamConfig;
+        expect(numberParam.name).toEqual('Name');
         expect(numberParam.min).toEqual(1);
         expect(numberParam.max).toEqual(5);
         expect(numberParam.step).toEqual(NumberParamConfigDefaults.step);
@@ -27,7 +28,15 @@ describe('ParamConfigFactory', () => {
 
     it('rejects unsupported config fields', () => {
         expect(() => {
-            ParamConfigFactory.configFrom(3, { bad: 'field' });
+            ParamConfigFactory.configFrom(3, 'param', { bad: 'field' });
         }).toThrowError('Unsupported param config field: bad');
+    });
+
+    it('assigns default names properly without config', () => {
+        const param1 = ParamConfigFactory.configFrom(3);
+        expect(param1.name).toEqual('Untitled Param');
+
+        const param2 = ParamConfigFactory.configFrom(3, 'Default Name');
+        expect(param2.name).toEqual('Default Name');
     });
 });

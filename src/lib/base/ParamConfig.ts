@@ -57,12 +57,17 @@ export class ParamConfigFactory {
     /**
      * Create a config object from a value and an optional config data object (via JSON).
      * @param value - the value to create a config for
+     * @param fallbackName - the name to use if no config data is provided
      * @param data - optional config data to reference
      * @returns a config object
      * @throws if the value type is unsupported
      * @throws if the config data contains unsupported fields
      */
-    public static configFrom(value: unknown, data?: Record<string, unknown>): ParamConfig {
+    public static configFrom(
+        value: unknown,
+        fallbackName = 'Untitled Param',
+        data?: Record<string, unknown>
+    ): ParamConfig {
         // Create the proper type for the value and assign defaults
         let param: ParamConfig;
         if (typeof value === 'number') {
@@ -86,6 +91,9 @@ export class ParamConfigFactory {
             }
             // Assign the config fields to the param
             Object.assign(param, data);
+        } else {
+            // If no config exists, assign the value as the default
+            param.name = fallbackName;
         }
 
         // Return the generated param

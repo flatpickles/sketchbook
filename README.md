@@ -5,6 +5,9 @@ Todo / WIP notes:
 -   Color parameters! Three-element numeric array...
 -   Code coverage...
 -   Better error messaging for config file parsing throughout
+-   "trigger" mode for parameter updates - wait until button click
+-   "animated" mode for sketches
+-   reset mechanism - to clear canvases automatically
 
 -   Build basic panels & UI for architecture validation
 -   Validate canvas-sketch usage with current spec
