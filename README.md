@@ -7,7 +7,6 @@ Todo / WIP notes:
 -   Better error messaging for config file parsing throughout
 -   "trigger" mode for parameter updates - wait until button click
 -   "animated" mode for sketches
--   reset mechanism - to clear canvases automatically
 
 -   Build basic panels & UI for architecture validation
 -   Validate canvas-sketch usage with current spec
