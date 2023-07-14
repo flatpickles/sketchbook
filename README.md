@@ -24,6 +24,7 @@ Todo / WIP notes:
 MVP stretch goals:
 
 -   Link previews
+-   Webcam & microphone inputs
 -   API:
     -   Project list (names, dates, metadata)
     -   Link preview images
@@ -33,7 +34,6 @@ MVP stretch goals:
     -   Project switching
     -   Min/max range slider
     -   Undo/redo for parameter changes
--   Webcam & microphone inputs
 
 Long-term goals:
 
