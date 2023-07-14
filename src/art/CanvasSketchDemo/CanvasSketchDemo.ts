@@ -18,7 +18,7 @@ export default class CanvasSketchDemo extends Project {
             context.font = 'bold 24px Helvetica';
             context.textAlign = 'left';
             context.textBaseline = 'top';
-            context.fillText('Hello Canvas Sketch', 0, 0);
+            context.fillText('Hello Canvas Sketch', 400, 200);
         };
     };
 
@@ -31,5 +31,14 @@ export default class CanvasSketchDemo extends Project {
 
     update() {
         this.#sketchManager?.render();
+    }
+
+    destroy() {
+        super.destroy();
+        this.#sketchManager?.unload();
+
+        // Even after unload, sketchManager will clear the canvas on resize
+        // todo: canvas-sketch PR to fix this. For now, just clear the canvas
+        this.#sketchManager.props.canvas = null;
     }
 }

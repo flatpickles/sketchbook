@@ -1,5 +1,6 @@
 <script lang="ts">
     import type Project from '$lib/base/Project';
+    import { onMount } from 'svelte';
 
     export let project: Project;
     let previousProject: Project | undefined;
@@ -17,13 +18,30 @@
             project.update();
         }
     }
+
+    onMount(() => {
+        // Update the canvas size after the DOM has loaded, and whenever the window is resized
+        setTimeout(setCanvasSize, 0);
+        window.addEventListener('resize', () => {
+            setCanvasSize();
+            project.update();
+        });
+    });
+
+    function setCanvasSize() {
+        // todo: optional 2x resolution
+        // todo: tests for canvas sizing behavior?
+        canvasElement.width = canvasElement.clientWidth * 2;
+        canvasElement.height = canvasElement.clientHeight * 2;
+    }
 </script>
 
 <canvas class="main-canvas" data-testid="main-canvas" bind:this={canvasElement} />
 
 <style lang="scss">
     .main-canvas {
-        width: 100%;
-        height: 100%;
+        display: block;
+        width: 100vw;
+        height: 100vh;
     }
 </style>
