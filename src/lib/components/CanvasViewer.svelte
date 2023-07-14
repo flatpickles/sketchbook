@@ -19,7 +19,7 @@
     }
 </script>
 
-<canvas class="main-canvas" bind:this={canvasElement} />
+<canvas class="main-canvas" data-testid="main-canvas" bind:this={canvasElement} />
 
 <style lang="scss">
     .main-canvas {
