@@ -6,15 +6,14 @@
     .panel-container {
         display: flex;
         flex-direction: column;
-        justify-content: center;
-        align-items: center;
+        justify-content: top;
 
-        padding: 1rem;
-        max-width: 10rem;
-        width: 100%;
+        height: 100%;
+        width: $panel-width;
+        padding: $panel-content-padding;
+        background-color: $panel-bg-color;
 
-        background-color: #f0f;
-        border-radius: 1rem;
-        box-shadow: 0 0 1rem #777;
+        border-radius: $panel-border-radius;
+        box-shadow: $panel-shadow;
     }
 </style>
