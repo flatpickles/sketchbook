@@ -6,6 +6,8 @@ export default class CanvasSketchDemo extends Project {
     size = 256;
     #sketchManager: any;
     #sketchFn = () => {
+        const squareSize = 400;
+        let position = 0;
         return (props: any) => {
             const { context, width, height } = props;
 
@@ -13,19 +15,37 @@ export default class CanvasSketchDemo extends Project {
             context.fillStyle = 'pink';
             context.fillRect(0, 0, width, height);
 
+            // Draw a white rectangle in the center
+            context.fillStyle = 'white';
+            context.fillRect(position % width, height / 4, squareSize, height / 2);
+
+            // Split rectangle in two when wrapping around
+            if (position > width - squareSize) {
+                context.fillRect(
+                    0,
+                    (height - squareSize) / 2,
+                    squareSize - (width - position),
+                    squareSize
+                );
+            }
+
+            // Increment
+            position = (position + 3) % width;
+
             // Write some text in the top left
             context.fillStyle = 'white';
             context.font = 'bold 24px Helvetica';
             context.textAlign = 'left';
             context.textBaseline = 'top';
-            context.fillText('Hello Canvas Sketch', 400, 200);
+            context.fillText('Hello Canvas Sketch', 400, 100);
         };
     };
 
     async init() {
         this.#sketchManager = await canvasSketch(this.#sketchFn, {
             canvas: this.canvas,
-            resizeCanvas: false
+            resizeCanvas: false,
+            animate: true
         });
     }
 
