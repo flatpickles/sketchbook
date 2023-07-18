@@ -1,22 +1,15 @@
 <script lang="ts">
     import type { SketchbookConfig } from '$lib/base/ConfigLoader';
     import type { ProjectProperties } from '$lib/base/ProjectConfig';
+    import GroupSelector from './GroupSelector.svelte';
     import Panel from './Panel.svelte';
     import PanelHeader from './PanelHeader.svelte';
     import ProjectList from './ProjectList.svelte';
 
-    export let projects: Record<string, ProjectProperties>;
     export let sketchbookConfig: SketchbookConfig;
+    export let projects: Record<string, ProjectProperties>;
 
-    // const groups = Object.values(projects).reduce((acc, project) => {
-    //     const groups: string[] =
-    //         project.groups && project.groups.length > 0
-    //             ? project.groups
-    //             : [sketchbookConfig.defaultGroup];
-    //     acc = acc.concat(groups);
-    //     return acc;
-    // }, [] as string[]);
-    // console.log(groups);
+    let selectedGroup: string | undefined;
 </script>
 
 <div class="panel-container">
@@ -26,7 +19,8 @@
             subtitle={sketchbookConfig.subtitle}
             description={sketchbookConfig.description}
         />
-        <ProjectList {projects} />
+        <GroupSelector projects={Object.values(projects)} bind:selectedGroup />
+        <ProjectList {projects} {selectedGroup} />
     </Panel>
 </div>
 

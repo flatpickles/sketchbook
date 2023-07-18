@@ -1,5 +1,6 @@
 {
     "title": "canvas-sketch Demo",
     "date": "2023-06-27",
-    "description": "This is a basic canvas-sketch demo, just to make sure it works as expected."
+    "description": "This is a basic canvas-sketch demo, just to make sure it works as expected.",
+    "groups": ["Cats", "Rats"]
 }

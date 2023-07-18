@@ -10,7 +10,7 @@ export interface SketchbookConfig {
     subtitle: string | undefined;
     description: string | undefined;
     sorting: SortType;
-    defaultGroup: string;
+    defaultGroup: string | undefined;
     storeParamValues: boolean;
     storeProjectSelection: boolean;
 }
@@ -20,7 +20,7 @@ export const SketchbookConfigDefaults: SketchbookConfig = {
     subtitle: undefined,
     description: 'A collection of generative art projects.',
     sorting: SortType.Date,
-    defaultGroup: 'Uncategorized',
+    defaultGroup: undefined,
     storeParamValues: true,
     storeProjectSelection: true
 };

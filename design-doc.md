@@ -62,7 +62,7 @@ Svelte, npm run dev, etc..
     "subtitle": "by <a href='http://flatpickles.com'>flatpickles</a>",
     "description": "This is a collection of programmatic art pieces. Code and details <a href='https://github.com/flatpickles/sketchbook'>here</a>.",
     "sorting": "date",
-    "defaultGroup": "Uncategorized",
+    "defaultGroup": "Pixel Art",
     "storeParamValues": true,
     "storeProjectSelection": true
 }
