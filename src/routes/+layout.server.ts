@@ -5,7 +5,6 @@ import ConfigLoader from '$lib/base/ConfigLoader';
 
 export const load: PageServerLoad = (async () => {
     const projects = await ProjectLoader.loadAvailableProjects();
-    const config = await ConfigLoader.loadSketchbookConfig();
-    console.log(config);
-    return { projects };
+    const sketchbook = await ConfigLoader.loadSketchbookConfig();
+    return { projects, sketchbook };
 }) satisfies PageServerLoad;

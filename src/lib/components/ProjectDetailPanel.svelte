@@ -1,18 +1,26 @@
 <script lang="ts">
     import type { ProjectTuple } from '$lib/base/ProjectLoader';
     import Panel from './Panel.svelte';
+    import PanelHeader from './PanelHeader.svelte';
+    import ProjectParams from './ProjectParams.svelte';
 
     export let projectTuple: ProjectTuple;
 </script>
 
 <div class="panel-container">
     <Panel>
-        <h1>{projectTuple.props.title}</h1>
-        <ul>
-            {#each Object.values(projectTuple.params) as param}
-                <li>{param.name}</li>
-            {/each}
-        </ul>
+        <!-- todo: customizable date formatting -->
+        <PanelHeader
+            title={projectTuple.props.title}
+            subtitle={projectTuple.props.date?.toLocaleDateString('en-us', {
+                year: 'numeric',
+                month: 'long'
+            })}
+            description={projectTuple.props.description}
+        />
+        {#if projectTuple.params && Object.values(projectTuple.params).length > 0}
+            <ProjectParams params={projectTuple.params} />
+        {/if}
     </Panel>
 </div>
 

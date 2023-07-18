@@ -8,7 +8,7 @@ export enum SortType {
 export interface SketchbookConfig {
     title: string;
     subtitle: string | undefined;
-    description: string;
+    description: string | undefined;
     sorting: SortType;
     defaultGroup: string;
     storeParamValues: boolean;

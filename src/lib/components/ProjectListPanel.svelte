@@ -1,18 +1,32 @@
 <script lang="ts">
+    import type { SketchbookConfig } from '$lib/base/ConfigLoader';
     import type { ProjectProperties } from '$lib/base/ProjectConfig';
     import Panel from './Panel.svelte';
+    import PanelHeader from './PanelHeader.svelte';
+    import ProjectList from './ProjectList.svelte';
 
     export let projects: Record<string, ProjectProperties>;
+    export let sketchbookConfig: SketchbookConfig;
+
+    // const groups = Object.values(projects).reduce((acc, project) => {
+    //     const groups: string[] =
+    //         project.groups && project.groups.length > 0
+    //             ? project.groups
+    //             : [sketchbookConfig.defaultGroup];
+    //     acc = acc.concat(groups);
+    //     return acc;
+    // }, [] as string[]);
+    // console.log(groups);
 </script>
 
 <div class="panel-container">
     <Panel>
-        <h1>Sketchbook</h1>
-        <ul>
-            {#each Object.keys(projects) as key}
-                <li><a href="/{key}">{projects[key].title}</a></li>
-            {/each}
-        </ul>
+        <PanelHeader
+            title={sketchbookConfig.title}
+            subtitle={sketchbookConfig.subtitle}
+            description={sketchbookConfig.description}
+        />
+        <ProjectList {projects} />
     </Panel>
 </div>
 

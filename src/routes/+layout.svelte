@@ -7,6 +7,6 @@
     export let data: PageData;
 </script>
 
-<ProjectListPanel projects={data.projects} />
+<ProjectListPanel projects={data.projects} sketchbookConfig={data.sketchbook} />
 
 <slot />
