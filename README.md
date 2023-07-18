@@ -44,6 +44,7 @@ Long-term goals:
 -   Midi control:
     -   Included in global configuration
     -   Enable project switching (fast switching)
+-   Render queue (preempt & cancel long-running renders)
 -   Fast switching:
     -   Optional (global config)
     -   Multiple canvases already instantiated

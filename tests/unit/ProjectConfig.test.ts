@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 
 import { ProjectConfigFactory, ProjectPropertiesDefaults } from '$lib/base/ProjectConfig';
-import ConfigAndSupport from './TestProjects/ConfigAndSupport/ConfigAndSupport';
+import ConfigAndSupport from './TestFiles/ConfigAndSupport/ConfigAndSupport';
 import { type NumberParamConfig, NumberParamConfigDefaults } from '$lib/base/ParamConfig';
 
 describe('ProjectConfigFactory.propsFrom', () => {

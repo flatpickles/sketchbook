@@ -6,12 +6,12 @@ import { ProjectPropertiesDefaults } from '$lib/base/ProjectConfig';
 import ProjectLoader from '$lib/base/ProjectLoader';
 import * as fileProviders from '$lib/base/FileProviders';
 import Project from '$lib/base/Project';
-import ConfigAndSupport from './TestProjects/ConfigAndSupport/ConfigAndSupport';
-import NoConfig from './TestProjects/NoConfig/NoConfig';
+import ConfigAndSupport from './TestFiles/ConfigAndSupport/ConfigAndSupport';
+import NoConfig from './TestFiles/NoConfig/NoConfig';
 
 // Use TestProjects directory for loading tests
-const testProjects = import.meta.glob('/tests/unit/TestProjects/*/*.ts');
-const testConfigs = import.meta.glob('/tests/unit/TestProjects/*/config.json');
+const testProjects = import.meta.glob('/tests/unit/TestFiles/*/*.ts');
+const testConfigs = import.meta.glob('/tests/unit/TestFiles/*/config.json');
 vi.spyOn(fileProviders, 'importProjectClassFiles').mockReturnValue(testProjects);
 vi.spyOn(fileProviders, 'importProjectConfigFiles').mockReturnValue(testConfigs);
 

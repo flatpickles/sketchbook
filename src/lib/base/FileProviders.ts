@@ -8,4 +8,11 @@ function importProjectConfigFiles(): Record<string, () => Promise<unknown>> {
     return import.meta.glob('/src/art/*/config.json');
 }
 
-export { importProjectClassFiles, importProjectConfigFiles };
+function importSketchbookConfigFile(): (() => Promise<unknown>) | undefined {
+    const files = import.meta.glob('/src/art/config.json');
+    if (files && Object.values(files).length > 0) {
+        return Object.values(files)[0];
+    }
+}
+
+export { importProjectClassFiles, importProjectConfigFiles, importSketchbookConfigFile };

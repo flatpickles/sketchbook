@@ -17,7 +17,7 @@ export default class CanvasSketchDemo extends Project {
 
             // Draw a white rectangle in the center
             context.fillStyle = 'white';
-            context.fillRect(position % width, height / 4, squareSize, height / 2);
+            context.fillRect(position % width, (height - squareSize) / 2, squareSize, squareSize);
 
             // Split rectangle in two when wrapping around
             if (position > width - squareSize) {

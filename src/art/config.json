@@ -3,7 +3,7 @@
     "subtitle": "by <a href='http://flatpickles.com'>flatpickles</a>",
     "description": "This is a collection of programmatic art pieces. Code and details <a href='https://github.com/flatpickles/sketchbook'>here</a>.",
     "sorting": "date",
-    "default_group": "Uncategorized",
-    "store_param_values": true,
-    "store_project_selection": true
+    "defaultGroup": "Uncategorized",
+    "storeParamValues": true,
+    "storeProjectSelection": true
 }
