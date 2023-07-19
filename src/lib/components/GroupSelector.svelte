@@ -29,9 +29,10 @@
 </script>
 
 {#if sortedGroups.length > 0}
-    <div class="group-list">
+    <div class="group-list" data-testid="group-list">
         <div
             class="group-item"
+            data-testid="group-item"
             class:selected={selectedGroup === undefined}
             on:click={handleGroupClick}
             on:keypress={handleGroupClick}
@@ -41,6 +42,7 @@
         {#each sortedGroups as group}
             <div
                 class="group-item"
+                data-testid="group-item"
                 class:selected={selectedGroup === group}
                 on:click={handleGroupClick}
                 on:keypress={handleGroupClick}

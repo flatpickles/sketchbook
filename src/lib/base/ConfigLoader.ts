@@ -10,6 +10,7 @@ export interface SketchbookConfig {
     subtitle: string | undefined;
     description: string | undefined;
     sorting: SortType;
+    // todo: group sorting? (date, alphabetical, explicit)
     defaultGroup: string | undefined;
     storeParamValues: boolean;
     storeProjectSelection: boolean;
