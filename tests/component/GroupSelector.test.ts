@@ -1,5 +1,5 @@
 import { render, fireEvent, screen, cleanup } from '@testing-library/svelte';
-import { describe, it, expect, vi, afterEach } from 'vitest';
+import { describe, it, expect, afterEach } from 'vitest';
 import { type ProjectProperties, ProjectPropertiesDefaults } from '$lib/base/ProjectConfig';
 import GroupSelector from '$lib/components/GroupSelector.svelte';
 

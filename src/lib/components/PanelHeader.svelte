@@ -4,10 +4,10 @@
     export let description: string | undefined = undefined;
 </script>
 
-<h1>{title}</h1>
+<h1 data-testid="header-title">{title}</h1>
 {#if subtitle}
-    <h2>{@html subtitle}</h2>
+    <h2 data-testid="header-subtitle">{@html subtitle}</h2>
 {/if}
 {#if description}
-    <p>{@html description}</p>
+    <p data-testid="header-description">{@html description}</p>
 {/if}
