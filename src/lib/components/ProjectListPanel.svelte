@@ -9,6 +9,7 @@
     export let sketchbookConfig: SketchbookConfig;
     export let projects: Record<string, ProjectProperties>;
 
+    export let selectedProjectKey: string;
     let selectedGroup: string | undefined;
 </script>
 
@@ -20,7 +21,12 @@
             description={sketchbookConfig.description}
         />
         <GroupSelector projects={Object.values(projects)} bind:selectedGroup />
-        <ProjectList {projects} {selectedGroup} sorting={sketchbookConfig.sorting} />
+        <ProjectList
+            {projects}
+            {selectedGroup}
+            {selectedProjectKey}
+            sorting={sketchbookConfig.sorting}
+        />
     </Panel>
 </div>
 

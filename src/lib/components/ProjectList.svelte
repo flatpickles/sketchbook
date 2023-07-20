@@ -2,6 +2,7 @@
     import type { ProjectProperties } from '$lib/base/ProjectConfig';
     import { ProjectSortType } from '$lib/base/ConfigLoader';
     export let projects: Record<string, ProjectProperties>;
+    export let selectedProjectKey: string;
     export let sorting: ProjectSortType = ProjectSortType.Date;
     export let selectedGroup: string | undefined = undefined;
 
@@ -21,7 +22,11 @@
 
 {#each sortedKeys as key}
     {#if selectedGroup === undefined || (projects[key].groups?.includes(selectedGroup) ?? false)}
-        <div class="project-list-item" data-testid="project-list-item">
+        <div
+            class="project-list-item"
+            data-testid="project-list-item"
+            class:selected={key === selectedProjectKey}
+        >
             <a href="/{key}">{projects[key].title}</a>
         </div>
     {/if}
@@ -30,5 +35,9 @@
 <style lang="scss">
     .project-list-item {
         margin-bottom: 0.5rem;
+    }
+
+    .selected {
+        background-color: rgb(184, 253, 190);
     }
 </style>

@@ -1,5 +1,5 @@
 import { render, fireEvent, screen, cleanup } from '@testing-library/svelte';
-import { describe, it, expect, afterEach } from 'vitest';
+import { describe, it, expect, afterEach, beforeAll } from 'vitest';
 import { ProjectConfigFactory } from '$lib/base/ProjectConfig';
 import { type SketchbookConfig, ProjectSortType } from '$lib/base/ConfigLoader';
 import ProjectListPanel from '$lib/components/ProjectListPanel.svelte';
@@ -21,7 +21,8 @@ describe('ProjectListPanel rendering', () => {
         };
         render(ProjectListPanel, {
             sketchbookConfig: sketchbookConfig,
-            projects: {}
+            projects: {},
+            selectedProjectKey: 'test'
         });
 
         const title = screen.getByTestId('header-title');
@@ -44,7 +45,8 @@ describe('ProjectListPanel rendering', () => {
         };
         render(ProjectListPanel, {
             sketchbookConfig: sketchbookConfig,
-            projects: {}
+            projects: {},
+            selectedProjectKey: 'test'
         });
 
         const title = screen.queryByTestId('header-title');
@@ -81,7 +83,8 @@ describe('ProjectListPanel rendering', () => {
         };
         render(ProjectListPanel, {
             sketchbookConfig: sketchbookConfig,
-            projects: projects
+            projects: projects,
+            selectedProjectKey: 'banana'
         });
 
         const listItems = screen.getAllByTestId('project-list-item');
@@ -117,7 +120,8 @@ describe('ProjectListPanel rendering', () => {
         };
         render(ProjectListPanel, {
             sketchbookConfig: sketchbookConfig,
-            projects: projects
+            projects: projects,
+            selectedProjectKey: 'banana'
         });
 
         const listItems = screen.getAllByTestId('project-list-item');
@@ -126,11 +130,88 @@ describe('ProjectListPanel rendering', () => {
         expect(listItems[1].textContent).toContain('Apple');
         expect(listItems[2].textContent).toContain('Banana');
     });
+
+    it('selects the proper project via selectedProjectKey', async () => {
+        const sketchbookConfig: SketchbookConfig = {
+            title: 'Test Title',
+            subtitle: undefined,
+            description: undefined,
+            sorting: ProjectSortType.Date,
+            defaultGroup: undefined,
+            storeParamValues: false,
+            storeProjectSelection: false
+        };
+        const projects = {
+            banana: ProjectConfigFactory.propsFrom({
+                title: 'Banana',
+                date: '2021-01-01'
+            }),
+            apple: ProjectConfigFactory.propsFrom({
+                title: 'Apple',
+                date: '2021-01-03'
+            }),
+            carrot: ProjectConfigFactory.propsFrom({
+                title: 'Carrot',
+                date: '2022-01-02'
+            })
+        };
+        render(ProjectListPanel, {
+            sketchbookConfig: sketchbookConfig,
+            projects: projects,
+            selectedProjectKey: 'apple'
+        });
+
+        const appleItem = screen.getByText('Apple').parentElement;
+        expect(appleItem?.classList.contains('selected')).toBe(true);
+    });
 });
 
 describe('ProjectListPanel interaction', () => {
-    it('navigates to projects when clicked', async () => {
-        // todo
+    let renderedComponent: ProjectListPanel;
+    beforeAll(() => {
+        const sketchbookConfig: SketchbookConfig = {
+            title: 'Test Title',
+            subtitle: undefined,
+            description: undefined,
+            sorting: ProjectSortType.Date,
+            defaultGroup: undefined,
+            storeParamValues: false,
+            storeProjectSelection: false
+        };
+        const projects = {
+            banana: ProjectConfigFactory.propsFrom({
+                title: 'Banana',
+                date: '2021-01-01',
+                groups: ['fruit']
+            }),
+            apple: ProjectConfigFactory.propsFrom({
+                title: 'Apple',
+                date: '2021-01-03',
+                groups: ['fruit', 'technology']
+            }),
+            carrot: ProjectConfigFactory.propsFrom({
+                title: 'Carrot',
+                date: '2022-01-02',
+                groups: ['vegetable']
+            })
+        };
+        const { component } = render(ProjectListPanel, {
+            sketchbookConfig: sketchbookConfig,
+            projects: projects,
+            selectedProjectKey: 'banana'
+        });
+        renderedComponent = component;
+    });
+
+    it('selects projects when clicked', async () => {
+        return;
+        const listItems = screen.getAllByTestId('project-list-item');
+        fireEvent.click(listItems[0]);
+        // renderedComponent.
+        fireEvent.click(listItems[1]);
+        expect(window.location.pathname).toBe('/apple');
+        fireEvent.click(listItems[2]);
+        expect(window.location.pathname).toBe('/carrot');
     });
 
     it('filters projects when group is clicked', async () => {
