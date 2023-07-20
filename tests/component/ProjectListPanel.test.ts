@@ -1,14 +1,10 @@
 import { render, fireEvent, screen, cleanup } from '@testing-library/svelte';
 import { describe, it, expect, afterEach } from 'vitest';
-import {
-    type ProjectProperties,
-    ProjectPropertiesDefaults,
-    ProjectConfigFactory
-} from '$lib/base/ProjectConfig';
-import { type SketchbookConfig, SortType } from '$lib/base/ConfigLoader';
+import { ProjectConfigFactory } from '$lib/base/ProjectConfig';
+import { type SketchbookConfig, ProjectSortType } from '$lib/base/ConfigLoader';
 import ProjectListPanel from '$lib/components/ProjectListPanel.svelte';
 
-describe('ProjectListPanel', () => {
+describe('ProjectListPanel rendering', () => {
     afterEach(() => {
         cleanup();
     });
@@ -18,7 +14,7 @@ describe('ProjectListPanel', () => {
             title: 'Test Title',
             subtitle: 'Test Subtitle',
             description: 'Test Description',
-            sorting: SortType.Alphabetical,
+            sorting: ProjectSortType.Alphabetical,
             defaultGroup: undefined,
             storeParamValues: false,
             storeProjectSelection: false
@@ -41,7 +37,7 @@ describe('ProjectListPanel', () => {
             title: 'Test Title',
             subtitle: undefined,
             description: undefined,
-            sorting: SortType.Alphabetical,
+            sorting: ProjectSortType.Alphabetical,
             defaultGroup: undefined,
             storeParamValues: false,
             storeProjectSelection: false
@@ -60,14 +56,79 @@ describe('ProjectListPanel', () => {
     });
 
     it('renders projects alphabetically', async () => {
-        // todo
-        // (use ProjectConfigFactory to create project configs as needed)
+        const sketchbookConfig: SketchbookConfig = {
+            title: 'Test Title',
+            subtitle: undefined,
+            description: undefined,
+            sorting: ProjectSortType.Alphabetical,
+            defaultGroup: undefined,
+            storeParamValues: false,
+            storeProjectSelection: false
+        };
+        const projects = {
+            banana: ProjectConfigFactory.propsFrom({
+                title: 'Banana',
+                date: '2021-01-01'
+            }),
+            apple: ProjectConfigFactory.propsFrom({
+                title: 'Apple',
+                date: '2021-01-03'
+            }),
+            carrot: ProjectConfigFactory.propsFrom({
+                title: 'Carrot',
+                date: '2021-01-02'
+            })
+        };
+        render(ProjectListPanel, {
+            sketchbookConfig: sketchbookConfig,
+            projects: projects
+        });
+
+        const listItems = screen.getAllByTestId('project-list-item');
+        expect(listItems.length).toBe(3);
+        expect(listItems[0].textContent).toContain('Apple');
+        expect(listItems[1].textContent).toContain('Banana');
+        expect(listItems[2].textContent).toContain('Carrot');
     });
 
     it('renders projects by date', async () => {
-        // todo
-    });
+        const sketchbookConfig: SketchbookConfig = {
+            title: 'Test Title',
+            subtitle: undefined,
+            description: undefined,
+            sorting: ProjectSortType.Date,
+            defaultGroup: undefined,
+            storeParamValues: false,
+            storeProjectSelection: false
+        };
+        const projects = {
+            banana: ProjectConfigFactory.propsFrom({
+                title: 'Banana',
+                date: '2021-01-01'
+            }),
+            apple: ProjectConfigFactory.propsFrom({
+                title: 'Apple',
+                date: '2021-01-03'
+            }),
+            carrot: ProjectConfigFactory.propsFrom({
+                title: 'Carrot',
+                date: '2022-01-02'
+            })
+        };
+        render(ProjectListPanel, {
+            sketchbookConfig: sketchbookConfig,
+            projects: projects
+        });
 
+        const listItems = screen.getAllByTestId('project-list-item');
+        expect(listItems.length).toBe(3);
+        expect(listItems[0].textContent).toContain('Carrot');
+        expect(listItems[1].textContent).toContain('Apple');
+        expect(listItems[2].textContent).toContain('Banana');
+    });
+});
+
+describe('ProjectListPanel interaction', () => {
     it('navigates to projects when clicked', async () => {
         // todo
     });

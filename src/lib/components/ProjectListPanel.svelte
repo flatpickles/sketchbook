@@ -20,7 +20,7 @@
             description={sketchbookConfig.description}
         />
         <GroupSelector projects={Object.values(projects)} bind:selectedGroup />
-        <ProjectList {projects} {selectedGroup} />
+        <ProjectList {projects} {selectedGroup} sorting={sketchbookConfig.sorting} />
     </Panel>
 </div>
 
