@@ -167,7 +167,6 @@ describe('ProjectListPanel rendering', () => {
 });
 
 describe('ProjectListPanel interaction', () => {
-    let renderedComponent: ProjectListPanel;
     beforeAll(() => {
         const sketchbookConfig: SketchbookConfig = {
             title: 'Test Title',
@@ -182,39 +181,49 @@ describe('ProjectListPanel interaction', () => {
             banana: ProjectConfigFactory.propsFrom({
                 title: 'Banana',
                 date: '2021-01-01',
-                groups: ['fruit']
+                groups: ['Fruit']
             }),
             apple: ProjectConfigFactory.propsFrom({
                 title: 'Apple',
                 date: '2021-01-03',
-                groups: ['fruit', 'technology']
+                groups: ['Fruit', 'Technology']
             }),
             carrot: ProjectConfigFactory.propsFrom({
                 title: 'Carrot',
                 date: '2022-01-02',
-                groups: ['vegetable']
+                groups: ['Vegetable']
             })
         };
-        const { component } = render(ProjectListPanel, {
+        render(ProjectListPanel, {
             sketchbookConfig: sketchbookConfig,
             projects: projects,
-            selectedProjectKey: 'banana'
+            selectedProjectKey: 'Banana'
         });
-        renderedComponent = component;
     });
 
-    it('selects projects when clicked', async () => {
-        return;
-        const listItems = screen.getAllByTestId('project-list-item');
-        fireEvent.click(listItems[0]);
-        // renderedComponent.
-        fireEvent.click(listItems[1]);
-        expect(window.location.pathname).toBe('/apple');
-        fireEvent.click(listItems[2]);
-        expect(window.location.pathname).toBe('/carrot');
-    });
+    it('filters projects when group or all is clicked', async () => {
+        // Technology
+        const techItem = screen.getByText('Technology');
+        await fireEvent.click(techItem);
+        let listItems = screen.getAllByTestId('project-list-item');
+        expect(listItems.length).toBe(1);
 
-    it('filters projects when group is clicked', async () => {
-        // todo
+        // Fruit
+        const fruitItem = screen.getByText('Fruit');
+        await fireEvent.click(fruitItem);
+        listItems = screen.getAllByTestId('project-list-item');
+        expect(listItems.length).toBe(2);
+
+        // Veggies
+        const veggiesItem = screen.getByText('Vegetable');
+        await fireEvent.click(veggiesItem);
+        listItems = screen.getAllByTestId('project-list-item');
+        expect(listItems.length).toBe(1);
+
+        // All
+        const allItem = screen.getByText('All');
+        await fireEvent.click(allItem);
+        listItems = screen.getAllByTestId('project-list-item');
+        expect(listItems.length).toBe(3);
     });
 });
