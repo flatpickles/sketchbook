@@ -76,8 +76,9 @@ describe('loading specific projects', async () => {
         const paramsConfig = projectTuple!.params;
         expect(paramsConfig).toBeDefined();
         expect(Object.keys(paramsConfig!).length).toEqual(1);
-        expect(paramsConfig!['testNumber']).toBeDefined();
-        expect(paramsConfig!['testNumber'].type).toEqual('number');
+        const testParam = paramsConfig.filter((param) => param.key === 'testNumber')[0];
+        expect(testParam).toBeDefined();
+        expect(testParam.type).toEqual('number');
     });
 
     it('loads a project with a config file', async () => {
@@ -105,10 +106,12 @@ describe('loading specific projects', async () => {
         const paramsConfig = projectTuple!.params;
         expect(paramsConfig).toBeDefined();
         expect(Object.keys(paramsConfig!).length).toEqual(1);
-        expect(paramsConfig!['testNumber']).toBeDefined();
-        expect(paramsConfig!['testNumber'].type).toEqual('number');
-        expect(paramsConfig!['testNumber'].name).toEqual('Number Param');
-        expect(paramsConfig!['testUnusedParam']).toBeUndefined();
+        const testParam = paramsConfig.filter((param) => param.key === 'testNumber')[0];
+        expect(testParam).toBeDefined();
+        expect(testParam.type).toEqual('number');
+        expect(testParam.name).toEqual('Number Param');
+        const testUnusedParam = paramsConfig.filter((param) => param.key === 'testUnusedParam')[0];
+        expect(testUnusedParam).toBeUndefined();
     });
 
     it('does not load a project without a properly named class file', async () => {

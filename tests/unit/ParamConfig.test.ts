@@ -8,10 +8,10 @@ import {
 
 describe('ParamConfigFactory', () => {
     it('creates ParamConfig objects with the correct type', () => {
-        expect(ParamConfigFactory.configFrom(3).type).toEqual('number');
-        expect(ParamConfigFactory.configFrom(true).type).toEqual('boolean');
+        expect(ParamConfigFactory.configFrom(3, 'number').type).toEqual('number');
+        expect(ParamConfigFactory.configFrom(true, 'bool').type).toEqual('boolean');
         expect(() => {
-            ParamConfigFactory.configFrom('str');
+            ParamConfigFactory.configFrom('str', 'string');
         }).toThrowError('Unsupported param type');
     });
 
@@ -33,10 +33,7 @@ describe('ParamConfigFactory', () => {
     });
 
     it('assigns default names properly without config', () => {
-        const param1 = ParamConfigFactory.configFrom(3);
-        expect(param1.name).toEqual('Untitled Param');
-
-        const param2 = ParamConfigFactory.configFrom(3, 'Default Name');
-        expect(param2.name).toEqual('Default Name');
+        const param1 = ParamConfigFactory.configFrom(3, 'number');
+        expect(param1.name).toEqual('number');
     });
 });

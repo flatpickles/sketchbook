@@ -65,9 +65,10 @@ describe('ProjectConfigFactory.propsFrom', () => {
 
         // Load parameters & check that they were loaded properly
         const params = ProjectConfigFactory.paramsFrom(testProject, paramData);
-        expect(params['testNumber']).toBeDefined();
-        expect(params['testNumber'].type).toEqual('number');
-        const numberParam = params['testNumber'] as NumberParamConfig;
+        const testParam = params.filter((param) => param.key === 'testNumber')[0];
+        expect(testParam).toBeDefined();
+        expect(testParam.type).toEqual('number');
+        const numberParam = testParam as NumberParamConfig;
         expect(numberParam.min).toEqual(1);
         expect(numberParam.max).toEqual(5);
 
@@ -85,9 +86,10 @@ describe('ProjectConfigFactory.propsFrom', () => {
 
         // Load parameters & check default values
         const params = ProjectConfigFactory.paramsFrom(testProject);
-        expect(params['testNumber']).toBeDefined();
-        expect(params['testNumber'].type).toEqual('number');
-        const numberParam = params['testNumber'] as NumberParamConfig;
+        const testParam = params.filter((param) => param.key === 'testNumber')[0];
+        expect(testParam).toBeDefined();
+        expect(testParam.type).toEqual('number');
+        const numberParam = testParam as NumberParamConfig;
         expect(numberParam.name).toEqual('testNumber');
         expect(numberParam.min).toEqual(NumberParamConfigDefaults.min);
         expect(numberParam.max).toEqual(NumberParamConfigDefaults.max);
