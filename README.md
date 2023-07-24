@@ -2,12 +2,14 @@
 
 Todo / WIP notes:
 
+-   Optional explicit route name (vs. just using the filename/key)
 -   Color parameters! Three-element numeric array...
 -   Code coverage...
 -   Better error messaging for config file parsing throughout
 -   "trigger" mode for parameter updates - wait until button click
 -   "animated" mode for sketches
 
+-   Make old style possible via parameterization (or something like it)
 -   Build basic panels & UI for architecture validation
 -   Validate canvas-sketch usage with current spec
 -   Read through old notes and absorb in design doc

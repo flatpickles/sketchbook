@@ -8,7 +8,7 @@
 </script>
 
 <svelte:head>
-    <title>{data.props.title}</title>
+    <title>{data.projectTuple.props.title}</title>
 </svelte:head>
 
 <ProjectListPanel
@@ -16,5 +16,5 @@
     sketchbookConfig={data.sketchbook}
     selectedProjectKey={data.projectKey}
 />
-<CanvasViewer project={data.project} />
-<ProjectDetailPanel projectTuple={data} />
+<CanvasViewer project={data.projectTuple.project} />
+<ProjectDetailPanel projectTuple={data.projectTuple} />

@@ -19,7 +19,7 @@
             description={projectTuple.props.description}
         />
         {#if projectTuple.params && Object.values(projectTuple.params).length > 0}
-            <ProjectParams params={projectTuple.params} />
+            <ProjectParams {projectTuple} />
         {/if}
     </Panel>
 </div>

@@ -10,9 +10,7 @@ export const load = (async ({ params }) => {
         throw error(404, `No project named "${projectKey}" exists!`);
     }
     return {
-        projectKey: projectKey,
-        project: projectTuple.project,
-        props: projectTuple.props,
-        params: projectTuple.params
+        projectKey,
+        projectTuple
     };
 }) satisfies PageLoad;

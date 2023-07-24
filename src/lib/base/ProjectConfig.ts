@@ -62,8 +62,8 @@ export class ProjectConfigFactory {
     public static paramsFrom(
         project: Project,
         data?: Record<string, Record<string, unknown>>
-    ): Record<string, ParamConfig> {
-        const params: Record<string, ParamConfig> = {};
+    ): ParamConfig[] {
+        const params: ParamConfig[] = [];
 
         // Get the list of params from the Project object
         const templateProject = new Project();
@@ -85,7 +85,7 @@ export class ProjectConfigFactory {
                 configData
             );
             // Assign ParamConfig object
-            params[key] = paramConfig;
+            params.push(paramConfig);
         }
         return params;
     }

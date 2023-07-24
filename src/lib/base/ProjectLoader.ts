@@ -10,7 +10,7 @@ import type { ParamConfig } from './ParamConfig';
 export interface ProjectTuple {
     project: Project;
     props: ProjectProperties;
-    params: Record<string, ParamConfig>;
+    params: ParamConfig[];
 }
 
 type ProjectModule = {

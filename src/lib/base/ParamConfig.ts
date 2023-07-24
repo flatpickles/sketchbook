@@ -5,6 +5,7 @@ export enum ParamType {
 
 export interface ParamConfig {
     type: ParamType;
+    key: string;
     name: string;
     section?: string;
 }
@@ -22,6 +23,7 @@ export interface NumberParamConfig extends ParamConfig {
 
 export const NumberParamConfigDefaults: NumberParamConfig = {
     type: ParamType.Number,
+    key: 'untitled-number',
     name: 'Untitled Number',
     section: undefined,
 
@@ -33,6 +35,10 @@ export const NumberParamConfigDefaults: NumberParamConfig = {
     options: undefined
 } as const;
 
+export function isNumberParamConfig(param: ParamConfig): param is NumberParamConfig {
+    return param.type === ParamType.Number;
+}
+
 /* Boolean param config */
 
 export interface BooleanParamConfig extends ParamConfig {
@@ -42,6 +48,7 @@ export interface BooleanParamConfig extends ParamConfig {
 
 export const BooleanParamConfigDefaults: BooleanParamConfig = {
     type: ParamType.Boolean,
+    key: 'untitled-boolean',
     name: 'Untitled Boolean',
     section: undefined,
 
@@ -65,7 +72,7 @@ export class ParamConfigFactory {
      */
     public static configFrom(
         value: unknown,
-        fallbackName = 'Untitled Param',
+        key: string,
         data?: Record<string, unknown>
     ): ParamConfig {
         // Create the proper type for the value and assign defaults
@@ -93,10 +100,11 @@ export class ParamConfigFactory {
             Object.assign(param, data);
         } else {
             // If no config exists, assign the value as the default
-            param.name = fallbackName;
+            param.name = key;
         }
 
         // Return the generated param
+        param.key = key;
         return param;
     }
 }

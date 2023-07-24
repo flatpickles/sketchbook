@@ -3,12 +3,12 @@ import Project from '$lib/base/Project';
 import canvasSketch from 'canvas-sketch';
 
 export default class CanvasSketchDemo extends Project {
-    size = 256;
+    size = 1.0;
     #sketchManager: any;
     #sketchFn = () => {
-        const squareSize = 400;
         let position = 0;
         return (props: any) => {
+            const squareSize = this.size * 512;
             const { context, width, height } = props;
 
             // Fill the canvas with pink
