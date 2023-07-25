@@ -1,23 +1,37 @@
 <script lang="ts">
     import type { ProjectTuple } from '$lib/base/FileLoading/ProjectLoader';
     import { isBooleanParamConfig } from '$lib/base/ParamConfig/BooleanParamConfig';
-    import type { ParamConfig } from '$lib/base/ParamConfig/ParamConfig';
+    import { isFunctionParamConfig } from '$lib/base/ParamConfig/FunctionParamConfig';
+    import { ParamType, type ParamConfig } from '$lib/base/ParamConfig/ParamConfig';
     import { type ParamValueType, ParamGuards } from '$lib/base/ParamConfig/ParamTypes';
     import BooleanParamInput from './ParamInputs/BooleanParamInput.svelte';
+    import FunctionParamInput from './ParamInputs/FunctionParamInput.svelte';
     import NumberParamInput from './ParamInputs/NumberParamInput.svelte';
 
     export let projectTuple: ProjectTuple;
 
-    // A little dark magic update the project's value for this key
+    // A little dark magic to apply the updated param (or call the associated function)
     function paramUpdated(event: any) {
         const updatedConfig = event.detail.config as ParamConfig;
-        Object.defineProperty(projectTuple.project, updatedConfig.key, {
-            value: event.detail.value,
-            writable: true,
-            enumerable: true,
-            configurable: true
-        });
-        projectTuple.project.update();
+        if (updatedConfig.type != ParamType.Function) {
+            // Change the project's value for this key, and update the project
+            Object.defineProperty(projectTuple.project, updatedConfig.key, {
+                value: event.detail.value,
+                writable: true,
+                enumerable: true,
+                configurable: true
+            });
+            projectTuple.project.update();
+        } else {
+            // Call the named function on the project
+            const descriptor = Object.getOwnPropertyDescriptor(
+                projectTuple.project,
+                updatedConfig.key
+            );
+            if (descriptor?.value) {
+                descriptor.value();
+            }
+        }
     }
 
     // A little dark magic to get the properly typed initial value for a given param
@@ -41,6 +55,8 @@
                 value={initialValueForParam(param)}
                 on:update={paramUpdated}
             />
+        {:else if ParamGuards.isFunctionParamConfig(param)}
+            <FunctionParamInput paramConfig={param} on:update={paramUpdated} />
         {/if}
     {/each}
 </div>

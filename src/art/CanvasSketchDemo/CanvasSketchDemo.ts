@@ -4,7 +4,15 @@ import canvasSketch from 'canvas-sketch';
 
 export default class CanvasSketchDemo extends Project {
     size = 0.8;
-    blue = true;
+    colored = true;
+
+    #fgColor = `rgb(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255})`;
+    randomize = () => {
+        this.#fgColor = `rgb(${Math.random() * 255}, ${Math.random() * 255}, ${
+            Math.random() * 255
+        })`;
+    };
+
     #sketchManager: any;
     #sketchFn = () => {
         let position = 0;
@@ -17,7 +25,7 @@ export default class CanvasSketchDemo extends Project {
             context.fillRect(0, 0, width, height);
 
             // Draw a white rectangle in the center
-            context.fillStyle = this.blue ? 'blue' : 'white';
+            context.fillStyle = this.colored ? this.#fgColor : 'white';
             context.fillRect(position % width, (height - squareSize) / 2, squareSize, squareSize);
 
             // Split rectangle in two when wrapping around

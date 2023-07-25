@@ -1,7 +1,8 @@
 export enum ParamType {
     Undefined = 'undefined',
     Number = 'number',
-    Boolean = 'boolean'
+    Boolean = 'boolean',
+    Function = 'function'
 }
 
 export interface ParamConfig {

@@ -1,6 +1,7 @@
 import type { ParamConfig } from './ParamConfig';
 import { type NumberParamConfig, NumberParamConfigDefaults } from './NumberParamConfig';
 import { type BooleanParamConfig, BooleanParamConfigDefaults } from './BooleanParamConfig';
+import { FunctionParamConfigDefaults, type FunctionParamConfig } from './FunctionParamConfig';
 
 export class ParamConfigFactory {
     /**
@@ -25,8 +26,11 @@ export class ParamConfigFactory {
         } else if (typeof value === 'boolean') {
             param = {} as BooleanParamConfig;
             Object.assign(param, BooleanParamConfigDefaults);
+        } else if (typeof value === 'function') {
+            param = {} as FunctionParamConfig;
+            Object.assign(param, FunctionParamConfigDefaults);
         } else {
-            throw new Error('Unsupported param type');
+            throw new Error('Unsupported param type: ' + typeof value);
         }
 
         // If the config exists, assign its properties to the param
