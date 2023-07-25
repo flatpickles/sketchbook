@@ -1,7 +1,9 @@
 <script lang="ts">
     import type { ProjectTuple } from '$lib/base/FileLoading/ProjectLoader';
+    import { isBooleanParamConfig } from '$lib/base/ParamConfig/BooleanParamConfig';
     import type { ParamConfig } from '$lib/base/ParamConfig/ParamConfig';
     import { type ParamValueType, ParamGuards } from '$lib/base/ParamConfig/ParamTypes';
+    import BooleanParamInput from './ParamInputs/BooleanParamInput.svelte';
     import NumberParamInput from './ParamInputs/NumberParamInput.svelte';
 
     export let projectTuple: ProjectTuple;
@@ -29,6 +31,12 @@
     {#each projectTuple.params as param}
         {#if ParamGuards.isNumberParamConfig(param)}
             <NumberParamInput
+                paramConfig={param}
+                value={initialValueForParam(param)}
+                on:update={paramUpdated}
+            />
+        {:else if ParamGuards.isBooleanParamConfig(param)}
+            <BooleanParamInput
                 paramConfig={param}
                 value={initialValueForParam(param)}
                 on:update={paramUpdated}
