@@ -10,6 +10,12 @@ export interface ParamConfig {
     section?: string;
 }
 
+export type ParamValueType<T> = T extends NumberParamConfig
+    ? number
+    : T extends BooleanParamConfig
+    ? boolean
+    : never;
+
 /* Number param config */
 
 export interface NumberParamConfig extends ParamConfig {

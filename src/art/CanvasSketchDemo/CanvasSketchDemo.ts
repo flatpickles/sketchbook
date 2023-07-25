@@ -3,7 +3,7 @@ import Project from '$lib/base/Project';
 import canvasSketch from 'canvas-sketch';
 
 export default class CanvasSketchDemo extends Project {
-    size = 1.0;
+    size = 0.8;
     #sketchManager: any;
     #sketchFn = () => {
         let position = 0;
