@@ -1,11 +1,11 @@
 import { render, fireEvent, screen, cleanup } from '@testing-library/svelte';
 import { describe, it, expect, afterEach } from 'vitest';
-import { type ProjectProperties, ProjectPropertiesDefaults } from '$lib/base/ProjectConfig';
+import { type ProjectConfig, ProjectConfigDefaults } from '$lib/base/ProjectConfig/ProjectConfig';
 import GroupSelector from '$lib/components/GroupSelector.svelte';
 
-function projectWithGroups(groups: string[]): ProjectProperties {
-    const props = {} as ProjectProperties;
-    Object.assign(props, ProjectPropertiesDefaults);
+function projectWithGroups(groups: string[]): ProjectConfig {
+    const props = {} as ProjectConfig;
+    Object.assign(props, ProjectConfigDefaults);
     props.groups = groups;
     return props;
 }
@@ -16,7 +16,7 @@ describe('GroupSelector', () => {
     });
 
     it('renders and dedupes groups', async () => {
-        const projects: ProjectProperties[] = [
+        const projects: ProjectConfig[] = [
             projectWithGroups(['banana', 'dog']),
             projectWithGroups(['dog', 'apple'])
         ];
@@ -32,7 +32,7 @@ describe('GroupSelector', () => {
     });
 
     it('orders groups correctly', async () => {
-        const projects: ProjectProperties[] = [
+        const projects: ProjectConfig[] = [
             projectWithGroups(['banana', 'dog']),
             projectWithGroups(['dog', 'apple'])
         ];
@@ -48,7 +48,7 @@ describe('GroupSelector', () => {
     });
 
     it('initializes with selected group if provided', async () => {
-        const projects: ProjectProperties[] = [
+        const projects: ProjectConfig[] = [
             projectWithGroups(['banana', 'dog']),
             projectWithGroups(['dog', 'apple'])
         ];
@@ -66,7 +66,7 @@ describe('GroupSelector', () => {
     });
 
     it('selects All by default; updates selected group with clicks', async () => {
-        const projects: ProjectProperties[] = [
+        const projects: ProjectConfig[] = [
             projectWithGroups(['banana', 'dog']),
             projectWithGroups(['dog', 'apple'])
         ];
@@ -90,7 +90,7 @@ describe('GroupSelector', () => {
     });
 
     it('does not render with no groups', async () => {
-        const projects: ProjectProperties[] = [projectWithGroups([]), projectWithGroups([])];
+        const projects: ProjectConfig[] = [projectWithGroups([]), projectWithGroups([])];
         render(GroupSelector, {
             projects: projects
         });

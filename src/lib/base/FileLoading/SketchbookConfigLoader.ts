@@ -1,37 +1,12 @@
 import { importSketchbookConfigFile } from './FileProviders';
+import { type SketchbookConfig, SketchbookConfigDefaults } from './SketchbookConfig';
 
-export enum ProjectSortType {
-    Date = 'date',
-    Alphabetical = 'alphabetical'
-}
-
-export interface SketchbookConfig {
-    title: string;
-    subtitle: string | undefined;
-    description: string | undefined;
-    sorting: ProjectSortType;
-    // todo: group sorting? (date, alphabetical, explicit)
-    defaultGroup: string | undefined;
-    storeParamValues: boolean;
-    storeProjectSelection: boolean;
-}
-
-export const SketchbookConfigDefaults: SketchbookConfig = {
-    title: 'Sketchbook',
-    subtitle: undefined,
-    description: 'A collection of generative art projects.',
-    sorting: ProjectSortType.Date,
-    defaultGroup: undefined,
-    storeParamValues: true,
-    storeProjectSelection: true
-};
-
-type ConfigModule = {
+type SketchbookConfigModule = {
     default: new () => Record<string, unknown>;
 };
 
-export default class ConfigLoader {
-    public static async loadSketchbookConfig(): Promise<SketchbookConfig> {
+export default class SketchbookConfigLoader {
+    public static async loadConfig(): Promise<SketchbookConfig> {
         // Create new config object and assign defaults
         const sketchbookConfig = {} as SketchbookConfig;
         Object.assign(sketchbookConfig, SketchbookConfigDefaults);
@@ -39,7 +14,7 @@ export default class ConfigLoader {
         // Import config file
         const moduleFactory = importSketchbookConfigFile();
         if (!moduleFactory) return sketchbookConfig;
-        const module = (await moduleFactory()) as ConfigModule;
+        const module = (await moduleFactory()) as SketchbookConfigModule;
         const configData = module.default;
 
         // Assign properties from data

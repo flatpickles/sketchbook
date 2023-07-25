@@ -1,13 +1,13 @@
 <script lang="ts">
-    import type { SketchbookConfig } from '$lib/base/ConfigLoader';
-    import type { ProjectProperties } from '$lib/base/ProjectConfig';
+    import type { SketchbookConfig } from '$lib/base/FileLoading/SketchbookConfig';
+    import type { ProjectConfig } from '$lib/base/ProjectConfig/ProjectConfig';
     import GroupSelector from './GroupSelector.svelte';
     import Panel from './Panel.svelte';
     import PanelHeader from './PanelHeader.svelte';
     import ProjectList from './ProjectList.svelte';
 
     export let sketchbookConfig: SketchbookConfig;
-    export let projects: Record<string, ProjectProperties>;
+    export let projects: Record<string, ProjectConfig>;
 
     export let selectedProjectKey: string;
     let selectedGroup: string | undefined;

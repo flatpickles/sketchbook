@@ -1,6 +1,6 @@
 <script lang="ts">
-    import type { ProjectProperties } from '$lib/base/ProjectConfig';
-    export let projects: ProjectProperties[];
+    import type { ProjectConfig } from '$lib/base/ProjectConfig/ProjectConfig';
+    export let projects: ProjectConfig[];
     export let selectedGroup: string | undefined = undefined;
 
     // Procure the sorted groups list

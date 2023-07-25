@@ -1,15 +1,12 @@
 import { importProjectClassFiles, importProjectConfigFiles } from './FileProviders';
-import type Project from './Project';
-import {
-    type ProjectProperties,
-    ProjectConfigFactory,
-    ProjectPropertiesDefaults
-} from './ProjectConfig';
-import type { ParamConfig } from './ParamConfig';
+import type Project from '../Project';
+import { type ProjectConfig, ProjectConfigDefaults } from '../ProjectConfig/ProjectConfig';
+import type { ParamConfig } from '../ParamConfig/ParamConfig';
+import { ProjectConfigFactory } from '../ProjectConfig/ProjectConfigFactory';
 
 export interface ProjectTuple {
     project: Project;
-    props: ProjectProperties;
+    props: ProjectConfig;
     params: ParamConfig[];
 }
 
@@ -23,7 +20,7 @@ export default class ProjectLoader {
      * Load a collection of available projects as a map of project keys to ProjectConfig objects.
      * @returns A map of project keys to ProjectProperties objects.
      */
-    public static async loadAvailableProjects(): Promise<Record<string, ProjectProperties>> {
+    public static async loadAvailableProjects(): Promise<Record<string, ProjectConfig>> {
         // Load files
         const projectClassFiles = importProjectClassFiles();
         const projectConfigFiles = importProjectConfigFiles();
@@ -40,7 +37,7 @@ export default class ProjectLoader {
         }
 
         // Collect projects from class files and assign config data if any
-        const availableProjects: Record<string, ProjectProperties> = {};
+        const availableProjects: Record<string, ProjectConfig> = {};
         for (const path in projectClassFiles) {
             // Find the project key from the file name
             const projectKey = ProjectLoader.#keyFromProjectPath(path);
@@ -55,7 +52,7 @@ export default class ProjectLoader {
             );
 
             // Assign the project title if unset
-            if (availableProjects[projectKey].title === ProjectPropertiesDefaults.title) {
+            if (availableProjects[projectKey].title === ProjectConfigDefaults.title) {
                 availableProjects[projectKey].title = projectKey;
             }
         }
@@ -97,7 +94,7 @@ export default class ProjectLoader {
         );
 
         // Assign the project title if unset
-        if (props.title === ProjectPropertiesDefaults.title) {
+        if (props.title === ProjectConfigDefaults.title) {
             props.title = key;
         }
 

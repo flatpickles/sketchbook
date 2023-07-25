@@ -1,8 +1,8 @@
 import { render, fireEvent, screen, cleanup } from '@testing-library/svelte';
 import { describe, it, expect, afterEach, beforeAll } from 'vitest';
-import { ProjectConfigFactory } from '$lib/base/ProjectConfig';
-import { type SketchbookConfig, ProjectSortType } from '$lib/base/ConfigLoader';
+import { ProjectConfigFactory } from '$lib/base/ProjectConfig/ProjectConfigFactory';
 import ProjectListPanel from '$lib/components/ProjectListPanel.svelte';
+import { type SketchbookConfig, ProjectSortType } from '$lib/base/FileLoading/SketchbookConfig';
 
 describe('ProjectListPanel rendering', () => {
     afterEach(() => {

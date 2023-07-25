@@ -1,12 +1,7 @@
 <script lang="ts">
-    import {
-        type ParamConfig,
-        type ParamValueType,
-        isNumberParamConfig,
-        type NumberParamConfig,
-        type BooleanParamConfig
-    } from '$lib/base/ParamConfig';
-    import type { ProjectTuple } from '$lib/base/ProjectLoader';
+    import type { ProjectTuple } from '$lib/base/FileLoading/ProjectLoader';
+    import type { ParamConfig } from '$lib/base/ParamConfig/ParamConfig';
+    import { type ParamValueType, ParamGuards } from '$lib/base/ParamConfig/ParamTypes';
     import NumberParamInput from './ParamInputs/NumberParamInput.svelte';
 
     export let projectTuple: ProjectTuple;
@@ -32,7 +27,7 @@
 
 <div class="params-wrapper">
     {#each projectTuple.params as param}
-        {#if isNumberParamConfig(param)}
+        {#if ParamGuards.isNumberParamConfig(param)}
             <NumberParamInput
                 paramConfig={param}
                 value={initialValueForParam(param)}

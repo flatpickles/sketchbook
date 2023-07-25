@@ -1,25 +1,7 @@
-import Project from './Project';
-import { type ParamConfig, ParamConfigFactory } from './ParamConfig';
-
-export interface ProjectProperties {
-    title: string;
-    date?: Date;
-    description?: string;
-    defaultPresetName?: string;
-    liveUpdates?: boolean;
-    groups?: string[];
-    experimental?: boolean;
-}
-
-export const ProjectPropertiesDefaults: ProjectProperties = {
-    title: 'Untitled',
-    date: undefined,
-    description: undefined,
-    defaultPresetName: undefined,
-    liveUpdates: true,
-    groups: [],
-    experimental: false
-};
+import type { ParamConfig } from '../ParamConfig/ParamConfig';
+import { ParamConfigFactory } from '../ParamConfig/ParamConfigFactory';
+import Project from '../Project';
+import { type ProjectConfig, ProjectConfigDefaults } from './ProjectConfig';
 
 export class ProjectConfigFactory {
     /**
@@ -28,10 +10,10 @@ export class ProjectConfigFactory {
      * @param data - object derived from imported JSON data, matching to ProjectProperties
      * @returns a ProjectProperties object
      */
-    public static propsFrom(data?: Record<string, unknown>): ProjectProperties {
+    public static propsFrom(data?: Record<string, unknown>): ProjectConfig {
         // Create new properties config object and assign defaults
-        const props = {} as ProjectProperties;
-        Object.assign(props, ProjectPropertiesDefaults);
+        const props = {} as ProjectConfig;
+        Object.assign(props, ProjectConfigDefaults);
         if (!data) return props;
 
         // Assign properties from data

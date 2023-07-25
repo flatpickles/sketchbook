@@ -1,7 +1,6 @@
+import ProjectLoader from '$lib/base/FileLoading/ProjectLoader';
 import type { PageLoad } from './$types';
 import { error } from '@sveltejs/kit';
-
-import ProjectLoader from '$lib/base/ProjectLoader';
 
 export const load = (async ({ params }) => {
     const projectKey = params.key;

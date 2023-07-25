@@ -1,19 +1,22 @@
+import {
+    type NumberParamConfig,
+    NumberParamConfigDefaults
+} from '$lib/base/ParamConfig/NumberParamConfig';
+import { ProjectConfigDefaults } from '$lib/base/ProjectConfig/ProjectConfig';
+import { ProjectConfigFactory } from '$lib/base/ProjectConfig/ProjectConfigFactory';
 import { describe, it, expect } from 'vitest';
-
-import { ProjectConfigFactory, ProjectPropertiesDefaults } from '$lib/base/ProjectConfig';
 import ConfigAndSupport from './TestFiles/ConfigAndSupport/ConfigAndSupport';
-import { type NumberParamConfig, NumberParamConfigDefaults } from '$lib/base/ParamConfig';
 
 describe('ProjectConfigFactory.propsFrom', () => {
     it('creates default props without provided config data', () => {
         const props = ProjectConfigFactory.propsFrom(undefined);
-        expect(props.title).toEqual(ProjectPropertiesDefaults.title);
-        expect(props.date).toEqual(ProjectPropertiesDefaults.date);
-        expect(props.description).toEqual(ProjectPropertiesDefaults.description);
-        expect(props.defaultPresetName).toEqual(ProjectPropertiesDefaults.defaultPresetName);
-        expect(props.liveUpdates).toEqual(ProjectPropertiesDefaults.liveUpdates);
-        expect(props.groups).toEqual(ProjectPropertiesDefaults.groups);
-        expect(props.experimental).toEqual(ProjectPropertiesDefaults.experimental);
+        expect(props.title).toEqual(ProjectConfigDefaults.title);
+        expect(props.date).toEqual(ProjectConfigDefaults.date);
+        expect(props.description).toEqual(ProjectConfigDefaults.description);
+        expect(props.defaultPresetName).toEqual(ProjectConfigDefaults.defaultPresetName);
+        expect(props.liveUpdates).toEqual(ProjectConfigDefaults.liveUpdates);
+        expect(props.groups).toEqual(ProjectConfigDefaults.groups);
+        expect(props.experimental).toEqual(ProjectConfigDefaults.experimental);
     });
 
     it('creates config objects properly from config data', () => {
@@ -44,11 +47,11 @@ describe('ProjectConfigFactory.propsFrom', () => {
         const props = ProjectConfigFactory.propsFrom(configData);
         expect(props.title).toEqual(configData.title);
         expect(props.date).toEqual(new Date(configData.date));
-        expect(props.description).toEqual(ProjectPropertiesDefaults.description);
-        expect(props.defaultPresetName).toEqual(ProjectPropertiesDefaults.defaultPresetName);
-        expect(props.liveUpdates).toEqual(ProjectPropertiesDefaults.liveUpdates);
-        expect(props.groups).toEqual(ProjectPropertiesDefaults.groups);
-        expect(props.experimental).toEqual(ProjectPropertiesDefaults.experimental);
+        expect(props.description).toEqual(ProjectConfigDefaults.description);
+        expect(props.defaultPresetName).toEqual(ProjectConfigDefaults.defaultPresetName);
+        expect(props.liveUpdates).toEqual(ProjectConfigDefaults.liveUpdates);
+        expect(props.groups).toEqual(ProjectConfigDefaults.groups);
+        expect(props.experimental).toEqual(ProjectConfigDefaults.experimental);
     });
 });
 

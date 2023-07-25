@@ -1,6 +1,6 @@
 <script lang="ts">
+    import type { NumberParamConfig } from '$lib/base/ParamConfig/NumberParamConfig';
     import ParamInput from './ParamInput.svelte';
-    import type { NumberParamConfig, ParamConfig } from '$lib/base/ParamConfig';
     import { createEventDispatcher } from 'svelte';
 
     export let paramConfig: NumberParamConfig;

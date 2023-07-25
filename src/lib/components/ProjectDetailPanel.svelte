@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { ProjectTuple } from '$lib/base/ProjectLoader';
+    import type { ProjectTuple } from '$lib/base/FileLoading/ProjectLoader';
     import Panel from './Panel.svelte';
     import PanelHeader from './PanelHeader.svelte';
     import ProjectParams from './ProjectParams.svelte';

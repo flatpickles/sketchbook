@@ -2,12 +2,12 @@
 
 import { describe, it, expect, vi } from 'vitest';
 
-import { ProjectPropertiesDefaults } from '$lib/base/ProjectConfig';
-import ProjectLoader from '$lib/base/ProjectLoader';
-import * as fileProviders from '$lib/base/FileProviders';
 import Project from '$lib/base/Project';
 import ConfigAndSupport from './TestFiles/ConfigAndSupport/ConfigAndSupport';
 import NoConfig from './TestFiles/NoConfig/NoConfig';
+import ProjectLoader from '$lib/base/FileLoading/ProjectLoader';
+import { ProjectConfigDefaults } from '$lib/base/ProjectConfig/ProjectConfig';
+import * as fileProviders from '$lib/base/FileLoading/FileProviders';
 
 // Use TestProjects directory for loading tests
 const testProjects = import.meta.glob('/tests/unit/TestFiles/*/*.ts');
@@ -26,11 +26,11 @@ describe('loading available projects', async () => {
         const project = availableProjects['NoConfig'];
         expect(project).toBeDefined();
         expect(project?.title).toEqual('NoConfig');
-        expect(project?.date).toEqual(ProjectPropertiesDefaults.date);
-        expect(project?.description).toEqual(ProjectPropertiesDefaults.description);
-        expect(project?.liveUpdates).toEqual(ProjectPropertiesDefaults.liveUpdates);
-        expect(project?.groups).toEqual(ProjectPropertiesDefaults.groups);
-        expect(project?.experimental).toEqual(ProjectPropertiesDefaults.experimental);
+        expect(project?.date).toEqual(ProjectConfigDefaults.date);
+        expect(project?.description).toEqual(ProjectConfigDefaults.description);
+        expect(project?.liveUpdates).toEqual(ProjectConfigDefaults.liveUpdates);
+        expect(project?.groups).toEqual(ProjectConfigDefaults.groups);
+        expect(project?.experimental).toEqual(ProjectConfigDefaults.experimental);
     });
 
     it('correctly configures a project with a config file', () => {
@@ -66,11 +66,11 @@ describe('loading specific projects', async () => {
         const projectProps = projectTuple!.props;
         expect(projectProps).toBeDefined();
         expect(projectProps?.title).toEqual('NoConfig');
-        expect(projectProps?.date).toEqual(ProjectPropertiesDefaults.date);
-        expect(projectProps?.description).toEqual(ProjectPropertiesDefaults.description);
-        expect(projectProps?.liveUpdates).toEqual(ProjectPropertiesDefaults.liveUpdates);
-        expect(projectProps?.groups).toEqual(ProjectPropertiesDefaults.groups);
-        expect(projectProps?.experimental).toEqual(ProjectPropertiesDefaults.experimental);
+        expect(projectProps?.date).toEqual(ProjectConfigDefaults.date);
+        expect(projectProps?.description).toEqual(ProjectConfigDefaults.description);
+        expect(projectProps?.liveUpdates).toEqual(ProjectConfigDefaults.liveUpdates);
+        expect(projectProps?.groups).toEqual(ProjectConfigDefaults.groups);
+        expect(projectProps?.experimental).toEqual(ProjectConfigDefaults.experimental);
 
         // Check params config
         const paramsConfig = projectTuple!.params;

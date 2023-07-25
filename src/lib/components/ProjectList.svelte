@@ -1,7 +1,8 @@
 <script lang="ts">
-    import type { ProjectProperties } from '$lib/base/ProjectConfig';
-    import { ProjectSortType } from '$lib/base/ConfigLoader';
-    export let projects: Record<string, ProjectProperties>;
+    import { ProjectSortType } from '$lib/base/FileLoading/SketchbookConfig';
+    import type { ProjectConfig } from '$lib/base/ProjectConfig/ProjectConfig';
+
+    export let projects: Record<string, ProjectConfig>;
     export let selectedProjectKey: string;
     export let sorting: ProjectSortType = ProjectSortType.Date;
     export let selectedGroup: string | undefined = undefined;

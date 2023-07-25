@@ -1,10 +1,9 @@
-import { describe, it, expect } from 'vitest';
-
 import {
-    ParamConfigFactory,
     type NumberParamConfig,
     NumberParamConfigDefaults
-} from '$lib/base/ParamConfig';
+} from '$lib/base/ParamConfig/NumberParamConfig';
+import { ParamConfigFactory } from '$lib/base/ParamConfig/ParamConfigFactory';
+import { describe, it, expect } from 'vitest';
 
 describe('ParamConfigFactory', () => {
     it('creates ParamConfig objects with the correct type', () => {
