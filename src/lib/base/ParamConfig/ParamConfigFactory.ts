@@ -42,7 +42,14 @@ export class ParamConfigFactory {
             Object.assign(param, StringParamConfigDefaults);
         } else if (Array.isArray(value)) {
             // Validate array param
-            if (typeof value[0] != 'number') {
+            let numericEntries = true;
+            for (const entry of value) {
+                if (typeof entry != 'number') {
+                    numericEntries = false;
+                    break;
+                }
+            }
+            if (!numericEntries) {
                 throw new Error(`Non-numeric array params are unsupported (${key})`);
             } else if (value.length < 1) {
                 throw new Error(`Empty array params are unsupported (${key})`);
