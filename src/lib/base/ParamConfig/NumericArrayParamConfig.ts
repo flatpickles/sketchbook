@@ -2,8 +2,8 @@ import { type ParamConfig, ParamConfigDefaults, ParamType } from './ParamConfig'
 import { NumberParamConfigDefaults } from './NumberParamConfig';
 
 enum NumericArrayParamStyle {
-    CompactField = 'compact-field',
-    CompactSlider = 'compact-slider',
+    CompactField = 'compactField',
+    CompactSlider = 'compactSlider',
     Slider = 'slider',
     Field = 'field'
 }
@@ -12,7 +12,6 @@ export interface NumericArrayParamConfig extends ParamConfig {
     min: number;
     max: number;
     step: number;
-    liveUpdates: boolean;
     style: NumericArrayParamStyle;
 }
 
@@ -22,7 +21,6 @@ export const NumericArrayParamConfigDefaults: NumericArrayParamConfig = {
     min: NumberParamConfigDefaults.min,
     max: NumberParamConfigDefaults.max,
     step: NumberParamConfigDefaults.step,
-    liveUpdates: true,
     style: NumericArrayParamStyle.Slider
 } as const;
 

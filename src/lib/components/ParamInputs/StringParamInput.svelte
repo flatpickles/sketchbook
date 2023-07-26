@@ -16,7 +16,13 @@
 </script>
 
 <ParamInput name={paramConfig.name}>
-    <input type="text" bind:value id={paramConfig.name} on:input={paramUpdated} />
+    <input
+        type="text"
+        bind:value
+        id={paramConfig.name}
+        on:input={paramUpdated}
+        autocomplete="off"
+    />
 </ParamInput>
 
 <style lang="scss">

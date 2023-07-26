@@ -39,10 +39,12 @@ export class ProjectConfigFactory {
      * Create param config objects from the properties in a Project object, also referencing
      * config data, if provided.
      * @param project - the Project object to load params from
+     * @param liveUpdatesDefault - the default value for liveUpdates
      * @param data - optional config data to reference
      */
     public static paramsFrom(
         project: Project,
+        liveUpdatesDefault: boolean,
         data?: Record<string, Record<string, unknown>>
     ): ParamConfig[] {
         const params: ParamConfig[] = [];
@@ -64,6 +66,7 @@ export class ProjectConfigFactory {
             const paramConfig = ParamConfigFactory.configFrom(
                 propertyDescriptor.value,
                 key,
+                liveUpdatesDefault,
                 configData
             );
             // Assign ParamConfig object

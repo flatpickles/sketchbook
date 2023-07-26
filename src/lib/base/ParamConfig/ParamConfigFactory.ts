@@ -12,7 +12,8 @@ export class ParamConfigFactory {
     /**
      * Create a config object from a value and an optional config data object (via JSON).
      * @param value - the value to create a config for
-     * @param fallbackName - the name to use if no config data is provided
+     * @param key - the key for this parameter value
+     * @param liveUpdatesDefault - the default value for liveUpdates
      * @param data - optional config data to reference
      * @returns a config object
      * @throws if the value type is unsupported
@@ -21,6 +22,7 @@ export class ParamConfigFactory {
     public static configFrom(
         value: unknown,
         key: string,
+        liveUpdatesDefault: boolean,
         data?: Record<string, unknown>
     ): ParamConfig {
         // Create the proper type for the value and assign defaults
@@ -50,6 +52,9 @@ export class ParamConfigFactory {
         } else {
             throw new Error(`${typeof value} params are unsupported (${key})`);
         }
+
+        // Assign sketchbook liveUpdates value to this param
+        param.liveUpdates = liveUpdatesDefault;
 
         // If the config exists, assign its properties to the param
         if (data) {

@@ -9,7 +9,6 @@ export interface NumberParamConfig extends ParamConfig {
     min: number;
     max: number;
     step: number;
-    liveUpdates: boolean;
     style: NumberParamStyle;
 }
 
@@ -19,7 +18,6 @@ export const NumberParamConfigDefaults: NumberParamConfig = {
     min: 0,
     max: 1,
     step: 0.01,
-    liveUpdates: true,
     style: NumberParamStyle.Slider
 } as const;
 

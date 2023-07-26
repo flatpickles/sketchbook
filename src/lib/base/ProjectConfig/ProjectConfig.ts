@@ -3,7 +3,7 @@ export interface ProjectConfig {
     date?: Date;
     description?: string;
     defaultPresetName?: string;
-    liveUpdates?: boolean;
+    liveUpdates: boolean;
     groups?: string[];
     experimental?: boolean;
 }

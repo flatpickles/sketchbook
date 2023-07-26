@@ -90,6 +90,7 @@ export default class ProjectLoader {
         );
         const params = ProjectConfigFactory.paramsFrom(
             project,
+            props.liveUpdates,
             configModule?.params as Record<string, Record<string, unknown>> | undefined
         );
 
