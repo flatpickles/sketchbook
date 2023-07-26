@@ -2,6 +2,7 @@ import type { ParamConfig } from './ParamConfig';
 import { type NumberParamConfig, NumberParamConfigDefaults } from './NumberParamConfig';
 import { type BooleanParamConfig, BooleanParamConfigDefaults } from './BooleanParamConfig';
 import { FunctionParamConfigDefaults, type FunctionParamConfig } from './FunctionParamConfig';
+import { StringParamConfigDefaults, type StringParamConfig } from './StringParamConfig';
 
 export class ParamConfigFactory {
     /**
@@ -29,6 +30,9 @@ export class ParamConfigFactory {
         } else if (typeof value === 'function') {
             param = {} as FunctionParamConfig;
             Object.assign(param, FunctionParamConfigDefaults);
+        } else if (typeof value === 'string') {
+            param = {} as StringParamConfig;
+            Object.assign(param, StringParamConfigDefaults);
         } else {
             throw new Error('Unsupported param type: ' + typeof value);
         }

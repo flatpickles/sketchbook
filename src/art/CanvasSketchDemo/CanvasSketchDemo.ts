@@ -5,6 +5,7 @@ import canvasSketch from 'canvas-sketch';
 export default class CanvasSketchDemo extends Project {
     size = 0.8;
     colored = true;
+    displayText = 'Hello Canvas Sketch';
 
     #fgColor = `rgb(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255})`;
     randomize = () => {
@@ -13,6 +14,7 @@ export default class CanvasSketchDemo extends Project {
         })`;
     };
 
+    #frameCount = 0;
     #sketchManager: any;
     #sketchFn = () => {
         let position = 0;
@@ -46,7 +48,10 @@ export default class CanvasSketchDemo extends Project {
             context.font = 'bold 24px Helvetica';
             context.textAlign = 'left';
             context.textBaseline = 'top';
-            context.fillText('Hello Canvas Sketch', 400, 100);
+            context.fillText(this.displayText, 400, 100);
+
+            this.#frameCount += 1;
+            // console.log('sketchFn ' + this.#frameCount);
         };
     };
 
@@ -54,11 +59,13 @@ export default class CanvasSketchDemo extends Project {
         this.#sketchManager = await canvasSketch(this.#sketchFn, {
             canvas: this.canvas,
             resizeCanvas: false,
-            animate: true
+            animate: true,
+            hotkeys: false // todo; can we still enable save hotkey without enabling play toggling with space
         });
     }
 
     update() {
+        if (this.#sketchManager && this.#sketchManager.settings.animate) return;
         this.#sketchManager?.render();
     }
 

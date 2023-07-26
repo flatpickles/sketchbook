@@ -4,10 +4,12 @@ Todo / WIP notes:
 
 -   Optional explicit route name (vs. just using the filename/key)
 -   Color parameters! Three-element numeric array...
+    -   Do this with a different "style" – different default styles for different array sizes
 -   Code coverage...
 -   Better error messaging for config file parsing throughout
 -   "trigger" mode for parameter updates - wait until button click
--   "animated" mode for sketches
+-   "animated" mode for sketches: call update with request a
+-   Show a project's groups on right panel
 
 -   Make old style possible via parameterization (or something like it)
 -   Build basic panels & UI for architecture validation
