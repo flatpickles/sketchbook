@@ -22,8 +22,11 @@
         },
         "testBoolean": {
             "name": "Boolean Param",
-            "liveUpdates": true,
+            "liveUpdates": false,
             "enables": []
+        },
+        "testString": {
+            "name": "String Param"
         }
     },
     "param_sections": []

@@ -5,4 +5,8 @@ import Project from '$lib/base/Project';
 export default class NoConfig extends Project {
     testNumber = 42;
     #internalProperty = 42;
+    testFunction = () => {
+        return this.#internalProperty;
+    };
+    testNumericArray = [1, 2, 3];
 }

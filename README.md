@@ -2,7 +2,6 @@
 
 Params WIP:
 
--   liveUpdates as higher-level property / functionality
 -   sections
 -   grid layout!
 -   file inputs?
@@ -10,7 +9,6 @@ Params WIP:
     -   number: separate slider & field, or same?
     -   numeric array: compact is two per line
     -   string: color options
--   model tests
 -   component tests
 -   hover text?
 

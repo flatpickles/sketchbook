@@ -6,6 +6,7 @@ import { ProjectConfigDefaults } from '$lib/base/ProjectConfig/ProjectConfig';
 import { ProjectConfigFactory } from '$lib/base/ProjectConfig/ProjectConfigFactory';
 import { describe, it, expect } from 'vitest';
 import ConfigAndSupport from './TestFiles/ConfigAndSupport/ConfigAndSupport';
+import NoConfig from './TestFiles/NoConfig/NoConfig';
 
 describe('ProjectConfigFactory.propsFrom', () => {
     it('creates default props without provided config data', () => {
@@ -98,5 +99,17 @@ describe('ProjectConfigFactory.propsFrom', () => {
         expect(numberParam.step).toEqual(NumberParamConfigDefaults.step);
         expect(numberParam.liveUpdates).toEqual(NumberParamConfigDefaults.liveUpdates);
         expect(numberParam.style).toEqual(NumberParamConfigDefaults.style);
+    });
+
+    it('applies liveUpdatesDefault properly', () => {
+        // Initialize with no config data
+        const testProject = new NoConfig();
+
+        // Load parameters & check default values
+        const params = ProjectConfigFactory.paramsFrom(testProject, undefined, false);
+        const testParam = params.filter((param) => param.key === 'testNumber')[0];
+        expect(testParam).toBeDefined();
+        const numberParam = testParam as NumberParamConfig;
+        expect(numberParam.liveUpdates).toEqual(false);
     });
 });

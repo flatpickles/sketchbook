@@ -8,6 +8,7 @@ import NoConfig from './TestFiles/NoConfig/NoConfig';
 import ProjectLoader from '$lib/base/FileLoading/ProjectLoader';
 import { ProjectConfigDefaults } from '$lib/base/ProjectConfig/ProjectConfig';
 import * as fileProviders from '$lib/base/FileLoading/FileProviders';
+import { ParamType } from '$lib/base/ParamConfig/ParamConfig';
 
 // Use TestProjects directory for loading tests
 const testProjects = import.meta.glob('/tests/unit/TestFiles/*/*.ts');
@@ -75,10 +76,20 @@ describe('loading specific projects', async () => {
         // Check params config
         const paramsConfig = projectTuple!.params;
         expect(paramsConfig).toBeDefined();
-        expect(Object.keys(paramsConfig!).length).toEqual(1);
-        const testParam = paramsConfig.filter((param) => param.key === 'testNumber')[0];
-        expect(testParam).toBeDefined();
-        expect(testParam.type).toEqual('number');
+        expect(Object.keys(paramsConfig!).length).toEqual(3);
+        const testNumberParam = paramsConfig.filter((param) => param.key === 'testNumber')[0];
+        expect(testNumberParam).toBeDefined();
+        expect(testNumberParam.type).toEqual('number');
+        const unlistedParam = paramsConfig.filter((param) => param.key === '#internalProperty')[0];
+        expect(unlistedParam).toBeUndefined();
+        const testFunctionParam = paramsConfig.filter((param) => param.key === 'testFunction')[0];
+        expect(testFunctionParam).toBeDefined();
+        expect(testFunctionParam.type).toEqual(ParamType.Function);
+        const testNumericArrayParam = paramsConfig.filter(
+            (param) => param.key === 'testNumericArray'
+        );
+        expect(testNumericArrayParam).toBeDefined();
+        expect(testNumericArrayParam[0].type).toEqual(ParamType.NumericArray);
     });
 
     it('loads a project with a config file', async () => {
@@ -105,11 +116,19 @@ describe('loading specific projects', async () => {
         // Check params config
         const paramsConfig = projectTuple!.params;
         expect(paramsConfig).toBeDefined();
-        expect(Object.keys(paramsConfig!).length).toEqual(1);
-        const testParam = paramsConfig.filter((param) => param.key === 'testNumber')[0];
-        expect(testParam).toBeDefined();
-        expect(testParam.type).toEqual('number');
-        expect(testParam.name).toEqual('Number Param');
+        expect(Object.keys(paramsConfig!).length).toEqual(2);
+        const testNumberParam = paramsConfig.filter((param) => param.key === 'testNumber')[0];
+        expect(testNumberParam).toBeDefined();
+        expect(testNumberParam.type).toEqual(ParamType.Number);
+        expect(testNumberParam.name).toEqual('Number Param');
+        expect(testNumberParam.liveUpdates).toEqual(true); // explicit definition
+        const testBooleanParam = paramsConfig.filter((param) => param.key === 'testBoolean')[0];
+        expect(testBooleanParam).toBeUndefined();
+        const testStringParam = paramsConfig.filter((param) => param.key === 'testString')[0];
+        expect(testStringParam).toBeDefined();
+        expect(testStringParam.type).toEqual(ParamType.String);
+        expect(testStringParam.name).toEqual('String Param');
+        expect(testStringParam.liveUpdates).toEqual(false); // project default
         const testUnusedParam = paramsConfig.filter((param) => param.key === 'testUnusedParam')[0];
         expect(testUnusedParam).toBeUndefined();
     });
