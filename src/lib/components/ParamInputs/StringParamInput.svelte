@@ -28,5 +28,6 @@
 <style lang="scss">
     input[type='text'] {
         background-color: orange;
+        width: 100%;
     }
 </style>

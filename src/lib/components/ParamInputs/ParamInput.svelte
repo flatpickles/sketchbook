@@ -3,9 +3,16 @@
     export let hoverText: string | undefined = undefined;
 </script>
 
-<div class="param" data-testid="param" title={hoverText}>
-    <label for={name}>{name}</label>
-    <div class="param-wrapper">
-        <slot />
-    </div>
+<label class="param-label" for={name} title={hoverText}>{name}</label>
+<div class="param-input">
+    <slot />
 </div>
+
+<style lang="scss">
+    .param-label {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        padding-right: 1rem;
+    }
+</style>

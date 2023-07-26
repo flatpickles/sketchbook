@@ -26,3 +26,9 @@
         on:input={paramUpdated}
     />
 </ParamInput>
+
+<style lang="scss">
+    input[type='range'] {
+        width: 100%;
+    }
+</style>

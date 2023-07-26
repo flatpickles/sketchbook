@@ -5,6 +5,9 @@
     "params": {
         "randomize": {
             "name": "Randomize Color"
+        },
+        "bgSize": {
+            "name": "Background Size"
         }
     }
 }

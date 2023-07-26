@@ -21,5 +21,6 @@
     input[type='button'] {
         background-color: orange;
         cursor: pointer;
+        width: 100%;
     }
 </style>

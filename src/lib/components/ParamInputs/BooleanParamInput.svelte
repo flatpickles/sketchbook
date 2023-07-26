@@ -18,3 +18,9 @@
 <ParamInput name={paramConfig.name}>
     <input type="checkbox" bind:checked={value} id={paramConfig.name} on:change={paramUpdated} />
 </ParamInput>
+
+<style lang="scss">
+    input[type='checkbox'] {
+        width: 100%;
+    }
+</style>

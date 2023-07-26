@@ -29,3 +29,9 @@
         {/each}
     </div>
 </ParamInput>
+
+<style lang="scss">
+    input[type='range'] {
+        width: 100%;
+    }
+</style>
