@@ -3,7 +3,8 @@ export enum ParamType {
     Number = 'number',
     Boolean = 'boolean',
     Function = 'function',
-    String = 'string'
+    String = 'string',
+    NumericArray = 'numeric-array'
 }
 
 export interface ParamConfig {

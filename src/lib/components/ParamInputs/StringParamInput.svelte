@@ -4,14 +4,13 @@
     import { createEventDispatcher } from 'svelte';
 
     export let paramConfig: StringParamConfig;
-    export let value: boolean;
+    export let value: string;
 
     const dispatch = createEventDispatcher();
-    function paramUpdated(event: any) {
-        event;
+    function paramUpdated() {
         dispatch('update', {
             config: paramConfig,
-            value: event.target.value
+            value: value
         });
     }
 </script>

@@ -80,7 +80,6 @@ describe('ProjectConfigFactory.propsFrom', () => {
         expect(numberParam.step).toEqual(NumberParamConfigDefaults.step);
         expect(numberParam.liveUpdates).toEqual(NumberParamConfigDefaults.liveUpdates);
         expect(numberParam.style).toEqual(NumberParamConfigDefaults.style);
-        expect(numberParam.options).toEqual(NumberParamConfigDefaults.options);
     });
 
     it('loads params properly from a project object with no param config data', () => {
@@ -99,6 +98,5 @@ describe('ProjectConfigFactory.propsFrom', () => {
         expect(numberParam.step).toEqual(NumberParamConfigDefaults.step);
         expect(numberParam.liveUpdates).toEqual(NumberParamConfigDefaults.liveUpdates);
         expect(numberParam.style).toEqual(NumberParamConfigDefaults.style);
-        expect(numberParam.options).toEqual(NumberParamConfigDefaults.options);
     });
 });

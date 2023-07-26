@@ -7,10 +7,10 @@
     export let value: boolean;
 
     const dispatch = createEventDispatcher();
-    function paramUpdated(event: any) {
+    function paramUpdated() {
         dispatch('update', {
             config: paramConfig,
-            value: event.target.checked
+            value: value
         });
     }
 </script>

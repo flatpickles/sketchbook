@@ -3,6 +3,7 @@ import { type ParamConfig, ParamType, ParamConfigDefaults } from './ParamConfig'
 enum StringParamStyle {
     SingleLine = 'single',
     MultiLine = 'multi',
+    Color = 'color',
     Options = 'options'
 }
 

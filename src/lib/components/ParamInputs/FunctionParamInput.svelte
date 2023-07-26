@@ -6,7 +6,7 @@
     export let paramConfig: FunctionParamConfig;
 
     const dispatch = createEventDispatcher();
-    function paramUpdated(event: any) {
+    function paramUpdated() {
         dispatch('update', {
             config: paramConfig
         });

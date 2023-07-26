@@ -3,6 +3,10 @@ import { type NumberParamConfig, NumberParamConfigDefaults } from './NumberParam
 import { type BooleanParamConfig, BooleanParamConfigDefaults } from './BooleanParamConfig';
 import { FunctionParamConfigDefaults, type FunctionParamConfig } from './FunctionParamConfig';
 import { StringParamConfigDefaults, type StringParamConfig } from './StringParamConfig';
+import {
+    NumericArrayParamConfigDefaults,
+    type NumericArrayParamConfig
+} from './NumericArrayParamConfig';
 
 export class ParamConfigFactory {
     /**
@@ -33,8 +37,18 @@ export class ParamConfigFactory {
         } else if (typeof value === 'string') {
             param = {} as StringParamConfig;
             Object.assign(param, StringParamConfigDefaults);
+        } else if (Array.isArray(value)) {
+            // Validate array param
+            if (typeof value[0] != 'number') {
+                throw new Error(`Non-numeric array params are unsupported (${key})`);
+            } else if (value.length < 1) {
+                throw new Error(`Empty array params are unsupported (${key})`);
+            }
+            // Proceed!
+            param = {} as NumericArrayParamConfig;
+            Object.assign(param, NumericArrayParamConfigDefaults);
         } else {
-            throw new Error('Unsupported param type: ' + typeof value);
+            throw new Error(`${typeof value} params are unsupported (${key})`);
         }
 
         // If the config exists, assign its properties to the param

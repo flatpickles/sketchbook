@@ -14,7 +14,8 @@ export default class CanvasSketchDemo extends Project {
         })`;
     };
 
-    #frameCount = 0;
+    bgSize = [0.7, 0.9];
+
     #sketchManager: any;
     #sketchFn = () => {
         let position = 0;
@@ -23,8 +24,9 @@ export default class CanvasSketchDemo extends Project {
             const { context, width, height } = props;
 
             // Fill the canvas with pink
+            context.clearRect(0, 0, width, height);
             context.fillStyle = 'pink';
-            context.fillRect(0, 0, width, height);
+            context.fillRect(0, 0, width * this.bgSize[0], height * this.bgSize[1]);
 
             // Draw a white rectangle in the center
             context.fillStyle = this.colored ? this.#fgColor : 'white';
@@ -49,9 +51,6 @@ export default class CanvasSketchDemo extends Project {
             context.textAlign = 'left';
             context.textBaseline = 'top';
             context.fillText(this.displayText, 400, 100);
-
-            this.#frameCount += 1;
-            // console.log('sketchFn ' + this.#frameCount);
         };
     };
 

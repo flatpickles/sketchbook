@@ -167,14 +167,15 @@ Options (and parenthesized defaults) for each type are as follows:
     -   `section` (`undefined`): String name for the named section that this param should be grouped within, or undefined if it's a top level param. Params are displayed in the order they are defined in the file unless `section` is defined; sectioned params will be grouped together in the position of the first listed parameter.
 -   **Numeric array:**
     -   `name`, `min`, `max`, `step`, `liveUpdates`, and `section` as above.
-    -   `names` (_[1, 2, ...]_): An array with names for each of the parameters in index order. Must be the same length as the associated property. `name` will still be displayed to identify the entire numeric array param.
-    -   `style` ("field") as above, though without a "selection" option and with a different default (as noted).
+    -   `names` (_[1, 2, ...]_): An array with names for each of the parameters in index order. Must be the same length as the associated property. `name` will still be displayed to identify the entire numeric array param. (TODO: no names?)
+    -   `style` TODO
 -   **String:**
     -   `name`, `liveUpdates`, and `section` as above.
     -   `style` ("single"): A string indicating the display style for this param. Options include:
         -   "single": A single-line text field input.
         -   "multi": A multi-line text field input.
         -   "options": Show a dropdown selector with several options, as described below. This is particularly useful when defining a corresponding project class property as a custom TypeScript enum.
+        -   "color": TODO
     -   `options` (`undefined`): When using the "selection" style, this array of strings will be used for the list of selection options, and the param value will be set to the index in this list when selection occurs.
 -   **Boolean:**
     -   `name` and `section` as above.

@@ -5,6 +5,7 @@
     import BooleanParamInput from './ParamInputs/BooleanParamInput.svelte';
     import FunctionParamInput from './ParamInputs/FunctionParamInput.svelte';
     import NumberParamInput from './ParamInputs/NumberParamInput.svelte';
+    import NumericArrayParamInput from './ParamInputs/NumericArrayParamInput.svelte';
     import StringParamInput from './ParamInputs/StringParamInput.svelte';
 
     export let projectTuple: ProjectTuple;
@@ -58,6 +59,12 @@
             <FunctionParamInput paramConfig={param} on:update={paramUpdated} />
         {:else if ParamGuards.isStringParamConfig(param)}
             <StringParamInput
+                paramConfig={param}
+                value={initialValueForParam(param)}
+                on:update={paramUpdated}
+            />
+        {:else if ParamGuards.isNumericArrayParamConfig(param)}
+            <NumericArrayParamInput
                 paramConfig={param}
                 value={initialValueForParam(param)}
                 on:update={paramUpdated}

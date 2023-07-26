@@ -4,7 +4,7 @@
     import { createEventDispatcher } from 'svelte';
 
     export let paramConfig: NumberParamConfig;
-    export let value: number;
+    export let value: number[];
 
     const dispatch = createEventDispatcher();
     function paramUpdated() {
@@ -16,13 +16,16 @@
 </script>
 
 <ParamInput name={paramConfig.name}>
-    <input
-        type="range"
-        bind:value
-        id={paramConfig.name}
-        min={paramConfig.min}
-        max={paramConfig.max}
-        step={paramConfig.step}
-        on:input={paramUpdated}
-    />
+    <div id={paramConfig.name} class="numeric-array-param-input">
+        {#each value as valueMember}
+            <input
+                type="range"
+                bind:value={valueMember}
+                min={paramConfig.min}
+                max={paramConfig.max}
+                step={paramConfig.step}
+                on:input={paramUpdated}
+            />
+        {/each}
+    </div>
 </ParamInput>

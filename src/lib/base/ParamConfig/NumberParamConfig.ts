@@ -2,7 +2,7 @@ import { type ParamConfig, ParamConfigDefaults, ParamType } from './ParamConfig'
 
 enum NumberParamStyle {
     Slider = 'slider',
-    Input = 'input'
+    Field = 'field'
 }
 
 export interface NumberParamConfig extends ParamConfig {
@@ -11,7 +11,6 @@ export interface NumberParamConfig extends ParamConfig {
     step: number;
     liveUpdates: boolean;
     style: NumberParamStyle;
-    options?: string[];
 }
 
 export const NumberParamConfigDefaults: NumberParamConfig = {
@@ -21,8 +20,7 @@ export const NumberParamConfigDefaults: NumberParamConfig = {
     max: 1,
     step: 0.01,
     liveUpdates: true,
-    style: NumberParamStyle.Slider,
-    options: undefined
+    style: NumberParamStyle.Slider
 } as const;
 
 export function isNumberParamConfig(param: ParamConfig): param is NumberParamConfig {

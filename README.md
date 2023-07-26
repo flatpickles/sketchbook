@@ -1,21 +1,28 @@
 (readme could be the design-doc eventually, for now this is freeform)
 
+Params WIP:
+
+-   liveUpdates as higher-level property / functionality
+-   sections
+-   grid layout!
+-   file inputs?
+-   styles:
+    -   number: separate slider & field, or same?
+    -   numeric array: compact is two per line
+    -   string: color options
+-   model tests
+-   component tests
+-   hover text?
+
 Todo / WIP notes:
 
--   Optional explicit route name (vs. just using the filename/key)
--   Color parameters! Three-element numeric array...
-    -   Do this with a different "style" – different default styles for different array sizes
--   Code coverage...
--   Better error messaging for config file parsing throughout
--   "trigger" mode for parameter updates - wait until button click
--   "animated" mode for sketches: call update with request a
--   Show a project's groups on right panel
-
--   Make old style possible via parameterization (or something like it)
--   Build basic panels & UI for architecture validation
--   Validate canvas-sketch usage with current spec
 -   Read through old notes and absorb in design doc
-
+-   Optional explicit route name (vs. just using the filename/key)
+-   Better error messaging for config file parsing throughout
+-   "trigger" mode for global parameter updates - wait until button click?
+-   "animated" mode for sketches: call update with animation frame request
+-   Show a project's groups on right panel
+-   Make old style possible via parameterization (or something like it)
 -   When changing param defaults (assigned in file) what happens? Especially with local storage... param default vals will get confusing...
 
 -   Param UI
