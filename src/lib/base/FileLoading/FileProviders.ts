@@ -9,7 +9,7 @@ function importProjectConfigFiles(): Record<string, () => Promise<unknown>> {
 }
 
 function importSketchbookConfigFile(): (() => Promise<unknown>) | undefined {
-    const files = import.meta.glob('/src/art/config.json');
+    const files = import.meta.glob('/src/config/config.json');
     if (files && Object.values(files).length > 0) {
         return Object.values(files)[0];
     }
