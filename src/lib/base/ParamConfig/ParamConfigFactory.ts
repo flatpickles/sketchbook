@@ -7,14 +7,15 @@ import {
     NumericArrayParamConfigDefaults,
     type NumericArrayParamConfig
 } from './NumericArrayParamConfig';
+import { ProjectConfigDefaults } from '../ProjectConfig/ProjectConfig';
 
 export class ParamConfigFactory {
     /**
      * Create a config object from a value and an optional config data object (via JSON).
      * @param value - the value to create a config for
      * @param key - the key for this parameter value
-     * @param liveUpdatesDefault - the default value for liveUpdates
      * @param data - optional config data to reference
+     * @param liveUpdatesDefault - the default value for liveUpdates
      * @returns a config object
      * @throws if the value type is unsupported
      * @throws if the config data contains unsupported fields
@@ -22,8 +23,8 @@ export class ParamConfigFactory {
     public static configFrom(
         value: unknown,
         key: string,
-        liveUpdatesDefault: boolean,
-        data?: Record<string, unknown>
+        data?: Record<string, unknown>,
+        liveUpdatesDefault = ProjectConfigDefaults.liveUpdates
     ): ParamConfig {
         // Create the proper type for the value and assign defaults
         let param: ParamConfig;

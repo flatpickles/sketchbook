@@ -44,8 +44,8 @@ export class ProjectConfigFactory {
      */
     public static paramsFrom(
         project: Project,
-        liveUpdatesDefault: boolean,
-        data?: Record<string, Record<string, unknown>>
+        data?: Record<string, Record<string, unknown>>,
+        liveUpdatesDefault = ProjectConfigDefaults.liveUpdates
     ): ParamConfig[] {
         const params: ParamConfig[] = [];
 
@@ -66,8 +66,8 @@ export class ProjectConfigFactory {
             const paramConfig = ParamConfigFactory.configFrom(
                 propertyDescriptor.value,
                 key,
-                liveUpdatesDefault,
-                configData
+                configData,
+                liveUpdatesDefault
             );
             // Assign ParamConfig object
             params.push(paramConfig);
