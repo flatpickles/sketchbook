@@ -21,21 +21,36 @@
     });
 </script>
 
-{#each sortedKeys as key}
-    {#if selectedGroup === undefined || (projects[key].groups?.includes(selectedGroup) ?? false)}
-        <div
-            class="project-list-item"
-            data-testid="project-list-item"
-            class:selected={key === selectedProjectKey}
-        >
-            <a href="/{key}">{projects[key].title}</a>
-        </div>
-    {/if}
-{/each}
+<div class="project-list">
+    {#each sortedKeys as key}
+        {#if selectedGroup === undefined || (projects[key].groups?.includes(selectedGroup) ?? false)}
+            <a href="/{key}"
+                ><div
+                    class="project-list-item"
+                    data-testid="project-list-item"
+                    class:selected={key === selectedProjectKey}
+                >
+                    {projects[key].title}
+                </div></a
+            >
+        {/if}
+    {/each}
+</div>
 
 <style lang="scss">
+    $list-item-margin: calc($project-list-item-spacing / 2);
+
+    a {
+        text-decoration: none;
+        color: inherit;
+    }
+
     .project-list-item {
-        margin-bottom: 0.5rem;
+        padding: $list-item-margin $panel-content-inset;
+    }
+
+    .project-list-item:hover {
+        background-color: aquamarine;
     }
 
     .selected {

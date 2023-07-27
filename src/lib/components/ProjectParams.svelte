@@ -78,5 +78,6 @@
         width: 100%;
         display: grid;
         grid-template-columns: fit-content(50%) 1fr;
+        padding: 0 $panel-content-inset;
     }
 </style>

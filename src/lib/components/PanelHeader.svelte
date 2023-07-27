@@ -4,18 +4,27 @@
     export let description: string | undefined = undefined;
 </script>
 
-<div class="header-lede">
-    <h1 data-testid="header-title">{title}</h1>
-    {#if subtitle}
-        <h2 data-testid="header-subtitle">{@html subtitle}</h2>
+<div class="header-wrapper">
+    <div class="header-lede">
+        <h1 data-testid="header-title">{title}</h1>
+        {#if subtitle}
+            <h2 data-testid="header-subtitle">{@html subtitle}</h2>
+        {/if}
+    </div>
+
+    {#if description}
+        <p data-testid="header-description">{@html description}</p>
     {/if}
 </div>
 
-{#if description}
-    <p data-testid="header-description">{@html description}</p>
-{/if}
-
 <style lang="scss">
+    .header-wrapper {
+        padding: $panel-content-inset $panel-content-inset 0;
+        display: flex;
+        flex-direction: column;
+        gap: $panel-content-spacing;
+    }
+
     h1 {
         font-size: $title-font-size;
     }

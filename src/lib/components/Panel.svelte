@@ -11,7 +11,6 @@
 
         height: 100%;
         width: $panel-width;
-        padding: $panel-content-inset;
         background-color: $panel-bg-color;
 
         border-radius: $panel-border-radius;

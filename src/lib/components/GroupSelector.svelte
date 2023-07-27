@@ -58,6 +58,7 @@
         display: flex;
         flex-direction: row;
         gap: 0.25rem;
+        padding: 0 $panel-content-inset;
     }
 
     .group-item {
