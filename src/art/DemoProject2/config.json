@@ -3,7 +3,7 @@
     "date": "2023-07-20",
     "description": "This is the description for a demo project.",
     "liveUpdates": true,
-    "groups": ["Ants"],
+    "groups": ["Live Graphics"],
     "experimental": false,
 
     "params": {

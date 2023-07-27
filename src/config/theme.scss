@@ -11,18 +11,50 @@ $panel-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.2);
 
 // Panel content
 $panel-content-inset: 1rem;
-$panel-content-spacing: 0.5rem;
+$panel-section-spacing: 0.75rem;
+
+// Panel headers
+$panel-header-section-spacing: 0.5rem;
 $title-font-size: 1.6rem;
 $subtitle-font-size: 1rem;
 $description-font-size: 1rem;
 
+// Group selector
+$group-colors: green, cyan, purple;
+$group-selector-item-spacing: 0.25rem;
+$group-selector-item-padding: 0.25rem 0.75rem;
+@mixin group-selector-item {
+    // Group selector item layout
+    padding: $group-selector-item-padding;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 2rem;
+    font-size: 0.85rem;
+    font-weight: bold;
+    
+    // Group colors
+    @for $i from 1 through length($group-colors) {
+        &.group-#{$i} {
+            background: rgba(nth($group-colors, $i), 0.05);
+            &.selected {
+                background-color: rgba(nth($group-colors, $i), 0.5);
+            }
+        }
+    }
+
+    // More selected behavior
+    &.selected {
+        box-shadow: 0 0.1rem 0.1rem rgba(0, 0, 0, 0.3);
+    }
+}
+
 // Project list
-$project-list-item-spacing: 1rem;
+$project-list-item-spacing: 0.25rem;
+$project-list-item-padding: 0.75rem;
 @mixin project-list-item {
     // Project list item layout
-    margin: calc($project-list-item-spacing / 4) calc($panel-content-inset / 2);
-    border-radius: calc($project-list-item-spacing / 2);
-    padding: calc($project-list-item-spacing * 3 / 4) calc($panel-content-inset / 2);
+    margin: 0 calc($panel-content-inset / 2);
+    padding: $project-list-item-padding calc($panel-content-inset / 2);
+    border-radius: 0.5rem;
 
     // Even & odd backgrounds
     &:nth-child(even) {

@@ -43,6 +43,12 @@
         display: block;
     }
 
+    .project-list {
+        display: flex;
+        flex-direction: column;
+        gap: $project-list-item-spacing;
+    }
+
     .project-list-item {
         @include project-list-item;
     }

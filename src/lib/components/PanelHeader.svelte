@@ -22,7 +22,7 @@
         padding: $panel-content-inset $panel-content-inset 0;
         display: flex;
         flex-direction: column;
-        gap: $panel-content-spacing;
+        gap: $panel-header-section-spacing;
     }
 
     h1 {

@@ -31,7 +31,7 @@
 {#if sortedGroups.length > 0}
     <div class="group-list" data-testid="group-list">
         <div
-            class="group-item"
+            class="group-item group-1"
             data-testid="group-item"
             class:selected={selectedGroup === undefined}
             on:click={handleGroupClick}
@@ -39,9 +39,9 @@
         >
             All
         </div>
-        {#each sortedGroups as group}
+        {#each sortedGroups as group, i}
             <div
-                class="group-item"
+                class="group-item group-{i + 2}"
                 data-testid="group-item"
                 class:selected={selectedGroup === group}
                 on:click={handleGroupClick}
@@ -57,18 +57,12 @@
     .group-list {
         display: flex;
         flex-direction: row;
-        gap: 0.25rem;
+        gap: $group-selector-item-spacing;
         padding: 0 $panel-content-inset;
     }
 
     .group-item {
-        padding: 0.25rem;
-        border: 1px solid #ccc;
-        border-radius: 0.25rem;
+        @include group-selector-item;
         cursor: pointer;
-    }
-
-    .selected {
-        background-color: #ccc;
     }
 </style>
