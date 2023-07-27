@@ -3,7 +3,7 @@
     "date": "2023-06-27",
     "description": "This is the description for a demo project.",
     "liveUpdates": true,
-    "groups": ["Print Media"],
+    "groups": ["Print Media", "Test Category"],
     "experimental": false,
 
     "params": {

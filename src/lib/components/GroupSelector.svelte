@@ -59,10 +59,30 @@
         flex-direction: row;
         gap: $group-selector-item-spacing;
         padding: 0 $panel-content-inset;
+
+        // Fade out edges
+        mask-image: linear-gradient(
+            to right,
+            rgba(0, 0, 0, 0),
+            rgba(0, 0, 0, 1) $panel-content-inset,
+            rgba(0, 0, 0, 1) calc($panel-width - $panel-content-inset * 2),
+            rgba(0, 0, 0, 0)
+        );
+
+        // Scroll with no scrollbar
+        overflow-y: scroll;
+        -ms-overflow-style: none; /* IE and Edge */
+        scrollbar-width: none; /* Firefox */
+    }
+
+    // Webkit hide scrollbar
+    .group-list::-webkit-scrollbar {
+        display: none;
     }
 
     .group-item {
         @include group-selector-item;
         cursor: pointer;
+        white-space: nowrap;
     }
 </style>

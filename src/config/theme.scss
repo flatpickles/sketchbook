@@ -23,9 +23,11 @@ $description-font-size: 1rem;
 $group-colors: green, cyan, purple;
 $group-selector-item-spacing: 0.25rem;
 $group-selector-item-padding: 0.25rem 0.75rem;
+$group-selected-shadow-size: 0.1rem;
 @mixin group-selector-item {
     // Group selector item layout
     padding: $group-selector-item-padding;
+    margin-bottom: calc($group-selected-shadow-size * 2);
     border: 1px solid rgba(0, 0, 0, 0.3);
     border-radius: 2rem;
     font-size: 0.85rem;
@@ -43,7 +45,7 @@ $group-selector-item-padding: 0.25rem 0.75rem;
 
     // More selected behavior
     &.selected {
-        box-shadow: 0 0.1rem 0.1rem rgba(0, 0, 0, 0.3);
+        box-shadow: 0 $group-selected-shadow-size $group-selected-shadow-size rgba(0, 0, 0, 0.3);
     }
 }
 
