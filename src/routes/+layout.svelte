@@ -1,4 +1,5 @@
 <script lang="ts">
+    import '../app.postcss';
     import 'ress';
 </script>
 
