@@ -65,7 +65,7 @@
             to right,
             rgba(0, 0, 0, 0),
             rgba(0, 0, 0, 1) $panel-content-inset,
-            rgba(0, 0, 0, 1) calc($panel-width - $panel-content-inset * 2),
+            rgba(0, 0, 0, 1) calc($panel-width - $panel-content-inset),
             rgba(0, 0, 0, 0)
         );
 

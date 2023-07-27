@@ -1,5 +1,13 @@
 // General style settings
 $font-family: 'Helvetica', sans-serif;
+@mixin link-style {
+    text-decoration: none;
+    color: rgb(20, 109, 56);
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
 
 // Panels
 $panel-width: 20rem;
@@ -7,7 +15,7 @@ $panel-edge-inset: 1rem;
 $panel-border-radius: 1rem;
 $panel-bg-color: rgba(249, 247, 228, 0.9);
 $panel-bg-filter: blur(0.5rem);
-$panel-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.2);
+$panel-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.3);
 
 // Panel content
 $panel-content-inset: 1rem;
@@ -23,13 +31,11 @@ $description-font-size: 1rem;
 $group-colors: green, cyan, purple;
 $group-selector-item-spacing: 0.25rem;
 $group-selector-item-padding: 0.25rem 0.75rem;
-$group-selected-shadow-size: 0.1rem;
 @mixin group-selector-item {
     // Group selector item layout
     padding: $group-selector-item-padding;
-    margin-bottom: calc($group-selected-shadow-size * 2);
     border: 1px solid rgba(0, 0, 0, 0.3);
-    border-radius: 2rem;
+    border-radius: 1rem;
     font-size: 0.85rem;
     font-weight: bold;
     
@@ -44,6 +50,8 @@ $group-selected-shadow-size: 0.1rem;
     }
 
     // More selected behavior
+    $group-selected-shadow-size: 0.1rem;
+    margin-bottom: calc($group-selected-shadow-size * 2);
     &.selected {
         box-shadow: 0 $group-selected-shadow-size $group-selected-shadow-size rgba(0, 0, 0, 0.3);
     }
@@ -68,14 +76,14 @@ $project-list-item-padding: 0.75rem;
 
     // Selected behavior
     &.selected {
-        background-color: rgba(0, 0, 0, 0.1);
+        background-color: rgba(0, 0, 0, 0.07);
         box-shadow: 0 0.1rem 0.1rem rgba(0, 0, 0, 0.3);
         font-weight: bold;
     }
 
     // Hover behavior
     &:hover:not(.selected) {
-        background-color: rgba(0, 0, 0, 0.07);
+        background-color: rgba(0, 0, 0, 0.05);
     }
 }
 

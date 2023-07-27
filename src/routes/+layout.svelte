@@ -3,12 +3,14 @@
     import 'ress';
 </script>
 
-<div class="page-wrapper">
-    <slot />
-</div>
+<slot />
 
 <style lang="scss">
-    .page-wrapper {
+    :global(body) {
         font-family: $font-family;
+    }
+
+    :global(a) {
+        @include link-style;
     }
 </style>
