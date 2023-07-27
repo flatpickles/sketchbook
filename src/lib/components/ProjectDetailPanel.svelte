@@ -30,6 +30,6 @@
         top: 0;
         right: 0;
         height: 100%;
-        padding: $panel-inset;
+        padding: $panel-edge-inset;
     }
 </style>

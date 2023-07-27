@@ -12,6 +12,8 @@
         height: 100%;
         width: $panel-width;
         background-color: $panel-bg-color;
+        backdrop-filter: $panel-bg-filter;
+        -webkit-backdrop-filter: $panel-bg-filter;
 
         border-radius: $panel-border-radius;
         box-shadow: $panel-shadow;

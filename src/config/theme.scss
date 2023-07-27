@@ -3,9 +3,10 @@ $font-family: 'Helvetica', sans-serif;
 
 // Panels
 $panel-width: 20rem;
-$panel-inset: 1rem;
+$panel-edge-inset: 1rem;
 $panel-border-radius: 1rem;
 $panel-bg-color: rgba(249, 247, 228, 0.9);
+$panel-bg-filter: blur(0.5rem);
 $panel-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.2);
 
 // Panel content
@@ -17,5 +18,31 @@ $description-font-size: 1rem;
 
 // Project list
 $project-list-item-spacing: 1rem;
+@mixin project-list-item {
+    // Project list item layout
+    margin: calc($project-list-item-spacing / 4) calc($panel-content-inset / 2);
+    border-radius: calc($project-list-item-spacing / 2);
+    padding: calc($project-list-item-spacing * 3 / 4) calc($panel-content-inset / 2);
+
+    // Even & odd backgrounds
+    &:nth-child(even) {
+        background-color: rgba(0, 0, 0, 0);
+    }
+    &:nth-child(odd) {
+        background-color: rgba(0, 0, 0, 0.03);
+    }
+
+    // Selected behavior
+    &.selected {
+        background-color: rgba(0, 0, 0, 0.1);
+        box-shadow: 0 0.1rem 0.1rem rgba(0, 0, 0, 0.3);
+        font-weight: bold;
+    }
+
+    // Hover behavior
+    &:hover:not(.selected) {
+        background-color: rgba(0, 0, 0, 0.07);
+    }
+}
 
 // Parameter display
