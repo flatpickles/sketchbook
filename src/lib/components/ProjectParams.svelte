@@ -79,5 +79,7 @@
         display: grid;
         grid-template-columns: fit-content(50%) 1fr;
         padding: 0 $panel-content-inset;
+        row-gap: $parameter-item-spacing;
+        align-items: center;
     }
 </style>

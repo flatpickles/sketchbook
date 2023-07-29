@@ -3,9 +3,10 @@ import Project from '$lib/base/Project';
 import canvasSketch from 'canvas-sketch';
 
 export default class CanvasSketchDemo extends Project {
-    size = 0.8;
-    colored = true;
     displayText = 'Hello Canvas Sketch';
+    colored = true;
+    bgSize = [0.7, 0.9];
+    size = 0.8;
 
     #fgColor = `rgb(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255})`;
     randomize = () => {
@@ -13,8 +14,6 @@ export default class CanvasSketchDemo extends Project {
             Math.random() * 255
         })`;
     };
-
-    bgSize = [0.7, 0.9];
 
     #sketchManager: any;
     #sketchFn = () => {

@@ -61,3 +61,8 @@ Long-term goals:
         -   Simple crossfade
         -   Alpha overlay for custom cutouts, wipes, etc
         -   Maybe a base Sketch class function called when transition begins?
+
+Philosophy:
+
+-   Start a project as quickly as possible: idea to pixels without losing a train of thought. Creative workflow optimized from the moment of first concept.
+-   Create portable work. Easily carry your projects into another context (client work, etc) with minimal transportation cost (redesigning, rebuilding).

@@ -14,13 +14,13 @@
 </script>
 
 <ParamInput name={paramConfig.name}>
-    <input type="button" value="Run" on:click={paramUpdated} />
+    <input type="button" value="Run Function" on:click={paramUpdated} />
 </ParamInput>
 
 <style lang="scss">
     input[type='button'] {
-        background-color: orange;
+        @include function-parameter-input;
         cursor: pointer;
-        width: 100%;
+        min-width: 50%;
     }
 </style>

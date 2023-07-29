@@ -2,6 +2,7 @@
     import type { ProjectTuple } from '$lib/base/FileLoading/ProjectLoader';
     import Panel from './Panel.svelte';
     import PanelHeader from './PanelHeader.svelte';
+    import PresetControl from './PresetControl.svelte';
     import ProjectParams from './ProjectParams.svelte';
 
     export let projectTuple: ProjectTuple;
@@ -18,6 +19,7 @@
             })}
             description={projectTuple.props.description}
         />
+        <PresetControl {projectTuple} />
         {#if projectTuple.params && Object.values(projectTuple.params).length > 0}
             <ProjectParams {projectTuple} />
         {/if}

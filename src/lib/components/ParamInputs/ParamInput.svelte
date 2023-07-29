@@ -10,9 +10,19 @@
 
 <style lang="scss">
     .param-label {
+        @include parameter-label;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
         padding-right: 1rem;
+        text-align: left;
+    }
+
+    .param-input {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: $parameter-item-height;
     }
 </style>

@@ -27,7 +27,7 @@
 
 <style lang="scss">
     input[type='text'] {
-        background-color: orange;
+        @include string-parameter-input;
         width: 100%;
     }
 </style>

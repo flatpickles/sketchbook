@@ -19,7 +19,7 @@ export default defineConfig({
     },
     server: {
         fs: {
-            allow: ['art', 'src/art']
+            allow: ['src/art']
         }
     }
 });

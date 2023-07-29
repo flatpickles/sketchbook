@@ -1,3 +1,5 @@
+@use "sass:color";
+
 // General style settings
 $font-family: 'Helvetica', sans-serif;
 @mixin link-style {
@@ -13,7 +15,7 @@ $font-family: 'Helvetica', sans-serif;
 $panel-width: 20rem;
 $panel-edge-inset: 1rem;
 $panel-border-radius: 1rem;
-$panel-bg-color: rgba(249, 247, 228, 0.9);
+$panel-bg-color: rgba(255, 254, 233, 0.9);
 $panel-bg-filter: blur(0.5rem);
 $panel-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.3);
 
@@ -50,7 +52,7 @@ $group-selector-item-padding: 0.25rem 0.75rem;
     }
 
     // More selected behavior
-    $group-selected-shadow-size: 0.1rem;
+    $group-selected-shadow-size: 0.07rem;
     margin-bottom: calc($group-selected-shadow-size * 2);
     &.selected {
         box-shadow: 0 $group-selected-shadow-size $group-selected-shadow-size rgba(0, 0, 0, 0.3);
@@ -87,4 +89,43 @@ $project-list-item-padding: 0.75rem;
     }
 }
 
+// Preset control
+$preset-control-item-spacing: 0.25rem;
+$preset-control-item-padding: 0.25rem 0.75rem;
+@mixin preset-control-item {
+    // Group selector item layout
+    padding: $preset-control-item-padding;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 1rem;
+    font-size: 0.85rem;
+    font-weight: bold;
+}
+
 // Parameter display
+$parameter-item-spacing: 0.5rem;
+$parameter-item-height: 1.5rem;
+@mixin parameter-label {
+    font-size: 0.85rem;
+    font-weight: bold;
+}
+@mixin string-parameter-input {
+    $background-color: rgba(255, 255, 255, 0.5);
+    font-size: 0.85rem;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 0.25rem;
+    background-color: $background-color;
+    padding: 0.25rem;
+}
+@mixin function-parameter-input {
+    $background-color: greenyellow;
+    font-size: 0.85rem;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 1rem;
+    font-weight: bold;
+    background-color: $background-color;
+    padding: 0 0.75rem;
+
+    &:active {
+        background-color: color.scale($background-color, $lightness: -20%);
+    }
+}
