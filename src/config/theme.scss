@@ -1,6 +1,6 @@
 @use "sass:color";
 
-// General style settings
+// General style settings & variables
 $font-family: 'Helvetica', sans-serif;
 @mixin link-style {
     text-decoration: none;
@@ -10,24 +10,37 @@ $font-family: 'Helvetica', sans-serif;
         text-decoration: underline;
     }
 }
+$title-text-size: 1.4rem;
+$large-text-size: 1rem;
+$medium-text-size: 0.9rem;
+$small-text-size: 0.8rem;
 
 // Panels
-$panel-width: 20rem;
-$panel-edge-inset: 1rem;
-$panel-border-radius: 1rem;
-$panel-bg-color: rgba(255, 254, 233, 0.9);
-$panel-bg-filter: blur(0.5rem);
+$panel-width: 16rem;
+$panel-edge-inset: 0.5rem;
+$panel-border-radius: 0.5rem;
+$panel-bg-color: rgba(255, 254, 233, 0.85);
+$panel-bg-filter: blur(1rem);
 $panel-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.3);
 
 // Panel content
-$panel-content-inset: 1rem;
+$panel-content-inset: 0.8rem;
 $panel-section-spacing: 0.75rem;
 
 // Panel headers
 $panel-header-section-spacing: 0.5rem;
-$title-font-size: 1.6rem;
-$subtitle-font-size: 1rem;
-$description-font-size: 1rem;
+@mixin title-text {
+    font-size: $title-text-size;
+    font-weight: bold;
+}
+@mixin subtitle-text {
+    font-size: $large-text-size;
+    font-weight: normal;
+}
+@mixin description-text {
+    font-size: $medium-text-size;
+    font-weight: normal;
+}
 
 // Group selector
 $group-colors: green, cyan, purple;
@@ -38,7 +51,7 @@ $group-selector-item-padding: 0.25rem 0.75rem;
     padding: $group-selector-item-padding;
     border: 1px solid rgba(0, 0, 0, 0.3);
     border-radius: 1rem;
-    font-size: 0.85rem;
+    font-size: $small-text-size;
     font-weight: bold;
     
     // Group colors
@@ -64,6 +77,7 @@ $project-list-item-spacing: 0.25rem;
 $project-list-item-padding: 0.75rem;
 @mixin project-list-item {
     // Project list item layout
+    font-size: $medium-text-size;
     margin: 0 calc($panel-content-inset / 2);
     padding: $project-list-item-padding calc($panel-content-inset / 2);
     border-radius: 0.5rem;
@@ -97,7 +111,7 @@ $preset-control-item-padding: 0.25rem 0.75rem;
     padding: $preset-control-item-padding;
     border: 1px solid rgba(0, 0, 0, 0.3);
     border-radius: 1rem;
-    font-size: 0.85rem;
+    font-size: $small-text-size;
     font-weight: bold;
 }
 
@@ -105,12 +119,12 @@ $preset-control-item-padding: 0.25rem 0.75rem;
 $parameter-item-spacing: 0.5rem;
 $parameter-item-height: 1.5rem;
 @mixin parameter-label {
-    font-size: 0.85rem;
+    font-size: $small-text-size;
     font-weight: bold;
 }
 @mixin string-parameter-input {
     $background-color: rgba(255, 255, 255, 0.5);
-    font-size: 0.85rem;
+    font-size: $small-text-size;
     border: 1px solid rgba(0, 0, 0, 0.3);
     border-radius: 0.25rem;
     background-color: $background-color;
@@ -118,7 +132,7 @@ $parameter-item-height: 1.5rem;
 }
 @mixin function-parameter-input {
     $background-color: greenyellow;
-    font-size: 0.85rem;
+    font-size: $small-text-size;
     border: 1px solid rgba(0, 0, 0, 0.3);
     border-radius: 1rem;
     font-weight: bold;

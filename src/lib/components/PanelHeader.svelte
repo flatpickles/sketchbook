@@ -26,14 +26,14 @@
     }
 
     h1 {
-        font-size: $title-font-size;
+        @include title-text;
     }
 
     h2 {
-        font-size: $subtitle-font-size;
+        @include subtitle-text;
     }
 
     p {
-        font-size: $description-font-size;
+        @include description-text;
     }
 </style>
