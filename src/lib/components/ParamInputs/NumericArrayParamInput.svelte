@@ -34,4 +34,11 @@
     input[type='range'] {
         width: 100%;
     }
+
+    .numeric-array-param-input {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
 </style>

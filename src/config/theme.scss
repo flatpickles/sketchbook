@@ -22,6 +22,7 @@ $panel-border-radius: 0.5rem;
 $panel-bg-color: rgba(255, 254, 233, 0.85);
 $panel-bg-filter: blur(1rem);
 $panel-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.3);
+$panel-outline: 1px solid rgba(0, 0, 0, 0.3);
 
 // Panel content
 $panel-content-inset: 0.8rem;
@@ -116,8 +117,22 @@ $preset-control-item-padding: 0.25rem 0.75rem;
 }
 
 // Parameter display
-$parameter-item-spacing: 0.5rem;
-$parameter-item-height: 1.5rem;
+$parameter-item-spacing-vertical: 0.25rem;
+$parameter-item-spacing-horizontal: 0.5rem;
+$parameter-item-padding-vertical: 0.25rem;
+$border-radius: 0.5rem; // move elsewhere
+@mixin parameter-item {
+    font-size: $medium-text-size;
+    margin: 0 calc($panel-content-inset / 2);
+    padding: $parameter-item-padding-vertical calc($panel-content-inset / 2);
+
+    // .odd {
+    //     background-color: rgba(0, 0, 0, 0.03);
+    // }
+    // .even {
+    //     background-color: rgba(0, 0, 0, 0);
+    // }
+}
 @mixin parameter-label {
     font-size: $small-text-size;
     font-weight: bold;

@@ -17,5 +17,6 @@
 
         border-radius: $panel-border-radius;
         box-shadow: $panel-shadow;
+        outline: $panel-outline;
     }
 </style>
