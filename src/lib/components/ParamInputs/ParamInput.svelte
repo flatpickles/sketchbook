@@ -4,22 +4,19 @@
     export let even = false;
 </script>
 
-<div class="label-wrapper">
+<div class="label-wrapper" class:even class:odd={!even}>
     <label class="param-label" for={name} title={hoverText}>{name}</label>
 </div>
-<div class="input-wrapper">
+<div class="input-wrapper" class:even class:odd={!even}>
     <slot />
 </div>
 
 <style lang="scss">
-    $debug-bg-color: rgba(255, 0, 0, 0.2);
-
     .label-wrapper {
         height: 100%;
         display: flex;
         align-items: center;
         justify-content: left;
-        background-color: $debug-bg-color;
         @include parameter-item;
         padding-right: calc($parameter-item-spacing-horizontal / 2);
         margin-right: 0;
@@ -41,7 +38,6 @@
         align-items: center;
         justify-content: center;
 
-        background-color: $debug-bg-color;
         @include parameter-item;
         padding-left: calc($parameter-item-spacing-horizontal / 2);
         margin-left: 0;

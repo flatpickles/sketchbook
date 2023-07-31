@@ -126,12 +126,13 @@ $border-radius: 0.5rem; // move elsewhere
     margin: 0 calc($panel-content-inset / 2);
     padding: $parameter-item-padding-vertical calc($panel-content-inset / 2);
 
-    // .odd {
-    //     background-color: rgba(0, 0, 0, 0.03);
-    // }
-    // .even {
-    //     background-color: rgba(0, 0, 0, 0);
-    // }
+    &.odd {
+        font-size: 2rem;
+        background-color: rgba(0, 0, 0, 0);
+    }
+    &.even {
+        background-color: rgba(0, 0, 0, 0.05);
+    }
 }
 @mixin parameter-label {
     font-size: $small-text-size;

@@ -5,6 +5,7 @@
 
     export let paramConfig: BooleanParamConfig;
     export let value: boolean;
+    export let even = false;
 
     const dispatch = createEventDispatcher();
     function paramUpdated() {
@@ -15,7 +16,7 @@
     }
 </script>
 
-<ParamInput name={paramConfig.name}>
+<ParamInput name={paramConfig.name} {even}>
     <input type="checkbox" bind:checked={value} id={paramConfig.name} on:change={paramUpdated} />
 </ParamInput>
 

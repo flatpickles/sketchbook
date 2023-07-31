@@ -4,6 +4,7 @@
     import { createEventDispatcher } from 'svelte';
 
     export let paramConfig: FunctionParamConfig;
+    export let even = false;
 
     const dispatch = createEventDispatcher();
     function paramUpdated() {
@@ -13,7 +14,7 @@
     }
 </script>
 
-<ParamInput name={paramConfig.name}>
+<ParamInput name={paramConfig.name} {even}>
     <input type="button" value="Run Function" on:click={paramUpdated} />
 </ParamInput>
 

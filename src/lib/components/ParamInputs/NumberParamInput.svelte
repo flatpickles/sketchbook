@@ -5,6 +5,7 @@
 
     export let paramConfig: NumberParamConfig;
     export let value: number;
+    export let even = false;
 
     const dispatch = createEventDispatcher();
     function paramUpdated() {
@@ -15,7 +16,7 @@
     }
 </script>
 
-<ParamInput name={paramConfig.name}>
+<ParamInput name={paramConfig.name} {even}>
     <input
         type="range"
         bind:value

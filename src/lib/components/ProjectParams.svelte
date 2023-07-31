@@ -42,32 +42,40 @@
 </script>
 
 <div class="params-wrapper">
-    {#each projectTuple.params as param}
+    {#each projectTuple.params as param, paramIdx}
         {#if ParamGuards.isNumberParamConfig(param)}
             <NumberParamInput
                 paramConfig={param}
                 value={initialValueForParam(param)}
                 on:update={paramUpdated}
+                even={paramIdx % 2 == 0}
             />
         {:else if ParamGuards.isBooleanParamConfig(param)}
             <BooleanParamInput
                 paramConfig={param}
                 value={initialValueForParam(param)}
                 on:update={paramUpdated}
+                even={paramIdx % 2 == 0}
             />
         {:else if ParamGuards.isFunctionParamConfig(param)}
-            <FunctionParamInput paramConfig={param} on:update={paramUpdated} />
+            <FunctionParamInput
+                paramConfig={param}
+                on:update={paramUpdated}
+                even={paramIdx % 2 == 0}
+            />
         {:else if ParamGuards.isStringParamConfig(param)}
             <StringParamInput
                 paramConfig={param}
                 value={initialValueForParam(param)}
                 on:update={paramUpdated}
+                even={paramIdx % 2 == 0}
             />
         {:else if ParamGuards.isNumericArrayParamConfig(param)}
             <NumericArrayParamInput
                 paramConfig={param}
                 value={initialValueForParam(param)}
                 on:update={paramUpdated}
+                even={paramIdx % 2 == 0}
             />
         {/if}
     {/each}
