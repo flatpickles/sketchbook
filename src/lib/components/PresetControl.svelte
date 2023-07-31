@@ -18,6 +18,7 @@
         flex-direction: row;
         justify-content: space-between;
         gap: $preset-control-item-spacing;
+        user-select: none;
     }
 
     .preset-selector {

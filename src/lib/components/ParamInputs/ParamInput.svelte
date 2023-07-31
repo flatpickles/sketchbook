@@ -17,6 +17,8 @@
         display: flex;
         align-items: center;
         justify-content: left;
+        user-select: none;
+
         @include parameter-item;
         padding-right: calc($parameter-item-spacing-horizontal / 2);
         margin-right: 0;
@@ -24,11 +26,13 @@
     }
 
     .param-label {
-        @include parameter-label;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
         text-align: left;
+        pointer-events: none;
+
+        @include parameter-label;
     }
 
     .input-wrapper {
@@ -37,6 +41,7 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
+        user-select: none;
 
         @include parameter-item;
         padding-left: calc($parameter-item-spacing-horizontal / 2);

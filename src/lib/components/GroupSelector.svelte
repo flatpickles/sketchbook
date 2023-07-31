@@ -84,5 +84,6 @@
         @include group-selector-item;
         cursor: pointer;
         white-space: nowrap;
+        user-select: none;
     }
 </style>

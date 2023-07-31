@@ -50,6 +50,7 @@
     }
 
     .project-list-item {
+        user-select: none;
         @include project-list-item;
     }
 </style>
