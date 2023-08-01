@@ -28,6 +28,7 @@
                 step={paramConfig.step}
                 on:input={paramUpdated.bind(null, false)}
                 on:change={paramUpdated.bind(null, true)}
+                data-testid="numeric-array-param-input"
             />
         {/each}
     </div>

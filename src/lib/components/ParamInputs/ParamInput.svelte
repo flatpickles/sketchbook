@@ -5,7 +5,7 @@
 </script>
 
 <div class="label-wrapper" class:even class:odd={!even}>
-    <label class="param-label" for={name} title={hoverText}>{name}</label>
+    <label class="param-label" data-testid="param-label" for={name} title={hoverText}>{name}</label>
 </div>
 <div class="input-wrapper" class:even class:odd={!even}>
     <slot />

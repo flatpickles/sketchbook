@@ -18,7 +18,13 @@
 </script>
 
 <ParamInput name={paramConfig.name} {even}>
-    <input type="checkbox" bind:checked={value} id={paramConfig.name} on:change={paramUpdated} />
+    <input
+        type="checkbox"
+        bind:checked={value}
+        id={paramConfig.name}
+        on:change={paramUpdated}
+        data-testid="boolean-param-input"
+    />
 </ParamInput>
 
 <style lang="scss">

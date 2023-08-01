@@ -16,7 +16,12 @@
 </script>
 
 <ParamInput name={paramConfig.name} {even}>
-    <input type="button" value="Run Function" on:click={paramUpdated} />
+    <input
+        type="button"
+        value="Run Function"
+        on:click={paramUpdated}
+        data-testid="function-param-input"
+    />
 </ParamInput>
 
 <style lang="scss">

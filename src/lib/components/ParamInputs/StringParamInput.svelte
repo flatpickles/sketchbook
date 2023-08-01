@@ -25,6 +25,7 @@
         on:input={paramUpdated.bind(null, false)}
         on:blur={paramUpdated.bind(null, true)}
         autocomplete="off"
+        data-testid="string-param-input"
     />
 </ParamInput>
 

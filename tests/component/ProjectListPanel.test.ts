@@ -161,7 +161,7 @@ describe('ProjectListPanel rendering', () => {
             selectedProjectKey: 'apple'
         });
 
-        const appleItem = screen.getByText('Apple').parentElement;
+        const appleItem = screen.getByText('Apple');
         expect(appleItem?.classList.contains('selected')).toBe(true);
     });
 });
