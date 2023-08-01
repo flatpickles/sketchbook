@@ -96,7 +96,7 @@
     .params-wrapper {
         width: 100%;
         display: grid;
-        grid-template-columns: fit-content(50%) 1fr;
+        grid-template-columns: fit-content($parameter-label-max-width) 1fr;
         row-gap: $parameter-item-spacing-vertical;
         align-items: center;
     }

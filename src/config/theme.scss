@@ -119,8 +119,9 @@ $preset-control-item-padding: 0.25rem 0.75rem;
 
 // Parameter display
 $parameter-item-spacing-vertical: 0.25rem;
-$parameter-item-spacing-horizontal: 1rem;
+$parameter-item-spacing-horizontal: 0.75rem;
 $parameter-item-padding-vertical: 0.5rem;
+$parameter-label-max-width: 50%;
 $border-radius: 0.5rem; // move elsewhere
 @mixin parameter-item {
     font-size: $medium-text-size;

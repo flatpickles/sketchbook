@@ -17,6 +17,7 @@
         display: flex;
         align-items: center;
         justify-content: left;
+        overflow: hidden;
 
         @include parameter-item;
         padding-right: calc($parameter-item-spacing-horizontal / 2);
@@ -26,10 +27,10 @@
 
     .param-label {
         white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
         text-align: left;
         pointer-events: none;
+        overflow: hidden;
+        text-overflow: ellipsis;
 
         @include parameter-label;
     }
