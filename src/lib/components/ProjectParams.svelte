@@ -39,6 +39,7 @@
             );
             if (descriptor?.value) {
                 descriptor.value();
+                projectTuple.project.update();
             }
         }
     }
