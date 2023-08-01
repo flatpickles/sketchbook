@@ -13,17 +13,26 @@
     // A little dark magic to apply the updated param (or call the associated function)
     function paramUpdated(event: any) {
         const updatedConfig = event.detail.config as ParamConfig;
+
+        // If the param update isn't complete and liveUpdates isn't set, we shan't proceed
+        if (!event.detail.complete && !updatedConfig.liveUpdates) {
+            return;
+        }
+
+        // Update the project's value for this key, or call the named function
         if (updatedConfig.type != ParamType.Function) {
-            // Change the project's value for this key, and update the project
+            // If it's an array, we need to copy it so that we don't mutate the original
+            const value = Array.isArray(event.detail.value)
+                ? [...event.detail.value]
+                : event.detail.value;
             Object.defineProperty(projectTuple.project, updatedConfig.key, {
-                value: event.detail.value,
+                value: value,
                 writable: true,
                 enumerable: true,
                 configurable: true
             });
             projectTuple.project.update();
         } else {
-            // Call the named function on the project
             const descriptor = Object.getOwnPropertyDescriptor(
                 projectTuple.project,
                 updatedConfig.key
@@ -37,7 +46,9 @@
     // A little dark magic to get the properly typed initial value for a given param
     function initialValueForParam<T extends ParamConfig>(paramConfig: T): ParamValueType<T> {
         const descriptor = Object.getOwnPropertyDescriptor(projectTuple.project, paramConfig.key);
-        return descriptor?.value as ParamValueType<T>;
+        const value = descriptor?.value;
+        // If it's an array, we need to copy it so that we don't mutate the original
+        return (Array.isArray(value) ? [...value] : value) as ParamValueType<T>;
     }
 </script>
 

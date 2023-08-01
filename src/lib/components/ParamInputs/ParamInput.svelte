@@ -17,7 +17,6 @@
         display: flex;
         align-items: center;
         justify-content: left;
-        user-select: none;
 
         @include parameter-item;
         padding-right: calc($parameter-item-spacing-horizontal / 2);

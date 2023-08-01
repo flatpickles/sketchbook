@@ -7,10 +7,10 @@
     "experimental": false,
 
     "params": {
-        "testNumber": {
+        "size": {
             "name": "Cool Number",
             "min": 0,
-            "max": 100,
+            "max": 1,
             "step": 0.01,
             "liveUpdates": true,
             "style": "slider"

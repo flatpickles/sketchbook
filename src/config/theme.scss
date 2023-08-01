@@ -14,6 +14,7 @@ $title-text-size: 1.4rem;
 $large-text-size: 1rem;
 $medium-text-size: 0.9rem;
 $small-text-size: 0.8rem;
+$xs-text-size: 0.7rem;
 
 // Panels
 $panel-width: 16rem;
@@ -22,7 +23,7 @@ $panel-border-radius: 0.5rem;
 $panel-bg-color: rgba(255, 254, 233, 0.85);
 $panel-bg-filter: blur(1rem);
 $panel-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.3);
-$panel-outline: 1px solid rgba(0, 0, 0, 0.3);
+$panel-outline: 1px solid rgba(0, 0, 0, 0.1);
 
 // Panel content
 $panel-content-inset: 0.8rem;
@@ -118,8 +119,8 @@ $preset-control-item-padding: 0.25rem 0.75rem;
 
 // Parameter display
 $parameter-item-spacing-vertical: 0.25rem;
-$parameter-item-spacing-horizontal: 0.5rem;
-$parameter-item-padding-vertical: 0.25rem;
+$parameter-item-spacing-horizontal: 1rem;
+$parameter-item-padding-vertical: 0.5rem;
 $border-radius: 0.5rem; // move elsewhere
 @mixin parameter-item {
     font-size: $medium-text-size;
@@ -140,7 +141,7 @@ $border-radius: 0.5rem; // move elsewhere
 }
 @mixin string-parameter-input {
     $background-color: rgba(255, 255, 255, 0.5);
-    font-size: $small-text-size;
+    font-size: $xs-text-size;
     border: 1px solid rgba(0, 0, 0, 0.3);
     border-radius: 0.25rem;
     background-color: $background-color;
@@ -148,12 +149,12 @@ $border-radius: 0.5rem; // move elsewhere
 }
 @mixin function-parameter-input {
     $background-color: greenyellow;
-    font-size: $small-text-size;
+    font-size: $xs-text-size;
     border: 1px solid rgba(0, 0, 0, 0.3);
     border-radius: 1rem;
     font-weight: bold;
     background-color: $background-color;
-    padding: 0 0.75rem;
+    padding: 0.1rem 0.75rem;
 
     &:active {
         background-color: color.scale($background-color, $lightness: -20%);

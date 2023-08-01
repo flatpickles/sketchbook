@@ -8,10 +8,11 @@
     export let even = false;
 
     const dispatch = createEventDispatcher();
-    function paramUpdated() {
+    function paramUpdated(complete: boolean) {
         dispatch('update', {
             config: paramConfig,
-            value: value
+            value: value,
+            complete: complete
         });
     }
 </script>
@@ -21,7 +22,8 @@
         type="text"
         bind:value
         id={paramConfig.name}
-        on:input={paramUpdated}
+        on:input={paramUpdated.bind(null, false)}
+        on:blur={paramUpdated.bind(null, true)}
         autocomplete="off"
     />
 </ParamInput>

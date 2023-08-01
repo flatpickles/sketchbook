@@ -11,7 +11,8 @@
     function paramUpdated() {
         dispatch('update', {
             config: paramConfig,
-            value: value
+            value: value,
+            complete: true
         });
     }
 </script>

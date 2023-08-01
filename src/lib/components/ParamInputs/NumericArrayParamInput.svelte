@@ -8,10 +8,11 @@
     export let even = false;
 
     const dispatch = createEventDispatcher();
-    function paramUpdated() {
+    function paramUpdated(complete: boolean) {
         dispatch('update', {
             config: paramConfig,
-            value: value
+            value: value,
+            complete: complete
         });
     }
 </script>
@@ -25,7 +26,8 @@
                 min={paramConfig.min}
                 max={paramConfig.max}
                 step={paramConfig.step}
-                on:input={paramUpdated}
+                on:input={paramUpdated.bind(null, false)}
+                on:change={paramUpdated.bind(null, true)}
             />
         {/each}
     </div>

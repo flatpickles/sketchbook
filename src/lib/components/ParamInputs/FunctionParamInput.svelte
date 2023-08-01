@@ -9,7 +9,8 @@
     const dispatch = createEventDispatcher();
     function paramUpdated() {
         dispatch('update', {
-            config: paramConfig
+            config: paramConfig,
+            complete: true
         });
     }
 </script>
