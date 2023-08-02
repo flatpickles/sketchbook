@@ -96,6 +96,7 @@
 <style lang="scss">
     .params-wrapper {
         width: 100%;
+        margin-top: calc($panel-section-spacing / 2); // todo: scrolling etc
         display: grid;
         grid-template-columns: fit-content($parameter-label-max-width) 1fr;
         row-gap: $parameter-item-spacing-vertical;

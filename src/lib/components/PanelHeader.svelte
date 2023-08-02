@@ -22,6 +22,9 @@
 
 <style lang="scss">
     .header-wrapper {
+        flex-shrink: 0;
+        margin-bottom: calc($panel-section-spacing / 2);
+
         display: flex;
         flex-direction: column;
         gap: $panel-header-section-spacing;

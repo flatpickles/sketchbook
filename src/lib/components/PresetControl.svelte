@@ -12,7 +12,7 @@
 <style lang="scss">
     .presets-wrapper {
         width: 100%;
-        padding: 0 $panel-content-inset;
+        padding: calc($panel-content-inset / 2) $panel-content-inset;
 
         display: flex;
         flex-direction: row;

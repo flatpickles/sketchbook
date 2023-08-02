@@ -7,7 +7,6 @@
         display: flex;
         flex-direction: column;
         justify-content: top;
-        row-gap: $panel-section-spacing;
 
         height: 100%;
         width: $panel-width;

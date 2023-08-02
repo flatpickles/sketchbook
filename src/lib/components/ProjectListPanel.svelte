@@ -3,6 +3,7 @@
     import type { ProjectConfig } from '$lib/base/ProjectConfig/ProjectConfig';
     import GroupSelector from './GroupSelector.svelte';
     import Panel from './Panel.svelte';
+    import PanelFooter from './PanelFooter.svelte';
     import PanelHeader from './PanelHeader.svelte';
     import ProjectList from './ProjectList.svelte';
 
@@ -27,6 +28,7 @@
             {selectedProjectKey}
             sorting={sketchbookConfig.sorting}
         />
+        <PanelFooter />
     </Panel>
 </div>
 

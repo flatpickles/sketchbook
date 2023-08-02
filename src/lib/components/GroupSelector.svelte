@@ -55,17 +55,19 @@
 
 <style lang="scss">
     .group-list {
+        flex-shrink: 0;
+
         display: flex;
         flex-direction: row;
         gap: $group-selector-item-spacing;
-        padding: 0 $panel-content-inset;
+        padding: calc($panel-content-inset / 2) $panel-content-inset 0 $panel-content-inset;
 
         // Fade out edges
         mask-image: linear-gradient(
             to right,
             rgba(0, 0, 0, 0),
             rgba(0, 0, 0, 1) $panel-content-inset,
-            rgba(0, 0, 0, 1) calc($panel-width - $panel-content-inset),
+            rgba(0, 0, 0, 1) calc(100% - $panel-content-inset),
             rgba(0, 0, 0, 0)
         );
 
