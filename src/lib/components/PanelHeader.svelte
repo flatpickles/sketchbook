@@ -1,7 +1,14 @@
 <script lang="ts">
+    import { createEventDispatcher } from 'svelte';
+
     export let title: string;
     export let subtitle: string | undefined = undefined;
     export let description: string | undefined = undefined;
+
+    const dispatch = createEventDispatcher();
+    function closeClicked() {
+        dispatch('close');
+    }
 </script>
 
 <div class="header-wrapper">
@@ -12,7 +19,7 @@
                 <h2 data-testid="header-subtitle">{@html subtitle}</h2>
             {/if}
         </div>
-        <button class="header-button"><i class="fa fa-close" /></button>
+        <button class="header-button" on:click={closeClicked}><i class="fa fa-close" /></button>
     </div>
 
     {#if description}

@@ -6,6 +6,10 @@
     import ProjectParams from './ProjectParams.svelte';
 
     export let projectTuple: ProjectTuple;
+
+    function closePanel() {
+        alert('todo: close panel');
+    }
 </script>
 
 <div class="panel-container">
@@ -18,6 +22,7 @@
                 month: 'long'
             })}
             description={projectTuple.props.description}
+            on:close={closePanel}
         />
         <PresetControl {projectTuple} />
         {#if projectTuple.params && Object.values(projectTuple.params).length > 0}

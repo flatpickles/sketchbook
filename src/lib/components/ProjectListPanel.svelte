@@ -12,6 +12,18 @@
 
     export let selectedProjectKey: string;
     let selectedGroup: string | undefined;
+
+    function closePanel() {
+        alert('todo: close panel');
+    }
+
+    function showInfo() {
+        alert('todo: show info');
+    }
+
+    function showSettings() {
+        alert('todo: show settings');
+    }
 </script>
 
 <div class="panel-container">
@@ -20,6 +32,7 @@
             title={sketchbookConfig.title}
             subtitle={sketchbookConfig.subtitle}
             description={sketchbookConfig.description}
+            on:close={closePanel}
         />
         <GroupSelector projects={Object.values(projects)} bind:selectedGroup />
         <ProjectList
@@ -32,6 +45,8 @@
             footerText={sketchbookConfig.footer}
             leftButton="fa-info-circle"
             rightButton="fa-gear"
+            on:leftbuttonclick={showInfo}
+            on:rightbuttonclick={showSettings}
         />
     </Panel>
 </div>

@@ -14,6 +14,7 @@ describe('ProjectListPanel rendering', () => {
             title: 'Test Title',
             subtitle: 'Test Subtitle',
             description: 'Test Description',
+            footer: 'Test Footer',
             sorting: ProjectSortType.Alphabetical,
             defaultGroup: undefined,
             storeParamValues: false,
@@ -31,6 +32,8 @@ describe('ProjectListPanel rendering', () => {
         expect(subtitle.textContent).toBe(sketchbookConfig.subtitle);
         const description = screen.getByTestId('header-description');
         expect(description.textContent).toBe(sketchbookConfig.description);
+        const footer = screen.getByTestId('footer-text');
+        expect(footer.textContent).toBe(sketchbookConfig.footer);
     });
 
     it('does not render subtitle or description if not provided', async () => {
@@ -38,6 +41,7 @@ describe('ProjectListPanel rendering', () => {
             title: 'Test Title',
             subtitle: undefined,
             description: undefined,
+            footer: undefined,
             sorting: ProjectSortType.Alphabetical,
             defaultGroup: undefined,
             storeParamValues: false,
@@ -62,6 +66,7 @@ describe('ProjectListPanel rendering', () => {
             title: 'Test Title',
             subtitle: undefined,
             description: undefined,
+            footer: undefined,
             sorting: ProjectSortType.Alphabetical,
             defaultGroup: undefined,
             storeParamValues: false,
@@ -99,6 +104,7 @@ describe('ProjectListPanel rendering', () => {
             title: 'Test Title',
             subtitle: undefined,
             description: undefined,
+            footer: undefined,
             sorting: ProjectSortType.Date,
             defaultGroup: undefined,
             storeParamValues: false,
@@ -136,6 +142,7 @@ describe('ProjectListPanel rendering', () => {
             title: 'Test Title',
             subtitle: undefined,
             description: undefined,
+            footer: undefined,
             sorting: ProjectSortType.Date,
             defaultGroup: undefined,
             storeParamValues: false,
@@ -172,6 +179,7 @@ describe('ProjectListPanel interaction', () => {
             title: 'Test Title',
             subtitle: undefined,
             description: undefined,
+            footer: undefined,
             sorting: ProjectSortType.Date,
             defaultGroup: undefined,
             storeParamValues: false,

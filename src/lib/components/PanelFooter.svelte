@@ -1,17 +1,37 @@
 <script lang="ts">
+    import { createEventDispatcher } from 'svelte';
+
     export let footerText: string | undefined = undefined;
     export let leftButton: string | undefined = undefined;
     export let rightButton: string | undefined = undefined;
+
+    const dispatch = createEventDispatcher();
+    function leftButtonClicked() {
+        dispatch('leftbuttonclick');
+    }
+    function rightButtonClicked() {
+        dispatch('rightbuttonclick');
+    }
 </script>
 
 <div class="footer-wrapper">
-    <button class="left-button" class:hidden={leftButton == undefined}>
+    <button
+        class="left-button"
+        class:hidden={leftButton == undefined}
+        on:click={leftButtonClicked}
+        on:keypress={leftButtonClicked}
+    >
         <i class="fa {leftButton}" />
     </button>
-    <div class="footer-text" class:hidden={footerText == undefined}>
+    <div class="footer-text" data-testid="footer-text" class:hidden={footerText == undefined}>
         {@html footerText}
     </div>
-    <button class="right-button" class:hidden={rightButton == undefined}>
+    <button
+        class="right-button"
+        class:hidden={rightButton == undefined}
+        on:click={rightButtonClicked}
+        on:keypress={rightButtonClicked}
+    >
         <i class="fa {rightButton}" />
     </button>
 </div>
