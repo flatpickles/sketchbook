@@ -61,7 +61,7 @@ $panel-header-section-spacing: 0.5rem;
 }
 @mixin header-button {
     @include panel-button;
-    margin: 0  0 calc($panel-content-inset / 2) calc($panel-content-inset / 2);
+    margin: 0 0 calc($panel-content-inset / 2) calc($panel-content-inset / 2);
     border-style: none none solid solid;
     border-radius: 0 $panel-border-radius 0 $panel-border-radius;
 }
@@ -182,4 +182,17 @@ $border-radius: 0.5rem; // move elsewhere // ok against panel corner?
     &:active {
         background-color: color.scale($background-color, $lightness: -20%);
     }
+}
+
+// Panel footers
+@mixin footer-text {
+    font-size: $xs-text-size;
+    font-weight: normal;
+    color: rgba(0, 0, 0, 0.5);
+}
+@mixin footer-button {
+    @include panel-button;
+    margin: calc($panel-content-inset / 2) 0 0 calc($panel-content-inset / 2);
+    border-style: solid none none solid;
+    border-radius: $panel-border-radius 0 $panel-border-radius 0;
 }

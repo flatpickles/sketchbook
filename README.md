@@ -9,11 +9,13 @@ Params WIP:
     -   number: separate slider & field, or same?
     -   numeric array: compact is two per line
     -   string: color options
+    -   MIDI map: for numeric & boolean params,
 -   component tests
 -   hover text?
 
 Todo / WIP notes:
 
+-   How can I use the same input components within array parameters? Use a grid layout for longform (full width) vs compact (half width / side by side) display styles.
 -   Read through old notes and absorb in design doc
 -   Optional explicit route name (vs. just using the filename/key)
 -   Better error messaging for config file parsing throughout
