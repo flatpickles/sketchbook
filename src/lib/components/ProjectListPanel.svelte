@@ -28,7 +28,11 @@
             {selectedProjectKey}
             sorting={sketchbookConfig.sorting}
         />
-        <PanelFooter />
+        <PanelFooter
+            footerText={sketchbookConfig.footer}
+            leftButton="fa-info-circle"
+            rightButton="fa-gear"
+        />
     </Panel>
 </div>
 

@@ -15,6 +15,7 @@ Params WIP:
 
 Todo / WIP notes:
 
+-   Clicking a group or project list item should scroll it fully into view.
 -   How can I use the same input components within array parameters? Use a grid layout for longform (full width) vs compact (half width / side by side) display styles.
 -   Read through old notes and absorb in design doc
 -   Optional explicit route name (vs. just using the filename/key)
@@ -22,7 +23,7 @@ Todo / WIP notes:
 -   "trigger" mode for global parameter updates - wait until button click?
 -   "animated" mode for sketches: call update with animation frame request
 -   Show a project's groups on right panel
--   Make old style possible via parameterization (or something like it)
+-   Make old style possible via theme config (or something like it)
 -   When changing param defaults (assigned in file) what happens? Especially with local storage... param default vals will get confusing...
 
 -   Param UI

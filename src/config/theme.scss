@@ -181,5 +181,12 @@ $border-radius: 0.5rem; // move elsewhere // ok against panel corner?
 @mixin footer-text {
     font-size: $xs-text-size;
     font-weight: normal;
-    color: rgba(0, 0, 0, 0.4);
+    color: rgba(0, 0, 0, 0.5);
+}
+@mixin footer-link-style {
+    color: inherit;
+    text-decoration: none;
+    &:hover {
+        text-decoration: underline;
+    }
 }

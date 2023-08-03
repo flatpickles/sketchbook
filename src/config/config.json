@@ -2,6 +2,7 @@
     "title": "Sketchbook",
     "subtitle": "by <a href='http://flatpickles.com'>flatpickles</a>",
     "description": "This is a collection of programmatic art pieces. Code and details <a href='https://github.com/flatpickles/sketchbook'>here</a>.",
+    "footer": "Copyright © 2023 <a href='http://flatpickles.com'>Matt Nichols</a>",
     "sorting": "date",
     "storeParamValues": true,
     "storeProjectSelection": true
