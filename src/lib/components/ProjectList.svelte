@@ -34,66 +34,6 @@
             </a>
         {/if}
     {/each}
-    {#each sortedKeys as key}
-        {#if selectedGroup === undefined || (projects[key].groups?.includes(selectedGroup) ?? false)}
-            <a
-                href="/{key}"
-                class="project-list-item"
-                data-testid="project-list-item"
-                class:selected={key === selectedProjectKey}
-            >
-                {projects[key].title}
-            </a>
-        {/if}
-    {/each}
-    {#each sortedKeys as key}
-        {#if selectedGroup === undefined || (projects[key].groups?.includes(selectedGroup) ?? false)}
-            <a
-                href="/{key}"
-                class="project-list-item"
-                data-testid="project-list-item"
-                class:selected={key === selectedProjectKey}
-            >
-                {projects[key].title}
-            </a>
-        {/if}
-    {/each}
-    {#each sortedKeys as key}
-        {#if selectedGroup === undefined || (projects[key].groups?.includes(selectedGroup) ?? false)}
-            <a
-                href="/{key}"
-                class="project-list-item"
-                data-testid="project-list-item"
-                class:selected={key === selectedProjectKey}
-            >
-                {projects[key].title}
-            </a>
-        {/if}
-    {/each}
-    {#each sortedKeys as key}
-        {#if selectedGroup === undefined || (projects[key].groups?.includes(selectedGroup) ?? false)}
-            <a
-                href="/{key}"
-                class="project-list-item"
-                data-testid="project-list-item"
-                class:selected={key === selectedProjectKey}
-            >
-                {projects[key].title}
-            </a>
-        {/if}
-    {/each}
-    {#each sortedKeys as key}
-        {#if selectedGroup === undefined || (projects[key].groups?.includes(selectedGroup) ?? false)}
-            <a
-                href="/{key}"
-                class="project-list-item"
-                data-testid="project-list-item"
-                class:selected={key === selectedProjectKey}
-            >
-                {projects[key].title}
-            </a>
-        {/if}
-    {/each}
 </div>
 
 <style lang="scss">
@@ -105,7 +45,6 @@
 
     .project-list {
         flex-grow: 1;
-        margin: calc($panel-section-spacing / 2) 0;
         padding: calc($panel-section-spacing / 2) 0;
 
         // Fade out edges

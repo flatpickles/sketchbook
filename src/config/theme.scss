@@ -144,7 +144,7 @@ $parameter-item-spacing-vertical: 0.25rem;
 $parameter-item-spacing-horizontal: 0.75rem;
 $parameter-item-padding-vertical: 0.5rem;
 $parameter-label-max-width: 50%;
-$border-radius: 0.5rem; // move elsewhere
+$border-radius: 0.5rem; // move elsewhere // ok against panel corner?
 @mixin parameter-item {
     font-size: $medium-text-size;
     margin: 0 calc($panel-content-inset / 2);

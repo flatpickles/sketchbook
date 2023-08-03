@@ -54,49 +54,73 @@
 </script>
 
 <div class="params-wrapper">
-    {#each projectTuple.params as param, paramIdx}
-        {#if ParamGuards.isNumberParamConfig(param)}
-            <NumberParamInput
-                paramConfig={param}
-                value={initialValueForParam(param)}
-                on:update={paramUpdated}
-                even={paramIdx % 2 == 0}
-            />
-        {:else if ParamGuards.isBooleanParamConfig(param)}
-            <BooleanParamInput
-                paramConfig={param}
-                value={initialValueForParam(param)}
-                on:update={paramUpdated}
-                even={paramIdx % 2 == 0}
-            />
-        {:else if ParamGuards.isFunctionParamConfig(param)}
-            <FunctionParamInput
-                paramConfig={param}
-                on:update={paramUpdated}
-                even={paramIdx % 2 == 0}
-            />
-        {:else if ParamGuards.isStringParamConfig(param)}
-            <StringParamInput
-                paramConfig={param}
-                value={initialValueForParam(param)}
-                on:update={paramUpdated}
-                even={paramIdx % 2 == 0}
-            />
-        {:else if ParamGuards.isNumericArrayParamConfig(param)}
-            <NumericArrayParamInput
-                paramConfig={param}
-                value={initialValueForParam(param)}
-                on:update={paramUpdated}
-                even={paramIdx % 2 == 0}
-            />
-        {/if}
-    {/each}
+    <div class="params-grid">
+        {#each projectTuple.params as param, paramIdx}
+            {#if ParamGuards.isNumberParamConfig(param)}
+                <NumberParamInput
+                    paramConfig={param}
+                    value={initialValueForParam(param)}
+                    on:update={paramUpdated}
+                    even={paramIdx % 2 == 0}
+                />
+            {:else if ParamGuards.isBooleanParamConfig(param)}
+                <BooleanParamInput
+                    paramConfig={param}
+                    value={initialValueForParam(param)}
+                    on:update={paramUpdated}
+                    even={paramIdx % 2 == 0}
+                />
+            {:else if ParamGuards.isFunctionParamConfig(param)}
+                <FunctionParamInput
+                    paramConfig={param}
+                    on:update={paramUpdated}
+                    even={paramIdx % 2 == 0}
+                />
+            {:else if ParamGuards.isStringParamConfig(param)}
+                <StringParamInput
+                    paramConfig={param}
+                    value={initialValueForParam(param)}
+                    on:update={paramUpdated}
+                    even={paramIdx % 2 == 0}
+                />
+            {:else if ParamGuards.isNumericArrayParamConfig(param)}
+                <NumericArrayParamInput
+                    paramConfig={param}
+                    value={initialValueForParam(param)}
+                    on:update={paramUpdated}
+                    even={paramIdx % 2 == 0}
+                />
+            {/if}
+        {/each}
+    </div>
 </div>
 
 <style lang="scss">
     .params-wrapper {
-        width: 100%;
-        margin-top: calc($panel-section-spacing / 2); // todo: scrolling etc
+        flex-grow: 1;
+        padding: calc($panel-section-spacing / 2) 0;
+
+        // Fade out edges
+        mask-image: linear-gradient(
+            to bottom,
+            rgba(0, 0, 0, 0),
+            rgba(0, 0, 0, 1) calc($panel-section-spacing / 2),
+            rgba(0, 0, 0, 1) calc(100% - $panel-section-spacing / 2),
+            rgba(0, 0, 0, 0)
+        );
+
+        // Scroll with no scrollbar
+        overflow-y: scroll;
+        -ms-overflow-style: none; /* IE and Edge */
+        scrollbar-width: none; /* Firefox */
+    }
+
+    // Webkit hide scrollbar
+    .params-wrapper::-webkit-scrollbar {
+        display: none;
+    }
+
+    .params-grid {
         display: grid;
         grid-template-columns: fit-content($parameter-label-max-width) 1fr;
         row-gap: $parameter-item-spacing-vertical;

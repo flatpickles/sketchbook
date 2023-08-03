@@ -3,6 +3,6 @@
 <style lang="scss">
     .footer-wrapper {
         width: 100%;
-        padding: 0 $panel-content-inset calc($panel-content-inset / 2) $panel-content-inset;
+        padding: 0 $panel-content-inset $panel-content-inset $panel-content-inset;
     }
 </style>
