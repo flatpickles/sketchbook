@@ -83,24 +83,22 @@ describe('ProjectParams list', () => {
 
     it('renders param default values properly', async () => {
         renderParams();
-        const numberInput = screen.getByTestId('number-param-input') as HTMLInputElement;
-        expect(numberInput).toBeDefined();
-        expect(numberInput.value).toBe('42');
         const booleanInput = screen.getByTestId('boolean-param-input') as HTMLInputElement;
         expect(booleanInput).toBeDefined();
         expect(booleanInput.checked).toBe(true);
         const stringInput = screen.getByTestId('string-param-input') as HTMLInputElement;
         expect(stringInput).toBeDefined();
         expect(stringInput.value).toBe('hello');
-        const numericArrayInput = screen.getAllByTestId(
-            'numeric-array-param-input'
-        ) as HTMLInputElement[];
-        expect(numericArrayInput.length).toBe(3);
-        expect(numericArrayInput[0].value).toBe('1');
-        expect(numericArrayInput[1].value).toBe('2');
-        expect(numericArrayInput[2].value).toBe('3');
         const functionInput = screen.getByTestId('function-param-input') as HTMLInputElement;
         expect(functionInput).toBeDefined();
+
+        // Both single & array numeric inputs are rendered
+        const numberInputs = screen.getAllByTestId('number-param-input') as HTMLInputElement[];
+        expect(numberInputs.length).toBe(4);
+        expect(numberInputs[0].value).toBe('42');
+        expect(numberInputs[1].value).toBe('1');
+        expect(numberInputs[2].value).toBe('2');
+        expect(numberInputs[3].value).toBe('3');
     });
 });
 
@@ -112,7 +110,7 @@ describe('number param input', () => {
     it('updates a number param when the input changes (liveUpdates)', async () => {
         const project = renderParams(true);
         vi.spyOn(project, 'update');
-        const numberInput = screen.getByTestId('number-param-input') as HTMLInputElement;
+        const numberInput = screen.getAllByTestId('number-param-input')[0] as HTMLInputElement;
         expect(numberInput.value).toBe('42');
         expect(project.testNumber).toBe(42);
         fireEvent.input(numberInput, { target: { value: '43' } });
@@ -128,7 +126,7 @@ describe('number param input', () => {
     it('updates a number param when the input changes (!liveUpdates)', async () => {
         const project = renderParams(false);
         vi.spyOn(project, 'update');
-        const numberInput = screen.getByTestId('number-param-input') as HTMLInputElement;
+        const numberInput = screen.getAllByTestId('number-param-input')[0] as HTMLInputElement;
         expect(numberInput.value).toBe('42');
         expect(project.testNumber).toBe(42);
         fireEvent.input(numberInput, { target: { value: '43' } });
@@ -204,9 +202,8 @@ describe('numeric array param input', () => {
     it('updates a numeric array param when the input changes (liveUpdates)', async () => {
         const project = renderParams(true);
         vi.spyOn(project, 'update');
-        const numericArrayInput = screen.getAllByTestId(
-            'numeric-array-param-input'
-        ) as HTMLInputElement[];
+        const numericArrayInput = screen.getAllByTestId('number-param-input') as HTMLInputElement[];
+        numericArrayInput.shift(); // first is the non-array numeric input
         expect(numericArrayInput.length).toBe(3);
         expect(numericArrayInput[0].value).toBe('1');
         expect(numericArrayInput[1].value).toBe('2');
@@ -225,9 +222,8 @@ describe('numeric array param input', () => {
     it('updates a numeric array param when the input changes (!liveUpdates)', async () => {
         const project = renderParams(false);
         vi.spyOn(project, 'update');
-        const numericArrayInput = screen.getAllByTestId(
-            'numeric-array-param-input'
-        ) as HTMLInputElement[];
+        const numericArrayInput = screen.getAllByTestId('number-param-input') as HTMLInputElement[];
+        numericArrayInput.shift(); // first is the non-array numeric input
         expect(numericArrayInput.length).toBe(3);
         expect(numericArrayInput[0].value).toBe('1');
         expect(numericArrayInput[1].value).toBe('2');

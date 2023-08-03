@@ -10,6 +10,10 @@
         "bgSize": {
             "name": "Background Size",
             "liveUpdates": true
+        },
+        "size": {
+            "name": "Size",
+            "liveUpdates": false
         }
     }
 }
