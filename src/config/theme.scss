@@ -26,14 +26,13 @@ $panel-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.3);
 $panel-outline: 1px solid rgba(0, 0, 0, 0.1);
 
 // Panel content
-$panel-content-inset: 0.8rem;
+$panel-content-inset: 0.75rem;
 $panel-section-spacing: 0.75rem;
 @mixin panel-button {
     font-size: $small-text-size;
     color: rgba(0, 0, 0, 0.5);
     width: 1.5rem;
     height: 1.5rem;
-    border: $panel-outline;
     background-color: rgba(0, 0, 0, 0.03);
     &:hover {
         background-color: rgba(0, 0, 0, 0.05);
@@ -58,12 +57,6 @@ $panel-header-section-spacing: 0.5rem;
 @mixin description-text {
     font-size: $medium-text-size;
     font-weight: normal;
-}
-@mixin header-button {
-    @include panel-button;
-    margin: 0 0 calc($panel-content-inset / 2) calc($panel-content-inset / 2);
-    border-style: none none solid solid;
-    border-radius: 0 $panel-border-radius 0 $panel-border-radius;
 }
 
 // Group selector
@@ -188,11 +181,5 @@ $border-radius: 0.5rem; // move elsewhere // ok against panel corner?
 @mixin footer-text {
     font-size: $xs-text-size;
     font-weight: normal;
-    color: rgba(0, 0, 0, 0.5);
-}
-@mixin footer-button {
-    @include panel-button;
-    margin: calc($panel-content-inset / 2) 0 0 calc($panel-content-inset / 2);
-    border-style: solid none none solid;
-    border-radius: $panel-border-radius 0 $panel-border-radius 0;
+    color: rgba(0, 0, 0, 0.4);
 }
