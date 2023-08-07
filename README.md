@@ -2,7 +2,6 @@
 
 Params WIP:
 
--   sections
 -   file inputs?
 -   styles:
     -   number: separate slider & field, or same?
@@ -11,7 +10,7 @@ Params WIP:
     -   MIDI map: for numeric & boolean params,
 -   Array params: use a grid layout for longform (full width) vs compact (half width / side by side) display styles
 -   component tests
--   hover text?
+    -   Sections
 -   Param UI
     -   Option to reset to default/preset value
     -   Lock parameter value (?)

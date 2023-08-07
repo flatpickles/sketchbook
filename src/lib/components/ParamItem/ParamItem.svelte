@@ -11,8 +11,6 @@
     export let value: ParamValueType<typeof config>;
     export let even = false;
 
-    let hoverText: string | undefined = undefined; // todo
-
     const dispatch = createEventDispatcher();
     function paramUpdated(complete: boolean) {
         // If the param update isn't complete and liveUpdates isn't set, we shan't proceed
@@ -34,10 +32,8 @@
     }
 </script>
 
-<div class="label-wrapper" class:even class:odd={!even}>
-    <label class="param-label" data-testid="param-label" for={config.name} title={hoverText}
-        >{config.name}</label
-    >
+<div class="label-wrapper" class:even class:odd={!even} title={config.hoverText}>
+    <label class="param-label" data-testid="param-label" for={config.name}>{config.name}</label>
 </div>
 <div class="input-wrapper" class:even class:odd={!even}>
     {#if ParamGuards.isNumberParamConfig(config) && typeof value === 'number'}

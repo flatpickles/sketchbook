@@ -155,6 +155,8 @@ Parameters are keyed with their associated property name, as defined on the proj
 
 Options (and parenthesized defaults) for each type are as follows:
 
+(Todo: hover text)
+
 -   **Number:**
     -   `name` (_property name_): Display name for parameter.
     -   `min` (0): Minimum value.

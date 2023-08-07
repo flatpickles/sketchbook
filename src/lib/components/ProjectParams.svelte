@@ -69,7 +69,6 @@
             <div class="params-section-header">
                 <div class="params-section-header-line" />
                 <div class="params-section-name">{paramSection.name}</div>
-                <!-- <div class="params-section-header-disclosure"><i class="fa fa-chevron-down" /></div> -->
                 <div class="params-section-header-line" />
             </div>
             <div class="params-grid">
@@ -134,11 +133,6 @@
         flex-grow: 1;
         height: 0;
         border-top: $parameter-section-divider;
-    }
-
-    .params-section-header-disclosure {
-        font-size: 0.7rem;
-        color: rgba(0, 0, 0, 0.8);
     }
 
     .params-grid {

@@ -6,7 +6,8 @@
     "params": {
         "randomize": {
             "name": "Randomize Color",
-            "section": "Colors"
+            "section": "Colors",
+            "hoverText": "Randomize the color of the moving foreground square."
         },
         "bgSize": {
             "name": "Background Size",
