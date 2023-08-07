@@ -8,6 +8,7 @@
     import StringInput from './StringInput.svelte';
 
     import { NumberParamStyle } from '$lib/base/ParamConfig/NumberParamConfig';
+    import { NumericArrayParamStyle } from '$lib/base/ParamConfig/NumericArrayParamConfig';
 
     export let config: ParamConfig;
     export let value: ParamValueType<typeof config>;
@@ -47,10 +48,8 @@
             bind:value
             on:input={paramUpdated.bind(null, false)}
             on:change={paramUpdated.bind(null, true)}
-            showField={config.style == NumberParamStyle.Field ||
-                config.style == NumberParamStyle.Combo}
-            showSlider={config.style == NumberParamStyle.Slider ||
-                config.style == NumberParamStyle.Combo}
+            showField={[NumberParamStyle.Field, NumberParamStyle.Combo].includes(config.style)}
+            showSlider={[NumberParamStyle.Slider, NumberParamStyle.Combo].includes(config.style)}
         />
     {:else if ParamGuards.isBooleanParamConfig(config) && typeof value === 'boolean'}
         <BooleanInput name={config.name} bind:value on:change={paramUpdated.bind(null, true)} />
@@ -64,17 +63,35 @@
             on:blur={paramUpdated.bind(null, true)}
         />
     {:else if ParamGuards.isNumericArrayParamConfig(config) && isNumericArray(value)}
-        {#each value as valueMember}
-            <NumberInput
-                name={config.name}
-                min={config.min}
-                max={config.max}
-                step={config.step}
-                bind:value={valueMember}
-                on:input={paramUpdated.bind(null, false)}
-                on:change={paramUpdated.bind(null, true)}
-            />
-        {/each}
+        <div
+            class="array-param-wrapper"
+            class:compact={[
+                NumericArrayParamStyle.CompactField,
+                NumericArrayParamStyle.CompactSlider
+            ].includes(config.style)}
+        >
+            {#each value as valueMember}
+                <NumberInput
+                    name={config.name}
+                    min={config.min}
+                    max={config.max}
+                    step={config.step}
+                    bind:value={valueMember}
+                    on:input={paramUpdated.bind(null, false)}
+                    on:change={paramUpdated.bind(null, true)}
+                    showField={[
+                        NumericArrayParamStyle.Field,
+                        NumericArrayParamStyle.CompactField,
+                        NumericArrayParamStyle.Combo
+                    ].includes(config.style)}
+                    showSlider={[
+                        NumericArrayParamStyle.Slider,
+                        NumericArrayParamStyle.CompactSlider,
+                        NumericArrayParamStyle.Combo
+                    ].includes(config.style)}
+                />
+            {/each}
+        </div>
     {/if}
 </div>
 
@@ -109,11 +126,23 @@
         align-items: center;
         justify-content: center;
         user-select: none;
-        gap: $parameter-item-spacing-vertical;
 
         @include parameter-item;
         padding-left: calc($parameter-item-spacing-horizontal / 2);
         margin-left: 0;
         border-radius: 0 $border-radius $border-radius 0;
+    }
+
+    .array-param-wrapper {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr;
+        row-gap: $parameter-item-spacing-vertical;
+        column-gap: calc($parameter-item-spacing-horizontal / 2);
+        align-items: center;
+    }
+
+    .compact {
+        grid-template-columns: 1fr 1fr;
     }
 </style>

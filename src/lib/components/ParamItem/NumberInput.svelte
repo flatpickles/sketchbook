@@ -79,7 +79,7 @@
         text-align: right;
         flex-grow: 1;
         min-width: 2rem;
-        max-width: 50%;
+        max-width: 4rem;
 
         // Hide up/down arrows: Firefox
         appearance: textfield;

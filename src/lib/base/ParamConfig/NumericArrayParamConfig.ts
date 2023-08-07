@@ -1,7 +1,8 @@
 import { type ParamConfig, ParamConfigDefaults, ParamType } from './ParamConfig';
 import { NumberParamConfigDefaults } from './NumberParamConfig';
 
-enum NumericArrayParamStyle {
+export enum NumericArrayParamStyle {
+    Combo = 'combo',
     CompactField = 'compactField',
     CompactSlider = 'compactSlider',
     Slider = 'slider',
@@ -21,7 +22,7 @@ export const NumericArrayParamConfigDefaults: NumericArrayParamConfig = {
     min: NumberParamConfigDefaults.min,
     max: NumberParamConfigDefaults.max,
     step: NumberParamConfigDefaults.step,
-    style: NumericArrayParamStyle.Slider
+    style: NumericArrayParamStyle.Combo
 } as const;
 
 export function isNumericArrayParamConfig(param: ParamConfig): param is NumericArrayParamConfig {

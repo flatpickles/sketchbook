@@ -23,7 +23,7 @@ $track-border-width: 0 !default;
 $track-border-color: #cfd8dc !default;
 
 $track-radius: 0.5rem !default;
-$contrast: 5% !default;
+$contrast: 0% !default;
 
 $ie-bottom-track-color: darken($track-color, $contrast) !default;
 
@@ -53,7 +53,7 @@ $ie-bottom-track-color: darken($track-color, $contrast) !default;
     appearance: none;
     -webkit-appearance: none;
     background: transparent;
-    margin: math.div($thumb-height, 2) 0;
+    margin: math.div($thumb-height - $track-height, 2) 0;
     width: $track-width;
 
     &::-moz-focus-outer {
