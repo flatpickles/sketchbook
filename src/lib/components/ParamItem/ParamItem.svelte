@@ -103,6 +103,7 @@
         align-items: center;
         justify-content: center;
         user-select: none;
+        gap: $parameter-item-spacing-vertical;
 
         @include parameter-item;
         padding-left: calc($parameter-item-spacing-horizontal / 2);

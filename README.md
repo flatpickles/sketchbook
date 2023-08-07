@@ -9,8 +9,9 @@ Params WIP:
     -   string: color options
     -   MIDI map: for numeric & boolean params,
 -   Array params: use a grid layout for longform (full width) vs compact (half width / side by side) display styles
--   component tests
+-   Component tests
     -   Sections
+    -   Hover text
 -   Param UI
     -   Option to reset to default/preset value
     -   Lock parameter value (?)
