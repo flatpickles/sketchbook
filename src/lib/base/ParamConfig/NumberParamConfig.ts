@@ -1,6 +1,7 @@
 import { type ParamConfig, ParamConfigDefaults, ParamType } from './ParamConfig';
 
-enum NumberParamStyle {
+export enum NumberParamStyle {
+    Combo = 'combo',
     Slider = 'slider',
     Field = 'field'
 }
@@ -18,7 +19,7 @@ export const NumberParamConfigDefaults: NumberParamConfig = {
     min: 0,
     max: 1,
     step: 0.01,
-    style: NumberParamStyle.Slider
+    style: NumberParamStyle.Combo
 } as const;
 
 export function isNumberParamConfig(param: ParamConfig): param is NumberParamConfig {

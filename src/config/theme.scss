@@ -175,10 +175,11 @@ $parameter-section-divider: 1px solid $parameter-section-header-color;
 @mixin string-parameter-input {
     $background-color: rgba(255, 255, 255, 0.5);
     font-size: $xs-text-size;
+    line-height: $xs-text-size;
     border: 1px solid rgba(0, 0, 0, 0.3);
-    border-radius: 0.2rem;
+    border-radius: 0.25rem;
     background-color: $background-color;
-    padding: 0.2rem;
+    padding: 0.15rem 0.25rem;
 }
 @mixin function-parameter-input {
     $background-color: greenyellow;

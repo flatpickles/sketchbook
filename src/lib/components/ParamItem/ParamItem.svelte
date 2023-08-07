@@ -7,6 +7,8 @@
     import NumberInput from './NumberInput.svelte';
     import StringInput from './StringInput.svelte';
 
+    import { NumberParamStyle } from '$lib/base/ParamConfig/NumberParamConfig';
+
     export let config: ParamConfig;
     export let value: ParamValueType<typeof config>;
     export let even = false;
@@ -45,6 +47,10 @@
             bind:value
             on:input={paramUpdated.bind(null, false)}
             on:change={paramUpdated.bind(null, true)}
+            showField={config.style == NumberParamStyle.Field ||
+                config.style == NumberParamStyle.Combo}
+            showSlider={config.style == NumberParamStyle.Slider ||
+                config.style == NumberParamStyle.Combo}
         />
     {:else if ParamGuards.isBooleanParamConfig(config) && typeof value === 'boolean'}
         <BooleanInput name={config.name} bind:value on:change={paramUpdated.bind(null, true)} />
