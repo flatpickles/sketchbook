@@ -46,15 +46,22 @@
 </script>
 
 <div class="params-wrapper">
-    <div class="params-grid">
-        {#each projectTuple.params as param, paramIdx}
-            <ParamItem
-                config={param}
-                value={initialValueForParam(param)}
-                even={paramIdx % 2 == 0}
-                on:update={paramUpdated}
-            />
-        {/each}
+    <div class="params-section">
+        <div class="params-section-header">
+            <div class="params-section-name">Test Header</div>
+            <div class="params-section-header-line" />
+            <div class="params-section-header-disclosure"><i class="fa fa-chevron-down" /></div>
+        </div>
+        <div class="params-grid">
+            {#each projectTuple.params as param, paramIdx}
+                <ParamItem
+                    config={param}
+                    value={initialValueForParam(param)}
+                    even={paramIdx % 2 == 0}
+                    on:update={paramUpdated}
+                />
+            {/each}
+        </div>
     </div>
 </div>
 
@@ -81,6 +88,29 @@
     // Webkit hide scrollbar
     .params-wrapper::-webkit-scrollbar {
         display: none;
+    }
+
+    .params-section-header {
+        @include param-section-header;
+
+        color: rgba(0, 0, 0, 0.8);
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: $parameter-item-spacing-horizontal;
+        cursor: pointer;
+    }
+
+    .params-section-header-line {
+        height: 1px;
+        background-color: rgba(0, 0, 0, 0.8);
+        flex-grow: 1;
+    }
+
+    .params-section-header-disclosure {
+        font-size: 0.7rem;
+        color: rgba(0, 0, 0, 0.8);
     }
 
     .params-grid {

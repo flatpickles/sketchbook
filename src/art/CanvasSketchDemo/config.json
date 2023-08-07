@@ -9,11 +9,13 @@
         },
         "bgSize": {
             "name": "Background Size",
-            "liveUpdates": true
+            "liveUpdates": true,
+            "section": "Sketches"
         },
         "size": {
             "name": "Size",
-            "liveUpdates": false
+            "liveUpdates": false,
+            "section": "Sketches"
         }
     }
 }

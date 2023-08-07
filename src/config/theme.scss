@@ -138,6 +138,12 @@ $parameter-item-spacing-horizontal: 0.75rem;
 $parameter-item-padding-vertical: 0.5rem;
 $parameter-label-max-width: 50%;
 $border-radius: 0.5rem; // move elsewhere // ok against panel corner?
+@mixin param-section-header {
+    font-size: $xs-text-size;
+    text-transform: uppercase;
+    font-weight: bold;
+    padding: 0 $panel-content-inset $parameter-item-padding-vertical $panel-content-inset;
+}
 @mixin parameter-item {
     font-size: $medium-text-size;
     margin: 0 calc($panel-content-inset / 2);

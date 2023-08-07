@@ -3,35 +3,32 @@
 Params WIP:
 
 -   sections
--   grid layout!
 -   file inputs?
 -   styles:
     -   number: separate slider & field, or same?
     -   numeric array: compact is two per line
     -   string: color options
     -   MIDI map: for numeric & boolean params,
+-   Array params: use a grid layout for longform (full width) vs compact (half width / side by side) display styles
 -   component tests
 -   hover text?
-
-Todo / WIP notes:
-
--   Clicking a group or project list item should scroll it fully into view.
--   How can I use the same input components within array parameters? Use a grid layout for longform (full width) vs compact (half width / side by side) display styles.
--   Read through old notes and absorb in design doc
--   Optional explicit route name (vs. just using the filename/key)
--   Better error messaging for config file parsing throughout
--   "trigger" mode for global parameter updates - wait until button click?
--   "animated" mode for sketches: call update with animation frame request
--   Show a project's groups on right panel
--   Make old style possible via theme config (or something like it)
--   When changing param defaults (assigned in file) what happens? Especially with local storage... param default vals will get confusing...
-
 -   Param UI
     -   Option to reset to default/preset value
     -   Lock parameter value (?)
     -   Numeric params
         -   Option to randomize within range
         -   Type in value (when slider is visible?)
+
+Todo / WIP notes:
+
+-   Clicking a group or project list item should scroll it fully into view.
+-   Read through old notes and absorb in design doc
+-   Optional explicit route name (vs. just using the filename/key)
+-   Better error messaging for config file parsing throughout
+-   "animated" mode for sketches: call update with animation frame request
+-   Show a project's groups on right panel
+-   Make old style possible via theme config (or something like it)
+-   When changing param defaults (assigned in file) what happens? Especially with local storage... param default vals will get confusing...
 
 MVP stretch goals:
 
@@ -49,13 +46,14 @@ MVP stretch goals:
 
 Long-term goals:
 
+-   Midi control:
+    -   Included in global configuration
+    -   Enable project switching (fast switching)
+-   Dark mode support
 -   Canvas zooming & panning
 -   Cloud preset storage
     -   Share presets with _just_ a link
 -   LFOs and/or other sorts of param sidechaining
--   Midi control:
-    -   Included in global configuration
-    -   Enable project switching (fast switching)
 -   Render queue (preempt & cancel long-running renders)
 -   Fast switching:
     -   Optional (global config)
