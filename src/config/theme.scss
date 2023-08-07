@@ -132,18 +132,30 @@ $preset-control-item-padding: 0.25rem 0.75rem;
     font-weight: bold;
 }
 
-// Parameter display
+// Parameter general
 $parameter-item-spacing-vertical: 0.25rem;
 $parameter-item-spacing-horizontal: 0.75rem;
 $parameter-item-padding-vertical: 0.5rem;
 $parameter-label-max-width: 50%;
 $border-radius: 0.5rem; // move elsewhere // ok against panel corner?
+
+// Parameter sections
+$parameter-section-gap: calc($parameter-item-padding-vertical * 2);
+$parameter-section-header-color: rgba(0, 0, 0, 0.7);
+$parameter-section-divider: 1px solid $parameter-section-header-color;
 @mixin param-section-header {
+    color: $parameter-section-header-color;
     font-size: $xs-text-size;
     text-transform: uppercase;
     font-weight: bold;
-    padding: 0 $panel-content-inset $parameter-item-padding-vertical $panel-content-inset;
+    padding:
+        0
+        $panel-content-inset
+        $parameter-item-padding-vertical
+        $panel-content-inset;
 }
+
+// Parameter items
 @mixin parameter-item {
     font-size: $medium-text-size;
     margin: 0 calc($panel-content-inset / 2);

@@ -1,11 +1,16 @@
 <script lang="ts">
     import type { ProjectTuple } from '$lib/base/FileLoading/ProjectLoader';
-    import { ParamType, type ParamConfig } from '$lib/base/ParamConfig/ParamConfig';
+    import {
+        ParamType,
+        type ParamConfig,
+        getParamSections
+    } from '$lib/base/ParamConfig/ParamConfig';
     import type { ParamValueType } from '$lib/base/ParamConfig/ParamTypes';
 
     import ParamItem from './ParamItem/ParamItem.svelte';
 
     export let projectTuple: ProjectTuple;
+    $: [noSectionParams, paramSections] = getParamSections(projectTuple.params);
 
     // A little dark magic to apply the updated param (or call the associated function)
     function paramUpdated(event: any) {
@@ -46,23 +51,39 @@
 </script>
 
 <div class="params-wrapper">
-    <div class="params-section">
-        <div class="params-section-header">
-            <div class="params-section-name">Test Header</div>
-            <div class="params-section-header-line" />
-            <div class="params-section-header-disclosure"><i class="fa fa-chevron-down" /></div>
-        </div>
-        <div class="params-grid">
-            {#each projectTuple.params as param, paramIdx}
-                <ParamItem
-                    config={param}
-                    value={initialValueForParam(param)}
-                    even={paramIdx % 2 == 0}
-                    on:update={paramUpdated}
-                />
-            {/each}
-        </div>
+    <!-- Put all params with no section at the top -->
+    <div class="params-grid">
+        {#each noSectionParams as param, paramIdx}
+            <ParamItem
+                config={param}
+                value={initialValueForParam(param)}
+                even={paramIdx % 2 == 0}
+                on:update={paramUpdated}
+            />
+        {/each}
     </div>
+
+    <!-- Display a section for each param section -->
+    {#each paramSections as paramSection}
+        <div class="params-section">
+            <div class="params-section-header">
+                <div class="params-section-header-line" />
+                <div class="params-section-name">{paramSection.name}</div>
+                <!-- <div class="params-section-header-disclosure"><i class="fa fa-chevron-down" /></div> -->
+                <div class="params-section-header-line" />
+            </div>
+            <div class="params-grid">
+                {#each paramSection.params as param, paramIdx}
+                    <ParamItem
+                        config={param}
+                        value={initialValueForParam(param)}
+                        even={paramIdx % 2 == 0}
+                        on:update={paramUpdated}
+                    />
+                {/each}
+            </div>
+        </div>
+    {/each}
 </div>
 
 <style lang="scss">
@@ -90,22 +111,29 @@
         display: none;
     }
 
+    .params-section {
+        padding-top: $parameter-section-gap;
+
+        // If it's the first child in params-wrapper, no top padding
+        .params-wrapper > &:first-child {
+            padding-top: 0;
+        }
+    }
+
     .params-section-header {
         @include param-section-header;
 
-        color: rgba(0, 0, 0, 0.8);
         display: flex;
         flex-direction: row;
         align-items: center;
         justify-content: space-between;
         gap: $parameter-item-spacing-horizontal;
-        cursor: pointer;
     }
 
     .params-section-header-line {
-        height: 1px;
-        background-color: rgba(0, 0, 0, 0.8);
         flex-grow: 1;
+        height: 0;
+        border-top: $parameter-section-divider;
     }
 
     .params-section-header-disclosure {

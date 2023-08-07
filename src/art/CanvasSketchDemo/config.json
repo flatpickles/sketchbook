@@ -5,17 +5,23 @@
     "liveUpdates": true,
     "params": {
         "randomize": {
-            "name": "Randomize Color"
+            "name": "Randomize Color",
+            "section": "Colors"
         },
         "bgSize": {
             "name": "Background Size",
             "liveUpdates": true,
-            "section": "Sketches"
+            "section": "Sizes"
         },
         "size": {
             "name": "Size",
             "liveUpdates": false,
-            "section": "Sketches"
+            "section": "Sizes"
+        },
+        "colored": {
+            "name": "Colored",
+            "liveUpdates": true,
+            "section": "Colors"
         }
     }
 }
