@@ -6,7 +6,5 @@
 <input type="checkbox" bind:checked={value} id={name} on:change data-testid="boolean-param-input" />
 
 <style lang="scss">
-    input[type='checkbox'] {
-        width: 100%;
-    }
+    @import './styles/input-checkbox.scss';
 </style>

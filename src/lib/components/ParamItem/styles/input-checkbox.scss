@@ -1,0 +1,46 @@
+@use 'sass:color';
+@import '/src/config/theme.scss';
+
+input[type='checkbox'] {
+    width: 100%;
+    -webkit-appearance: none;
+    appearance: none;
+    margin: 0;
+
+    background-color: $param-field-bg-color;
+    color: $param-fg-color;
+
+    width: $checkbox-input-size;
+    height: $checkbox-input-size;
+    border: $field-input-border;
+    border-radius: $field-input-border-radius;
+
+    display: grid;
+    place-content: center;
+}
+
+input[type='checkbox']::before {
+    background-color: $param-fg-color;
+    content: '';
+    width: calc($checkbox-input-size * 0.6);
+    height: calc($checkbox-input-size * 0.6);
+
+    // Hide the checkmark by default
+    display: none;
+
+    // Shape and position the checkmark
+    clip-path: polygon(0% 33%, 33% 33%, 33% 66%, 100% 66%, 100% 100%, 0% 100%);
+    rotate: -45deg;
+    position: relative;
+    top: -20%;
+    left: -12%;
+}
+
+input[type='checkbox']:checked::before {
+    // Show the checkmark when checked
+    display: block;
+}
+
+input[type='checkbox']:disabled::before {
+    background-color: color.scale($param-fg-color, $lightness: +50%);
+}
