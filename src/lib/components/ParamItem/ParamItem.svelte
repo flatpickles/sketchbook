@@ -71,6 +71,7 @@
                 bind:value
                 on:input={paramUpdated.bind(null, false)}
                 on:change={paramUpdated.bind(null, true)}
+                multiline={config.style === StringParamStyle.MultiLine}
             />
         {/if}
     {:else if ParamGuards.isNumericArrayParamConfig(config) && isNumericArray(value)}

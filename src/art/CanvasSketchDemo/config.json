@@ -6,7 +6,12 @@
     "params": {
         "displayText": {
             "name": "Display Text",
-            "liveUpdates": false
+            "liveUpdates": true
+        },
+        "multiText": {
+            "name": "Multi-line Text",
+            "liveUpdates": true,
+            "style": "multi"
         },
         "randomize": {
             "name": "Randomize Color",

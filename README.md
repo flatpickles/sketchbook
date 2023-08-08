@@ -4,20 +4,15 @@ Params WIP:
 
 -   file inputs?
 -   styles:
-    -   number: separate slider & field, or same?
-    -   numeric array: compact is two per line
-    -   string: color options
-    -   MIDI map: for numeric & boolean params,
--   Array params: use a grid layout for longform (full width) vs compact (half width / side by side) display styles
+    -   string: options
+    -   MIDI map: for numeric & boolean params
 -   Component tests
     -   Sections
     -   Hover text
+    -   Styles
 -   Param UI
     -   Option to reset to default/preset value
-    -   Lock parameter value (?)
-    -   Numeric params
-        -   Option to randomize within range
-        -   Type in value (when slider is visible?)
+    -   Option to randomize within range
 
 Todo / WIP notes:
 

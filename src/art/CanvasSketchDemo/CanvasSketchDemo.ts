@@ -8,6 +8,7 @@ export default class CanvasSketchDemo extends Project {
     bgSize = [0.7, 0.9];
     size = 0.8;
     bgColor = '#ff8811';
+    multiText = 'yes yes\nno no';
 
     #fgColor = `rgb(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255})`;
     randomize = () => {
