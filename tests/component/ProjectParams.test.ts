@@ -20,7 +20,8 @@ function paramsWithLiveUpdates(liveUpdates = true) {
             type: ParamType.Number,
             key: 'testNumber',
             name: 'Test Number',
-            liveUpdates: liveUpdates
+            liveUpdates: liveUpdates,
+            style: 'slider'
         },
         {
             type: ParamType.Boolean,
@@ -38,7 +39,8 @@ function paramsWithLiveUpdates(liveUpdates = true) {
             type: ParamType.NumericArray,
             key: 'testNumericArray',
             name: 'Test Numeric Array',
-            liveUpdates: liveUpdates
+            liveUpdates: liveUpdates,
+            style: 'slider'
         },
         {
             type: ParamType.Function,
