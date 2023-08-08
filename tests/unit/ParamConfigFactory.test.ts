@@ -4,6 +4,7 @@ import {
 } from '$lib/base/ParamConfig/NumberParamConfig';
 import { ParamType } from '$lib/base/ParamConfig/ParamConfig';
 import { ParamConfigFactory } from '$lib/base/ParamConfig/ParamConfigFactory';
+import type { StringParamConfig } from '$lib/base/ParamConfig/StringParamConfig';
 import { describe, it, expect } from 'vitest';
 
 describe('ParamConfigFactory', () => {
@@ -67,5 +68,20 @@ describe('ParamConfigFactory', () => {
     it('assigns default names properly without config', () => {
         const param1 = ParamConfigFactory.configFrom(3, 'number');
         expect(param1.name).toEqual('number');
+    });
+
+    it('rejects option string params without options array', () => {
+        expect(() => {
+            ParamConfigFactory.configFrom('str', 'string', { style: 'options' });
+        }).toThrow();
+    });
+
+    it('assigns option style when options array is present', () => {
+        const param = ParamConfigFactory.configFrom('str', 'string', {
+            options: ['a', 'b', 'c']
+        });
+        const stringParam = param as StringParamConfig;
+        expect(stringParam.style).toEqual('options');
+        expect(stringParam.options).toEqual(['a', 'b', 'c']);
     });
 });

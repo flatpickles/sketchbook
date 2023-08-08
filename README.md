@@ -2,7 +2,6 @@
 
 Params WIP:
 
--   Test for new string options behavior in loader
 -   file inputs?
 -   styles:
     -   string: options
