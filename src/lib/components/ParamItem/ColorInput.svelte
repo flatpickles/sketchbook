@@ -39,26 +39,7 @@
 </div>
 
 <style lang="scss">
-    // todo: go through https://css-tricks.com/color-inputs-a-deep-dive-into-cross-browser-differences/
-    input[type='color'] {
-        cursor: pointer;
-        appearance: none;
-        -webkit-appearance: none;
-
-        overflow: hidden;
-        outline: 0;
-    }
-
-    input[type='color']::-webkit-color-swatch-wrapper {
-        border: 0;
-        padding: 0;
-    }
-
-    input[type='color']::-webkit-color-swatch {
-        border: 0;
-        padding: 0;
-        border-radius: 0;
-    }
+    @import './styles/input-color.scss';
 
     .color-input-wrapper {
         display: flex;
@@ -76,8 +57,8 @@
     .color-selector {
         height: 100%;
         width: 100%;
-        max-width: $color-input-picker-width;
-        border: 1px solid rgba(0, 0, 0, 0.3);
+        max-width: $param-input-item-min-width;
+        border: $field-input-border;
         border-left: 0;
         border-radius: 0 $field-input-border-radius $field-input-border-radius 0;
     }

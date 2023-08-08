@@ -1,9 +1,9 @@
-<input type="button" value="Run Function" on:click data-testid="function-param-input" />
+<input type="button" value="Run" on:click data-testid="function-param-input" />
 
 <style lang="scss">
     input[type='button'] {
         @include function-parameter-input;
         cursor: pointer;
-        min-width: 50%;
+        min-width: $param-input-item-partial-width;
     }
 </style>

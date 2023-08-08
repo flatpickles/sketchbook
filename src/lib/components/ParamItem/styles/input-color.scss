@@ -1,0 +1,23 @@
+// todo: go through https://css-tricks.com/color-inputs-a-deep-dive-into-cross-browser-differences/
+
+@use '/src/config/theme.scss';
+
+input[type='color'] {
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+
+    overflow: hidden;
+    outline: 0;
+}
+
+input[type='color']::-webkit-color-swatch-wrapper {
+    border: 0;
+    padding: 0;
+}
+
+input[type='color']::-webkit-color-swatch {
+    border: 0;
+    padding: 0;
+    border-radius: 0;
+}

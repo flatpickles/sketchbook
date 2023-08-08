@@ -156,11 +156,16 @@ $parameter-section-divider: 1px solid $parameter-section-header-color;
 }
 
 // Parameter items
-$field-input-border: 1px solid rgba(0, 0, 0, 0.3);
+$param-fg-color: color.scale(black, $lightness: +10%);
+$param-field-bg-color: rgba(255, 255, 255, 0.5);
+$param-accent-color: rgba(0, 0, 0, 0.3);
+
+$field-input-border: 1px solid $param-accent-color;
 $field-input-border-radius: 0.25rem;
-$color-input-picker-width: 2rem;
-$number-input-field-min-width: 2rem;
-$number-input-field-max-width: 4rem;
+
+$param-input-item-min-width: 2rem;
+$param-input-item-partial-width: 4rem;
+
 @mixin parameter-item {
     font-size: $medium-text-size;
     margin: 0 calc($panel-content-inset / 2);
@@ -178,7 +183,8 @@ $number-input-field-max-width: 4rem;
     font-weight: bold;
 }
 @mixin string-parameter-input {
-    $background-color: rgba(255, 255, 255, 0.5);
+    $background-color: $param-field-bg-color;
+    color: $param-fg-color;
     font-size: $xs-text-size;
     line-height: $xs-text-size;
     border: $field-input-border;
@@ -187,16 +193,17 @@ $number-input-field-max-width: 4rem;
     padding: 0.15rem 0.25rem;
 }
 @mixin function-parameter-input {
-    $background-color: greenyellow;
+    $background-color: color.scale($param-accent-color, $lightness: +60%);
+    color: $param-fg-color;
     font-size: $xs-text-size;
-    border: $field-input-border;
+    outline: $field-input-border;
     border-radius: 1rem;
     font-weight: bold;
     background-color: $background-color;
     padding: 0.1rem 0.75rem;
 
     &:active {
-        background-color: color.scale($background-color, $lightness: -20%);
+        background-color: color.scale($param-accent-color, $lightness: +40%);
     }
 }
 

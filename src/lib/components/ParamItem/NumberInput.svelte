@@ -59,7 +59,7 @@
 </div>
 
 <style lang="scss">
-    @import './input-range.scss';
+    @import './styles/input-range.scss';
 
     .number-input-wrapper {
         width: 100%;
@@ -78,8 +78,8 @@
         @include string-parameter-input;
         text-align: right;
         flex-grow: 1;
-        min-width: $number-input-field-min-width;
-        max-width: $number-input-field-max-width;
+        min-width: $param-input-item-min-width;
+        max-width: $param-input-item-partial-width;
 
         // Hide up/down arrows: Firefox
         appearance: textfield;

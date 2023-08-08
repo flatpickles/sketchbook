@@ -16,7 +16,8 @@
         "bgSize": {
             "name": "Background Size",
             "liveUpdates": true,
-            "section": "Sizes"
+            "section": "Sizes",
+            "style": "compactField"
         },
         "size": {
             "name": "Size",

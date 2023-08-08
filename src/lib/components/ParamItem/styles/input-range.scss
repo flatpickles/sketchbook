@@ -1,9 +1,12 @@
 // Adapted from https://github.com/darlanrod/input-range-sass
 
 @use 'sass:math';
+@use 'sass:color';
 
-$track-color: rgba(0, 0, 0, 0.2) !default;
-$thumb-color: rgb(50, 50, 50) !default;
+@import '/src/config/theme.scss';
+
+$track-color: color.scale($param-accent-color, $lightness: +30%) !default;
+$thumb-color: $param-fg-color !default;
 
 $thumb-radius: 0.75rem !default;
 $thumb-height: 0.75rem !default;
