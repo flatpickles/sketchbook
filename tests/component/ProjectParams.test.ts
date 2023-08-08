@@ -173,7 +173,7 @@ describe('string param input', () => {
         expect(project.update).toHaveBeenCalledTimes(1);
         expect(stringInput.value).toBe('goodbye');
         expect(project.testString).toBe('goodbye');
-        fireEvent.blur(stringInput);
+        fireEvent.change(stringInput);
         expect(project.update).toHaveBeenCalledTimes(2);
     });
 
@@ -187,7 +187,7 @@ describe('string param input', () => {
         expect(project.update).toHaveBeenCalledTimes(0);
         expect(stringInput.value).toBe('goodbye');
         expect(project.testString).toBe('hello');
-        fireEvent.blur(stringInput);
+        fireEvent.change(stringInput);
         expect(project.update).toHaveBeenCalledTimes(1);
         expect(stringInput.value).toBe('goodbye');
         expect(project.testString).toBe('goodbye');

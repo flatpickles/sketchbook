@@ -8,7 +8,7 @@
     bind:value
     id={name}
     on:input
-    on:blur
+    on:change
     autocomplete="off"
     data-testid="string-param-input"
 />

@@ -4,6 +4,10 @@
     "description": "This is a basic canvas-sketch demo, just to make sure it works as expected.",
     "liveUpdates": true,
     "params": {
+        "displayText": {
+            "name": "Display Text",
+            "liveUpdates": false
+        },
         "randomize": {
             "name": "Randomize Color",
             "section": "Colors",

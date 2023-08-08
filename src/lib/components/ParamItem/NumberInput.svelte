@@ -12,7 +12,7 @@
     export let showField: boolean = true;
 
     const dispatch = createEventDispatcher();
-    function numberInputEvent(event: Event) {
+    function fieldInputEvent(event: Event) {
         const target = event.target as HTMLInputElement;
 
         // Check to see if the field is empty
@@ -51,8 +51,8 @@
             {min}
             {max}
             {step}
-            on:input={numberInputEvent}
-            on:change={numberInputEvent}
+            on:input={fieldInputEvent}
+            on:change={fieldInputEvent}
             data-testid="number-param-input"
         />
     {/if}
@@ -78,8 +78,8 @@
         @include string-parameter-input;
         text-align: right;
         flex-grow: 1;
-        min-width: 2rem;
-        max-width: 4rem;
+        min-width: $number-input-field-min-width;
+        max-width: $number-input-field-max-width;
 
         // Hide up/down arrows: Firefox
         appearance: textfield;

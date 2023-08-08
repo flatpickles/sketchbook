@@ -70,7 +70,7 @@
                 name={config.name}
                 bind:value
                 on:input={paramUpdated.bind(null, false)}
-                on:blur={paramUpdated.bind(null, true)}
+                on:change={paramUpdated.bind(null, true)}
             />
         {/if}
     {:else if ParamGuards.isNumericArrayParamConfig(config) && isNumericArray(value)}

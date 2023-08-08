@@ -156,6 +156,11 @@ $parameter-section-divider: 1px solid $parameter-section-header-color;
 }
 
 // Parameter items
+$field-input-border: 1px solid rgba(0, 0, 0, 0.3);
+$field-input-border-radius: 0.25rem;
+$color-input-picker-width: 2rem;
+$number-input-field-min-width: 2rem;
+$number-input-field-max-width: 4rem;
 @mixin parameter-item {
     font-size: $medium-text-size;
     margin: 0 calc($panel-content-inset / 2);
@@ -176,15 +181,15 @@ $parameter-section-divider: 1px solid $parameter-section-header-color;
     $background-color: rgba(255, 255, 255, 0.5);
     font-size: $xs-text-size;
     line-height: $xs-text-size;
-    border: 1px solid rgba(0, 0, 0, 0.3);
-    border-radius: 0.25rem;
+    border: $field-input-border;
+    border-radius: $field-input-border-radius;
     background-color: $background-color;
     padding: 0.15rem 0.25rem;
 }
 @mixin function-parameter-input {
     $background-color: greenyellow;
     font-size: $xs-text-size;
-    border: 1px solid rgba(0, 0, 0, 0.3);
+    border: $field-input-border;
     border-radius: 1rem;
     font-weight: bold;
     background-color: $background-color;
@@ -193,12 +198,6 @@ $parameter-section-divider: 1px solid $parameter-section-header-color;
     &:active {
         background-color: color.scale($background-color, $lightness: -20%);
     }
-}
-@mixin color-parameter-input {
-    border: 1px solid rgba(0, 0, 0, 0.3);
-    border-radius: 0.25rem;
-    height: 1rem;
-    width: 70%;
 }
 
 // Panel footers
