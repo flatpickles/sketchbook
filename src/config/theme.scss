@@ -194,6 +194,12 @@ $parameter-section-divider: 1px solid $parameter-section-header-color;
         background-color: color.scale($background-color, $lightness: -20%);
     }
 }
+@mixin color-parameter-input {
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 0.25rem;
+    height: 1rem;
+    width: 70%;
+}
 
 // Panel footers
 @mixin footer-text {

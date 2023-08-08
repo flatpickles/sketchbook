@@ -9,6 +9,8 @@
 
     import { NumberParamStyle } from '$lib/base/ParamConfig/NumberParamConfig';
     import { NumericArrayParamStyle } from '$lib/base/ParamConfig/NumericArrayParamConfig';
+    import { StringParamStyle } from '$lib/base/ParamConfig/StringParamConfig';
+    import ColorInput from './ColorInput.svelte';
 
     export let config: ParamConfig;
     export let value: ParamValueType<typeof config>;
@@ -56,12 +58,21 @@
     {:else if ParamGuards.isFunctionParamConfig(config) && typeof value === 'function'}
         <FunctionInput on:click={paramUpdated.bind(null, true)} />
     {:else if ParamGuards.isStringParamConfig(config) && typeof value === 'string'}
-        <StringInput
-            name={config.name}
-            bind:value
-            on:input={paramUpdated.bind(null, false)}
-            on:blur={paramUpdated.bind(null, true)}
-        />
+        {#if config.style === StringParamStyle.Color}
+            <ColorInput
+                name={config.name}
+                bind:value
+                on:input={paramUpdated.bind(null, false)}
+                on:change={paramUpdated.bind(null, true)}
+            />
+        {:else}
+            <StringInput
+                name={config.name}
+                bind:value
+                on:input={paramUpdated.bind(null, false)}
+                on:blur={paramUpdated.bind(null, true)}
+            />
+        {/if}
     {:else if ParamGuards.isNumericArrayParamConfig(config) && isNumericArray(value)}
         <div
             class="array-param-wrapper"

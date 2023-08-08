@@ -23,6 +23,12 @@
             "name": "Colored",
             "liveUpdates": true,
             "section": "Colors"
+        },
+        "bgColor": {
+            "name": "BG Color",
+            "liveUpdates": true,
+            "section": "Colors",
+            "style": "color"
         }
     }
 }

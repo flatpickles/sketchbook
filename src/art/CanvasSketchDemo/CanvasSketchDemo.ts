@@ -7,6 +7,7 @@ export default class CanvasSketchDemo extends Project {
     colored = true;
     bgSize = [0.7, 0.9];
     size = 0.8;
+    bgColor = '#ff8811';
 
     #fgColor = `rgb(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255})`;
     randomize = () => {
@@ -24,7 +25,7 @@ export default class CanvasSketchDemo extends Project {
 
             // Fill the canvas with pink
             context.clearRect(0, 0, width, height);
-            context.fillStyle = 'pink';
+            context.fillStyle = this.bgColor;
             context.fillRect(0, 0, width * this.bgSize[0], height * this.bgSize[1]);
 
             // Draw a white rectangle in the center
