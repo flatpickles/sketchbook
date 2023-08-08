@@ -13,6 +13,11 @@
             "liveUpdates": true,
             "style": "multi"
         },
+        "enumTest": {
+            "name": "Enum Test",
+            "liveUpdates": true,
+            "options": ["yes", "no", "maybe"]
+        },
         "randomize": {
             "name": "Randomize Color",
             "section": "Colors",

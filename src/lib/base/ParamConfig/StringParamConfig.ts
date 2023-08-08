@@ -15,7 +15,8 @@ export interface StringParamConfig extends ParamConfig {
 export const StringParamConfigDefaults: StringParamConfig = {
     ...ParamConfigDefaults,
     type: ParamType.String,
-    style: StringParamStyle.SingleLine
+    style: StringParamStyle.SingleLine,
+    options: undefined
 } as const;
 
 export function isStringParamConfig(param: ParamConfig): param is StringParamConfig {

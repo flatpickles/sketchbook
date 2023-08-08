@@ -2,6 +2,12 @@ import Project from '$lib/base/Project';
 
 import canvasSketch from 'canvas-sketch';
 
+enum StringEnumTest {
+    Yes = 'yes',
+    No = 'no',
+    Maybe = 'maybe'
+}
+
 export default class CanvasSketchDemo extends Project {
     displayText = 'Hello Canvas Sketch';
     colored = true;
@@ -9,6 +15,7 @@ export default class CanvasSketchDemo extends Project {
     size = 0.8;
     bgColor = '#ff8811';
     multiText = 'yes yes\nno no';
+    enumTest = StringEnumTest.Yes;
 
     #fgColor = `rgb(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255})`;
     randomize = () => {
@@ -51,7 +58,7 @@ export default class CanvasSketchDemo extends Project {
             context.font = 'bold 24px Helvetica';
             context.textAlign = 'left';
             context.textBaseline = 'top';
-            context.fillText(this.displayText, 400, 100);
+            context.fillText(this.displayText + ' - ' + this.enumTest, 400, 100);
         };
     };
 

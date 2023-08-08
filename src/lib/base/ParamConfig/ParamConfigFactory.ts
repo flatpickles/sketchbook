@@ -2,7 +2,12 @@ import type { ParamConfig } from './ParamConfig';
 import { type NumberParamConfig, NumberParamConfigDefaults } from './NumberParamConfig';
 import { type BooleanParamConfig, BooleanParamConfigDefaults } from './BooleanParamConfig';
 import { FunctionParamConfigDefaults, type FunctionParamConfig } from './FunctionParamConfig';
-import { StringParamConfigDefaults, type StringParamConfig } from './StringParamConfig';
+import {
+    StringParamConfigDefaults,
+    type StringParamConfig,
+    StringParamStyle,
+    isStringParamConfig
+} from './StringParamConfig';
 import {
     NumericArrayParamConfigDefaults,
     type NumericArrayParamConfig
@@ -78,6 +83,21 @@ export class ParamConfigFactory {
         } else {
             // If no config exists, assign the value as the default
             param.name = key;
+        }
+
+        // Validate string options param
+        if (isStringParamConfig(param)) {
+            if (param.style === StringParamStyle.Options) {
+                // Make sure options array exists if style is "options"
+                if (param.options == undefined || param.options.length < 1) {
+                    throw new Error(
+                        `A string param with "options" style must include an array of options in its config (${key})`
+                    );
+                }
+            } else if (param.options != undefined && param.options.length > 0) {
+                // If options array exists but style is not "options", set style to "options"
+                param.style = StringParamStyle.Options;
+            }
         }
 
         // Return the generated param

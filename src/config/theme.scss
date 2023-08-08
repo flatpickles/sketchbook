@@ -166,7 +166,7 @@ $field-input-border-radius: 0.25rem;
 $param-input-item-min-width: 2rem;
 $param-input-item-partial-width: 4rem;
 
-$checkbox-input-size: 1rem;
+$checkbox-input-size: 0.9rem;
 
 @mixin parameter-item {
     font-size: $medium-text-size;

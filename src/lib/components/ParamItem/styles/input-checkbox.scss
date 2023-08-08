@@ -32,8 +32,8 @@ input[type='checkbox']::before {
     clip-path: polygon(0% 33%, 33% 33%, 33% 66%, 100% 66%, 100% 100%, 0% 100%);
     rotate: -45deg;
     position: relative;
-    top: -20%;
-    left: -12%;
+    top: -25%;
+    left: -10%;
 }
 
 input[type='checkbox']:checked::before {
