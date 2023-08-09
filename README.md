@@ -2,7 +2,6 @@
 
 Params WIP:
 
--   Checkbox: click anywhere to toggle
 -   Number fields: validate min/max/step
 -   File input
 -   Param UI (label double click options)
