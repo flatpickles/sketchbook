@@ -34,8 +34,18 @@
         id={name}
         on:input={fieldInputEvent}
         on:change={fieldInputEvent}
+        autocomplete="off"
+        data-testid="color-param-field"
     />
-    <input class="color-selector" type="color" bind:value id={name} on:input on:change />
+    <input
+        class="color-selector"
+        type="color"
+        bind:value
+        id={name}
+        on:input
+        on:change
+        data-testid="color-param-selector"
+    />
 </div>
 
 <style lang="scss">

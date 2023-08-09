@@ -3,7 +3,6 @@
 Params WIP:
 
 -   Component tests
-    -   Styles (ParamItem test)
     -   Param input interactions
 -   Customizable label for function buttons
 -   File input
@@ -15,6 +14,8 @@ Params WIP:
 
 Next up:
 
+-   Test coverage:
+    -   Groups selection (component tests)
 -   Saved state
     -   Param values
     -   Selected project (for root navigation redirect)

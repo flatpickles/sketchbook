@@ -13,7 +13,7 @@
         on:change
         autocomplete="off"
         rows="2"
-        data-testid="string-param-input"
+        data-testid="string-param-input-multiline"
     />
 {:else}
     <input
@@ -23,7 +23,7 @@
         on:input
         on:change
         autocomplete="off"
-        data-testid="string-param-input"
+        data-testid="string-param-input-singleline"
     />
 {/if}
 

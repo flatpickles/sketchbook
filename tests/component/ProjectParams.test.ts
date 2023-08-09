@@ -47,6 +47,7 @@ function paramsWithLiveUpdates(
             key: 'testString',
             name: 'Test String',
             liveUpdates: liveUpdates,
+            style: 'single',
             section: [SectionOption.SomeSections, SectionOption.AllSections].includes(sectionOption)
                 ? 'Section 1'
                 : undefined
@@ -177,7 +178,7 @@ describe('ProjectParams list', () => {
         const booleanInput = screen.getByTestId('boolean-param-input') as HTMLInputElement;
         expect(booleanInput).toBeDefined();
         expect(booleanInput.checked).toBe(true);
-        const stringInput = screen.getByTestId('string-param-input') as HTMLInputElement;
+        const stringInput = screen.getByTestId('string-param-input-singleline') as HTMLInputElement;
         expect(stringInput).toBeDefined();
         expect(stringInput.value).toBe('hello');
         const functionInput = screen.getByTestId('function-param-input') as HTMLInputElement;
@@ -309,7 +310,7 @@ describe('string param input', () => {
     it('updates a string param when the input changes (liveUpdates)', async () => {
         const project = renderParams(true);
         vi.spyOn(project, 'update');
-        const stringInput = screen.getByTestId('string-param-input') as HTMLInputElement;
+        const stringInput = screen.getByTestId('string-param-input-singleline') as HTMLInputElement;
         expect(stringInput.value).toBe('hello');
         expect(project.testString).toBe('hello');
         fireEvent.input(stringInput, { target: { value: 'goodbye' } });
@@ -323,7 +324,7 @@ describe('string param input', () => {
     it('updates a string param when the input changes (!liveUpdates)', async () => {
         const project = renderParams(false);
         vi.spyOn(project, 'update');
-        const stringInput = screen.getByTestId('string-param-input') as HTMLInputElement;
+        const stringInput = screen.getByTestId('string-param-input-singleline') as HTMLInputElement;
         expect(stringInput.value).toBe('hello');
         expect(project.testString).toBe('hello');
         fireEvent.input(stringInput, { target: { value: 'goodbye' } });
