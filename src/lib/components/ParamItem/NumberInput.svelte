@@ -40,7 +40,7 @@
             {step}
             on:input
             on:change
-            data-testid="number-param-input"
+            data-testid="number-param-slider"
         />
     {/if}
     {#if showField}
@@ -53,7 +53,7 @@
             {step}
             on:input={fieldInputEvent}
             on:change={fieldInputEvent}
-            data-testid="number-param-input"
+            data-testid="number-param-field"
         />
     {/if}
 </div>

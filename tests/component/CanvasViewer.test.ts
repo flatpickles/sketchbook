@@ -8,9 +8,7 @@ import { describe, it, expect, vi, afterEach } from 'vitest';
 global.HTMLCanvasElement.prototype.getContext = () => null;
 
 describe('CanvasViewer', () => {
-    afterEach(() => {
-        cleanup();
-    });
+    afterEach(cleanup);
 
     it('renders a canvas', async () => {
         const { getByTestId } = render(CanvasViewer, {

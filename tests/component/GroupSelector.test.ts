@@ -11,9 +11,7 @@ function projectWithGroups(groups: string[]): ProjectConfig {
 }
 
 describe('GroupSelector', () => {
-    afterEach(() => {
-        cleanup();
-    });
+    afterEach(cleanup);
 
     it('renders and dedupes groups', async () => {
         const projects: ProjectConfig[] = [

@@ -5,12 +5,14 @@ Params WIP:
 -   Component tests
     -   Hover text (ParamItem test)
     -   Styles (ParamItem test)
+    -   even/odd test (ProjectParams)
 -   Customizable label for function buttons
 -   File input
 -   Param UI (label double click options)
     -   Option to reset to default/preset value
     -   Option to randomize within range
 -   Checkbox: click anywhere to toggle
+-   Number fields: validate min/max/step
 
 Next up:
 

@@ -30,7 +30,7 @@ function paramsWithLiveUpdates(
             key: 'testNumber',
             name: 'Test Number',
             liveUpdates: liveUpdates,
-            style: 'slider',
+            style: 'combo',
             section: sectionOption === SectionOption.AllSections ? 'Section 1' : undefined
         },
         {
@@ -93,9 +93,7 @@ function renderParams(
 }
 
 describe('ProjectParams list', () => {
-    afterEach(() => {
-        cleanup();
-    });
+    afterEach(cleanup);
 
     it('renders param label names properly, in order', async () => {
         renderParams();
@@ -120,19 +118,19 @@ describe('ProjectParams list', () => {
         expect(functionInput).toBeDefined();
 
         // Both single & array numeric inputs are rendered
-        const numberInputs = screen.getAllByTestId('number-param-input') as HTMLInputElement[];
-        expect(numberInputs.length).toBe(4);
-        expect(numberInputs[0].value).toBe('42');
-        expect(numberInputs[1].value).toBe('1');
-        expect(numberInputs[2].value).toBe('2');
-        expect(numberInputs[3].value).toBe('3');
+        const numberInputSliders = screen.getAllByTestId(
+            'number-param-slider'
+        ) as HTMLInputElement[];
+        expect(numberInputSliders.length).toBe(4);
+        expect(numberInputSliders[0].value).toBe('42');
+        expect(numberInputSliders[1].value).toBe('1');
+        expect(numberInputSliders[2].value).toBe('2');
+        expect(numberInputSliders[3].value).toBe('3');
     });
 });
 
 describe('ProjectParams sections', () => {
-    afterEach(() => {
-        cleanup();
-    });
+    afterEach(cleanup);
 
     it('renders param sections properly (some params in sections)', async () => {
         renderParams(true, SectionOption.SomeSections);
@@ -188,14 +186,12 @@ describe('ProjectParams sections', () => {
 });
 
 describe('number param input', () => {
-    afterEach(() => {
-        cleanup();
-    });
+    afterEach(cleanup);
 
     it('updates a number param when the input changes (liveUpdates)', async () => {
         const project = renderParams(true);
         vi.spyOn(project, 'update');
-        const numberInput = screen.getAllByTestId('number-param-input')[0] as HTMLInputElement;
+        const numberInput = screen.getAllByTestId('number-param-slider')[0] as HTMLInputElement;
         expect(numberInput.value).toBe('42');
         expect(project.testNumber).toBe(42);
         fireEvent.input(numberInput, { target: { value: '43' } });
@@ -211,7 +207,7 @@ describe('number param input', () => {
     it('updates a number param when the input changes (!liveUpdates)', async () => {
         const project = renderParams(false);
         vi.spyOn(project, 'update');
-        const numberInput = screen.getAllByTestId('number-param-input')[0] as HTMLInputElement;
+        const numberInput = screen.getAllByTestId('number-param-slider')[0] as HTMLInputElement;
         expect(numberInput.value).toBe('42');
         expect(project.testNumber).toBe(42);
         fireEvent.input(numberInput, { target: { value: '43' } });
@@ -226,9 +222,7 @@ describe('number param input', () => {
 });
 
 describe('boolean param input', () => {
-    afterEach(() => {
-        cleanup();
-    });
+    afterEach(cleanup);
 
     it('updates a boolean param when the input changes', async () => {
         const project = renderParams(true);
@@ -244,9 +238,7 @@ describe('boolean param input', () => {
 });
 
 describe('string param input', () => {
-    afterEach(() => {
-        cleanup();
-    });
+    afterEach(cleanup);
 
     it('updates a string param when the input changes (liveUpdates)', async () => {
         const project = renderParams(true);
@@ -280,14 +272,14 @@ describe('string param input', () => {
 });
 
 describe('numeric array param input', () => {
-    afterEach(() => {
-        cleanup();
-    });
+    afterEach(cleanup);
 
     it('updates a numeric array param when the input changes (liveUpdates)', async () => {
         const project = renderParams(true);
         vi.spyOn(project, 'update');
-        const numericArrayInput = screen.getAllByTestId('number-param-input') as HTMLInputElement[];
+        const numericArrayInput = screen.getAllByTestId(
+            'number-param-slider'
+        ) as HTMLInputElement[];
         numericArrayInput.shift(); // first is the non-array numeric input
         expect(numericArrayInput.length).toBe(3);
         expect(numericArrayInput[0].value).toBe('1');
@@ -307,7 +299,9 @@ describe('numeric array param input', () => {
     it('updates a numeric array param when the input changes (!liveUpdates)', async () => {
         const project = renderParams(false);
         vi.spyOn(project, 'update');
-        const numericArrayInput = screen.getAllByTestId('number-param-input') as HTMLInputElement[];
+        const numericArrayInput = screen.getAllByTestId(
+            'number-param-slider'
+        ) as HTMLInputElement[];
         numericArrayInput.shift(); // first is the non-array numeric input
         expect(numericArrayInput.length).toBe(3);
         expect(numericArrayInput[0].value).toBe('1');
@@ -326,9 +320,7 @@ describe('numeric array param input', () => {
 });
 
 describe('function param input', () => {
-    afterEach(() => {
-        cleanup();
-    });
+    afterEach(cleanup);
 
     it('calls a param-ized function when the button is clicked', async () => {
         const project = renderParams(true);

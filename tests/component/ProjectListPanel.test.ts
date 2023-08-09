@@ -5,9 +5,7 @@ import ProjectListPanel from '$lib/components/ProjectListPanel.svelte';
 import { type SketchbookConfig, ProjectSortType } from '$lib/base/FileLoading/SketchbookConfig';
 
 describe('ProjectListPanel rendering', () => {
-    afterEach(() => {
-        cleanup();
-    });
+    afterEach(cleanup);
 
     it('uses the sketchbookConfig values', async () => {
         const sketchbookConfig: SketchbookConfig = {
@@ -174,6 +172,8 @@ describe('ProjectListPanel rendering', () => {
 });
 
 describe('ProjectListPanel interaction', () => {
+    afterEach(cleanup);
+
     beforeAll(() => {
         const sketchbookConfig: SketchbookConfig = {
             title: 'Test Title',
