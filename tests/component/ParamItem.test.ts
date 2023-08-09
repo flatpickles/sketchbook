@@ -1,14 +1,10 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 
-import { render, fireEvent, screen, cleanup, waitFor } from '@testing-library/svelte';
-import { vi, describe, it, expect, afterEach } from 'vitest';
+import { render, screen, cleanup } from '@testing-library/svelte';
+import { describe, it, expect, afterEach } from 'vitest';
 import ParamItem from '$lib/components/ParamItem/ParamItem.svelte';
-import Project from '$lib/base/Project';
-import type { ProjectTuple } from '$lib/base/FileLoading/ProjectLoader';
-import { ParamType, type ParamConfig } from '$lib/base/ParamConfig/ParamConfig';
-import { ProjectConfigFactory } from '$lib/base/ProjectConfig/ProjectConfigFactory';
+import { ParamType } from '$lib/base/ParamConfig/ParamConfig';
 import { NumberParamStyle, type NumberParamConfig } from '$lib/base/ParamConfig/NumberParamConfig';
-import type { ParamValueType } from '$lib/base/ParamConfig/ParamTypes';
 import type { BooleanParamConfig } from '$lib/base/ParamConfig/BooleanParamConfig';
 import type { FunctionParamConfig } from '$lib/base/ParamConfig/FunctionParamConfig';
 import { StringParamStyle, type StringParamConfig } from '$lib/base/ParamConfig/StringParamConfig';
