@@ -3,7 +3,6 @@
 Params WIP:
 
 -   Component tests
-    -   Sections (ProjectParams.test.ts)
     -   Hover text (ParamItem test)
     -   Styles (ParamItem test)
 -   Customizable label for function buttons

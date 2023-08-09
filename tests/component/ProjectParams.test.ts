@@ -14,44 +14,69 @@ class TestProject extends Project {
     testFunction = () => 42;
 }
 
-function paramsWithLiveUpdates(liveUpdates = true) {
+enum SectionOption {
+    NoSections = 'none', // no params in sections
+    SomeSections = 'someSectioned', // some params in sections
+    AllSections = 'allSectioned' // all params in sections
+}
+
+function paramsWithLiveUpdates(
+    liveUpdates = true,
+    sectionOption: SectionOption = SectionOption.NoSections
+) {
     return [
         {
             type: ParamType.Number,
             key: 'testNumber',
             name: 'Test Number',
             liveUpdates: liveUpdates,
-            style: 'slider'
+            style: 'slider',
+            section: sectionOption === SectionOption.AllSections ? 'Section 1' : undefined
         },
         {
             type: ParamType.Boolean,
             key: 'testBoolean',
             name: 'Test Boolean',
-            liveUpdates: liveUpdates
+            liveUpdates: liveUpdates,
+            section: [SectionOption.SomeSections, SectionOption.AllSections].includes(sectionOption)
+                ? 'Section 1'
+                : undefined
         },
         {
             type: ParamType.String,
             key: 'testString',
             name: 'Test String',
-            liveUpdates: liveUpdates
+            liveUpdates: liveUpdates,
+            section: [SectionOption.SomeSections, SectionOption.AllSections].includes(sectionOption)
+                ? 'Section 1'
+                : undefined
         },
         {
             type: ParamType.NumericArray,
             key: 'testNumericArray',
             name: 'Test Numeric Array',
             liveUpdates: liveUpdates,
-            style: 'slider'
+            style: 'slider',
+            section: [SectionOption.SomeSections, SectionOption.AllSections].includes(sectionOption)
+                ? 'Section 2'
+                : undefined
         },
         {
             type: ParamType.Function,
             key: 'testFunction',
             name: 'Test Function',
-            liveUpdates: liveUpdates
+            liveUpdates: liveUpdates,
+            section: [SectionOption.SomeSections, SectionOption.AllSections].includes(sectionOption)
+                ? 'Section 2'
+                : undefined
         }
     ];
 }
 
-function renderParams(liveUpdates = true): TestProject {
+function renderParams(
+    liveUpdates = true,
+    sectionOption: SectionOption = SectionOption.NoSections
+): TestProject {
     const testProject = new TestProject();
     const testProjectConfig = ProjectConfigFactory.propsFrom({
         liveUpdates: liveUpdates
@@ -59,7 +84,7 @@ function renderParams(liveUpdates = true): TestProject {
     const testTuple: ProjectTuple = {
         project: testProject,
         props: testProjectConfig,
-        params: paramsWithLiveUpdates(liveUpdates)
+        params: paramsWithLiveUpdates(liveUpdates, sectionOption)
     };
     render(ProjectParams, {
         projectTuple: testTuple
@@ -101,6 +126,64 @@ describe('ProjectParams list', () => {
         expect(numberInputs[1].value).toBe('1');
         expect(numberInputs[2].value).toBe('2');
         expect(numberInputs[3].value).toBe('3');
+    });
+});
+
+describe('ProjectParams sections', () => {
+    afterEach(() => {
+        cleanup();
+    });
+
+    it('renders param sections properly (some params in sections)', async () => {
+        renderParams(true, SectionOption.SomeSections);
+        const noSectionParams = screen.getByTestId('no-section-params');
+        const sectionItems = screen.getAllByTestId('params-section');
+
+        // Check no section params
+        expect(noSectionParams).toBeDefined();
+        expect(noSectionParams.textContent).toContain('Test Number');
+        expect(noSectionParams.nextElementSibling).toBe(sectionItems[0]);
+
+        // Check sections
+        expect(sectionItems.length).toBe(2);
+        expect(sectionItems[0].textContent).toContain('Section 1');
+        expect(sectionItems[1].textContent).toContain('Section 2');
+        expect(sectionItems[0].nextElementSibling).toBe(sectionItems[1]);
+        expect(sectionItems[1].nextElementSibling).toBeNull();
+        expect(sectionItems[0].textContent).toContain('Test Boolean');
+        expect(sectionItems[0].textContent).toContain('Test String');
+        expect(sectionItems[1].textContent).toContain('Test Numeric Array');
+        expect(sectionItems[1].textContent).toContain('Test Function');
+    });
+
+    it('renders param sections properly (all params in sections)', async () => {
+        renderParams(true, SectionOption.AllSections);
+        const sectionItems = screen.getAllByTestId('params-section');
+
+        // Check sections
+        expect(sectionItems.length).toBe(2);
+        expect(sectionItems[0].textContent).toContain('Section 1');
+        expect(sectionItems[1].textContent).toContain('Section 2');
+        expect(sectionItems[0].nextElementSibling).toBe(sectionItems[1]);
+        expect(sectionItems[1].nextElementSibling).toBeNull();
+        expect(sectionItems[0].textContent).toContain('Test Number');
+        expect(sectionItems[0].textContent).toContain('Test Boolean');
+        expect(sectionItems[0].textContent).toContain('Test String');
+        expect(sectionItems[1].textContent).toContain('Test Numeric Array');
+        expect(sectionItems[1].textContent).toContain('Test Function');
+    });
+
+    it('renders param sections properly (no params in sections)', async () => {
+        renderParams(true, SectionOption.NoSections);
+        const noSectionParams = screen.getByTestId('no-section-params');
+        expect(() => {
+            screen.getAllByTestId('params-section');
+        }).toThrow();
+
+        // Check no section params
+        expect(noSectionParams).toBeDefined();
+        expect(noSectionParams.textContent).toContain('Test Number');
+        expect(noSectionParams.nextElementSibling).toBeNull();
     });
 });
 

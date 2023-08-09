@@ -52,7 +52,7 @@
 
 <div class="params-wrapper">
     <!-- Put all params with no section at the top -->
-    <div class="params-grid">
+    <div class="params-grid" data-testid="no-section-params">
         {#each noSectionParams as param, paramIdx}
             <ParamItem
                 config={param}
@@ -65,7 +65,7 @@
 
     <!-- Display a section for each param section -->
     {#each paramSections as paramSection}
-        <div class="params-section">
+        <div class="params-section" data-testid="params-section">
             <div class="params-section-header">
                 <div class="params-section-header-line" />
                 <div class="params-section-name">{paramSection.name}</div>
