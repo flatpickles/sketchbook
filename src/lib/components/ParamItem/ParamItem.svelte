@@ -63,7 +63,7 @@
     {:else if ParamGuards.isBooleanParamConfig(config) && typeof value === 'boolean'}
         <BooleanInput name={config.name} bind:value on:change={paramUpdated.bind(null, true)} />
     {:else if ParamGuards.isFunctionParamConfig(config) && typeof value === 'function'}
-        <FunctionInput on:click={paramUpdated.bind(null, true)} />
+        <FunctionInput buttonText={config.buttonText} on:click={paramUpdated.bind(null, true)} />
     {:else if ParamGuards.isStringParamConfig(config) && typeof value === 'string'}
         {#if config.style === StringParamStyle.Options}
             <OptionInput

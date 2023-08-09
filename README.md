@@ -2,20 +2,17 @@
 
 Params WIP:
 
--   Component tests
-    -   Param input interactions
--   Customizable label for function buttons
+-   Checkbox: click anywhere to toggle
+-   Number fields: validate min/max/step
 -   File input
 -   Param UI (label double click options)
     -   Option to reset to default/preset value
     -   Option to randomize within range
--   Checkbox: click anywhere to toggle
--   Number fields: validate min/max/step
 
 Next up:
 
 -   Test coverage:
-    -   Groups selection (component tests)
+    -   Project detail panel (component tests)
 -   Saved state
     -   Param values
     -   Selected project (for root navigation redirect)
@@ -116,6 +113,7 @@ Long-term goals:
         -   Simple crossfade
         -   Alpha overlay for custom cutouts, wipes, etc
         -   Maybe a base Sketch class function called when transition begins?
+-   Password protected projects
 
 Philosophy:
 

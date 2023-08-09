@@ -6,7 +6,10 @@ import ParamItem from '$lib/components/ParamItem/ParamItem.svelte';
 import { ParamType } from '$lib/base/ParamConfig/ParamConfig';
 import { NumberParamStyle, type NumberParamConfig } from '$lib/base/ParamConfig/NumberParamConfig';
 import type { BooleanParamConfig } from '$lib/base/ParamConfig/BooleanParamConfig';
-import type { FunctionParamConfig } from '$lib/base/ParamConfig/FunctionParamConfig';
+import {
+    FunctionParamConfigDefaults,
+    type FunctionParamConfig
+} from '$lib/base/ParamConfig/FunctionParamConfig';
 import { StringParamStyle, type StringParamConfig } from '$lib/base/ParamConfig/StringParamConfig';
 
 describe('ParamItem', () => {
@@ -130,6 +133,30 @@ describe('ParamItem function styles', () => {
             key: 'function',
             name: 'Function',
             type: ParamType.Function,
+            liveUpdates: true,
+            buttonText: 'Bananas'
+        };
+        render(ParamItem, {
+            config: param,
+            // @ts-ignore – value type checking isn't working in the render constructor
+            value: () => {
+                return;
+            },
+            even: false
+        });
+        const label = screen.getByText('Function');
+        expect(label).toBeDefined();
+        const button = screen.getAllByTestId('function-param-input')[0] as HTMLButtonElement;
+        expect(button).toBeDefined();
+        const buttonText = screen.getByText('Bananas');
+        expect(buttonText).toBeDefined();
+    });
+
+    it('renders a function param with no button text', () => {
+        const param: FunctionParamConfig = {
+            key: 'function',
+            name: 'Function',
+            type: ParamType.Function,
             liveUpdates: true
         };
         render(ParamItem, {
@@ -144,6 +171,8 @@ describe('ParamItem function styles', () => {
         expect(label).toBeDefined();
         const button = screen.getAllByTestId('function-param-input')[0] as HTMLButtonElement;
         expect(button).toBeDefined();
+        const buttonText = screen.getByText(FunctionParamConfigDefaults.buttonText ?? 'Run');
+        expect(buttonText).toBeDefined();
     });
 });
 

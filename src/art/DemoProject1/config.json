@@ -18,6 +18,10 @@
         "testBoolean": {
             "name": "Boolean Param",
             "enables": []
+        },
+        "testFn": {
+            "name": "TestFunction",
+            "buttonText": "Go!!!"
         }
     }
 }

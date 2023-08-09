@@ -1,11 +1,13 @@
 import { type ParamConfig, ParamType, ParamConfigDefaults } from './ParamConfig';
 
-// Function params offer no additional configuration options
-export type FunctionParamConfig = ParamConfig;
+export interface FunctionParamConfig extends ParamConfig {
+    buttonText?: string;
+}
 
-export const FunctionParamConfigDefaults: ParamConfig = {
+export const FunctionParamConfigDefaults: FunctionParamConfig = {
     ...ParamConfigDefaults,
-    type: ParamType.Function
+    type: ParamType.Function,
+    buttonText: 'Run'
 } as const;
 
 export function isFunctionParamConfig(param: ParamConfig): param is FunctionParamConfig {
