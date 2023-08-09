@@ -3,9 +3,8 @@
 Params WIP:
 
 -   Component tests
-    -   Hover text (ParamItem test)
     -   Styles (ParamItem test)
-    -   even/odd test (ProjectParams)
+    -   Param input interactions
 -   Customizable label for function buttons
 -   File input
 -   Param UI (label double click options)

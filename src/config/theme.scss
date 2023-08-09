@@ -173,10 +173,10 @@ $checkbox-input-size: 0.9rem;
     margin: 0 calc($panel-content-inset / 2);
     padding: $parameter-item-padding-vertical calc($panel-content-inset / 2);
 
-    &.odd {
+    &.even {
         background-color: rgba(0, 0, 0, 0);
     }
-    &.even {
+    &.odd {
         background-color: rgba(0, 0, 0, 0.05);
     }
 }

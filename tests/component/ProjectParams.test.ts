@@ -95,6 +95,72 @@ function renderParams(
 describe('ProjectParams list', () => {
     afterEach(cleanup);
 
+    it('renders param items as even/odd correctly (no sections)', async () => {
+        renderParams(true, SectionOption.NoSections);
+
+        // Check label wrappers
+        const labelWrappers = screen.getAllByTestId('param-label-wrapper');
+        expect(labelWrappers.length).toBe(5);
+        expect(labelWrappers[0].classList.contains('odd')).toBe(true);
+        expect(labelWrappers[1].classList.contains('even')).toBe(true);
+        expect(labelWrappers[2].classList.contains('odd')).toBe(true);
+        expect(labelWrappers[3].classList.contains('even')).toBe(true);
+        expect(labelWrappers[4].classList.contains('odd')).toBe(true);
+
+        // Check input wrappers
+        const inputWrappers = screen.getAllByTestId('param-input-wrapper');
+        expect(inputWrappers.length).toBe(5);
+        expect(inputWrappers[0].classList.contains('odd')).toBe(true);
+        expect(inputWrappers[1].classList.contains('even')).toBe(true);
+        expect(inputWrappers[2].classList.contains('odd')).toBe(true);
+        expect(inputWrappers[3].classList.contains('even')).toBe(true);
+        expect(inputWrappers[4].classList.contains('odd')).toBe(true);
+    });
+
+    it('renders param items as even/odd correctly (some in sections)', async () => {
+        renderParams(true, SectionOption.SomeSections);
+
+        // Check label wrappers
+        const labelWrappers = screen.getAllByTestId('param-label-wrapper');
+        expect(labelWrappers.length).toBe(5);
+        expect(labelWrappers[0].classList.contains('odd')).toBe(true);
+        expect(labelWrappers[1].classList.contains('odd')).toBe(true);
+        expect(labelWrappers[2].classList.contains('even')).toBe(true);
+        expect(labelWrappers[3].classList.contains('odd')).toBe(true);
+        expect(labelWrappers[4].classList.contains('even')).toBe(true);
+
+        // Check input wrappers
+        const inputWrappers = screen.getAllByTestId('param-input-wrapper');
+        expect(inputWrappers.length).toBe(5);
+        expect(inputWrappers[0].classList.contains('odd')).toBe(true);
+        expect(inputWrappers[1].classList.contains('odd')).toBe(true);
+        expect(inputWrappers[2].classList.contains('even')).toBe(true);
+        expect(inputWrappers[3].classList.contains('odd')).toBe(true);
+        expect(inputWrappers[4].classList.contains('even')).toBe(true);
+    });
+
+    it('renders param items as even/odd correctly (all in sections)', async () => {
+        renderParams(true, SectionOption.AllSections);
+
+        // Check label wrappers
+        const labelWrappers = screen.getAllByTestId('param-label-wrapper');
+        expect(labelWrappers.length).toBe(5);
+        expect(labelWrappers[0].classList.contains('odd')).toBe(true);
+        expect(labelWrappers[1].classList.contains('even')).toBe(true);
+        expect(labelWrappers[2].classList.contains('odd')).toBe(true);
+        expect(labelWrappers[3].classList.contains('odd')).toBe(true);
+        expect(labelWrappers[4].classList.contains('even')).toBe(true);
+
+        // Check input wrappers
+        const inputWrappers = screen.getAllByTestId('param-input-wrapper');
+        expect(inputWrappers.length).toBe(5);
+        expect(inputWrappers[0].classList.contains('odd')).toBe(true);
+        expect(inputWrappers[1].classList.contains('even')).toBe(true);
+        expect(inputWrappers[2].classList.contains('odd')).toBe(true);
+        expect(inputWrappers[3].classList.contains('odd')).toBe(true);
+        expect(inputWrappers[4].classList.contains('even')).toBe(true);
+    });
+
     it('renders param label names properly, in order', async () => {
         renderParams();
         const labelItems = screen.getAllByTestId('param-label');

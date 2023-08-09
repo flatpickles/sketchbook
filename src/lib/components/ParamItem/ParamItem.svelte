@@ -38,10 +38,16 @@
     }
 </script>
 
-<div class="label-wrapper" class:even class:odd={!even} title={config.hoverText}>
+<div
+    class="label-wrapper"
+    data-testid="param-label-wrapper"
+    class:even
+    class:odd={!even}
+    title={config.hoverText}
+>
     <label class="param-label" data-testid="param-label" for={config.name}>{config.name}</label>
 </div>
-<div class="input-wrapper" class:even class:odd={!even}>
+<div class="input-wrapper" data-testid="param-input-wrapper" class:even class:odd={!even}>
     {#if ParamGuards.isNumberParamConfig(config) && typeof value === 'number'}
         <NumberInput
             name={config.name}
