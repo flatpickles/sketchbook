@@ -2,22 +2,59 @@
 
 Params WIP:
 
--   file inputs?
--   styles:
-    -   string: options
-    -   MIDI map: for numeric & boolean params
 -   Component tests
-    -   Sections
-    -   Hover text
-    -   Styles
--   Param UI
+    -   Sections (ProjectParams.test.ts)
+    -   Hover text (ParamItem test)
+    -   Styles (ParamItem test)
+-   Customizable label for function buttons
+-   File input
+-   Param UI (label double click options)
     -   Option to reset to default/preset value
     -   Option to randomize within range
+-   Checkbox: click anywhere to toggle
 
-Todo / WIP notes:
+Next up:
 
--   Clicking a group or project list item should scroll it fully into view.
+-   Saved state
+    -   Param values
+    -   Selected project (for root navigation redirect)
+    -   Selected group
+    -   Settings values
+    -   Panel states
+-   Show & hide panels in desktop layout
+    -   Show/hide animation
+    -   Show buttons from hidden state
+-   Presets
+    -   Model work
+    -   Selection UI & plumbing
+    -   Options: creation, export, import, etc
+-   Settings panel & values
+    -   Show & hide from button
+    -   Param double click behavior
+    -   Experimental mode
+    -   Auto-hide panels w/ mouse hover to show them (desktop only)
+    -   Double click to hide/show panels
+    -   Dark mode - TBD
+    -   Perf data - FPS meter (or maybe put this elsewhere)
+-   config.json
+    -   Defaults for all settings
+-   Base project subclasses:
+    -   Canvas Sketch
+    -   P5
+    -   REGL
+-   Mobile layout & behavior
+-   Info display / link from bottom left button - TBD
+-   Link previews
+-   Theming / styling:
+    -   Expose only high-level adjustments in theme.scss; move finer details elsewhere (closer to components probably)
+    -   Enable SBv1 style (or something mono/sharp)
+    -   Enable dark mode configuration, somehow
+
+Miscellaneous / notes:
+
 -   Read through old notes and absorb in design doc
+-   Read through design doc
+-   Clicking a group or project list item should scroll it fully into view.
 -   Optional explicit route name (vs. just using the filename/key)
 -   Better error messaging for config file parsing throughout
 -   "animated" mode for sketches: call update with animation frame request
@@ -25,10 +62,31 @@ Todo / WIP notes:
 -   Make old style possible via theme config (or something like it)
 -   When changing param defaults (assigned in file) what happens? Especially with local storage... param default vals will get confusing...
 
+Ongoing:
+
+-   Accessibility
+    -   Param label associations
+    -   Semantic markup
+-   Style & theme cleanup
+-   Cross-browser testing
+    -   Firefox text baselines are too high? Probably the baked helvetica isn't normalized
+
+Eventual work for launch:
+
+-   Update design doc, and/or adapt into other documentation:
+    -   Getting started
+    -   Full docs, etc
+-   Theme examples
+-   Project examples
+-   Example deployment with a few demo projects (not just Longitude Studio)
+-   Port SBv1 into projects.longitude.studio
+-   Pick an OSS license and document accordingly
+-   Record demo videos and create other marketing assets - TBD
+
 MVP stretch goals:
 
--   Link previews
 -   Webcam & microphone inputs
+-   MIDI inputs
 -   API:
     -   Project list (names, dates, metadata)
     -   Link preview images

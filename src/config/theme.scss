@@ -195,7 +195,7 @@ $checkbox-input-size: 0.9rem;
     padding: 0.15rem 0.25rem;
 }
 @mixin function-parameter-input {
-    $background-color: color.scale($param-accent-color, $lightness: +60%);
+    $background-color: color.scale($param-accent-color, $lightness: +70%);
     color: $param-fg-color;
     font-size: $xs-text-size;
     outline: $field-input-border;
