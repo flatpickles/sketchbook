@@ -13,6 +13,7 @@ import {
     type NumericArrayParamConfig
 } from './NumericArrayParamConfig';
 import { ProjectConfigDefaults } from '../ProjectConfig/ProjectConfig';
+import { FileParamConfigDefaults, type FileParamConfig } from './FileParamConfig';
 
 export class ParamConfigFactory {
     /**
@@ -40,8 +41,17 @@ export class ParamConfigFactory {
             param = {} as BooleanParamConfig;
             Object.assign(param, BooleanParamConfigDefaults);
         } else if (typeof value === 'function') {
-            param = {} as FunctionParamConfig;
-            Object.assign(param, FunctionParamConfigDefaults);
+            const fnLengthDescriptor = Object.getOwnPropertyDescriptor(value, 'length');
+            const fnLength = fnLengthDescriptor ? fnLengthDescriptor.value : 0;
+            if (fnLength == 0) {
+                // If the function has no parameters, it's a function param
+                param = {} as FunctionParamConfig;
+                Object.assign(param, FunctionParamConfigDefaults);
+            } else {
+                // Otherwise, it's a file param
+                param = {} as FileParamConfig;
+                Object.assign(param, FileParamConfigDefaults);
+            }
         } else if (typeof value === 'string') {
             param = {} as StringParamConfig;
             Object.assign(param, StringParamConfigDefaults);

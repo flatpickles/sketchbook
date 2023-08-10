@@ -1,7 +1,7 @@
 <script lang="ts">
     import { FunctionParamConfigDefaults } from '$lib/base/ParamConfig/FunctionParamConfig';
 
-    export let buttonText: string | undefined = FunctionParamConfigDefaults.buttonText;
+    export let buttonText: string = FunctionParamConfigDefaults.buttonText;
 </script>
 
 <input type="button" value={buttonText} on:click data-testid="function-param-input" />

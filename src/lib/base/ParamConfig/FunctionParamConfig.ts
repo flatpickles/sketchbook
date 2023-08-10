@@ -1,7 +1,7 @@
 import { type ParamConfig, ParamType, ParamConfigDefaults } from './ParamConfig';
 
 export interface FunctionParamConfig extends ParamConfig {
-    buttonText?: string;
+    buttonText: string;
 }
 
 export const FunctionParamConfigDefaults: FunctionParamConfig = {

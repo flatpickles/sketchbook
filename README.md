@@ -2,11 +2,16 @@
 
 Params WIP:
 
+-   File input: single-parameter function property on project subclass, parameter is the result of the file read
 -   Number fields: validate min/max/step
--   File input
 -   Param UI (label double click options)
     -   Option to reset to default/preset value
     -   Option to randomize within range
+-   Boolean param enables/disables
+    -   Model work
+    -   UI plumbing
+    -   Disabled states for input elements
+    -   String options: should this have enable/disable functionality too, somehow?
 
 Next up:
 
@@ -49,6 +54,9 @@ Next up:
 
 Miscellaneous / notes:
 
+-   Update function: take an optional "previousValues" parameter, containing previous values of exposed params before the latest update (so we can see what specifically changed).
+    { changedKey: key, previousValues: {} }
+-   Await function & load callbacks (for function & file params) so update is called after
 -   Read through old notes and absorb in design doc
 -   Read through design doc
 -   Clicking a group or project list item should scroll it fully into view.
@@ -119,3 +127,7 @@ Philosophy:
 -   Start a project as quickly as possible: idea to pixels without losing a train of thought. Creative workflow optimized from the moment of first concept.
 -   Create something that's inviting for others to play with. Comprehensive and intuitive presentation out of the box, with options to enable even more functionality.
 -   Create portable work. Easily carry your projects into another context (client work, etc) with minimal transportation cost (redesigning, rebuilding).
+
+Questions for beta testers:
+
+-   Casing in JSON fields, e.g. "liveUpdates", "dataURL" etc

@@ -22,6 +22,10 @@
         "testFn": {
             "name": "TestFunction",
             "buttonText": "Go!!!"
+        },
+        "testColor": {
+            "name": "Color Param",
+            "style": "color"
         }
     }
 }

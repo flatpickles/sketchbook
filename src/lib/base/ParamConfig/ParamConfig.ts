@@ -6,7 +6,8 @@ export enum ParamType {
     Boolean = 'boolean',
     Function = 'function',
     String = 'string',
-    NumericArray = 'numericArray'
+    NumericArray = 'numericArray',
+    File = 'file'
 }
 
 export interface ParamConfig {
