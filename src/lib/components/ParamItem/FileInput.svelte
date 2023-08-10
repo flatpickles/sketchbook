@@ -1,24 +1,34 @@
 <script lang="ts">
+    import { createEventDispatcher } from 'svelte';
     import { FileParamConfigDefaults } from '$lib/base/ParamConfig/FileParamConfig';
 
     export let multiple = FileParamConfigDefaults.multiple;
     export let accept = FileParamConfigDefaults.accept;
+    export let selectedFiles: FileList | undefined = undefined;
 
-    const noFilesText = 'No selection';
+    const noFilesText = 'Select file...';
     const multipleFilesText = 'Multiple selected';
     const selectionErrorText = 'Selection error';
 
-    let selectedFiles: FileList;
     let displayedFileName: string = noFilesText;
 
-    function changed() {
-        if (selectedFiles.length === 0) {
+    const dispatch = createEventDispatcher();
+    function fileInputEvent() {
+        const firstSelection = selectedFiles?.item(0)?.name;
+        if (!selectedFiles || selectedFiles?.length === 0) {
             displayedFileName = noFilesText;
-        } else if (selectedFiles.length === 1) {
-            displayedFileName = selectedFiles.item(0)?.name ?? selectionErrorText;
-        } else {
+        } else if (selectedFiles?.length === 1 && firstSelection) {
+            displayedFileName = firstSelection;
+        } else if (selectedFiles?.length >= 1) {
             displayedFileName = multipleFilesText;
+        } else {
+            // Just in case...
+            displayedFileName = selectionErrorText;
+            return;
         }
+
+        // Dispatch the update event
+        dispatch('change', selectedFiles);
     }
 </script>
 
@@ -27,7 +37,7 @@
         id="native-file-input"
         type="file"
         bind:files={selectedFiles}
-        on:change={changed}
+        on:change={fileInputEvent}
         {multiple}
         {accept}
     />

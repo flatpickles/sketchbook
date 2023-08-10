@@ -14,6 +14,13 @@ export default class DemoProject extends Project {
         // after first parameter, could use next params for other file metadata, e.g. name, size, type, date
         // https://developer.mozilla.org/en-US/docs/Web/API/FileReader/result
         console.log(result);
+        const img = new Image();
+        img.onload = () => {
+            const ctx = this.canvas?.getContext('2d');
+            if (!ctx) throw new Error('Could not get 2D context');
+            ctx.drawImage(img, 0, 0);
+        };
+        img.src = result;
         return;
     };
     strang = "I'm a string!";
@@ -22,7 +29,7 @@ export default class DemoProject extends Project {
         if (!this.canvas) throw new Error('Canvas not set');
         const ctx = this.canvas.getContext('2d');
         if (!ctx) throw new Error('Could not get 2D context');
-        ctx.fillStyle = '#9900FF';
+        ctx.fillStyle = this.testColor;
         ctx.fillRect(100, 100, 550, 700);
     }
 }

@@ -30,6 +30,15 @@
         });
     }
 
+    // File selection is special!
+    function filesSelected(event: any) {
+        const files = event.detail;
+        dispatch('update', {
+            config: config,
+            value: files
+        });
+    }
+
     export function isNumericArray(value: any): value is number[] {
         if (!Array.isArray(value)) return false;
         for (const member of value) {
@@ -51,43 +60,39 @@
 <div class="input-wrapper" data-testid="param-input-wrapper" class:even class:odd={!even}>
     {#if ParamGuards.isNumberParamConfig(config) && typeof value === 'number'}
         <NumberInput
+            bind:value
+            on:input={paramUpdated.bind(null, false)}
+            on:change={paramUpdated.bind(null, true)}
             name={config.name}
             min={config.min}
             max={config.max}
             step={config.step}
-            bind:value
-            on:input={paramUpdated.bind(null, false)}
-            on:change={paramUpdated.bind(null, true)}
             showField={[NumberParamStyle.Field, NumberParamStyle.Combo].includes(config.style)}
             showSlider={[NumberParamStyle.Slider, NumberParamStyle.Combo].includes(config.style)}
         />
     {:else if ParamGuards.isBooleanParamConfig(config) && typeof value === 'boolean'}
-        <BooleanInput name={config.name} bind:value on:change={paramUpdated.bind(null, true)} />
-    {:else if ParamGuards.isFunctionParamConfig(config) && typeof value === 'function'}
-        <FunctionInput buttonText={config.buttonText} on:click={paramUpdated.bind(null, true)} />
-    {:else if ParamGuards.isFileParamConfig(config) && typeof value === 'function'}
-        <FileInput />
+        <BooleanInput bind:value on:change={paramUpdated.bind(null, true)} name={config.name} />
     {:else if ParamGuards.isStringParamConfig(config) && typeof value === 'string'}
         {#if config.style === StringParamStyle.Options}
             <OptionInput
-                name={config.name}
                 bind:value
                 on:change={paramUpdated.bind(null, true)}
+                name={config.name}
                 options={config.options}
             />
         {:else if config.style === StringParamStyle.Color}
             <ColorInput
-                name={config.name}
                 bind:value
                 on:input={paramUpdated.bind(null, false)}
                 on:change={paramUpdated.bind(null, true)}
+                name={config.name}
             />
         {:else}
             <StringInput
-                name={config.name}
                 bind:value
                 on:input={paramUpdated.bind(null, false)}
                 on:change={paramUpdated.bind(null, true)}
+                name={config.name}
                 multiline={config.style === StringParamStyle.MultiLine}
             />
         {/if}
@@ -101,13 +106,13 @@
         >
             {#each value as valueMember}
                 <NumberInput
+                    bind:value={valueMember}
+                    on:input={paramUpdated.bind(null, false)}
+                    on:change={paramUpdated.bind(null, true)}
                     name={config.name}
                     min={config.min}
                     max={config.max}
                     step={config.step}
-                    bind:value={valueMember}
-                    on:input={paramUpdated.bind(null, false)}
-                    on:change={paramUpdated.bind(null, true)}
                     showField={[
                         NumericArrayParamStyle.Field,
                         NumericArrayParamStyle.CompactField,
@@ -121,6 +126,10 @@
                 />
             {/each}
         </div>
+    {:else if ParamGuards.isFunctionParamConfig(config)}
+        <FunctionInput on:click={paramUpdated.bind(null, true)} buttonText={config.buttonText} />
+    {:else if ParamGuards.isFileParamConfig(config)}
+        <FileInput on:change={filesSelected} multiple={config.multiple} accept={config.accept} />
     {/if}
 </div>
 

@@ -1,23 +1,45 @@
 <script lang="ts">
     import type { ProjectTuple } from '$lib/base/FileLoading/ProjectLoader';
-    import {
-        ParamType,
-        type ParamConfig,
-        getParamSections
-    } from '$lib/base/ParamConfig/ParamConfig';
+    import { isFileParamConfig } from '$lib/base/ParamConfig/FileParamConfig';
+    import { type ParamConfig, getParamSections } from '$lib/base/ParamConfig/ParamConfig';
     import type { ParamValueType } from '$lib/base/ParamConfig/ParamTypes';
+    import UserFileLoader from '$lib/base/Util/UserFileLoader';
 
     import ParamItem from './ParamItem/ParamItem.svelte';
+    import { isFunctionParamConfig } from '$lib/base/ParamConfig/FunctionParamConfig';
 
     export let projectTuple: ProjectTuple;
     $: [noSectionParams, paramSections] = getParamSections(projectTuple.params);
 
     // A little dark magic to apply the updated param (or call the associated function)
-    function paramUpdated(event: any) {
+    async function paramUpdated(event: CustomEvent) {
         const updatedConfig = event.detail.config as ParamConfig;
 
         // Update the project's value for this key, or call the named function
-        if (updatedConfig.type != ParamType.Function) {
+        if (isFunctionParamConfig(updatedConfig)) {
+            // If it's a function param, call the associated function
+            const descriptor = Object.getOwnPropertyDescriptor(
+                projectTuple.project,
+                updatedConfig.key
+            );
+            if (descriptor?.value) {
+                await descriptor.value();
+                projectTuple.project.update();
+            }
+        } else if (isFileParamConfig(updatedConfig)) {
+            // If it's a file param, load the file(s) then call the associated function
+            const fileList: FileList = event.detail.value;
+            // todo: multiple files & error handling
+            const loadedFile = await UserFileLoader.loadFile(fileList[0], updatedConfig.mode);
+            const descriptor = Object.getOwnPropertyDescriptor(
+                projectTuple.project,
+                updatedConfig.key
+            );
+            if (descriptor?.value) {
+                await descriptor.value(loadedFile);
+                projectTuple.project.update();
+            }
+        } else {
             // If it's an array, we need to copy it so that we don't mutate the original
             const value = Array.isArray(event.detail.value)
                 ? [...event.detail.value]
@@ -29,16 +51,6 @@
                 configurable: true
             });
             projectTuple.project.update();
-        } else {
-            // If it's a function, we need to call it
-            const descriptor = Object.getOwnPropertyDescriptor(
-                projectTuple.project,
-                updatedConfig.key
-            );
-            if (descriptor?.value) {
-                descriptor.value();
-                projectTuple.project.update();
-            }
         }
     }
 

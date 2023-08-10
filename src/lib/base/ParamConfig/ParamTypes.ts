@@ -12,7 +12,7 @@ export type ParamValueType<T> = T extends NumberParamConfig
     : T extends FunctionParamConfig
     ? () => void
     : T extends FileParamConfig
-    ? (url: string) => void
+    ? (result: string | ArrayBuffer) => void
     : T extends StringParamConfig
     ? string
     : T extends NumericArrayParamConfig

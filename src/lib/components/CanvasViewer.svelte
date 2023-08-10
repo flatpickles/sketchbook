@@ -21,6 +21,7 @@
 
     onMount(() => {
         // Update the canvas size after the DOM has loaded, and whenever the window is resized
+        // todo: flash of canvas before properly sized; maybe just hide it until we size it?
         setTimeout(setCanvasSize, 0);
         window.addEventListener('resize', () => {
             setCanvasSize();
@@ -31,6 +32,7 @@
     function setCanvasSize() {
         // todo: optional 2x resolution
         // todo: tests for canvas sizing behavior?
+        // todo: clears canvas - not desired?
         canvasElement.width = canvasElement.clientWidth * 2;
         canvasElement.height = canvasElement.clientHeight * 2;
     }

@@ -4,11 +4,12 @@ Params WIP:
 
 -   Demo project with all param types & styles visible for comparison
 -   File input
-    -   Set fontawesome icon based on accept types
-    -   Selected file plumbing
     -   Conditional type for each mode (needed? is fn type needed? where do we use this?)
     -   Actual file loading (ProjectParams component / dedicated util class maybe)
     -   Testing / beginning demo project / etc
+    -   Set fontawesome icon based on accept types
+    -   Click on file name field?
+    -   Unit & component tests
 -   Number fields: validate min/max/step
 -   Param UI (label double click options)
     -   Option to reset to default/preset value
@@ -24,9 +25,9 @@ Next up:
 -   Test coverage:
     -   Project detail panel (component tests)
 -   Saved state
-    -   Param values
+    -   Param values (what to do with file inputs?)
     -   Selected project (for root navigation redirect)
-    -   Selected group
+    -   Selected group in left panel
     -   Settings values
     -   Panel states
 -   Show & hide panels in desktop layout
@@ -60,6 +61,7 @@ Next up:
 
 Miscellaneous / notes:
 
+-   Default styles and modes, depending on parameter property names (e.g. "bgColor" would use color style by default)
 -   Update function: take an optional "previousValues" parameter, containing previous values of exposed params before the latest update (so we can see what specifically changed).
     { changedKey: key, previousValues: {} }
 -   Await function & load callbacks (for function & file params) so update is called after
@@ -82,6 +84,8 @@ Ongoing:
 -   Cross-browser testing
     -   Firefox text baselines are too high? Probably the baked helvetica isn't normalized
     -   Firefox & Safari outline some fields - awkward
+    -   Custom checkmark positioning seems to differ
+    -   IE / Edge testing?
 
 Eventual work for launch:
 
