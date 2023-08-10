@@ -6,7 +6,7 @@
 
 <div class="presets-wrapper">
     <div class="preset-selector">Default Values</div>
-    <div class="control-button">...</div>
+    <div class="control-button"><i class="fa fa-pen-to-square" /></div>
 </div>
 
 <style lang="scss">
@@ -23,13 +23,11 @@
 
     .preset-selector {
         @include preset-control-item;
-        background-color: orange;
         width: 100%;
     }
 
     .control-button {
         @include preset-control-item;
-        background-color: yellow;
         cursor: pointer;
     }
 </style>

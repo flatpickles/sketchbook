@@ -19,7 +19,7 @@
                 <h2 data-testid="header-subtitle">{@html subtitle}</h2>
             {/if}
         </div>
-        <button class="header-button" on:click={closeClicked}><i class="fa fa-close" /></button>
+        <button class="header-button" on:click={closeClicked}><i class="fa fa-xmark" /></button>
     </div>
 
     {#if description}
