@@ -2,7 +2,13 @@
 
 Params WIP:
 
--   File input: single-parameter function property on project subclass, parameter is the result of the file read
+-   Demo project with all param types & styles visible for comparison
+-   File input
+    -   Set fontawesome icon based on accept types
+    -   Selected file plumbing
+    -   Conditional type for each mode (needed? is fn type needed? where do we use this?)
+    -   Actual file loading (ProjectParams component / dedicated util class maybe)
+    -   Testing / beginning demo project / etc
 -   Number fields: validate min/max/step
 -   Param UI (label double click options)
     -   Option to reset to default/preset value
@@ -70,11 +76,12 @@ Miscellaneous / notes:
 Ongoing:
 
 -   Accessibility
-    -   Param label associations
+    -   Param label associations (name // id // etc)
     -   Semantic markup
 -   Style & theme cleanup
 -   Cross-browser testing
     -   Firefox text baselines are too high? Probably the baked helvetica isn't normalized
+    -   Firefox & Safari outline some fields - awkward
 
 Eventual work for launch:
 

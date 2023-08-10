@@ -159,6 +159,7 @@ $parameter-section-divider: 1px solid $parameter-section-header-color;
 $param-fg-color: color.scale(black, $lightness: +10%);
 $param-field-bg-color: rgba(255, 255, 255, 0.7);
 $param-accent-color: rgba(0, 0, 0, 0.3);
+$param-light-accent-color: color.scale($param-accent-color, $lightness: +70%);
 
 $field-input-border: 1px solid $param-accent-color;
 $field-input-border-radius: 0.25rem;
@@ -195,7 +196,7 @@ $checkbox-input-size: 0.9rem;
     padding: 0.15rem 0.25rem;
 }
 @mixin function-parameter-input {
-    $background-color: color.scale($param-accent-color, $lightness: +70%);
+    $background-color: $param-light-accent-color;
     color: $param-fg-color;
     font-size: $xs-text-size;
     outline: $field-input-border;

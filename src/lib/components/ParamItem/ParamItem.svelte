@@ -12,6 +12,7 @@
     import { StringParamStyle } from '$lib/base/ParamConfig/StringParamConfig';
     import ColorInput from './ColorInput.svelte';
     import OptionInput from './OptionInput.svelte';
+    import FileInput from './FileInput.svelte';
 
     export let config: ParamConfig;
     export let value: ParamValueType<typeof config>;
@@ -64,6 +65,8 @@
         <BooleanInput name={config.name} bind:value on:change={paramUpdated.bind(null, true)} />
     {:else if ParamGuards.isFunctionParamConfig(config) && typeof value === 'function'}
         <FunctionInput buttonText={config.buttonText} on:click={paramUpdated.bind(null, true)} />
+    {:else if ParamGuards.isFileParamConfig(config) && typeof value === 'function'}
+        <FileInput />
     {:else if ParamGuards.isStringParamConfig(config) && typeof value === 'string'}
         {#if config.style === StringParamStyle.Options}
             <OptionInput

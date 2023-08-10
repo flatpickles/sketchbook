@@ -30,6 +30,7 @@
             });
             projectTuple.project.update();
         } else {
+            // If it's a function, we need to call it
             const descriptor = Object.getOwnPropertyDescriptor(
                 projectTuple.project,
                 updatedConfig.key

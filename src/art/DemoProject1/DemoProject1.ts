@@ -16,6 +16,7 @@ export default class DemoProject extends Project {
         console.log(result);
         return;
     };
+    strang = "I'm a string!";
 
     update() {
         if (!this.canvas) throw new Error('Canvas not set');

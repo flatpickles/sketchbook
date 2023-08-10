@@ -3,6 +3,7 @@ import { isNumberParamConfig, type NumberParamConfig } from './NumberParamConfig
 import { isFunctionParamConfig, type FunctionParamConfig } from './FunctionParamConfig';
 import { isStringParamConfig, type StringParamConfig } from './StringParamConfig';
 import { isNumericArrayParamConfig, type NumericArrayParamConfig } from './NumericArrayParamConfig';
+import { isFileParamConfig, type FileParamConfig } from './FileParamConfig';
 
 export type ParamValueType<T> = T extends NumberParamConfig
     ? number
@@ -10,6 +11,8 @@ export type ParamValueType<T> = T extends NumberParamConfig
     ? boolean
     : T extends FunctionParamConfig
     ? () => void
+    : T extends FileParamConfig
+    ? (url: string) => void
     : T extends StringParamConfig
     ? string
     : T extends NumericArrayParamConfig
@@ -21,5 +24,6 @@ export const ParamGuards = {
     isBooleanParamConfig,
     isFunctionParamConfig,
     isStringParamConfig,
-    isNumericArrayParamConfig
+    isNumericArrayParamConfig,
+    isFileParamConfig
 };
