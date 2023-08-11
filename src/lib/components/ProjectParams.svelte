@@ -1,6 +1,10 @@
 <script lang="ts">
     import type { ProjectTuple } from '$lib/base/FileLoading/ProjectLoader';
     import { isFileParamConfig } from '$lib/base/ParamConfig/FileParamConfig';
+    import type {
+        FileResultParamType,
+        FileMetadataParamType
+    } from '$lib/base/ParamConfig/ParamTypes';
     import { type ParamConfig, getParamSections } from '$lib/base/ParamConfig/ParamConfig';
     import type { ParamValueType } from '$lib/base/ParamConfig/ParamTypes';
     import UserFileLoader from '$lib/base/Util/UserFileLoader';
@@ -28,16 +32,34 @@
             }
         } else if (isFileParamConfig(updatedConfig)) {
             // If it's a file param, load the file(s) then call the associated function
-            const fileList: FileList = event.detail.value;
-            // todo: multiple files & error handling
-            const loadedFile = await UserFileLoader.loadFile(fileList[0], updatedConfig.mode);
-            const descriptor = Object.getOwnPropertyDescriptor(
-                projectTuple.project,
-                updatedConfig.key
-            );
-            if (descriptor?.value) {
-                await descriptor.value(loadedFile);
-                projectTuple.project.update();
+            try {
+                // Collect picked files from the event
+                const fileList: FileList = event.detail.value;
+                const files = Array.from(fileList);
+
+                // Load files; load params receive a single file OR an array of files
+                let loadedFiles: FileResultParamType;
+                let fileMetadata: FileMetadataParamType;
+                if (!updatedConfig.multiple) {
+                    fileMetadata = files[0];
+                    loadedFiles = await UserFileLoader.loadFile(files[0], updatedConfig.mode);
+                } else {
+                    fileMetadata = files;
+                    loadedFiles = await UserFileLoader.loadFiles(files, updatedConfig.mode);
+                }
+
+                // Call the function with the loaded file(s)
+                const descriptor = Object.getOwnPropertyDescriptor(
+                    projectTuple.project,
+                    updatedConfig.key
+                );
+                if (descriptor?.value) {
+                    await descriptor.value(loadedFiles, fileMetadata);
+                    projectTuple.project.update();
+                }
+            } catch (e) {
+                alert('Error loading file(s). See console for details.');
+                console.error(e);
             }
         } else {
             // If it's an array, we need to copy it so that we don't mutate the original

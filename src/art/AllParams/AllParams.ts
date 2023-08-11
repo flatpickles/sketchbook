@@ -9,7 +9,8 @@ export default class AllParams extends Project {
     function = () => {
         alert('hello!');
     };
-    fileInput = async (result: string) => {
+    fileInput = async (result: ArrayBuffer[], metadata: File[]) => {
         console.log(result);
+        console.log(metadata);
     };
 }

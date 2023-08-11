@@ -6,10 +6,10 @@ export default class UserFileLoader {
             // Create a FileReader and set up callbacks
             const reader = new FileReader();
             reader.onload = () => {
-                if (typeof reader.result === 'string') {
+                if (reader.result) {
                     resolve(reader.result);
                 } else {
-                    reject(new Error('FileReader result is not a string'));
+                    reject(new Error('FileReader result was undefined'));
                 }
             };
             reader.onerror = () => {
@@ -34,5 +34,12 @@ export default class UserFileLoader {
                     reject(new Error(`Unsupported FileReader mode: ${mode}`));
             }
         });
+    }
+
+    public static loadFiles(
+        files: File[],
+        mode: FileReaderMode
+    ): Promise<(string | ArrayBuffer)[]> {
+        return Promise.all(files.map((file) => UserFileLoader.loadFile(file, mode)));
     }
 }

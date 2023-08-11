@@ -1,3 +1,10 @@
 {
-    "title": "All The Params"
+    "title": "All The Params",
+    "params": {
+        "fileInput": {
+            "name": "File Input",
+            "multiple": false,
+            "mode": "text"
+        }
+    }
 }
