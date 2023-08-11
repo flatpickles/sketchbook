@@ -1,10 +1,6 @@
 <script lang="ts">
     import type { ProjectTuple } from '$lib/base/FileLoading/ProjectLoader';
     import { isFileParamConfig } from '$lib/base/ParamConfig/FileParamConfig';
-    import type {
-        FileResultParamType,
-        FileMetadataParamType
-    } from '$lib/base/ParamConfig/ParamTypes';
     import { type ParamConfig, getParamSections } from '$lib/base/ParamConfig/ParamConfig';
     import type { ParamValueType } from '$lib/base/ParamConfig/ParamTypes';
     import UserFileLoader from '$lib/base/Util/UserFileLoader';
@@ -33,20 +29,9 @@
         } else if (isFileParamConfig(updatedConfig)) {
             // If it's a file param, load the file(s) then call the associated function
             try {
-                // Collect picked files from the event
+                // Load the file(s)
                 const fileList: FileList = event.detail.value;
-                const files = Array.from(fileList);
-
-                // Load files; load params receive a single file OR an array of files
-                let loadedFiles: FileResultParamType;
-                let fileMetadata: FileMetadataParamType;
-                if (!updatedConfig.multiple) {
-                    fileMetadata = files[0];
-                    loadedFiles = await UserFileLoader.loadFile(files[0], updatedConfig.mode);
-                } else {
-                    fileMetadata = files;
-                    loadedFiles = await UserFileLoader.loadFiles(files, updatedConfig.mode);
-                }
+                const fileLoadResult = await UserFileLoader.loadFileList(fileList, updatedConfig);
 
                 // Call the function with the loaded file(s)
                 const descriptor = Object.getOwnPropertyDescriptor(
@@ -54,7 +39,7 @@
                     updatedConfig.key
                 );
                 if (descriptor?.value) {
-                    await descriptor.value(loadedFiles, fileMetadata);
+                    await descriptor.value(fileLoadResult.result, fileLoadResult.metadata);
                     projectTuple.project.update();
                 }
             } catch (e) {

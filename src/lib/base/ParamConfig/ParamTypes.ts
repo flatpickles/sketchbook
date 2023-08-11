@@ -27,6 +27,3 @@ export const ParamGuards = {
     isNumericArrayParamConfig,
     isFileParamConfig
 };
-
-export type FileResultParamType = string | ArrayBuffer | (string | ArrayBuffer)[];
-export type FileMetadataParamType = File | File[];

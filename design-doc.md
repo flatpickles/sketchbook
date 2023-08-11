@@ -183,6 +183,7 @@ Options (and parenthesized defaults) for each type are as follows:
     -   `enables` ([]): An array of strings, each being a property name (not display name!) for another param within this project. Included params will be disabled when this boolean param is unset. Boolean params may be included without a corresponding project class property, and used only to enable/disable other params.
 -   **Function:**
     -   `name` and `section` as above.
+    -   todo: will await before calling update...
 -   **File:**
     -   `name` and `section` as above.
     -   `multiple` (false): Whether the user is allowed to select multiple files.

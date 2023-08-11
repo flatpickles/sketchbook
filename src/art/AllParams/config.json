@@ -3,7 +3,7 @@
     "params": {
         "fileInput": {
             "name": "File Input",
-            "multiple": false,
+            "multiple": true,
             "mode": "text"
         }
     }
