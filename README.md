@@ -6,7 +6,6 @@ Params WIP:
 -   File input
     -   Set fontawesome icon based on accept types (and multiple: fa-files)
     -   Click on file name field?
-    -   Unit & component tests
     -   Bundled image files?
 -   Number fields: validate min/max/step
 -   Param UI (label double click options)

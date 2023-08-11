@@ -1,5 +1,5 @@
 import { render, fireEvent, screen, cleanup, waitFor } from '@testing-library/svelte';
-import { vi, describe, it, expect, afterEach } from 'vitest';
+import { describe, it, expect, afterEach } from 'vitest';
 import FileInput from '$lib/components/ParamItem/FileInput.svelte';
 
 const mockFiles = [
