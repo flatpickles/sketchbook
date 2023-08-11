@@ -1,19 +1,13 @@
 import { FileReaderMode, type FileParamConfig } from '../ParamConfig/FileParamConfig';
+import type {
+    UserFileLoaderReturnType,
+    FileResultType,
+    FileMetadataType,
+    SingleFileResultType,
+    MultipleFileResultType
+} from '../ParamConfig/ParamTypes';
 
-/*
-    File loading result types vary depending on the parameter configuration's read mode
-    and whether the parameter is set to accept multiple files.
-*/
-type SingleFileResultType = string | ArrayBuffer;
-type MultipleFileResultType = SingleFileResultType[];
-type FileResultType = SingleFileResultType | MultipleFileResultType;
-type FileMetadataType = File | File[];
-type UserFileLoaderReturnType = {
-    result: FileResultType;
-    metadata: FileMetadataType;
-};
-
-export default class UserFileLoader {
+export default class FileParamLoader {
     /**
      * Loads the files from a FileList object.
      * @param files - the FileList object produced by a file input element
@@ -29,10 +23,10 @@ export default class UserFileLoader {
         let fileMetadata: FileMetadataType;
         if (!paramConfig.multiple) {
             fileMetadata = files[0];
-            loadedFiles = await UserFileLoader.#loadFile(fileArray[0], paramConfig.mode);
+            loadedFiles = await FileParamLoader.#loadFile(fileArray[0], paramConfig.mode);
         } else {
             fileMetadata = fileArray;
-            loadedFiles = await UserFileLoader.#loadFiles(fileArray, paramConfig.mode);
+            loadedFiles = await FileParamLoader.#loadFiles(fileArray, paramConfig.mode);
         }
         return { result: loadedFiles, metadata: fileMetadata };
     }
@@ -86,6 +80,6 @@ export default class UserFileLoader {
      * @returns - the results of the file reads
      */
     static #loadFiles(files: File[], mode: FileReaderMode): Promise<MultipleFileResultType> {
-        return Promise.all(files.map((file) => UserFileLoader.#loadFile(file, mode)));
+        return Promise.all(files.map((file) => FileParamLoader.#loadFile(file, mode)));
     }
 }

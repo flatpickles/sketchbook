@@ -4,9 +4,6 @@ Params WIP:
 
 -   Demo project with all param types & styles visible for comparison
 -   File input
-    -   Conditional type for each mode (needed? is fn type needed? where do we use this?)
-    -   Actual file loading (ProjectParams component / dedicated util class maybe)
-    -   Testing / beginning demo project / etc
     -   Set fontawesome icon based on accept types (and multiple: fa-files)
     -   Click on file name field?
     -   Unit & component tests
@@ -62,6 +59,7 @@ Next up:
 
 Miscellaneous / notes:
 
+-   FileLoading vs FileParamLoader naming is confusing
 -   Increase hit area for sliders
 -   Default styles and modes, depending on parameter property names (e.g. "bgColor" would use color style by default)
 -   Update function: take an optional "previousValues" parameter, containing previous values of exposed params before the latest update (so we can see what specifically changed).

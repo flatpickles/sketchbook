@@ -3,7 +3,7 @@
     import { isFileParamConfig } from '$lib/base/ParamConfig/FileParamConfig';
     import { type ParamConfig, getParamSections } from '$lib/base/ParamConfig/ParamConfig';
     import type { ParamValueType } from '$lib/base/ParamConfig/ParamTypes';
-    import UserFileLoader from '$lib/base/Util/UserFileLoader';
+    import UserFileLoader from '$lib/base/Util/FileParamLoader';
 
     import ParamItem from './ParamItem/ParamItem.svelte';
     import { isFunctionParamConfig } from '$lib/base/ParamConfig/FunctionParamConfig';
