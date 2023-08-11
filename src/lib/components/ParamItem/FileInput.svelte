@@ -32,17 +32,26 @@
     }
 </script>
 
-<div class="file-input-wrapper">
+<div class="file-input-wrapper" data-testid="file-param-input">
     <input
         id="native-file-input"
+        data-testid="native-file-input"
         type="file"
         bind:files={selectedFiles}
         on:change={fileInputEvent}
         {multiple}
         {accept}
     />
-    <input class="file-name-field" type="text" bind:value={displayedFileName} readonly />
-    <label class="file-button" for="native-file-input"><i class="fa fa-file" /></label>
+    <input
+        class="file-name-field"
+        data-testid="file-name-field"
+        type="text"
+        bind:value={displayedFileName}
+        readonly
+    />
+    <label class="file-button" data-testid="file-selector-button" for="native-file-input"
+        ><i class="fa fa-file" /></label
+    >
 </div>
 
 <style lang="scss">

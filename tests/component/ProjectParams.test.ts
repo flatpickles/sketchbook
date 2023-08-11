@@ -1,4 +1,4 @@
-import { render, fireEvent, screen, cleanup } from '@testing-library/svelte';
+import { render, fireEvent, screen, cleanup, waitFor } from '@testing-library/svelte';
 import { vi, describe, it, expect, afterEach } from 'vitest';
 import ProjectParams from '$lib/components/ProjectParams.svelte';
 import Project from '$lib/base/Project';
@@ -6,12 +6,18 @@ import type { ProjectTuple } from '$lib/base/FileLoading/ProjectLoader';
 import { ParamType } from '$lib/base/ParamConfig/ParamConfig';
 import { ProjectConfigFactory } from '$lib/base/ProjectConfig/ProjectConfigFactory';
 
+import type { UserFileLoaderReturnType } from '$lib/base/ParamConfig/ParamTypes';
+import FileParamLoader from '$lib/base/Util/FileParamLoader';
+
 class TestProject extends Project {
     testNumber = 42;
     testBoolean = true;
     testString = 'hello';
     testNumericArray = [1, 2, 3];
     testFunction = () => 42;
+    testFile = () => {
+        return;
+    };
 }
 
 enum SectionOption {
@@ -70,6 +76,15 @@ function paramsWithLiveUpdates(
             section: [SectionOption.SomeSections, SectionOption.AllSections].includes(sectionOption)
                 ? 'Section 2'
                 : undefined
+        },
+        {
+            type: ParamType.File,
+            key: 'testFile',
+            name: 'Test File',
+            liveUpdates: liveUpdates,
+            section: [SectionOption.SomeSections, SectionOption.AllSections].includes(sectionOption)
+                ? 'Section 2'
+                : undefined
         }
     ];
 }
@@ -101,21 +116,23 @@ describe('ProjectParams list', () => {
 
         // Check label wrappers
         const labelWrappers = screen.getAllByTestId('param-label-wrapper');
-        expect(labelWrappers.length).toBe(5);
+        expect(labelWrappers.length).toBe(6);
         expect(labelWrappers[0].classList.contains('odd')).toBe(true);
         expect(labelWrappers[1].classList.contains('even')).toBe(true);
         expect(labelWrappers[2].classList.contains('odd')).toBe(true);
         expect(labelWrappers[3].classList.contains('even')).toBe(true);
         expect(labelWrappers[4].classList.contains('odd')).toBe(true);
+        expect(labelWrappers[5].classList.contains('even')).toBe(true);
 
         // Check input wrappers
         const inputWrappers = screen.getAllByTestId('param-input-wrapper');
-        expect(inputWrappers.length).toBe(5);
+        expect(inputWrappers.length).toBe(6);
         expect(inputWrappers[0].classList.contains('odd')).toBe(true);
         expect(inputWrappers[1].classList.contains('even')).toBe(true);
         expect(inputWrappers[2].classList.contains('odd')).toBe(true);
         expect(inputWrappers[3].classList.contains('even')).toBe(true);
         expect(inputWrappers[4].classList.contains('odd')).toBe(true);
+        expect(inputWrappers[5].classList.contains('even')).toBe(true);
     });
 
     it('renders param items as even/odd correctly (some in sections)', async () => {
@@ -123,21 +140,23 @@ describe('ProjectParams list', () => {
 
         // Check label wrappers
         const labelWrappers = screen.getAllByTestId('param-label-wrapper');
-        expect(labelWrappers.length).toBe(5);
+        expect(labelWrappers.length).toBe(6);
         expect(labelWrappers[0].classList.contains('odd')).toBe(true);
         expect(labelWrappers[1].classList.contains('odd')).toBe(true);
         expect(labelWrappers[2].classList.contains('even')).toBe(true);
         expect(labelWrappers[3].classList.contains('odd')).toBe(true);
         expect(labelWrappers[4].classList.contains('even')).toBe(true);
+        expect(labelWrappers[5].classList.contains('odd')).toBe(true);
 
         // Check input wrappers
         const inputWrappers = screen.getAllByTestId('param-input-wrapper');
-        expect(inputWrappers.length).toBe(5);
+        expect(inputWrappers.length).toBe(6);
         expect(inputWrappers[0].classList.contains('odd')).toBe(true);
         expect(inputWrappers[1].classList.contains('odd')).toBe(true);
         expect(inputWrappers[2].classList.contains('even')).toBe(true);
         expect(inputWrappers[3].classList.contains('odd')).toBe(true);
         expect(inputWrappers[4].classList.contains('even')).toBe(true);
+        expect(inputWrappers[5].classList.contains('odd')).toBe(true);
     });
 
     it('renders param items as even/odd correctly (all in sections)', async () => {
@@ -145,32 +164,35 @@ describe('ProjectParams list', () => {
 
         // Check label wrappers
         const labelWrappers = screen.getAllByTestId('param-label-wrapper');
-        expect(labelWrappers.length).toBe(5);
+        expect(labelWrappers.length).toBe(6);
         expect(labelWrappers[0].classList.contains('odd')).toBe(true);
         expect(labelWrappers[1].classList.contains('even')).toBe(true);
         expect(labelWrappers[2].classList.contains('odd')).toBe(true);
         expect(labelWrappers[3].classList.contains('odd')).toBe(true);
         expect(labelWrappers[4].classList.contains('even')).toBe(true);
+        expect(labelWrappers[5].classList.contains('odd')).toBe(true);
 
         // Check input wrappers
         const inputWrappers = screen.getAllByTestId('param-input-wrapper');
-        expect(inputWrappers.length).toBe(5);
+        expect(inputWrappers.length).toBe(6);
         expect(inputWrappers[0].classList.contains('odd')).toBe(true);
         expect(inputWrappers[1].classList.contains('even')).toBe(true);
         expect(inputWrappers[2].classList.contains('odd')).toBe(true);
         expect(inputWrappers[3].classList.contains('odd')).toBe(true);
         expect(inputWrappers[4].classList.contains('even')).toBe(true);
+        expect(inputWrappers[5].classList.contains('odd')).toBe(true);
     });
 
     it('renders param label names properly, in order', async () => {
         renderParams();
         const labelItems = screen.getAllByTestId('param-label');
-        expect(labelItems.length).toBe(5);
+        expect(labelItems.length).toBe(6);
         expect(labelItems[0].textContent).toContain('Test Number');
         expect(labelItems[1].textContent).toContain('Test Boolean');
         expect(labelItems[2].textContent).toContain('Test String');
         expect(labelItems[3].textContent).toContain('Test Numeric Array');
         expect(labelItems[4].textContent).toContain('Test Function');
+        expect(labelItems[5].textContent).toContain('Test File');
     });
 
     it('renders param default values properly', async () => {
@@ -183,6 +205,8 @@ describe('ProjectParams list', () => {
         expect(stringInput.value).toBe('hello');
         const functionInput = screen.getByTestId('function-param-input') as HTMLInputElement;
         expect(functionInput).toBeDefined();
+        const fileInput = screen.getByTestId('file-param-input') as HTMLInputElement;
+        expect(fileInput).toBeDefined();
 
         // Both single & array numeric inputs are rendered
         const numberInputSliders = screen.getAllByTestId(
@@ -396,7 +420,65 @@ describe('function param input', () => {
         const functionButton = screen.getByTestId('function-param-input');
         expect(project.testFunction).toHaveBeenCalledTimes(0);
         fireEvent.click(functionButton);
-        expect(project.testFunction).toHaveBeenCalledTimes(1);
-        expect(project.update).toHaveBeenCalledTimes(1);
+        await waitFor(() => expect(project.testFunction).toHaveBeenCalledTimes(1));
+        await waitFor(() => expect(project.update).toHaveBeenCalledTimes(1));
+    });
+});
+
+describe('file param input', () => {
+    afterEach(cleanup);
+
+    // Mocking stuff!
+
+    const mockFiles = [
+        {
+            name: 'testFile1',
+            contents: 'testFile1 contents',
+            fileObject: new File([''], 'testFile1')
+        },
+        {
+            name: 'testFile2',
+            contents: 'testFile2 contents',
+            fileObject: new File([''], 'testFile2')
+        }
+    ];
+    const mockFileContents = mockFiles.map((file) => file.contents);
+
+    vi.spyOn(FileParamLoader, 'loadFileList').mockImplementation(
+        (fileList: FileList): Promise<UserFileLoaderReturnType> => {
+            const fileArray: File[] = [];
+            for (let i = 0; i < fileList.length; i++) {
+                const item = fileList.item(i);
+                if (item) fileArray.push(item);
+            }
+            return Promise.resolve({
+                result: mockFileContents,
+                metadata: fileArray
+            });
+        }
+    );
+
+    const fileListMock = {
+        length: mockFiles.length,
+        item: (idx: number) => mockFiles[idx].fileObject
+    };
+
+    // Actual tests...
+
+    it('attempts to load files when the input changes', async () => {
+        const project = renderParams(true);
+        vi.spyOn(project, 'update');
+        vi.spyOn(project, 'testFile');
+        const fileInput = screen.getByTestId('native-file-input') as HTMLInputElement;
+        fireEvent.change(fileInput, {
+            target: { files: fileListMock }
+        });
+        await waitFor(() =>
+            expect(project.testFile).toHaveBeenCalledWith(
+                mockFileContents,
+                mockFiles.map((file) => file.fileObject)
+            )
+        );
+        await waitFor(() => expect(project.update).toHaveBeenCalledTimes(1));
     });
 });

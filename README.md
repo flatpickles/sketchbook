@@ -43,8 +43,6 @@ Next up:
     -   Double click to hide/show panels
     -   Dark mode - TBD
     -   Perf data - FPS meter (or maybe put this elsewhere)
--   config.json
-    -   Defaults for all settings
 -   Base project subclasses:
     -   Canvas Sketch
     -   P5
@@ -56,6 +54,12 @@ Next up:
     -   Expose only high-level adjustments in theme.scss; move finer details elsewhere (closer to components probably)
     -   Enable SBv1 style (or something mono/sharp)
     -   Enable dark mode configuration, somehow
+-   Configuration in config.json
+    -   Defaults for all settings
+    -   (maybe this is just user-visible stuff? see below)
+-   Configurations for devs
+    -   Defaults applied to all projects: live updates, show presets, auto-style params based on names (color style for bgColor, etc)
+    -   Maybe put these somewhere other than config.json?
 
 Miscellaneous / notes:
 
