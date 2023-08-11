@@ -47,6 +47,7 @@ $panel-section-spacing: 0.75rem;
 // Panel headers
 $panel-header-section-spacing: 0.5rem;
 @mixin title-text {
+    @include word-wrap;
     font-size: $title-text-size;
     font-weight: bold;
 }
@@ -93,6 +94,8 @@ $group-selector-item-padding: 0.25rem 0.75rem;
 $project-list-item-spacing: 0.25rem;
 $project-list-item-padding: 0.75rem;
 @mixin project-list-item {
+    @include ellipsis;
+
     // Project list item layout
     font-size: $medium-text-size;
     margin: 0 calc($panel-content-inset / 2);
@@ -227,3 +230,25 @@ $checkbox-input-size: 0.9rem;
         text-decoration: underline;
     }
 }
+
+// todo: move to a separate file...
+
+// https://css-tricks.com/snippets/css/prevent-long-urls-from-breaking-out-of-container/
+@mixin word-wrap {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    -ms-word-break: break-all;
+    word-break: break-all;
+    word-break: break-word;
+    -ms-hyphens: auto;
+    -moz-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+}
+
+// todo: absorb this into places where I'm doing this as a one-off
+@mixin ellipsis {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
