@@ -92,12 +92,12 @@
             "section": "Numeric Arrays"
         },
         "numericArrayCompactSlider": {
-            "name": "Compact Slider",
+            "name": "Compact Sliders",
             "style": "compactSlider",
             "section": "Numeric Arrays"
         },
         "numericArrayCompactField": {
-            "name": "Compact Field",
+            "name": "Compact Fields",
             "style": "compactField",
             "section": "Numeric Arrays"
         }

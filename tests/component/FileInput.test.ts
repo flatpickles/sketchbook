@@ -43,6 +43,9 @@ describe('FileInput', () => {
         expect(fileInput).toBeDefined();
         expect(fileInput.multiple).toBe(false);
         expect(fileInput.accept).toBe('image/*');
+        let fileName = screen.getByTestId('file-name-field') as HTMLInputElement;
+        expect(fileName).toBeDefined();
+        expect(fileName.value).toBe('Select file...');
 
         // Check with multiple true
         rerender({
@@ -53,9 +56,12 @@ describe('FileInput', () => {
         expect(fileInput).toBeDefined();
         expect(fileInput.multiple).toBe(true);
         expect(fileInput.accept).toBe('image/*');
+        fileName = screen.getByTestId('file-name-field') as HTMLInputElement;
+        expect(fileName).toBeDefined();
+        expect(fileName.value).toBe('Select files...');
     });
 
-    it('updates state properly with file input', async () => {
+    it('updates state properly with file input (none, one, multiple selected)', async () => {
         const { component } = render(FileInput, {
             multiple: true,
             accept: 'image/*'
@@ -64,7 +70,7 @@ describe('FileInput', () => {
         // Check initial file name
         const fileName = screen.getByTestId('file-name-field') as HTMLInputElement;
         expect(fileName).toBeDefined();
-        expect(fileName.value).toBe('Select file...');
+        expect(fileName.value).toBe('Select files...');
 
         // Check multiple file input
         const fileInput = screen.getByTestId('native-file-input') as HTMLInputElement;
@@ -86,6 +92,6 @@ describe('FileInput', () => {
             target: { files: fileListMockNone }
         });
         expect(component.selectedFiles).toEqual(fileListMockNone);
-        await waitFor(() => expect(fileName.value).toBe('Select file...'));
+        await waitFor(() => expect(fileName.value).toBe('Select files...'));
     });
 });

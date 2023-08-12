@@ -6,7 +6,7 @@
     export let accept = FileParamConfigDefaults.accept;
     export let selectedFiles: FileList | undefined = undefined;
 
-    const noFilesText = 'Select file...';
+    const noFilesText = multiple ? 'Select files...' : 'Select file...';
     const multipleFilesText = 'Multiple selected';
     const selectionErrorText = 'Selection error';
 

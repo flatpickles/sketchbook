@@ -6,7 +6,6 @@ Params WIP:
     -   Set fontawesome icon based on accept types (and multiple: fa-files)
     -   Click on file name field?
     -   Bundled image files?
-    -   "Select files..." for multiple
 -   Number fields: validate min/max/step
 -   Param UI (label double click options)
     -   Option to reset to default/preset value
@@ -19,7 +18,6 @@ Params WIP:
 
 Next up:
 
--
 -   Test coverage:
     -   Project detail panel (component tests)
 -   Saved state
@@ -28,6 +26,10 @@ Next up:
     -   Selected group in left panel
     -   Settings values
     -   Panel states
+    -   Changing default values (values set in .ts file)
+        -   Track these before updating to saved state
+        -   Save these so we can see when the user updated default, to use this instead of saved state (with no preset selected)
+        -   Use these with double-click to reset to default (when no preset is selected)
 -   Show & hide panels in desktop layout
     -   Show/hide animation
     -   Show buttons from hidden state
