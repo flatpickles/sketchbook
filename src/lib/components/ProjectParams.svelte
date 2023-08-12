@@ -72,17 +72,19 @@
 
 <div class="params-wrapper">
     <!-- Put all params with no section at the top -->
-    <div class="params-grid" data-testid="no-section-params">
-        {#each noSectionParams as param, paramIdx}
-            <!-- Even/odd is one-indexed -->
-            <ParamItem
-                config={param}
-                value={initialValueForParam(param)}
-                even={paramIdx % 2 == 1}
-                on:update={paramUpdated}
-            />
-        {/each}
-    </div>
+    {#if noSectionParams.length > 0}
+        <div class="params-grid" data-testid="no-section-params">
+            {#each noSectionParams as param, paramIdx}
+                <!-- Even/odd is one-indexed -->
+                <ParamItem
+                    config={param}
+                    value={initialValueForParam(param)}
+                    even={paramIdx % 2 == 1}
+                    on:update={paramUpdated}
+                />
+            {/each}
+        </div>
+    {/if}
 
     <!-- Display a section for each param section -->
     {#each paramSections as paramSection}

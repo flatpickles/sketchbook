@@ -248,6 +248,9 @@ describe('ProjectParams sections', () => {
     it('renders param sections properly (all params in sections)', async () => {
         renderParams(true, SectionOption.AllSections);
         const sectionItems = screen.getAllByTestId('params-section');
+        expect(() => {
+            screen.getByTestId('no-section-params');
+        }).toThrow();
 
         // Check sections
         expect(sectionItems.length).toBe(2);

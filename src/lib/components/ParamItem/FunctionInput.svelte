@@ -8,8 +8,11 @@
 
 <style lang="scss">
     input[type='button'] {
-        @include function-parameter-input;
         cursor: pointer;
         min-width: $param-input-item-partial-width;
+        max-width: 100%;
+
+        @include ellipsis;
+        @include function-parameter-input;
     }
 </style>

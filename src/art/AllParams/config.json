@@ -1,10 +1,105 @@
 {
     "title": "All The Params",
+    "description": "Examples of possible parameter types and styles.",
     "params": {
-        "fileInput": {
-            "name": "File Input",
+        "numberDefault": {
+            "name": "Default Number",
+            "section": "Numbers"
+        },
+        "number1to5Int": {
+            "name": "Integer Number With a Long Name",
+            "hoverText": "Integer Number With a Long Name",
+            "section": "Numbers",
+            "min": 1,
+            "max": 5,
+            "step": 1
+        },
+        "numberSliderOnly": {
+            "name": "Slider Number",
+            "hoverText": "Slider Number with configurable hover text details.",
+            "style": "slider",
+            "section": "Numbers"
+        },
+        "numberFieldOnly": {
+            "name": "Field Number",
+            "style": "field",
+            "section": "Numbers"
+        },
+
+        "stringDefault": {
+            "name": "Default String",
+            "section": "Strings"
+        },
+        "stringMultline": {
+            "name": "Multiline String",
+            "style": "multi",
+            "section": "Strings"
+        },
+        "stringColor": {
+            "name": "Color String",
+            "style": "color",
+            "section": "Strings"
+        },
+        "stringOptions": {
+            "name": "Option String",
+            "style": "options",
+            "options": ["Option 1", "Option 2", "Option 3"],
+            "section": "Strings"
+        },
+
+        "booleanDefault": {
+            "name": "Default Boolean",
+            "section": "Booleans"
+        },
+
+        "functionDefault": {
+            "name": "Default Function",
+            "section": "Functions"
+        },
+        "functionCustom": {
+            "name": "Custom Text",
+            "buttonText": "Click Here!",
+            "section": "Functions"
+        },
+
+        "defaultFile": {
+            "name": "Default File",
+            "section": "File Inputs"
+        },
+        "multipleFiles": {
+            "name": "Multiple Files",
             "multiple": true,
-            "mode": "text"
+            "accept": "audio/*",
+            "mode": "arrayBuffer",
+            "section": "File Inputs"
+        },
+
+        "numericArrayDefault": {
+            "name": "Default Array",
+            "section": "Numeric Arrays"
+        },
+        "numericArraySliderOnly": {
+            "name": "Slider Array",
+            "style": "slider",
+            "section": "Numeric Arrays",
+            "min": 1,
+            "max": 5,
+            "step": 1
+        },
+        "numericArrayFieldOnly": {
+            "name": "Field Array",
+            "style": "field",
+            "section": "Numeric Arrays"
+        },
+        "numericArrayCompactSlider": {
+            "name": "Compact Slider",
+            "style": "compactSlider",
+            "section": "Numeric Arrays"
+        },
+        "numericArrayCompactField": {
+            "name": "Compact Field",
+            "style": "compactField",
+            "section": "Numeric Arrays"
         }
     }
 }

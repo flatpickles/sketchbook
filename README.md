@@ -2,11 +2,11 @@
 
 Params WIP:
 
--   Demo project with all param types & styles visible for comparison
 -   File input
     -   Set fontawesome icon based on accept types (and multiple: fa-files)
     -   Click on file name field?
     -   Bundled image files?
+    -   "Select files..." for multiple
 -   Number fields: validate min/max/step
 -   Param UI (label double click options)
     -   Option to reset to default/preset value
@@ -19,6 +19,7 @@ Params WIP:
 
 Next up:
 
+-
 -   Test coverage:
     -   Project detail panel (component tests)
 -   Saved state
@@ -31,6 +32,7 @@ Next up:
     -   Show/hide animation
     -   Show buttons from hidden state
 -   Presets
+    -   Disable preset picker & controls per-project
     -   Model work
     -   Selection UI & plumbing
     -   Options: creation, export, import, etc
@@ -48,6 +50,10 @@ Next up:
     -   REGL
 -   Mobile layout & behavior
 -   Info display / link from bottom left button - TBD
+-   No Signal display
+    -   Display when no projects are loaded
+    -   Also include error text; catch project errors
+    -   Also display if rendering passes a time limit (e.g. infinite loop in project)
 -   Link previews
 -   Theming / styling:
     -   Expose only high-level adjustments in theme.scss; move finer details elsewhere (closer to components probably)
@@ -62,6 +68,7 @@ Next up:
 
 Miscellaneous / notes:
 
+-   Parameter sorting: use config maybe? At least document
 -   FileLoading vs FileParamLoader naming is confusing
 -   Increase hit area for sliders
 -   Default styles and modes, depending on parameter property names (e.g. "bgColor" would use color style by default)
