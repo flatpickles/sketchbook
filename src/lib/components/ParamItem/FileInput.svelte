@@ -2,6 +2,8 @@
     import { createEventDispatcher } from 'svelte';
     import { FileParamConfigDefaults } from '$lib/base/ParamConfig/FileParamConfig';
 
+    export let name: string;
+    export let key: string; // use this for internal label/input association
     export let multiple = FileParamConfigDefaults.multiple;
     export let accept = FileParamConfigDefaults.accept;
     export let selectedFiles: FileList | undefined = undefined;
@@ -9,6 +11,15 @@
     const noFilesText = multiple ? 'Select files...' : 'Select file...';
     const multipleFilesText = 'Multiple selected';
     const selectionErrorText = 'Selection error';
+    const faIcon = (() => {
+        const acceptImage = accept?.includes('image');
+        const acceptVideo = accept?.includes('video');
+        const acceptAudio = accept?.includes('audio');
+        if (acceptImage && !acceptVideo && !acceptAudio) return 'fa fa-file-image';
+        if (!acceptImage && acceptVideo && !acceptAudio) return 'fa fa-file-video';
+        if (!acceptImage && !acceptVideo && acceptAudio) return 'fa fa-file-audio';
+        return 'fa-file';
+    })();
 
     let displayedFileName: string = noFilesText;
 
@@ -32,9 +43,10 @@
     }
 </script>
 
-<div class="file-input-wrapper" data-testid="file-param-input">
+<div class="file-input-wrapper" id={name} data-testid="file-param-input">
     <input
-        id="native-file-input"
+        id={key}
+        class="native-file-input"
         data-testid="native-file-input"
         type="file"
         bind:files={selectedFiles}
@@ -49,9 +61,9 @@
         bind:value={displayedFileName}
         readonly
     />
-    <label class="file-button" data-testid="file-selector-button" for="native-file-input"
-        ><i class="fa fa-file" /></label
-    >
+    <label class="file-button" data-testid="file-selector-button" for={key}>
+        <i class="fa {faIcon}" />
+    </label>
 </div>
 
 <style lang="scss">
@@ -84,7 +96,7 @@
         color: $param-fg-color;
     }
 
-    #native-file-input {
+    .native-file-input {
         display: none;
     }
 </style>

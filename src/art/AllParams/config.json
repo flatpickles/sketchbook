@@ -66,10 +66,24 @@
             "name": "Default File",
             "section": "File Inputs"
         },
-        "multipleFiles": {
-            "name": "Multiple Files",
+        "multipleAudioFiles": {
+            "name": "Audio Files",
             "multiple": true,
             "accept": "audio/*",
+            "mode": "arrayBuffer",
+            "section": "File Inputs"
+        },
+        "singleImageFile": {
+            "name": "Image File",
+            "multiple": false,
+            "accept": "image/*",
+            "mode": "dataURL",
+            "section": "File Inputs"
+        },
+        "multipleVideoFiles": {
+            "name": "Video Files",
+            "multiple": true,
+            "accept": "video/*",
             "mode": "arrayBuffer",
             "section": "File Inputs"
         },

@@ -30,11 +30,19 @@ export default class AllParams extends Project {
         alert('hello two!');
     };
 
-    defaultFile = async (result: string, metadata: File[]) => {
+    defaultFile = async (result: string, metadata: File) => {
         console.log(result);
         console.log(metadata);
     };
-    multipleFiles = async (result: ArrayBuffer[], metadata: File[]) => {
+    multipleAudioFiles = async (result: ArrayBuffer[], metadata: File[]) => {
+        console.log(result);
+        console.log(metadata);
+    };
+    singleImageFile = async (result: string, metadata: File) => {
+        console.log(result);
+        console.log(metadata);
+    };
+    multipleVideoFiles = async (result: ArrayBuffer[], metadata: File[]) => {
         console.log(result);
         console.log(metadata);
     };

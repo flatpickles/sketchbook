@@ -36,6 +36,8 @@ describe('FileInput', () => {
     it('renders properly', () => {
         // Check with multiple false
         const { rerender } = render(FileInput, {
+            name: 'testFileInput',
+            key: 'testFileInput',
             multiple: false,
             accept: 'image/*'
         });
@@ -49,6 +51,8 @@ describe('FileInput', () => {
 
         // Check with multiple true
         rerender({
+            name: 'testFileInput',
+            key: 'testFileInput',
             multiple: true,
             accept: 'image/*'
         });
@@ -61,8 +65,62 @@ describe('FileInput', () => {
         expect(fileName.value).toBe('Select files...');
     });
 
+    it('renders icons depending on file type', () => {
+        // Check with no specific type
+        const { rerender } = render(FileInput, {
+            name: 'testFileInput',
+            key: 'testFileInput',
+            multiple: false,
+            accept: '*'
+        });
+        let fileButton = screen.getByTestId('file-selector-button').firstChild as HTMLElement;
+        expect(fileButton.classList.contains('fa-file')).toBe(true);
+
+        // Check with image type
+        rerender({
+            name: 'testFileInput',
+            key: 'testFileInput',
+            multiple: false,
+            accept: 'image/*'
+        });
+        fileButton = screen.getByTestId('file-selector-button').firstChild as HTMLElement;
+        expect(fileButton.classList.contains('fa-file-image')).toBe(true);
+
+        // Check with video type
+        rerender({
+            name: 'testFileInput',
+            key: 'testFileInput',
+            multiple: false,
+            accept: 'video/*'
+        });
+        fileButton = screen.getByTestId('file-selector-button').firstChild as HTMLElement;
+        expect(fileButton.classList.contains('fa-file-video')).toBe(true);
+
+        // Check with audio type
+        rerender({
+            name: 'testFileInput',
+            key: 'testFileInput',
+            multiple: false,
+            accept: 'audio/*'
+        });
+        fileButton = screen.getByTestId('file-selector-button').firstChild as HTMLElement;
+        expect(fileButton.classList.contains('fa-file-audio')).toBe(true);
+
+        // Check with mixed type
+        rerender({
+            name: 'testFileInput',
+            key: 'testFileInput',
+            multiple: false,
+            accept: 'video/*, image/*'
+        });
+        fileButton = screen.getByTestId('file-selector-button').firstChild as HTMLElement;
+        expect(fileButton.classList.contains('fa-file')).toBe(true);
+    });
+
     it('updates state properly with file input (none, one, multiple selected)', async () => {
         const { component } = render(FileInput, {
+            name: 'testFileInput',
+            key: 'testFileInput',
             multiple: true,
             accept: 'image/*'
         });

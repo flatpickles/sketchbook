@@ -3,7 +3,6 @@
 Params WIP:
 
 -   File input
-    -   Set fontawesome icon based on accept types (and multiple: fa-files)
     -   Click on file name field?
     -   Bundled image files?
 -   Number fields: validate min/max/step
@@ -20,6 +19,8 @@ Next up:
 
 -   Test coverage:
     -   Project detail panel (component tests)
+-   Group sorting options...
+-   Section sorting options...
 -   Saved state
     -   Param values (what to do with file inputs?)
     -   Selected project (for root navigation redirect)
@@ -74,11 +75,7 @@ Miscellaneous / notes:
 -   FileLoading vs FileParamLoader naming is confusing
 -   Increase hit area for sliders
 -   Default styles and modes, depending on parameter property names (e.g. "bgColor" would use color style by default)
--   Update function: take an optional "previousValues" parameter, containing previous values of exposed params before the latest update (so we can see what specifically changed).
-    { changedKey: key, previousValues: {} }
--   Await function & load callbacks (for function & file params) so update is called after
--   Read through old notes and absorb in design doc
--   Read through design doc
+-   Update function: take an optional "previousValues" parameter, containing previous values of exposed params before the latest update (so we can see what specifically changed). { changedKey: key, previousValues: {} }
 -   Clicking a group or project list item should scroll it fully into view.
 -   Optional explicit route name (vs. just using the filename/key)
 -   Better error messaging for config file parsing throughout
@@ -86,9 +83,14 @@ Miscellaneous / notes:
 -   Show a project's groups on right panel
 -   Make old style possible via theme config (or something like it)
 -   When changing param defaults (assigned in file) what happens? Especially with local storage... param default vals will get confusing...
+-   What happens if someone sets a parameterized property from within the project?
+    -   Ideally this change is represented in params UI; e.g. load a text file into a multi-line text param
+    -   Maybe they sync on project update?
 
 Ongoing:
 
+-   Read through old notes and absorb in design doc
+-   Read through design doc
 -   Accessibility
     -   Param label associations (name // id // etc)
     -   Semantic markup

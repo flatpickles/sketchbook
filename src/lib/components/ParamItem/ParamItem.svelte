@@ -129,7 +129,13 @@
     {:else if ParamGuards.isFunctionParamConfig(config)}
         <FunctionInput on:click={paramUpdated.bind(null, true)} buttonText={config.buttonText} />
     {:else if ParamGuards.isFileParamConfig(config)}
-        <FileInput on:change={filesSelected} multiple={config.multiple} accept={config.accept} />
+        <FileInput
+            on:change={filesSelected}
+            name={config.name}
+            key={config.key}
+            multiple={config.multiple}
+            accept={config.accept}
+        />
     {/if}
 </div>
 
