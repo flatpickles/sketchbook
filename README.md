@@ -4,7 +4,6 @@ Params WIP:
 
 -   File input
     -   Click on file name field?
-    -   Bundled image files?
 -   Number fields: validate min/max/step
 -   Param UI (label double click options)
     -   Option to reset to default/preset value
@@ -13,12 +12,17 @@ Params WIP:
     -   Model work
     -   UI plumbing
     -   Disabled states for input elements
-    -   String options: should this have enable/disable functionality too, somehow?
+    -   String options: should have enable/disable functionality too
+    -   Add "hide" option, maybe as a project setting ("Hide disabled parameters"). Project setting can be generalized to sketchbook setting as well.
+-   How can we build a dimensions selector?
+    -   Support "options" for numeric array as well (maybe for everything?)
+    -   Maybe offer "named options", either as a map, or a separate param
 
 Next up:
 
 -   Test coverage:
     -   Project detail panel (component tests)
+-   Project sorting: put projects with no date at the top when sorting chronologically
 -   Group sorting options...
 -   Section sorting options...
 -   Saved state
@@ -62,6 +66,7 @@ Next up:
     -   Expose only high-level adjustments in theme.scss; move finer details elsewhere (closer to components probably)
     -   Enable SBv1 style (or something mono/sharp)
     -   Enable dark mode configuration, somehow
+    -   Enable constrained viewport, i.e. using _only_ the space between panels (no overlaid panels, except maybe on mobile)
 -   Configuration in config.json
     -   Defaults for all settings
     -   (maybe this is just user-visible stuff? see below)
@@ -71,6 +76,9 @@ Next up:
 
 Miscellaneous / notes:
 
+-   SSR: currently projects are initialized, but init() and update() aren't called.
+    -   Either projects shouldn't be initialized (so we don't have to do `browser` checks within projects, e.g. to load bundled images), or init() and update() should be called once each, to draw canvas contents.
+    -   Check if canvas drawing is possible with SSR; only benefit there really would be link previews, and these could just be static images if needed.
 -   Parameter sorting: use config maybe? At least document
 -   FileLoading vs FileParamLoader naming is confusing
 -   Increase hit area for sliders
@@ -80,7 +88,7 @@ Miscellaneous / notes:
 -   Optional explicit route name (vs. just using the filename/key)
 -   Better error messaging for config file parsing throughout
 -   "animated" mode for sketches: call update with animation frame request
--   Show a project's groups on right panel
+-   Show a project's groups on right panel?
 -   Make old style possible via theme config (or something like it)
 -   When changing param defaults (assigned in file) what happens? Especially with local storage... param default vals will get confusing...
 -   What happens if someone sets a parameterized property from within the project?
@@ -89,6 +97,7 @@ Miscellaneous / notes:
 
 Ongoing:
 
+-   Parse notes above into actual action items
 -   Read through old notes and absorb in design doc
 -   Read through design doc
 -   Accessibility
@@ -115,6 +124,10 @@ Eventual work for launch:
 
 MVP stretch goals:
 
+-   Variants:
+    -   Duplicate a folder within art and create another "variant" of an existing piece.
+    -   Variants are displayed under the same title in the project list, but once you click in you can see that there are several versions.
+    -   Maybe it's like tapping into a section in an iOS list view.
 -   Webcam & microphone inputs
 -   MIDI inputs
 -   API:
@@ -156,3 +169,27 @@ Philosophy:
 Questions for beta testers:
 
 -   Casing in JSON fields, e.g. "liveUpdates", "dataURL" etc
+-   Documentation:
+    -   Formatting: website vs. markdown files on GitHub
+
+Utils:
+
+-   Separate repo with things that I use in my art projects
+-   Sometimes just copy, credit, and consolidate other open source work
+-   Shader tools:
+    -   Polar transforms
+    -   Color transforms
+    -   Maybe don't include because of glslify?
+-   Canvas tools:
+    -   approximate circle
+    -   maybe extend D3 paths or something like that?
+
+Documentation:
+
+-   Project subclasses:
+    -   Using constructor:
+        -   this.canvas will not be defined
+    -   SSR notes: browser features may not be available
+        -   Example: Image()
+        -   init() and update() not called (currently as of 8/13)
+    -   Importing bundled images: show example
