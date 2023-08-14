@@ -1,28 +1,30 @@
 <script lang="ts">
     export let name: string;
     export let value: string;
-
     export let multiline = true;
+    export let disabled = false;
 </script>
 
 {#if multiline}
     <textarea
-        bind:value
         id={name}
-        on:input
-        on:change
         autocomplete="off"
         rows="2"
+        {disabled}
+        bind:value
+        on:input
+        on:change
         data-testid="string-param-input-multiline"
     />
 {:else}
     <input
         type="text"
-        bind:value
         id={name}
+        {disabled}
+        autocomplete="off"
+        bind:value
         on:input
         on:change
-        autocomplete="off"
         data-testid="string-param-input-singleline"
     />
 {/if}
@@ -36,5 +38,13 @@
     textarea {
         @include string-parameter-input;
         width: 100%;
+    }
+
+    input:disabled {
+        @include parameter-input-disabled;
+    }
+
+    textarea:disabled {
+        @include parameter-input-disabled;
     }
 </style>

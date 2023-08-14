@@ -40,7 +40,3 @@ input[type='checkbox']:checked::before {
     // Show the checkmark when checked
     display: block;
 }
-
-input[type='checkbox']:disabled::before {
-    background-color: color.scale($param-fg-color, $lightness: +50%);
-}

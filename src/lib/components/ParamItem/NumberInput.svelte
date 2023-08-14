@@ -6,6 +6,7 @@
     export let max: number;
     export let step: number;
     export let value: number;
+    export let disabled = false;
     $: fieldValue = value;
 
     export let showSlider: boolean = true;
@@ -33,11 +34,12 @@
     {#if showSlider}
         <input
             type="range"
-            bind:value
             id={name}
             {min}
             {max}
             {step}
+            {disabled}
+            bind:value
             on:input
             on:change
             data-testid="number-param-slider"
@@ -46,11 +48,12 @@
     {#if showField}
         <input
             type="number"
-            bind:value={fieldValue}
             id={name}
             {min}
             {max}
             {step}
+            {disabled}
+            bind:value={fieldValue}
             on:input={fieldInputEvent}
             on:change={fieldInputEvent}
             data-testid="number-param-field"
@@ -91,5 +94,9 @@
     input::-webkit-inner-spin-button {
         -webkit-appearance: none;
         margin: 0;
+    }
+
+    input:disabled {
+        @include parameter-input-disabled;
     }
 </style>

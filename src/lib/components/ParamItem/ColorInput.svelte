@@ -3,6 +3,7 @@
 
     export let name: string;
     export let value: string;
+    export let disabled = false;
     $: fieldValue = value;
 
     const dispatch = createEventDispatcher();
@@ -28,20 +29,22 @@
 
 <div class="color-input-wrapper">
     <input
-        class="color-field"
         type="text"
-        bind:value={fieldValue}
         id={name}
+        class="color-field"
+        autocomplete="off"
+        {disabled}
+        bind:value={fieldValue}
         on:input={fieldInputEvent}
         on:change={fieldInputEvent}
-        autocomplete="off"
         data-testid="color-param-field"
     />
     <input
-        class="color-selector"
         type="color"
-        bind:value
         id={name}
+        class="color-selector"
+        {disabled}
+        bind:value
         on:input
         on:change
         data-testid="color-param-selector"
@@ -71,5 +74,9 @@
         border: $field-input-border;
         border-left: 0;
         border-radius: 0 $field-input-border-radius $field-input-border-radius 0;
+    }
+
+    input:disabled {
+        @include parameter-input-disabled;
     }
 </style>

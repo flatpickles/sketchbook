@@ -7,6 +7,7 @@
     export let multiple = FileParamConfigDefaults.multiple;
     export let accept = FileParamConfigDefaults.accept;
     export let selectedFiles: FileList | undefined = undefined;
+    export let disabled = false;
 
     const noFilesText = multiple ? 'Select files...' : 'Select file...';
     const multipleFilesText = 'Multiple selected';
@@ -51,25 +52,32 @@
 
 <div class="file-input-wrapper" id={name} data-testid="file-param-input">
     <input
+        type="file"
         id={nativeInputID}
         class="native-file-input"
-        data-testid="native-file-input"
-        type="file"
         {multiple}
         {accept}
-        bind:files={selectedFiles}
+        {disabled}
         bind:this={nativeFileInput}
+        bind:files={selectedFiles}
         on:change={fileInputEvent}
+        data-testid="native-file-input"
     />
     <input
-        class="file-name-field"
-        data-testid="file-name-field"
         type="text"
+        class="file-name-field"
         readonly
+        {disabled}
         bind:value={displayedFileName}
         on:click={nameInputClicked}
+        data-testid="file-name-field"
     />
-    <label class="file-button" data-testid="file-selector-button" for={nativeInputID}>
+    <label
+        class="file-button"
+        class:disabled
+        for={nativeInputID}
+        data-testid="file-selector-button"
+    >
         <i class="fa {faIcon}" />
     </label>
 </div>
@@ -107,5 +115,13 @@
 
     .native-file-input {
         display: none;
+    }
+
+    input:disabled {
+        @include parameter-input-disabled;
+    }
+
+    label.disabled {
+        @include parameter-input-disabled;
     }
 </style>

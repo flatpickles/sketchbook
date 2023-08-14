@@ -2,19 +2,17 @@
 
 Params WIP:
 
--   Number fields: validate min/max/step
--   Param UI (label double click options)
-    -   Option to reset to default/preset value
-    -   Option to randomize within range
 -   Boolean param enables/disables
     -   Model work
-    -   UI plumbing
-    -   Disabled states for input elements
     -   String options: should have enable/disable functionality too
     -   Add "hide" option, maybe as a project setting ("Hide disabled parameters"). Project setting can be generalized to sketchbook setting as well.
 -   How can we build a dimensions selector?
     -   Support "options" for numeric array as well (maybe for everything?)
     -   Maybe offer "named options", either as a map, or a separate param
+-   Number fields: validate min/max/step
+-   Param UI (label double click options)
+    -   Option to reset to default/preset value
+    -   Option to randomize within range
 
 Next up:
 

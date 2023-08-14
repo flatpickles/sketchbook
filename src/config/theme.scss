@@ -188,6 +188,10 @@ $checkbox-input-size: 0.9rem;
         background-color: rgba(0, 0, 0, 0.05);
     }
 }
+@mixin parameter-input-disabled {
+    opacity: 50%;
+    pointer-events: none;
+}
 @mixin parameter-label {
     font-size: $small-text-size;
     font-weight: bold;

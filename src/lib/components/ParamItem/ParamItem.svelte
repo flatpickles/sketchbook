@@ -17,6 +17,7 @@
     export let config: ParamConfig;
     export let value: ParamValueType<typeof config>;
     export let even = false;
+    export let disabled = false;
 
     const dispatch = createEventDispatcher();
     function paramUpdated(complete: boolean) {
@@ -60,40 +61,49 @@
 <div class="input-wrapper" data-testid="param-input-wrapper" class:even class:odd={!even}>
     {#if ParamGuards.isNumberParamConfig(config) && typeof value === 'number'}
         <NumberInput
-            bind:value
-            on:input={paramUpdated.bind(null, false)}
-            on:change={paramUpdated.bind(null, true)}
             name={config.name}
             min={config.min}
             max={config.max}
             step={config.step}
             showField={[NumberParamStyle.Field, NumberParamStyle.Combo].includes(config.style)}
             showSlider={[NumberParamStyle.Slider, NumberParamStyle.Combo].includes(config.style)}
+            {disabled}
+            bind:value
+            on:input={paramUpdated.bind(null, false)}
+            on:change={paramUpdated.bind(null, true)}
         />
     {:else if ParamGuards.isBooleanParamConfig(config) && typeof value === 'boolean'}
-        <BooleanInput bind:value on:change={paramUpdated.bind(null, true)} name={config.name} />
+        <BooleanInput
+            name={config.name}
+            {disabled}
+            bind:value
+            on:change={paramUpdated.bind(null, true)}
+        />
     {:else if ParamGuards.isStringParamConfig(config) && typeof value === 'string'}
         {#if config.style === StringParamStyle.Options}
             <OptionInput
-                bind:value
-                on:change={paramUpdated.bind(null, true)}
                 name={config.name}
                 options={config.options}
+                {disabled}
+                bind:value
+                on:change={paramUpdated.bind(null, true)}
             />
         {:else if config.style === StringParamStyle.Color}
             <ColorInput
+                name={config.name}
+                {disabled}
                 bind:value
                 on:input={paramUpdated.bind(null, false)}
                 on:change={paramUpdated.bind(null, true)}
-                name={config.name}
             />
         {:else}
             <StringInput
+                name={config.name}
+                multiline={config.style === StringParamStyle.MultiLine}
+                {disabled}
                 bind:value
                 on:input={paramUpdated.bind(null, false)}
                 on:change={paramUpdated.bind(null, true)}
-                name={config.name}
-                multiline={config.style === StringParamStyle.MultiLine}
             />
         {/if}
     {:else if ParamGuards.isNumericArrayParamConfig(config) && isNumericArray(value)}
@@ -106,9 +116,6 @@
         >
             {#each value as valueMember}
                 <NumberInput
-                    bind:value={valueMember}
-                    on:input={paramUpdated.bind(null, false)}
-                    on:change={paramUpdated.bind(null, true)}
                     name={config.name}
                     min={config.min}
                     max={config.max}
@@ -123,18 +130,27 @@
                         NumericArrayParamStyle.CompactSlider,
                         NumericArrayParamStyle.Combo
                     ].includes(config.style)}
+                    {disabled}
+                    bind:value={valueMember}
+                    on:input={paramUpdated.bind(null, false)}
+                    on:change={paramUpdated.bind(null, true)}
                 />
             {/each}
         </div>
     {:else if ParamGuards.isFunctionParamConfig(config)}
-        <FunctionInput on:click={paramUpdated.bind(null, true)} buttonText={config.buttonText} />
+        <FunctionInput
+            buttonText={config.buttonText}
+            {disabled}
+            on:click={paramUpdated.bind(null, true)}
+        />
     {:else if ParamGuards.isFileParamConfig(config)}
         <FileInput
-            on:change={filesSelected}
             name={config.name}
             key={config.key}
             multiple={config.multiple}
             accept={config.accept}
+            {disabled}
+            on:change={filesSelected}
         />
     {/if}
 </div>

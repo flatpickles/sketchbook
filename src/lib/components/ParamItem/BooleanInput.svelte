@@ -1,6 +1,7 @@
 <script lang="ts">
     export let name: string;
     export let value: boolean;
+    export let disabled = false;
 
     let inputElement: HTMLInputElement;
     function wrapperClicked(event: MouseEvent | KeyboardEvent) {
@@ -16,11 +17,12 @@
 >
     <input
         type="checkbox"
-        bind:checked={value}
         id={name}
+        {disabled}
+        bind:this={inputElement}
+        bind:checked={value}
         on:change
         data-testid="boolean-param-input"
-        bind:this={inputElement}
     />
 </div>
 
@@ -32,5 +34,9 @@
         height: 100%;
         display: grid;
         place-items: center;
+    }
+
+    input:disabled {
+        @include parameter-input-disabled;
     }
 </style>
