@@ -43,8 +43,8 @@
                     projectTuple.project.update();
                 }
             } catch (e) {
-                alert('Error loading file(s). See console for details.');
                 console.error(e);
+                alert('Error loading file(s). See console for details.');
             }
         } else {
             // If it's an array, we need to copy it so that we don't mutate the original

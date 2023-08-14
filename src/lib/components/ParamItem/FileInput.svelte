@@ -3,7 +3,7 @@
     import { FileParamConfigDefaults } from '$lib/base/ParamConfig/FileParamConfig';
 
     export let name: string;
-    export let key: string; // use this for internal label/input association
+    export let key: string;
     export let multiple = FileParamConfigDefaults.multiple;
     export let accept = FileParamConfigDefaults.accept;
     export let selectedFiles: FileList | undefined = undefined;
@@ -22,6 +22,8 @@
     })();
 
     let displayedFileName: string = noFilesText;
+    let nativeFileInput: HTMLInputElement;
+    $: nativeInputID = key + '-file-input';
 
     const dispatch = createEventDispatcher();
     function fileInputEvent() {
@@ -41,27 +43,33 @@
         // Dispatch the update event
         dispatch('change', selectedFiles);
     }
+
+    function nameInputClicked() {
+        nativeFileInput.click();
+    }
 </script>
 
 <div class="file-input-wrapper" id={name} data-testid="file-param-input">
     <input
-        id={key}
+        id={nativeInputID}
         class="native-file-input"
         data-testid="native-file-input"
         type="file"
-        bind:files={selectedFiles}
-        on:change={fileInputEvent}
         {multiple}
         {accept}
+        bind:files={selectedFiles}
+        bind:this={nativeFileInput}
+        on:change={fileInputEvent}
     />
     <input
         class="file-name-field"
         data-testid="file-name-field"
         type="text"
-        bind:value={displayedFileName}
         readonly
+        bind:value={displayedFileName}
+        on:click={nameInputClicked}
     />
-    <label class="file-button" data-testid="file-selector-button" for={key}>
+    <label class="file-button" data-testid="file-selector-button" for={nativeInputID}>
         <i class="fa {faIcon}" />
     </label>
 </div>
@@ -94,6 +102,7 @@
         font-size: $xs-text-size;
         background-color: $param-light-accent-color;
         color: $param-fg-color;
+        cursor: pointer;
     }
 
     .native-file-input {

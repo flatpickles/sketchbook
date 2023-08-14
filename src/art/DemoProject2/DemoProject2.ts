@@ -8,10 +8,9 @@ export default class DemoProject extends Project {
 
     #bundledImage: HTMLImageElement | undefined;
 
-    constructor() {
-        super();
-
+    init() {
         // todo: Don't instantiate in SSR
+        // Can't do from constructor because canvas isn't set yet
         if (!browser) return;
         this.#bundledImage = new Image();
         this.#bundledImage.onload = this.update.bind(this);

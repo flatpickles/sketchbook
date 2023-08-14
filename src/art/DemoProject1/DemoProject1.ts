@@ -23,6 +23,9 @@ export default class DemoProject extends Project {
         img.src = result;
         return;
     };
+    testLoad2 = async (result: string) => {
+        return;
+    };
     strang = "I'm a string!";
 
     update() {

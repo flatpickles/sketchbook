@@ -26,6 +26,9 @@
         "testColor": {
             "name": "Color Param",
             "style": "color"
+        },
+        "testLoad": {
+            "name": "Test Load"
         }
     }
 }

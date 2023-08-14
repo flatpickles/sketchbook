@@ -2,8 +2,6 @@
 
 Params WIP:
 
--   File input
-    -   Click on file name field?
 -   Number fields: validate min/max/step
 -   Param UI (label double click options)
     -   Option to reset to default/preset value
