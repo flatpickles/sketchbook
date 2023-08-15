@@ -23,8 +23,10 @@ export default class DemoProject extends Project {
         img.src = result;
         return;
     };
-    testLoad2 = async (result: string) => {
-        return;
+    testLoadImage = async (result: HTMLImageElement) => {
+        const ctx = this.canvas?.getContext('2d');
+        if (!ctx) throw new Error('Could not get 2D context');
+        ctx.drawImage(result, 0, 0);
     };
     strang = "I'm a string!";
 

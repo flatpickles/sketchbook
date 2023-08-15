@@ -38,7 +38,7 @@ export default class AllParams extends Project {
         console.log(result);
         console.log(metadata);
     };
-    singleImageFile = async (result: string, metadata: File) => {
+    singleImageFile = async (result: HTMLImageElement, metadata: File) => {
         console.log(result);
         console.log(metadata);
     };

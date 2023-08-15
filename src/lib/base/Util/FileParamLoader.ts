@@ -44,7 +44,20 @@ export default class FileParamLoader {
             const reader = new FileReader();
             reader.onload = () => {
                 if (reader.result) {
-                    resolve(reader.result);
+                    if (mode != FileReaderMode.Image) {
+                        // Resolve directly with the file reader result
+                        resolve(reader.result);
+                    } else {
+                        // Read the image into a new HTMLImageElement object
+                        const img = new Image();
+                        img.onload = () => {
+                            resolve(img);
+                        };
+                        img.onerror = () => {
+                            reject(new Error("Couldn't create image from FileReader result"));
+                        };
+                        img.src = reader.result as string;
+                    }
                 } else {
                     reject(new Error('FileReader result was undefined'));
                 }
@@ -66,6 +79,9 @@ export default class FileParamLoader {
                     break;
                 case FileReaderMode.Text:
                     reader.readAsText(file);
+                    break;
+                case FileReaderMode.Image:
+                    reader.readAsDataURL(file);
                     break;
                 default:
                     reject(new Error(`Unsupported FileReader mode: ${mode}`));

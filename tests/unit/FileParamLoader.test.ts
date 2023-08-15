@@ -228,6 +228,44 @@ describe('FileParamLoader', () => {
         expect(FileReader.prototype.readAsDataURL).toHaveBeenCalledTimes(0);
     });
 
+    it('loads a file w/ FileReaderMode.DataURL', async () => {
+        // Mock: call onload for new image objects
+        global.Image = class {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            onload: any;
+            constructor() {
+                setTimeout(() => {
+                    this.onload(); // simulate success
+                }, 100);
+            }
+        } as typeof Image;
+
+        const config: FileParamConfig = {
+            accept: 'image/*',
+            multiple: false,
+            mode: FileReaderMode.Image,
+            type: ParamType.File,
+            key: 'testFile',
+            name: 'testFile',
+            liveUpdates: false
+        };
+        const { result, metadata } = await FileParamLoader.loadFileList(
+            mockDataURLFileList as FileList,
+            config
+        );
+        expect(result).toBeDefined();
+        expect(metadata).toBeDefined();
+        expect(Array.isArray(result)).toBe(false);
+        expect((result as HTMLImageElement).src).toEqual(mockDataURLFile.contents);
+        expect(Array.isArray(metadata)).toBe(false);
+        expect(metadata).toEqual(mockDataURLFile.fileObject);
+        expect(FileReader.prototype.readAsDataURL).toHaveBeenCalledTimes(1);
+        expect(FileReader.prototype.readAsDataURL).toHaveBeenCalledWith(mockDataURLFile.fileObject);
+        expect(FileReader.prototype.readAsArrayBuffer).toHaveBeenCalledTimes(0);
+        expect(FileReader.prototype.readAsBinaryString).toHaveBeenCalledTimes(0);
+        expect(FileReader.prototype.readAsText).toHaveBeenCalledTimes(0);
+    });
+
     it('loads multiple files w/ FileReaderMode.ArrayBuffer', async () => {
         const config: FileParamConfig = {
             accept: 'image/*',

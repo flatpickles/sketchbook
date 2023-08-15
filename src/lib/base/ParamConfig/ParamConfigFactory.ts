@@ -13,7 +13,12 @@ import {
     type NumericArrayParamConfig
 } from './NumericArrayParamConfig';
 import { ProjectConfigDefaults } from '../ProjectConfig/ProjectConfig';
-import { FileParamConfigDefaults, type FileParamConfig } from './FileParamConfig';
+import {
+    FileParamConfigDefaults,
+    type FileParamConfig,
+    isFileParamConfig,
+    FileReaderMode
+} from './FileParamConfig';
 
 export class ParamConfigFactory {
     /**
@@ -107,6 +112,21 @@ export class ParamConfigFactory {
             } else if (param.options != undefined && param.options.length > 0) {
                 // If options array exists but style is not "options", set style to "options"
                 param.style = StringParamStyle.Options;
+            }
+        }
+
+        // Validate file param config
+        if (isFileParamConfig(param)) {
+            if (param.mode === FileReaderMode.Image) {
+                if (param.accept === FileParamConfigDefaults.accept) {
+                    // Set accept to image/* if accept is default (i.e. undefined)
+                    param.accept = 'image/*';
+                } else if (!param.accept.includes('image')) {
+                    // Throw if accept has been set to an invalid value for image loading
+                    throw new Error(
+                        `File param with "image" mode must include "image" in its accept value (${key})`
+                    );
+                }
             }
         }
 

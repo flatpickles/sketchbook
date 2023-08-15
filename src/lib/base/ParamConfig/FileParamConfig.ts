@@ -4,7 +4,8 @@ export enum FileReaderMode {
     ArrayBuffer = 'arrayBuffer',
     BinaryString = 'binaryString',
     DataURL = 'dataURL',
-    Text = 'text'
+    Text = 'text',
+    Image = 'image'
 }
 
 export interface FileParamConfig extends ParamConfig {

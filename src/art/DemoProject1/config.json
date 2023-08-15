@@ -29,6 +29,9 @@
         },
         "testLoad": {
             "name": "Test Load"
+        },
+        "testLoadImage": {
+            "mode": "image"
         }
     }
 }

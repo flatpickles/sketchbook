@@ -76,8 +76,7 @@
         "singleImageFile": {
             "name": "Image File",
             "multiple": false,
-            "accept": "image/*",
-            "mode": "dataURL",
+            "mode": "image",
             "section": "File Inputs"
         },
         "multipleVideoFiles": {

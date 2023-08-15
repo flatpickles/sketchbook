@@ -36,8 +36,9 @@ Use cases: dimensions selector, modes.
 
 ### Other params stuff
 
+-   Double check "key" values
+-   Keep name as key name when other param settings are defined in json, but name is not
 -   Number fields: validate min/max/step
--   File inputs: image option (gives you an HTMLImageElement)
 -   Param UI (label double click options)
     -   Option to reset to default/preset value
     -   Option to randomize within range

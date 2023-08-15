@@ -9,7 +9,7 @@ import { isFileParamConfig, type FileParamConfig } from './FileParamConfig';
     File loading result types vary depending on the parameter configuration's read mode
     and whether the parameter is set to accept multiple files.
 */
-export type SingleFileResultType = string | ArrayBuffer;
+export type SingleFileResultType = string | ArrayBuffer | HTMLImageElement;
 export type MultipleFileResultType = SingleFileResultType[];
 export type FileResultType = SingleFileResultType | MultipleFileResultType;
 export type FileMetadataType = File | File[];
