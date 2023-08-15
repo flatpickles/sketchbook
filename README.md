@@ -1,20 +1,49 @@
 (readme could be the design-doc eventually, for now this is freeform)
 
-Params WIP:
+# Params WIP:
 
--   Boolean param enables/disables
-    -   Model work
-    -   String options: should have enable/disable functionality too
-    -   Add "hide" option, maybe as a project setting ("Hide disabled parameters"). Project setting can be generalized to sketchbook setting as well.
--   How can we build a dimensions selector?
-    -   Support "options" for numeric array as well (maybe for everything?)
-    -   Maybe offer "named options", either as a map, or a separate param
+### Value Effects
+
+Available for number, string, boolean. For a boolean, there's no value key; it's just a map with shows/hides/enables/disables keys.
+
+```
+"valueEffects": {
+    "0.5": {
+        "comparator": "lte",
+        "shows": [],
+        "hides": ["key1", "key2"],
+        "enables": [],
+        "disables": ["key3", "key4"]
+    }
+}
+```
+
+Use cases: modes (w/ options), sections, functionality only defined with some values.
+
+### Options for everything
+
+Support options style for: string, number, numeric array. It can either be a map of name to value, or just an array of values, which will then be used as the labels.
+
+```
+"options": {
+    "A3": [11.7, 16.5],
+    "A4": [8.3, 11.7],
+    "A5": [5.8, 8.3],
+}
+```
+
+Use cases: dimensions selector, modes.
+
+### Other params stuff
+
 -   Number fields: validate min/max/step
+-   File inputs: image option (gives you an HTMLImageElement)
 -   Param UI (label double click options)
     -   Option to reset to default/preset value
     -   Option to randomize within range
+-   Documentation!!!
 
-Next up:
+# Next up:
 
 -   Test coverage:
     -   Project detail panel (component tests)
@@ -70,7 +99,7 @@ Next up:
     -   Defaults applied to all projects: live updates, show presets, auto-style params based on names (color style for bgColor, etc)
     -   Maybe put these somewhere other than config.json?
 
-Miscellaneous / notes:
+# Miscellaneous / notes:
 
 -   SSR: currently projects are initialized, but init() and update() aren't called.
     -   Either projects shouldn't be initialized (so we don't have to do `browser` checks within projects, e.g. to load bundled images), or init() and update() should be called once each, to draw canvas contents.
@@ -91,7 +120,7 @@ Miscellaneous / notes:
     -   Ideally this change is represented in params UI; e.g. load a text file into a multi-line text param
     -   Maybe they sync on project update?
 
-Ongoing:
+# Ongoing:
 
 -   Parse notes above into actual action items
 -   Read through old notes and absorb in design doc
@@ -106,7 +135,7 @@ Ongoing:
     -   Custom checkmark positioning seems to differ
     -   IE / Edge testing?
 
-Eventual work for launch:
+# Eventual work for launch:
 
 -   Update design doc, and/or adapt into other documentation:
     -   Getting started
@@ -118,7 +147,7 @@ Eventual work for launch:
 -   Pick an OSS license and document accordingly
 -   Record demo videos and create other marketing assets - TBD
 
-MVP stretch goals:
+# MVP stretch goals:
 
 -   Variants:
     -   Duplicate a folder within art and create another "variant" of an existing piece.
@@ -136,7 +165,7 @@ MVP stretch goals:
     -   Min/max range slider
     -   Undo/redo for parameter changes
 
-Long-term goals:
+# Long-term goals:
 
 -   Midi control:
     -   Included in global configuration
@@ -156,19 +185,22 @@ Long-term goals:
         -   Maybe a base Sketch class function called when transition begins?
 -   Password protected projects
 
-Philosophy:
+# Philosophy:
 
--   Start a project as quickly as possible: idea to pixels without losing a train of thought. Creative workflow optimized from the moment of first concept.
--   Create something that's inviting for others to play with. Comprehensive and intuitive presentation out of the box, with options to enable even more functionality.
--   Create portable work. Easily carry your projects into another context (client work, etc) with minimal transportation cost (redesigning, rebuilding).
+-   Prototype & publish in the same place:
+    -   Start a project as quickly as possible: idea to pixels without losing a train of thought. Creative workflow optimized from the moment of first concept.
+    -   Create something that's inviting for others to play with. Comprehensive and intuitive presentation out of the box, with options to enable even more functionality.
+-   Light-weight but heavy-duty.
+    -   Opt-in customizablility. Sketchbook presents options for deep flexibility, but you can start any project without even creating a config file, and add complexity as you need it.
+    -   Create portable work. Easily carry your projects into another context (client work, etc) with minimal transportation cost (redesigning, rebuilding).
 
-Questions for beta testers:
+# Questions for beta testers:
 
 -   Casing in JSON fields, e.g. "liveUpdates", "dataURL" etc
 -   Documentation:
     -   Formatting: website vs. markdown files on GitHub
 
-Utils:
+# Utils:
 
 -   Separate repo with things that I use in my art projects
 -   Sometimes just copy, credit, and consolidate other open source work
@@ -180,7 +212,7 @@ Utils:
     -   approximate circle
     -   maybe extend D3 paths or something like that?
 
-Documentation:
+# Documentation:
 
 -   Project subclasses:
     -   Using constructor:
