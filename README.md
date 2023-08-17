@@ -28,6 +28,7 @@ Use cases: modes (w/ options), sections, functionality only defined with some va
 -   Param UI (label double click options)
     -   Option to reset to default/preset value
     -   Option to randomize within range
+-   Disabled as config option?
 -   Documentation!!!
 
 # Next up:
@@ -61,6 +62,8 @@ Use cases: modes (w/ options), sections, functionality only defined with some va
     -   Experimental mode
     -   Auto-hide panels w/ mouse hover to show them (desktop only)
     -   Double click to hide/show panels
+    -   Canvas size/available space (default fullscreen or between panels)
+    -   Canvas scale (default 2x / retina)
     -   Dark mode - TBD
     -   Perf data - FPS meter (or maybe put this elsewhere)
 -   Base project subclasses:
