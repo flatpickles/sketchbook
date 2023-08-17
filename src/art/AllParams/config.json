@@ -25,6 +25,11 @@
             "style": "field",
             "section": "Numbers"
         },
+        "numberOption": {
+            "name": "Option Number",
+            "options": [1, 2, 3],
+            "section": "Numbers"
+        },
 
         "stringDefault": {
             "name": "Default String",
@@ -43,7 +48,11 @@
         "stringOptions": {
             "name": "Option String",
             "style": "options",
-            "options": ["Option 1", "Option 2", "Option 3"],
+            "options": {
+                "Option 1": "option1",
+                "Option 2": "option2",
+                "Option 3": "option3"
+            },
             "section": "Strings"
         },
 
@@ -112,6 +121,15 @@
         "numericArrayCompactField": {
             "name": "Compact Fields",
             "style": "compactField",
+            "section": "Numeric Arrays"
+        },
+        "numericArrayOption": {
+            "name": "Array Option",
+            "options": [
+                [0.3, 0.7],
+                [0.5, 0.5],
+                [0.7, 0.3]
+            ],
             "section": "Numeric Arrays"
         }
     }

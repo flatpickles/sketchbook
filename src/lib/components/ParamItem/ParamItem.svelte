@@ -47,6 +47,21 @@
         }
         return true;
     }
+
+    function optionsObject<T>(options: T[] | Record<string, T>): Record<string, T> {
+        // Just return the object if it's already an object
+        if (typeof options === 'object' && !Array.isArray(options)) return options;
+
+        // Otherwise, parse the array into an object
+        const result: Record<string, T> = {};
+        for (const option of options) {
+            // Use the string directly, or stringify the object (with more readable commas)
+            const key =
+                typeof option === 'string' ? option : JSON.stringify(option).replace(/,/g, ', ');
+            result[key] = option;
+        }
+        return result;
+    }
 </script>
 
 <div
@@ -60,18 +75,30 @@
 </div>
 <div class="input-wrapper" data-testid="param-input-wrapper" class:even class:odd={!even}>
     {#if ParamGuards.isNumberParamConfig(config) && typeof value === 'number'}
-        <NumberInput
-            name={config.name}
-            min={config.min}
-            max={config.max}
-            step={config.step}
-            showField={[NumberParamStyle.Field, NumberParamStyle.Combo].includes(config.style)}
-            showSlider={[NumberParamStyle.Slider, NumberParamStyle.Combo].includes(config.style)}
-            {disabled}
-            bind:value
-            on:input={paramUpdated.bind(null, false)}
-            on:change={paramUpdated.bind(null, true)}
-        />
+        {#if config.options != undefined}
+            <OptionInput
+                name={config.name}
+                options={optionsObject(config.options)}
+                {disabled}
+                bind:value
+                on:change={paramUpdated.bind(null, true)}
+            />
+        {:else}
+            <NumberInput
+                name={config.name}
+                min={config.min}
+                max={config.max}
+                step={config.step}
+                showField={[NumberParamStyle.Field, NumberParamStyle.Combo].includes(config.style)}
+                showSlider={[NumberParamStyle.Slider, NumberParamStyle.Combo].includes(
+                    config.style
+                )}
+                {disabled}
+                bind:value
+                on:input={paramUpdated.bind(null, false)}
+                on:change={paramUpdated.bind(null, true)}
+            />
+        {/if}
     {:else if ParamGuards.isBooleanParamConfig(config) && typeof value === 'boolean'}
         <BooleanInput
             name={config.name}
@@ -80,10 +107,10 @@
             on:change={paramUpdated.bind(null, true)}
         />
     {:else if ParamGuards.isStringParamConfig(config) && typeof value === 'string'}
-        {#if config.style === StringParamStyle.Options}
+        {#if config.options != undefined}
             <OptionInput
                 name={config.name}
-                options={config.options}
+                options={optionsObject(config.options)}
                 {disabled}
                 bind:value
                 on:change={paramUpdated.bind(null, true)}
@@ -107,36 +134,46 @@
             />
         {/if}
     {:else if ParamGuards.isNumericArrayParamConfig(config) && isNumericArray(value)}
-        <div
-            class="array-param-wrapper"
-            class:compact={[
-                NumericArrayParamStyle.CompactField,
-                NumericArrayParamStyle.CompactSlider
-            ].includes(config.style)}
-        >
-            {#each value as valueMember}
-                <NumberInput
-                    name={config.name}
-                    min={config.min}
-                    max={config.max}
-                    step={config.step}
-                    showField={[
-                        NumericArrayParamStyle.Field,
-                        NumericArrayParamStyle.CompactField,
-                        NumericArrayParamStyle.Combo
-                    ].includes(config.style)}
-                    showSlider={[
-                        NumericArrayParamStyle.Slider,
-                        NumericArrayParamStyle.CompactSlider,
-                        NumericArrayParamStyle.Combo
-                    ].includes(config.style)}
-                    {disabled}
-                    bind:value={valueMember}
-                    on:input={paramUpdated.bind(null, false)}
-                    on:change={paramUpdated.bind(null, true)}
-                />
-            {/each}
-        </div>
+        {#if config.options != undefined}
+            <OptionInput
+                name={config.name}
+                options={optionsObject(config.options)}
+                {disabled}
+                bind:value
+                on:change={paramUpdated.bind(null, true)}
+            />
+        {:else}
+            <div
+                class="array-param-wrapper"
+                class:compact={[
+                    NumericArrayParamStyle.CompactField,
+                    NumericArrayParamStyle.CompactSlider
+                ].includes(config.style)}
+            >
+                {#each value as valueMember}
+                    <NumberInput
+                        name={config.name}
+                        min={config.min}
+                        max={config.max}
+                        step={config.step}
+                        showField={[
+                            NumericArrayParamStyle.Field,
+                            NumericArrayParamStyle.CompactField,
+                            NumericArrayParamStyle.Combo
+                        ].includes(config.style)}
+                        showSlider={[
+                            NumericArrayParamStyle.Slider,
+                            NumericArrayParamStyle.CompactSlider,
+                            NumericArrayParamStyle.Combo
+                        ].includes(config.style)}
+                        {disabled}
+                        bind:value={valueMember}
+                        on:input={paramUpdated.bind(null, false)}
+                        on:change={paramUpdated.bind(null, true)}
+                    />
+                {/each}
+            </div>
+        {/if}
     {:else if ParamGuards.isFunctionParamConfig(config)}
         <FunctionInput
             buttonText={config.buttonText}

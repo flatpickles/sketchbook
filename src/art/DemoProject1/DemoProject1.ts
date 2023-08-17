@@ -28,9 +28,15 @@ export default class DemoProject extends Project {
         if (!ctx) throw new Error('Could not get 2D context');
         ctx.drawImage(result, 0, 0);
     };
-    strang = "I'm a string!";
+    string = "I'm a string!";
+    arrayOptions = [4, 5, 6];
+    arrayOptions2 = [7, 8, 9];
+
+    stringOptions = 'Second';
 
     update() {
+        console.log(this.arrayOptions[1]);
+        console.log(this.stringOptions);
         if (!this.canvas) throw new Error('Canvas not set');
         const ctx = this.canvas.getContext('2d');
         if (!ctx) throw new Error('Could not get 2D context');

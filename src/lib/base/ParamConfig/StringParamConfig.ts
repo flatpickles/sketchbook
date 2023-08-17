@@ -3,13 +3,12 @@ import { type ParamConfig, ParamType, ParamConfigDefaults } from './ParamConfig'
 export enum StringParamStyle {
     SingleLine = 'single',
     MultiLine = 'multi',
-    Color = 'color',
-    Options = 'options'
+    Color = 'color'
 }
 
 export interface StringParamConfig extends ParamConfig {
     style: StringParamStyle;
-    options?: string[];
+    options?: string[] | Record<string, string>;
 }
 
 export const StringParamConfigDefaults: StringParamConfig = {

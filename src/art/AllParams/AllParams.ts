@@ -1,9 +1,9 @@
 import Project from '$lib/base/Project';
 
 enum StringOptions {
-    Option1 = 'Option 1',
-    Option2 = 'Option 2',
-    Option3 = 'Option 3'
+    Option1 = 'option1',
+    Option2 = 'option2',
+    Option3 = 'option3'
 }
 
 export default class AllParams extends Project {
@@ -12,6 +12,7 @@ export default class AllParams extends Project {
     number1to5Int = 4;
     numberSliderOnly = 0.3;
     numberFieldOnly = 0.7;
+    numberOption = 3;
 
     // Strings
     stringDefault = 'hello world';
@@ -53,4 +54,13 @@ export default class AllParams extends Project {
     numericArrayFieldOnly = [0.3, 0.8];
     numericArrayCompactSlider = [0.1, 0.9, 0.8, 0.4];
     numericArrayCompactField = [0.2, 0.7];
+    numericArrayOption = [0.3, 0.7];
 }
+
+/* todo...
+    "options": {
+        "A3": [11.7, 16.5],
+        "A4": [8.3, 11.7],
+        "A5": [5.8, 8.3],
+    }
+*/

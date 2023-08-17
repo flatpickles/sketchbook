@@ -20,20 +20,6 @@ Available for number, string, boolean. For a boolean, there's no value key; it's
 
 Use cases: modes (w/ options), sections, functionality only defined with some values.
 
-### Options for everything
-
-Support options style for: string, number, numeric array. It can either be a map of name to value, or just an array of values, which will then be used as the labels.
-
-```
-"options": {
-    "A3": [11.7, 16.5],
-    "A4": [8.3, 11.7],
-    "A5": [5.8, 8.3],
-}
-```
-
-Use cases: dimensions selector, modes.
-
 ### Other params stuff
 
 -   Double check "key" values
