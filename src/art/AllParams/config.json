@@ -62,7 +62,6 @@
         },
 
         "functionDefault": {
-            "name": "Default Function",
             "section": "Functions"
         },
         "functionCustom": {

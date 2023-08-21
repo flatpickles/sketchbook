@@ -88,12 +88,13 @@ export class ParamConfigFactory {
                     throw new Error(`Unsupported param config field: ${key}`);
                 }
             }
+
             // Assign the config fields to the param
             Object.assign(param, data);
-        } else {
-            // If no config exists, assign the value as the default
-            param.name = key;
         }
+
+        // If the name is unspecified, use the key as the name
+        param.name = (data?.name as string) ?? key;
 
         // Validate file param config accept value
         if (isFileParamConfig(param)) {
