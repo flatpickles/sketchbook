@@ -27,7 +27,6 @@ Use cases: modes (w/ options), sections, functionality only defined with some va
 ### Other params stuff
 
 -   Fix & update tests: key as name
--   Full width function button
 -   Double check "key" values
 -   Number fields: validate min/max/step
 -   Param UI (label double click options)
@@ -35,6 +34,7 @@ Use cases: modes (w/ options), sections, functionality only defined with some va
     -   Option to randomize within range
 -   Disabled as config option?
 -   Documentation!!!
+-   Layout bug: file input is inset a little bit for some reason
 
 # Next up:
 

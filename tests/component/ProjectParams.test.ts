@@ -36,6 +36,7 @@ function paramsWithLiveUpdates(
             key: 'testNumber',
             name: 'Test Number',
             liveUpdates: liveUpdates,
+            fullWidthInput: false,
             style: 'combo',
             section: sectionOption === SectionOption.AllSections ? 'Section 1' : undefined
         },
@@ -44,6 +45,7 @@ function paramsWithLiveUpdates(
             key: 'testBoolean',
             name: 'Test Boolean',
             liveUpdates: liveUpdates,
+            fullWidthInput: false,
             section: [SectionOption.SomeSections, SectionOption.AllSections].includes(sectionOption)
                 ? 'Section 1'
                 : undefined
@@ -53,6 +55,7 @@ function paramsWithLiveUpdates(
             key: 'testString',
             name: 'Test String',
             liveUpdates: liveUpdates,
+            fullWidthInput: false,
             style: 'single',
             section: [SectionOption.SomeSections, SectionOption.AllSections].includes(sectionOption)
                 ? 'Section 1'
@@ -63,6 +66,7 @@ function paramsWithLiveUpdates(
             key: 'testNumericArray',
             name: 'Test Numeric Array',
             liveUpdates: liveUpdates,
+            fullWidthInput: false,
             style: 'slider',
             section: [SectionOption.SomeSections, SectionOption.AllSections].includes(sectionOption)
                 ? 'Section 2'
@@ -73,6 +77,7 @@ function paramsWithLiveUpdates(
             key: 'testFunction',
             name: 'Test Function',
             liveUpdates: liveUpdates,
+            fullWidthInput: false,
             section: [SectionOption.SomeSections, SectionOption.AllSections].includes(sectionOption)
                 ? 'Section 2'
                 : undefined
@@ -82,6 +87,7 @@ function paramsWithLiveUpdates(
             key: 'testFile',
             name: 'Test File',
             liveUpdates: liveUpdates,
+            fullWidthInput: false,
             section: [SectionOption.SomeSections, SectionOption.AllSections].includes(sectionOption)
                 ? 'Section 2'
                 : undefined

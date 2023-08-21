@@ -161,7 +161,7 @@
 
     .params-grid {
         display: grid;
-        grid-auto-columns: fit-content($parameter-label-max-width) 1fr;
+        grid-template-columns: fit-content($parameter-label-max-width) 1fr;
         row-gap: $parameter-item-spacing-vertical;
         align-items: center;
     }

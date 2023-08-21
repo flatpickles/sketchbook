@@ -77,7 +77,7 @@ describe('ProjectConfigFactory.propsFrom', () => {
         expect(numberParam.max).toEqual(5);
 
         // Check default values
-        expect(numberParam.name).toEqual(NumberParamConfigDefaults.name);
+        expect(numberParam.name).toEqual('testNumber');
         expect(numberParam.step).toEqual(NumberParamConfigDefaults.step);
         expect(numberParam.liveUpdates).toEqual(NumberParamConfigDefaults.liveUpdates);
         expect(numberParam.style).toEqual(NumberParamConfigDefaults.style);

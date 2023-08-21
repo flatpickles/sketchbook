@@ -26,6 +26,7 @@ describe('ParamItem', () => {
             step: 1,
             style: NumberParamStyle.Slider,
             liveUpdates: true,
+            fullWidthInput: false,
             hoverText: 'Hover text'
         };
 
@@ -50,7 +51,8 @@ describe('ParamItem number styles', () => {
             max: 10,
             step: 1,
             style: NumberParamStyle.Combo,
-            liveUpdates: true
+            liveUpdates: true,
+            fullWidthInput: false
         };
         // @ts-ignore – value type checking isn't working in the render constructor
         render(ParamItem, { config: param as NumberParamConfig, value: 5, even: false });
@@ -71,7 +73,8 @@ describe('ParamItem number styles', () => {
             max: 10,
             step: 1,
             style: NumberParamStyle.Slider,
-            liveUpdates: true
+            liveUpdates: true,
+            fullWidthInput: false
         };
         // @ts-ignore – value type checking isn't working in the render constructor
         render(ParamItem, { config: param as NumberParamConfig, value: 5, even: false });
@@ -93,7 +96,8 @@ describe('ParamItem number styles', () => {
             max: 10,
             step: 1,
             style: NumberParamStyle.Field,
-            liveUpdates: true
+            liveUpdates: true,
+            fullWidthInput: false
         };
         // @ts-ignore – value type checking isn't working in the render constructor
         render(ParamItem, { config: param as NumberParamConfig, value: 5, even: false });
@@ -115,7 +119,8 @@ describe('ParamItem boolean styles', () => {
             key: 'boolean',
             name: 'Boolean',
             type: ParamType.Boolean,
-            liveUpdates: true
+            liveUpdates: true,
+            fullWidthInput: false
         };
         // @ts-ignore – value type checking isn't working in the render constructor
         render(ParamItem, { config: param, value: true, even: false });
@@ -135,6 +140,7 @@ describe('ParamItem function styles', () => {
             name: 'Function',
             type: ParamType.Function,
             liveUpdates: true,
+            fullWidthInput: false,
             buttonText: 'Bananas'
         };
         render(ParamItem, {
@@ -163,6 +169,7 @@ describe('ParamItem string styles', () => {
             name: 'String',
             type: ParamType.String,
             liveUpdates: true,
+            fullWidthInput: false,
             style: StringParamStyle.SingleLine
         };
         // @ts-ignore – value type checking isn't working in the render constructor
@@ -179,6 +186,7 @@ describe('ParamItem string styles', () => {
             name: 'String',
             type: ParamType.String,
             liveUpdates: true,
+            fullWidthInput: false,
             style: StringParamStyle.MultiLine
         };
         // @ts-ignore – value type checking isn't working in the render constructor
@@ -195,6 +203,7 @@ describe('ParamItem string styles', () => {
             name: 'String',
             type: ParamType.String,
             liveUpdates: true,
+            fullWidthInput: false,
             style: StringParamStyle.Color
         };
         // @ts-ignore – value type checking isn't working in the render constructor
@@ -218,6 +227,7 @@ describe('ParamItem with options', () => {
             name: 'Number',
             type: ParamType.Number,
             liveUpdates: true,
+            fullWidthInput: false,
             style: NumberParamStyle.Combo,
             options: {
                 Three: 3,
@@ -252,6 +262,7 @@ describe('ParamItem with options', () => {
             name: 'Number',
             type: ParamType.Number,
             liveUpdates: true,
+            fullWidthInput: false,
             style: NumberParamStyle.Combo,
             options: [3, 4, 5, 6],
             min: 0,
@@ -281,6 +292,7 @@ describe('ParamItem with options', () => {
             name: 'String',
             type: ParamType.String,
             liveUpdates: true,
+            fullWidthInput: false,
             style: StringParamStyle.SingleLine,
             options: {
                 'Hello x2': 'hello hello',
@@ -315,6 +327,7 @@ describe('ParamItem with options', () => {
             name: 'String',
             type: ParamType.String,
             liveUpdates: true,
+            fullWidthInput: false,
             style: StringParamStyle.SingleLine,
             options: ['hello', 'world', 'sup']
         };
@@ -341,6 +354,7 @@ describe('ParamItem with options', () => {
             name: 'Number',
             type: ParamType.NumericArray,
             liveUpdates: true,
+            fullWidthInput: false,
             style: NumericArrayParamStyle.Combo,
             options: [
                 [1, 2, 3],
@@ -374,6 +388,7 @@ describe('ParamItem with options', () => {
             name: 'Number',
             type: ParamType.NumericArray,
             liveUpdates: true,
+            fullWidthInput: false,
             style: NumericArrayParamStyle.Combo,
             options: {
                 First: [1, 2, 3],
@@ -398,5 +413,33 @@ describe('ParamItem with options', () => {
         await waitFor(() => expect(field.value).toBe('Third'));
         expect(component.value).toEqual([7, 8, 9]);
         expect(updateHandler).toHaveBeenCalledTimes(1);
+    });
+});
+
+describe('Full width ParamItem', () => {
+    afterEach(cleanup);
+
+    it('renders full width function param without a label', () => {
+        const param: FunctionParamConfig = {
+            key: 'function',
+            name: 'Function',
+            type: ParamType.Function,
+            liveUpdates: true,
+            fullWidthInput: true,
+            buttonText: 'Bananas'
+        };
+        render(ParamItem, {
+            config: param,
+            // @ts-ignore – value type checking isn't working in the render constructor
+            value: () => {
+                return;
+            },
+            even: false
+        });
+        expect(() => screen.getByText('Function')).toThrow();
+        const button = screen.getAllByTestId('function-param-input')[0] as HTMLButtonElement;
+        expect(button).toBeDefined();
+        const buttonText = screen.getByText('Bananas');
+        expect(buttonText).toBeDefined();
     });
 });

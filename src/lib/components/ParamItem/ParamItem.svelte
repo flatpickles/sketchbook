@@ -202,7 +202,6 @@
 
 <style lang="scss">
     .label-wrapper {
-        grid-column: 1;
         height: 100%;
         display: flex;
         align-items: center;
@@ -226,7 +225,6 @@
     }
 
     .input-wrapper {
-        grid-column: 2;
         height: 100%;
         overflow: hidden;
         display: flex;
@@ -236,12 +234,19 @@
         user-select: none;
 
         @include parameter-item;
-        padding-left: calc($parameter-item-spacing-horizontal / 2);
-        margin-left: 0;
-        border-radius: 0 $border-radius $border-radius 0;
 
+        // When it's just in the right column...
+        &:not(.full-width) {
+            padding-left: calc($parameter-item-spacing-horizontal / 2);
+            margin-left: 0;
+            border-radius: 0 $border-radius $border-radius 0;
+        }
+
+        // When it spans two columns...
         &.full-width {
-            grid-column: 1;
+            grid-column-start: 1;
+            grid-column-end: span 2;
+            border-radius: $border-radius;
         }
     }
 
