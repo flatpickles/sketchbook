@@ -39,6 +39,7 @@
     "type": "module",
     "dependencies": {
         "canvas-sketch": "^0.7.7",
-        "ress": "^5.0.2"
+        "ress": "^5.0.2",
+        "svelte-local-storage-store": "^0.6.0"
     }
 }

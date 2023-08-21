@@ -8,3 +8,7 @@ export const load: PageServerLoad = (async () => {
     const sketchbook = await SketchbookConfigLoader.loadConfig();
     return { projects, sketchbook };
 }) satisfies PageServerLoad;
+
+// Disable SSR for Sketchbook
+// Stored param values use localStorage; with SSR we see a flash of the default values
+export const ssr = false;

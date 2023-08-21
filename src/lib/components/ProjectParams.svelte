@@ -7,11 +7,13 @@
 
     import ParamItem from './ParamItem/ParamItem.svelte';
     import { isFunctionParamConfig } from '$lib/base/ParamConfig/FunctionParamConfig';
+    import ParamValueProvider from '$lib/base/Util/ParamValueProvider';
+    import { updated } from '$app/stores';
 
     export let projectTuple: ProjectTuple;
     $: [noSectionParams, paramSections] = getParamSections(projectTuple.params);
 
-    // A little dark magic to apply the updated param (or call the associated function)
+    // Apply the updated param (or call the associated function)
     async function paramUpdated(event: CustomEvent) {
         const updatedConfig = event.detail.config as ParamConfig;
 
@@ -58,15 +60,17 @@
                 configurable: true
             });
             projectTuple.project.update();
+            ParamValueProvider.setValue(updatedConfig, projectTuple.props.title, value);
         }
     }
 
-    // A little dark magic to get the properly typed initial value for a given param
+    // Get the properly typed initial value for a given param
     function initialValueForParam<T extends ParamConfig>(paramConfig: T): ParamValueType<T> {
-        const descriptor = Object.getOwnPropertyDescriptor(projectTuple.project, paramConfig.key);
-        const value = descriptor?.value;
-        // If it's an array, we need to copy it so that we don't mutate the original
-        return (Array.isArray(value) ? [...value] : value) as ParamValueType<T>;
+        return ParamValueProvider.getValue(
+            paramConfig,
+            projectTuple.props.title,
+            projectTuple.project
+        );
     }
 </script>
 

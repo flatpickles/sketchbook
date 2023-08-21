@@ -3,6 +3,8 @@ import type Project from '../Project';
 import { type ProjectConfig, ProjectConfigDefaults } from '../ProjectConfig/ProjectConfig';
 import type { ParamConfig } from '../ParamConfig/ParamConfig';
 import { ProjectConfigFactory } from '../ProjectConfig/ProjectConfigFactory';
+import ParamValueProvider from '../Util/ParamValueProvider';
+import { browser } from '$app/environment';
 
 export interface ProjectTuple {
     project: Project;
@@ -12,7 +14,7 @@ export interface ProjectTuple {
 
 type ProjectModule = {
     // Matching the Project constructor...
-    default: new (canvas?: HTMLCanvasElement) => Project;
+    default: new () => Project;
 };
 
 export default class ProjectLoader {
@@ -97,6 +99,20 @@ export default class ProjectLoader {
         // Assign the project title if unset
         if (props.title === ProjectConfigDefaults.title) {
             props.title = key;
+        }
+
+        // Set project properties to stored values
+        if (browser) {
+            for (const param of params) {
+                const storedValue = ParamValueProvider.getValue(param, props.title, project);
+                if (typeof storedValue === 'function') continue;
+                Object.defineProperty(project, param.key, {
+                    value: storedValue,
+                    writable: true,
+                    enumerable: true,
+                    configurable: true
+                });
+            }
         }
 
         // Return tuple

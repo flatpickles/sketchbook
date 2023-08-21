@@ -26,7 +26,7 @@ Use cases: modes (w/ options), sections, functionality only defined with some va
 
 ### Other params stuff
 
--   Fix & update tests: key as name
+-   Test coverage: localStorage values
 -   Double check "key" values
 -   Number fields: validate min/max/step
 -   Param UI (label double click options)
@@ -35,6 +35,13 @@ Use cases: modes (w/ options), sections, functionality only defined with some va
 -   Disabled as config option?
 -   Documentation!!!
 -   Layout bug: file input is inset a little bit for some reason
+-   File input persistence
+    -   When switching away from a project, then back
+    -   When reloading a project
+-   Persistence w/ default values (values set in .ts file)
+    -   Track these before updating to saved state
+    -   Save these so we can see when the user updated default, to use this instead of saved state (with no preset selected)
+    -   Use these with double-click to reset to default (when no preset is selected)
 
 # Next up:
 
@@ -43,16 +50,14 @@ Use cases: modes (w/ options), sections, functionality only defined with some va
 -   Project sorting: put projects with no date at the top when sorting chronologically
 -   Group sorting options...
 -   Section sorting options...
+-   Project key:
+    -   Use key instead of name in saved state
+    -   User-defined keys used for project URL
 -   Saved state
-    -   Param values (what to do with file inputs?)
     -   Selected project (for root navigation redirect)
     -   Selected group in left panel
     -   Settings values
     -   Panel states
-    -   Changing default values (values set in .ts file)
-        -   Track these before updating to saved state
-        -   Save these so we can see when the user updated default, to use this instead of saved state (with no preset selected)
-        -   Use these with double-click to reset to default (when no preset is selected)
 -   Show & hide panels in desktop layout
     -   Show/hide animation
     -   Show buttons from hidden state
