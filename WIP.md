@@ -26,6 +26,7 @@ Use cases: modes (w/ options), sections, functionality only defined with some va
 
 ### Other params stuff
 
+-   Full width function button
 -   Double check "key" values
 -   Keep name as key name when other param settings are defined in json, but name is not
 -   Number fields: validate min/max/step
