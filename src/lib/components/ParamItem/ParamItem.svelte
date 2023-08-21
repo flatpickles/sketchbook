@@ -64,16 +64,24 @@
     }
 </script>
 
+{#if !config.fullWidthInput}
+    <div
+        class="label-wrapper"
+        data-testid="param-label-wrapper"
+        class:even
+        class:odd={!even}
+        title={config.hoverText}
+    >
+        <label class="param-label" data-testid="param-label" for={config.name}>{config.name}</label>
+    </div>
+{/if}
 <div
-    class="label-wrapper"
-    data-testid="param-label-wrapper"
+    class="input-wrapper"
+    data-testid="param-input-wrapper"
     class:even
     class:odd={!even}
-    title={config.hoverText}
+    class:full-width={config.fullWidthInput}
 >
-    <label class="param-label" data-testid="param-label" for={config.name}>{config.name}</label>
-</div>
-<div class="input-wrapper" data-testid="param-input-wrapper" class:even class:odd={!even}>
     {#if ParamGuards.isNumberParamConfig(config) && typeof value === 'number'}
         {#if config.options != undefined}
             <OptionInput
@@ -194,6 +202,7 @@
 
 <style lang="scss">
     .label-wrapper {
+        grid-column: 1;
         height: 100%;
         display: flex;
         align-items: center;
@@ -217,6 +226,7 @@
     }
 
     .input-wrapper {
+        grid-column: 2;
         height: 100%;
         overflow: hidden;
         display: flex;
@@ -229,6 +239,10 @@
         padding-left: calc($parameter-item-spacing-horizontal / 2);
         margin-left: 0;
         border-radius: 0 $border-radius $border-radius 0;
+
+        &.full-width {
+            grid-column: 1;
+        }
     }
 
     .array-param-wrapper {

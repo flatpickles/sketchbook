@@ -15,6 +15,7 @@ export interface ParamConfig {
     key: string;
     name: string;
     liveUpdates: boolean;
+    fullWidthInput: boolean;
     section?: string;
     hoverText?: string;
 }
@@ -24,6 +25,7 @@ export const ParamConfigDefaults: ParamConfig = {
     key: 'untitledParam',
     name: 'Untitled Param',
     liveUpdates: ProjectConfigDefaults.liveUpdates,
+    fullWidthInput: false,
     section: undefined,
     hoverText: undefined
 } as const;

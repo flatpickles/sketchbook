@@ -70,6 +70,11 @@
             "buttonText": "Click Here!",
             "section": "Functions"
         },
+        "fullWidthFunction": {
+            "buttonText": "Full width button",
+            "fullWidthInput": true,
+            "section": "Functions"
+        },
 
         "defaultFile": {
             "name": "Default File",

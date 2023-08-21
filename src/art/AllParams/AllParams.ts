@@ -27,6 +27,9 @@ export default class AllParams extends Project {
     functionDefault = async () => {
         alert('hello one!');
     };
+    fullWidthFunction = async () => {
+        alert('hello three!');
+    };
     functionCustom = async () => {
         alert('hello two!');
     };
