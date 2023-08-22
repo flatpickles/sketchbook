@@ -19,6 +19,11 @@ export type UserFileLoaderReturnType = {
 };
 
 /*
+    AnyParamValueType is all possible parameter types, including undefined.
+*/
+export type AnyParamValueType = number | boolean | string | number[] | undefined;
+
+/*
     ParamValueType is used to determine the type of the parameter value
     based on the parameter configuration.
 */
@@ -26,14 +31,12 @@ export type ParamValueType<T> = T extends NumberParamConfig
     ? number
     : T extends BooleanParamConfig
     ? boolean
-    : T extends FunctionParamConfig
-    ? () => void
-    : T extends FileParamConfig
-    ? (result: UserFileLoaderReturnType) => void
     : T extends StringParamConfig
     ? string
     : T extends NumericArrayParamConfig
     ? number[]
+    : T extends FunctionParamConfig | FileParamConfig
+    ? undefined
     : never;
 
 /*

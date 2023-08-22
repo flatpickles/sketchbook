@@ -26,7 +26,6 @@ Use cases: modes (w/ options), sections, functionality only defined with some va
 
 ### Other params stuff
 
--   Test coverage: localStorage values
 -   Double check "key" values
 -   Number fields: validate min/max/step
 -   Param UI (label double click options)

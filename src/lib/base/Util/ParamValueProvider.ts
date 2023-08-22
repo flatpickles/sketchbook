@@ -9,7 +9,6 @@ export default class ParamValueProvider {
         projectKey: string,
         project: Project
     ): ParamValueType<T> {
-        console.log(paramConfig.key);
         let returnValue: ParamValueType<T>;
 
         // Use local storage value, or project property value as a backup

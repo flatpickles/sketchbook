@@ -1,24 +1,21 @@
 <script lang="ts">
     import type { ProjectTuple } from '$lib/base/FileLoading/ProjectLoader';
-    import { isFileParamConfig } from '$lib/base/ParamConfig/FileParamConfig';
     import { type ParamConfig, getParamSections } from '$lib/base/ParamConfig/ParamConfig';
-    import type { ParamValueType } from '$lib/base/ParamConfig/ParamTypes';
+    import { ParamGuards, type ParamValueType } from '$lib/base/ParamConfig/ParamTypes';
     import UserFileLoader from '$lib/base/Util/FileParamLoader';
 
     import ParamItem from './ParamItem/ParamItem.svelte';
-    import { isFunctionParamConfig } from '$lib/base/ParamConfig/FunctionParamConfig';
     import ParamValueProvider from '$lib/base/Util/ParamValueProvider';
-    import { updated } from '$app/stores';
 
     export let projectTuple: ProjectTuple;
     $: [noSectionParams, paramSections] = getParamSections(projectTuple.params);
 
     // Apply the updated param (or call the associated function)
     async function paramUpdated(event: CustomEvent) {
-        const updatedConfig = event.detail.config as ParamConfig;
+        const updatedConfig: ParamConfig = event.detail.config;
 
         // Update the project's value for this key, or call the named function
-        if (isFunctionParamConfig(updatedConfig)) {
+        if (ParamGuards.isFunctionParamConfig(updatedConfig)) {
             // If it's a function param, call the associated function
             const descriptor = Object.getOwnPropertyDescriptor(
                 projectTuple.project,
@@ -28,7 +25,7 @@
                 await descriptor.value();
                 projectTuple.project.update();
             }
-        } else if (isFileParamConfig(updatedConfig)) {
+        } else if (ParamGuards.isFileParamConfig(updatedConfig)) {
             // If it's a file param, load the file(s) then call the associated function
             try {
                 // Load the file(s)
@@ -50,7 +47,7 @@
             }
         } else {
             // If it's an array, we need to copy it so that we don't mutate the original
-            const value = Array.isArray(event.detail.value)
+            const value: ParamValueType<typeof updatedConfig> = Array.isArray(event.detail.value)
                 ? [...event.detail.value]
                 : event.detail.value;
             Object.defineProperty(projectTuple.project, updatedConfig.key, {
