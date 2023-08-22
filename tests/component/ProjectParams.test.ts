@@ -114,8 +114,14 @@ function renderParams(
     return testProject;
 }
 
+function cleanupParams() {
+    cleanup();
+    localStorage.clear();
+    vi.clearAllMocks();
+}
+
 describe('ProjectParams list', () => {
-    afterEach(cleanup);
+    afterEach(cleanupParams);
 
     it('renders param items as even/odd correctly (no sections)', async () => {
         renderParams(true, SectionOption.NoSections);
@@ -227,7 +233,7 @@ describe('ProjectParams list', () => {
 });
 
 describe('ProjectParams sections', () => {
-    afterEach(cleanup);
+    afterEach(cleanupParams);
 
     it('renders param sections properly (some params in sections)', async () => {
         renderParams(true, SectionOption.SomeSections);
@@ -286,7 +292,7 @@ describe('ProjectParams sections', () => {
 });
 
 describe('number param input', () => {
-    afterEach(cleanup);
+    afterEach(cleanupParams);
 
     it('updates a number param when the input changes (liveUpdates)', async () => {
         const project = renderParams(true);
@@ -322,7 +328,7 @@ describe('number param input', () => {
 });
 
 describe('boolean param input', () => {
-    afterEach(cleanup);
+    afterEach(cleanupParams);
 
     it('updates a boolean param when the input changes', async () => {
         const project = renderParams(true);
@@ -338,7 +344,7 @@ describe('boolean param input', () => {
 });
 
 describe('string param input', () => {
-    afterEach(cleanup);
+    afterEach(cleanupParams);
 
     it('updates a string param when the input changes (liveUpdates)', async () => {
         const project = renderParams(true);
@@ -372,7 +378,7 @@ describe('string param input', () => {
 });
 
 describe('numeric array param input', () => {
-    afterEach(cleanup);
+    afterEach(cleanupParams);
 
     it('updates a numeric array param when the input changes (liveUpdates)', async () => {
         const project = renderParams(true);
@@ -420,7 +426,7 @@ describe('numeric array param input', () => {
 });
 
 describe('function param input', () => {
-    afterEach(cleanup);
+    afterEach(cleanupParams);
 
     it('calls a param-ized function when the button is clicked', async () => {
         const project = renderParams(true);
@@ -435,7 +441,7 @@ describe('function param input', () => {
 });
 
 describe('file param input', () => {
-    afterEach(cleanup);
+    afterEach(cleanupParams);
 
     // Mocking stuff!
 
@@ -491,3 +497,5 @@ describe('file param input', () => {
         await waitFor(() => expect(project.update).toHaveBeenCalledTimes(1));
     });
 });
+
+// todo: add tests with mocked ParamValueProvider

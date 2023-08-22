@@ -124,7 +124,8 @@ describe('FileParamLoader', () => {
             type: ParamType.File,
             key: 'testFile',
             name: 'testFile',
-            liveUpdates: false
+            liveUpdates: false,
+            fullWidthInput: false
         };
         const { result, metadata } = await FileParamLoader.loadFileList(
             mockArrayBufferFileList as FileList,
@@ -153,7 +154,8 @@ describe('FileParamLoader', () => {
             type: ParamType.File,
             key: 'testFile',
             name: 'testFile',
-            liveUpdates: false
+            liveUpdates: false,
+            fullWidthInput: false
         };
         const { result, metadata } = await FileParamLoader.loadFileList(
             mockBinaryStringFileList as FileList,
@@ -182,7 +184,8 @@ describe('FileParamLoader', () => {
             type: ParamType.File,
             key: 'testFile',
             name: 'testFile',
-            liveUpdates: false
+            liveUpdates: false,
+            fullWidthInput: false
         };
         const { result, metadata } = await FileParamLoader.loadFileList(
             mockDataURLFileList as FileList,
@@ -209,7 +212,8 @@ describe('FileParamLoader', () => {
             type: ParamType.File,
             key: 'testFile',
             name: 'testFile',
-            liveUpdates: false
+            liveUpdates: false,
+            fullWidthInput: false
         };
         const { result, metadata } = await FileParamLoader.loadFileList(
             mockTextFileList as FileList,
@@ -247,7 +251,8 @@ describe('FileParamLoader', () => {
             type: ParamType.File,
             key: 'testFile',
             name: 'testFile',
-            liveUpdates: false
+            liveUpdates: false,
+            fullWidthInput: false
         };
         const { result, metadata } = await FileParamLoader.loadFileList(
             mockDataURLFileList as FileList,
@@ -274,7 +279,8 @@ describe('FileParamLoader', () => {
             type: ParamType.File,
             key: 'testFile',
             name: 'testFile',
-            liveUpdates: false
+            liveUpdates: false,
+            fullWidthInput: false
         };
         const { result, metadata } = await FileParamLoader.loadFileList(
             mockMultipleFileList as FileList,
