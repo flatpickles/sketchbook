@@ -9,6 +9,10 @@ import { ProjectConfigFactory } from '$lib/base/ProjectConfig/ProjectConfigFacto
 import type { UserFileLoaderReturnType } from '$lib/base/ParamConfig/ParamTypes';
 import FileParamLoader from '$lib/base/Util/FileParamLoader';
 
+import ParamValueProvider from '$lib/base/Util/ParamValueProvider';
+vi.spyOn(ParamValueProvider, 'getValue');
+vi.spyOn(ParamValueProvider, 'setValue');
+
 class TestProject extends Project {
     testNumber = 42;
     testBoolean = true;
@@ -111,6 +115,7 @@ function renderParams(
     render(ProjectParams, {
         projectTuple: testTuple
     });
+    expect(ParamValueProvider.getValue).toHaveBeenCalledTimes(6);
     return testProject;
 }
 
@@ -308,6 +313,7 @@ describe('number param input', () => {
         expect(project.update).toHaveBeenCalledTimes(2);
         expect(numberInput.value).toBe('44');
         expect(project.testNumber).toBe(44);
+        expect(ParamValueProvider.setValue).toHaveBeenCalledTimes(2);
     });
 
     it('updates a number param when the input changes (!liveUpdates)', async () => {
@@ -324,6 +330,7 @@ describe('number param input', () => {
         expect(project.update).toHaveBeenCalledTimes(1);
         expect(numberInput.value).toBe('44');
         expect(project.testNumber).toBe(44);
+        expect(ParamValueProvider.setValue).toHaveBeenCalledTimes(1);
     });
 });
 
@@ -340,6 +347,7 @@ describe('boolean param input', () => {
         expect(project.update).toHaveBeenCalledTimes(1);
         expect(booleanInput.checked).toBe(false);
         expect(project.testBoolean).toBe(false);
+        expect(ParamValueProvider.setValue).toHaveBeenCalledTimes(1);
     });
 });
 
@@ -358,6 +366,7 @@ describe('string param input', () => {
         expect(project.testString).toBe('goodbye');
         fireEvent.change(stringInput);
         expect(project.update).toHaveBeenCalledTimes(2);
+        expect(ParamValueProvider.setValue).toHaveBeenCalledTimes(2);
     });
 
     it('updates a string param when the input changes (!liveUpdates)', async () => {
@@ -374,6 +383,7 @@ describe('string param input', () => {
         expect(project.update).toHaveBeenCalledTimes(1);
         expect(stringInput.value).toBe('goodbye');
         expect(project.testString).toBe('goodbye');
+        expect(ParamValueProvider.setValue).toHaveBeenCalledTimes(1);
     });
 });
 
@@ -400,6 +410,7 @@ describe('numeric array param input', () => {
         expect(project.update).toHaveBeenCalledTimes(2);
         expect(numericArrayInput[1].value).toBe('5');
         expect(project.testNumericArray).toEqual([4, 5, 3]);
+        expect(ParamValueProvider.setValue).toHaveBeenCalledTimes(2);
     });
 
     it('updates a numeric array param when the input changes (!liveUpdates)', async () => {
@@ -422,6 +433,7 @@ describe('numeric array param input', () => {
         expect(project.update).toHaveBeenCalledTimes(1);
         expect(numericArrayInput[1].value).toBe('5');
         expect(project.testNumericArray).toEqual([4, 5, 3]);
+        expect(ParamValueProvider.setValue).toHaveBeenCalledTimes(1);
     });
 });
 
@@ -437,6 +449,7 @@ describe('function param input', () => {
         fireEvent.click(functionButton);
         await waitFor(() => expect(project.testFunction).toHaveBeenCalledTimes(1));
         await waitFor(() => expect(project.update).toHaveBeenCalledTimes(1));
+        expect(ParamValueProvider.setValue).toHaveBeenCalledTimes(0);
     });
 });
 
@@ -495,7 +508,6 @@ describe('file param input', () => {
             )
         );
         await waitFor(() => expect(project.update).toHaveBeenCalledTimes(1));
+        expect(ParamValueProvider.setValue).toHaveBeenCalledTimes(0);
     });
 });
-
-// todo: add tests with mocked ParamValueProvider
