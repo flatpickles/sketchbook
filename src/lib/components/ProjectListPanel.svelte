@@ -83,8 +83,7 @@
 
     .settings-wrapper {
         position: absolute;
-
-        width: 100%;
+        width: $panel-width; // 100% overflows on Safari w/ absolute positioning
         height: 100%;
         display: flex;
         flex-direction: column;
