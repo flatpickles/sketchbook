@@ -8,8 +8,8 @@ export interface SketchbookConfig {
     subtitle: string | undefined;
     description: string | undefined;
     footer: string | undefined;
+    infoLink: string | undefined;
     sorting: ProjectSortType;
-    // todo: group sorting? (date, alphabetical, explicit)
     defaultGroup: string | undefined;
     storeParamValues: boolean;
     storeProjectSelection: boolean;
@@ -20,6 +20,7 @@ export const SketchbookConfigDefaults: SketchbookConfig = {
     subtitle: undefined,
     description: 'A collection of generative art projects.',
     footer: undefined,
+    infoLink: undefined,
     sorting: ProjectSortType.Date,
     defaultGroup: undefined,
     storeParamValues: true,

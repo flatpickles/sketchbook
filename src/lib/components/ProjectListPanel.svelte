@@ -23,7 +23,8 @@
     }
 
     function showInfo() {
-        alert('todo: show info');
+        if (!sketchbookConfig.infoLink) throw new Error('No info link defined');
+        document.location.href = sketchbookConfig.infoLink;
     }
 
     function toggleSettings() {
@@ -50,7 +51,7 @@
                 />
                 <PanelFooter
                     footerText={sketchbookConfig.footer}
-                    leftButton="fa-info-circle"
+                    leftButton={sketchbookConfig.infoLink ? 'fa-info-circle' : undefined}
                     rightButton="fa-gear"
                     on:leftbuttonclick={showInfo}
                     on:rightbuttonclick={toggleSettings}

@@ -15,15 +15,22 @@
 </script>
 
 <div class="footer-wrapper">
-    <button
-        class="left-button"
-        class:hidden={leftButton == undefined}
-        on:click={leftButtonClicked}
-        on:keypress={leftButtonClicked}
+    {#if leftButton != undefined}
+        <button
+            class="left-button"
+            class:hidden={leftButton == undefined}
+            on:click={leftButtonClicked}
+            on:keypress={leftButtonClicked}
+        >
+            <i class="fa {leftButton}" />
+        </button>
+    {/if}
+    <div
+        class="footer-text"
+        data-testid="footer-text"
+        class:hidden={footerText == undefined}
+        class:left-align={leftButton == undefined}
     >
-        <i class="fa {leftButton}" />
-    </button>
-    <div class="footer-text" data-testid="footer-text" class:hidden={footerText == undefined}>
         {@html footerText}
     </div>
     <button
@@ -80,5 +87,10 @@
     .hidden {
         // Still included in DOM to preserve layout (no display: none)
         visibility: hidden;
+    }
+
+    .left-align {
+        text-align: left;
+        padding-left: $panel-content-inset;
     }
 </style>

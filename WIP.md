@@ -4,7 +4,78 @@ Ongoing notes for Sketchbook development.
 
 ---
 
-# Params WIP:
+# Current scope:
+
+## Johan's feedback (8/23):
+
+-   maybe rename update method; "update" implies it runs every frame
+-   passed to update:
+    -   parameter key (from update)
+    -   time (ms + frame count)
+-   think about how much infrastructure to provide / leave to other frameworks. Probably as minimal as possible
+-   check Unity lifecycle for ideas
+-   animation mode?
+-   dev mode vs. prod mode
+-   design: the art feels secondary with the panels floating over the top. Could be remedied with dedicated space for the canvas // no floating panels.
+-   Wouldn't often want to see project list as a first-class citizen during dev mode. That's kind of a portfolio feature. Could be remedied just by keeping the panel closed.
+
+## Settings // app configuration
+
+For each setting, user can configure default value, and whether it's shown in the user's settings panel (does this work for everything?)
+
+Maybe in content.json (what's on the page)
+
+-   Title
+-   Subtitle
+-   Description
+-   Footer
+-   Info link
+-   Default group
+
+Maybe in config.ts (how it behaves)
+
+-   Show experimental projects
+-   Canvas size // sizing behavior
+-   Canvas scale (pixel ratio)
+-   Panel visibility (projects + project details)
+    -   Enable/disable
+    -   Shown/hidden defaults
+    -   Show/hide behavior (mouse hover / movement / double click / etc)
+-   Project sorting // group sorting
+-   App state storage behavior (on/off)
+    -   project selection, for navigation to (/)
+    -   preset selection + set parameter values
+    -   panels open/closed
+    -   selected group
+-   Disable params in mobile layout (presets only)
+-   Param UI label double click options
+    -   Option to reset to default/preset value
+    -   Option to randomize within range
+-   Auto-style parameters based on name (may require reload)
+-   Project defaults:
+    -   Live updates (when unspecified per-param)
+    -   Show presets UI (default: shown only if presets exist)
+-   Show perf data (where?! in settings panel?)
+
+Maybe in theme.scss (how it looks)
+
+-   Overlay panels (vs. true sidebar behavior)
+-   Full-height panels (overlay + desktop only?)
+-   Dark mode?
+
+## Params
+
+-   Number fields: validate min/max/step
+-   Documentation!!!
+-   Layout bug: file input is inset a little bit for some reason
+-   File input persistence
+    -   When switching away from a project, then back
+    -   When reloading a project
+-   Persistence w/ default values (values set in .ts file)
+    -   Track these before updating to saved state
+    -   Save these so we can see when the user updated default, to use this instead of saved state (with no preset selected)
+    -   Use these with double-click to reset to default (when no preset is selected)
+-   Min/max range slider? (style for 2-member numeric array, maybe)
 
 ### Value Effects
 
@@ -24,39 +95,17 @@ Available for number, string, boolean. For a boolean, there's no value key; it's
 
 Use cases: modes (w/ options), sections, functionality only defined with some values.
 
-### Other params stuff
-
--   Double check "key" values
--   Number fields: validate min/max/step
--   Param UI (label double click options)
-    -   Option to reset to default/preset value
-    -   Option to randomize within range
--   Disabled as config option?
--   Documentation!!!
--   Layout bug: file input is inset a little bit for some reason
--   File input persistence
-    -   When switching away from a project, then back
-    -   When reloading a project
--   Persistence w/ default values (values set in .ts file)
-    -   Track these before updating to saved state
-    -   Save these so we can see when the user updated default, to use this instead of saved state (with no preset selected)
-    -   Use these with double-click to reset to default (when no preset is selected)
-
-# Next up:
+## Miscellany
 
 -   Test coverage:
     -   Project detail panel (component tests)
+    -   Settings panel (and AppState)
 -   Project sorting: put projects with no date at the top when sorting chronologically
 -   Group sorting options...
 -   Section sorting options...
 -   Project key:
     -   Use key instead of name in saved state
     -   User-defined keys used for project URL
--   Saved state
-    -   Selected project (for root navigation redirect)
-    -   Selected group in left panel
-    -   Settings values
-    -   Panel states
 -   Show & hide panels in desktop layout
     -   Show/hide animation
     -   Show buttons from hidden state
@@ -65,26 +114,16 @@ Use cases: modes (w/ options), sections, functionality only defined with some va
     -   Model work
     -   Selection UI & plumbing
     -   Options: creation, export, import, etc
--   Settings panel & values
-    -   Show & hide from button
-    -   Param double click behavior
-    -   Experimental mode
-    -   Auto-hide panels w/ mouse hover to show them (desktop only)
-    -   Double click to hide/show panels
-    -   Canvas size/available space (default fullscreen or between panels)
-    -   Canvas scale (default 2x / retina)
-    -   Dark mode - TBD
-    -   Perf data - FPS meter (or maybe put this elsewhere)
+    -   URL hash location set w/ preset (loads preset automatically)
 -   Base project subclasses:
     -   Canvas Sketch
     -   P5
     -   REGL
 -   Mobile layout & behavior
--   Info display / link from bottom left button - TBD
 -   No Signal display
     -   Display when no projects are loaded
     -   Also include error text; catch project errors
-    -   Also display if rendering passes a time limit (e.g. infinite loop in project)
+-   Catch and display error if rendering passes a time limit (e.g. infinite loop in project)
 -   Link previews
 -   Theming / styling:
     -   Expose only high-level adjustments in theme.scss; move finer details elsewhere (closer to components probably)
@@ -94,35 +133,30 @@ Use cases: modes (w/ options), sections, functionality only defined with some va
 -   Configuration in config.json
     -   Defaults for all settings
     -   (maybe this is just user-visible stuff? see below)
--   Configurations for devs
-    -   Defaults applied to all projects: live updates, show presets, auto-style params based on names (color style for bgColor, etc)
-    -   Maybe put these somewhere other than config.json?
+-   In config interfaces, maybe use optional members?
 
 # Miscellaneous / notes:
 
 -   SSR: currently projects are initialized, but init() and update() aren't called.
     -   Either projects shouldn't be initialized (so we don't have to do `browser` checks within projects, e.g. to load bundled images), or init() and update() should be called once each, to draw canvas contents.
     -   Check if canvas drawing is possible with SSR; only benefit there really would be link previews, and these could just be static images if needed.
--   Parameter sorting: use config maybe? At least document
+-   Parameter sorting: use config order maybe? At least document
 -   FileLoading vs FileParamLoader naming is confusing
 -   Increase hit area for sliders
--   Default styles and modes, depending on parameter property names (e.g. "bgColor" would use color style by default)
 -   Update function: take an optional "previousValues" parameter, containing previous values of exposed params before the latest update (so we can see what specifically changed). { changedKey: key, previousValues: {} }
 -   Clicking a group or project list item should scroll it fully into view.
--   Optional explicit route name (vs. just using the filename/key)
 -   Better error messaging for config file parsing throughout
 -   "animated" mode for sketches: call update with animation frame request
 -   Show a project's groups on right panel?
 -   Make old style possible via theme config (or something like it)
--   When changing param defaults (assigned in file) what happens? Especially with local storage... param default vals will get confusing...
 -   What happens if someone sets a parameterized property from within the project?
     -   Ideally this change is represented in params UI; e.g. load a text file into a multi-line text param
     -   Maybe they sync on project update?
+-   Can we enable DOM-based projects, e.g. vanilla Svelte prototypes that aren't entirely on a canvas?
 
 # Ongoing:
 
--   Parse notes above into actual action items
--   Read through old notes and absorb in design doc
+-   Parse miscellany above into actual action items
 -   Read through design doc
 -   Accessibility
     -   Param label associations (name // id // etc)
@@ -145,31 +179,33 @@ Use cases: modes (w/ options), sections, functionality only defined with some va
 -   Port SBv1 into projects.longitude.studio
 -   Pick an OSS license and document accordingly
 -   Record demo videos and create other marketing assets - TBD
+-   Figure out CI, e.g. auto-run tests with pushes
+-   Contributor workflow
+-   Move this doc into GitHub project planning tool
 
 # MVP stretch goals:
 
--   Variants:
-    -   Duplicate a folder within art and create another "variant" of an existing piece.
-    -   Variants are displayed under the same title in the project list, but once you click in you can see that there are several versions.
-    -   Maybe it's like tapping into a section in an iOS list view.
 -   Webcam & microphone inputs
 -   MIDI inputs
 -   API:
     -   Project list (names, dates, metadata)
     -   Link preview images
 -   Easy "export snapshot" (photo) option
+    -   Also save JSON with current parameter values (i.e. preset file)
 -   Key commands
     -   Hide/show panels
     -   Project switching
-    -   Min/max range slider
-    -   Undo/redo for parameter changes
+-   Undo/redo for parameter changes (w/ key command)
 
 # Long-term goals:
 
 -   Midi control:
     -   Included in global configuration
     -   Enable project switching (fast switching)
--   Dark mode support
+-   Variants:
+    -   Duplicate a folder within art and create another "variant" of an existing piece.
+    -   Variants are displayed under the same title in the project list, but once you click in you can see that there are several versions.
+    -   Maybe it's like tapping into a section in an iOS list view.
 -   Canvas zooming & panning
 -   Cloud preset storage
     -   Share presets with _just_ a link
@@ -198,6 +234,7 @@ Use cases: modes (w/ options), sections, functionality only defined with some va
 -   Casing in JSON fields, e.g. "liveUpdates", "dataURL" etc
 -   Documentation:
     -   Formatting: website vs. markdown files on GitHub
+-   Would you rather this was flatpickles/Sketchbook or Longitude-Labs/Sketchbook on GitHub?
 
 # Utils:
 
