@@ -12,6 +12,8 @@ todo: discuss JSON-based configuration options
 
 todo: discuss visual appearance
 
-## defaults.ts
+## config.ts
 
 todo: discuss behavior defaults
+
+Note file change vs localStorage behavior - check if value in backing file has changed... etc

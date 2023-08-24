@@ -98,8 +98,8 @@ Use cases: modes (w/ options), sections, functionality only defined with some va
 ## Miscellany
 
 -   Test coverage:
-    -   Project detail panel (component tests)
     -   Settings panel (and AppState)
+    -   Project detail panel (component tests)
 -   Project sorting: put projects with no date at the top when sorting chronologically
 -   Group sorting options...
 -   Section sorting options...

@@ -1,13 +1,40 @@
-import { persisted } from 'svelte-local-storage-store';
+import { writable } from 'svelte/store';
+import { config, userSettingsLabels } from '../../config/config';
+import type { AnyParamValueType } from './ParamConfig/ParamTypes';
 
-const AppStateDefaults = {
-    projectListPanelVisible: true,
-    settingsVisible: false,
-    projectDetailPanelVisible: true,
-    settings: {
-        showExperimentalProjects: false,
-        canvasSize: [500, 700]
+function createStateStore() {
+    // Restore only values that are specified in userSettingsLabels
+    const initialState: Record<string, AnyParamValueType> = config;
+    for (const key in userSettingsLabels) {
+        // Use the new value in the backing file if it's been changed
+        const fileValue = JSON.stringify(initialState[key]);
+        const lastFileValue = localStorage.getItem(`lastFileValue_${key}`);
+        localStorage.setItem(`lastFileValue_${key}`, fileValue);
+        if (lastFileValue && lastFileValue !== fileValue) {
+            localStorage.setItem(key, fileValue);
+            continue;
+        }
+
+        // Otherwise, use the value in local storage
+        initialState[key] = JSON.parse(localStorage.getItem(key) || fileValue);
     }
-};
+    const { subscribe, set } = writable(initialState);
 
-export const AppStateStore = persisted('app-state', AppStateDefaults);
+    // Persist only values that are specified in userSettingsLabels
+    const setAndPersist = (state: Record<string, AnyParamValueType>) => {
+        for (const key in userSettingsLabels) {
+            localStorage.setItem(key, JSON.stringify(state[key]));
+        }
+        set(state);
+    };
+
+    return {
+        subscribe,
+        set: setAndPersist
+    };
+}
+
+export const AppStateStore = createStateStore();
+
+// todo: this should be "app config store" maybe, and we can also have a
+// state store for stuff like selected project, etc...

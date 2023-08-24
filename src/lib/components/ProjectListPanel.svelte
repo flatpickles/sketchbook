@@ -8,7 +8,7 @@
     import PanelFooter from './PanelFooter.svelte';
     import PanelHeader from './PanelHeader.svelte';
     import ProjectList from './ProjectList.svelte';
-    import SettingsContent from './SettingsContent.svelte';
+    import SettingsContent from './Settings/SettingsContent.svelte';
 
     export let sketchbookConfig: SketchbookConfig;
     export let projects: Record<string, ProjectConfig>;
