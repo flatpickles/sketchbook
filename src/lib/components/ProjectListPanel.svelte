@@ -1,6 +1,7 @@
 <script lang="ts">
     import { fade } from 'svelte/transition';
 
+    import Content from '../../config/content';
     import type { SketchbookConfig } from '$lib/base/FileLoading/SketchbookConfig';
     import type { ProjectConfig } from '$lib/base/ProjectConfig/ProjectConfig';
     import GroupSelector from './GroupSelector.svelte';
@@ -23,8 +24,8 @@
     }
 
     function showInfo() {
-        if (!sketchbookConfig.infoLink) throw new Error('No info link defined');
-        document.location.href = sketchbookConfig.infoLink;
+        if (!Content.leftButtonLink) throw new Error('No info link defined');
+        document.location.href = Content.leftButtonLink;
     }
 
     function toggleSettings() {
@@ -37,9 +38,9 @@
         {#if !settingsDisplayed}
             <div class="main-wrapper" transition:fade={{ duration: 200 }}>
                 <PanelHeader
-                    title={sketchbookConfig.title}
-                    subtitle={sketchbookConfig.subtitle}
-                    description={sketchbookConfig.description}
+                    title={Content.title}
+                    subtitle={Content.subtitle}
+                    description={Content.description}
                     on:close={closePanel}
                 />
                 <GroupSelector projects={Object.values(projects)} bind:selectedGroup />
@@ -50,8 +51,10 @@
                     sorting={sketchbookConfig.sorting}
                 />
                 <PanelFooter
-                    footerText={sketchbookConfig.footer}
-                    leftButton={sketchbookConfig.infoLink ? 'fa-info-circle' : undefined}
+                    footerText={Content.footer}
+                    leftButton={Content.leftButtonIcon && Content.leftButtonLink
+                        ? Content.leftButtonIcon
+                        : undefined}
                     rightButton="fa-gear"
                     on:leftbuttonclick={showInfo}
                     on:rightbuttonclick={toggleSettings}
@@ -59,7 +62,11 @@
             </div>
         {:else}
             <div class="settings-wrapper" transition:fade={{ duration: 200 }}>
-                <PanelHeader title="Settings" on:close={toggleSettings} />
+                <PanelHeader
+                    title={Content.settingsTitle}
+                    description={Content.settingsDescription}
+                    on:close={toggleSettings}
+                />
                 <SettingsContent />
             </div>
         {/if}
