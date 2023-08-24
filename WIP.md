@@ -23,7 +23,7 @@ Ongoing notes for Sketchbook development.
 
 For each setting, user can configure default value, and whether it's shown in the user's settings panel (does this work for everything?)
 
-Maybe in content.json (what's on the page)
+Maybe in content.ts (what's on the page)
 
 -   Title
 -   Subtitle
@@ -98,7 +98,8 @@ Use cases: modes (w/ options), sections, functionality only defined with some va
 ## Miscellany
 
 -   Test coverage:
-    -   Settings panel (and AppState)
+    -   App state store
+    -   Settings panel
     -   Project detail panel (component tests)
 -   Project sorting: put projects with no date at the top when sorting chronologically
 -   Group sorting options...

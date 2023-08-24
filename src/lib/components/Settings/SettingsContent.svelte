@@ -12,7 +12,7 @@
     import type { ParamConfig } from '$lib/base/ParamConfig/ParamConfig';
     import { settingsParamConfigs } from './SettingsParamConfigs';
     import FunctionInput from '../ParamItem/FunctionInput.svelte';
-    import Content from '../../../config/content';
+    import { content } from '../../../config/content';
 
     // Settings value configs are backed by values in the AppStateStore object
     const settingsValueConfigs = Object.keys(userSettingsLabels).map((key) => {
@@ -62,7 +62,7 @@
         {/each}
     </div>
     <div class="reset-wrapper">
-        <FunctionInput buttonText={Content.settingsTitle} on:click={resetSketchbook} />
+        <FunctionInput buttonText={content.settingsTitle} on:click={resetSketchbook} />
     </div>
 </div>
 

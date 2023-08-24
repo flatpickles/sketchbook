@@ -1,7 +1,7 @@
 <script lang="ts">
     import { fade } from 'svelte/transition';
 
-    import Content from '../../config/content';
+    import { content } from '../../config/content';
     import { AppStateStore } from '$lib/base/AppState';
 
     import type { ProjectConfig } from '$lib/base/ProjectConfig/ProjectConfig';
@@ -13,10 +13,9 @@
     import SettingsContent from './Settings/SettingsContent.svelte';
 
     export let projects: Record<string, ProjectConfig>;
-
     export let selectedProjectKey: string;
-    let selectedGroup: string | undefined;
 
+    let selectedGroup: string | undefined;
     let settingsDisplayed = false;
 
     function closePanel() {
@@ -24,8 +23,8 @@
     }
 
     function showInfo() {
-        if (!Content.leftButtonLink) throw new Error('No info link defined');
-        document.location.href = Content.leftButtonLink;
+        if (!content.leftButtonLink) throw new Error('No info link defined');
+        document.location.href = content.leftButtonLink;
     }
 
     function toggleSettings() {
@@ -38,9 +37,9 @@
         {#if !settingsDisplayed}
             <div class="main-wrapper" transition:fade={{ duration: 200 }}>
                 <PanelHeader
-                    title={Content.title}
-                    subtitle={Content.subtitle}
-                    description={Content.description}
+                    title={content.title}
+                    subtitle={content.subtitle}
+                    description={content.description}
                     on:close={closePanel}
                 />
                 <GroupSelector projects={Object.values(projects)} bind:selectedGroup />
@@ -51,9 +50,9 @@
                     sorting={$AppStateStore.projectSortOrder}
                 />
                 <PanelFooter
-                    footerText={Content.footer}
-                    leftButton={Content.leftButtonIcon && Content.leftButtonLink
-                        ? Content.leftButtonIcon
+                    footerText={content.footer}
+                    leftButton={content.leftButtonIcon && content.leftButtonLink
+                        ? content.leftButtonIcon
                         : undefined}
                     rightButton="fa-gear"
                     on:leftbuttonclick={showInfo}
@@ -63,8 +62,8 @@
         {:else}
             <div class="settings-wrapper" transition:fade={{ duration: 200 }}>
                 <PanelHeader
-                    title={Content.settingsTitle}
-                    description={Content.settingsDescription}
+                    title={content.settingsTitle}
+                    description={content.settingsDescription}
                     on:close={toggleSettings}
                 />
                 <SettingsContent />

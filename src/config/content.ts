@@ -14,7 +14,7 @@ const settingsDescription = ``;
 const resetButtonLabel = 'Reset Sketchbook';
 
 // Export all content for use elsewhere in the app
-export default {
+export const content = {
     title,
     subtitle,
     description,

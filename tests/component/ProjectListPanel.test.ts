@@ -1,52 +1,42 @@
 import { render, fireEvent, screen, cleanup } from '@testing-library/svelte';
-import { describe, it, expect, afterEach, beforeAll } from 'vitest';
+import { vi, describe, it, expect, afterEach, beforeAll } from 'vitest';
 import { ProjectConfigFactory } from '$lib/base/ProjectConfig/ProjectConfigFactory';
 import ProjectListPanel from '$lib/components/ProjectListPanel.svelte';
-import { type SketchbookConfig, ProjectSortType } from '$lib/base/FileLoading/SketchbookConfig';
+
+import { content } from '../../src/config/content';
+import { config, SortOrder } from '../../src/config/config';
 
 describe('ProjectListPanel rendering', () => {
     afterEach(cleanup);
 
     it('uses the sketchbookConfig values', async () => {
-        const sketchbookConfig: SketchbookConfig = {
-            title: 'Test Title',
-            subtitle: 'Test Subtitle',
-            description: 'Test Description',
-            footer: 'Test Footer',
-            sorting: ProjectSortType.Alphabetical,
-            defaultGroup: undefined,
-            storeParamValues: false,
-            storeProjectSelection: false
-        };
+        vi.spyOn(content, 'title', 'get').mockReturnValue('test title');
+        vi.spyOn(content, 'subtitle', 'get').mockReturnValue('test subtitle');
+        vi.spyOn(content, 'description', 'get').mockReturnValue('test description');
+        vi.spyOn(content, 'footer', 'get').mockReturnValue('test footer');
+
         render(ProjectListPanel, {
-            sketchbookConfig: sketchbookConfig,
             projects: {},
             selectedProjectKey: 'test'
         });
 
         const title = screen.getByTestId('header-title');
-        expect(title.textContent).toBe(sketchbookConfig.title);
+        expect(title.textContent).toBe('test title');
         const subtitle = screen.getByTestId('header-subtitle');
-        expect(subtitle.textContent).toBe(sketchbookConfig.subtitle);
+        expect(subtitle.textContent).toBe('test subtitle');
+
         const description = screen.getByTestId('header-description');
-        expect(description.textContent).toBe(sketchbookConfig.description);
+        expect(description.textContent).toBe('test description');
         const footer = screen.getByTestId('footer-text');
-        expect(footer.textContent).toBe(sketchbookConfig.footer);
+        expect(footer.textContent).toBe('test footer');
     });
 
     it('does not render subtitle or description if not provided', async () => {
-        const sketchbookConfig: SketchbookConfig = {
-            title: 'Test Title',
-            subtitle: undefined,
-            description: undefined,
-            footer: undefined,
-            sorting: ProjectSortType.Alphabetical,
-            defaultGroup: undefined,
-            storeParamValues: false,
-            storeProjectSelection: false
-        };
+        vi.spyOn(content, 'title', 'get').mockReturnValue('test title');
+        vi.spyOn(content, 'subtitle', 'get').mockReturnValue('');
+        vi.spyOn(content, 'description', 'get').mockReturnValue('');
+
         render(ProjectListPanel, {
-            sketchbookConfig: sketchbookConfig,
             projects: {},
             selectedProjectKey: 'test'
         });
@@ -60,16 +50,8 @@ describe('ProjectListPanel rendering', () => {
     });
 
     it('renders projects alphabetically', async () => {
-        const sketchbookConfig: SketchbookConfig = {
-            title: 'Test Title',
-            subtitle: undefined,
-            description: undefined,
-            footer: undefined,
-            sorting: ProjectSortType.Alphabetical,
-            defaultGroup: undefined,
-            storeParamValues: false,
-            storeProjectSelection: false
-        };
+        vi.spyOn(config, 'projectSortOrder', 'get').mockReturnValue(SortOrder.Alphabetical);
+
         const projects = {
             banana: ProjectConfigFactory.propsFrom({
                 title: 'Banana',
@@ -85,7 +67,6 @@ describe('ProjectListPanel rendering', () => {
             })
         };
         render(ProjectListPanel, {
-            sketchbookConfig: sketchbookConfig,
             projects: projects,
             selectedProjectKey: 'banana'
         });
@@ -97,17 +78,9 @@ describe('ProjectListPanel rendering', () => {
         expect(listItems[2].textContent).toContain('Carrot');
     });
 
-    it('renders projects by date', async () => {
-        const sketchbookConfig: SketchbookConfig = {
-            title: 'Test Title',
-            subtitle: undefined,
-            description: undefined,
-            footer: undefined,
-            sorting: ProjectSortType.Date,
-            defaultGroup: undefined,
-            storeParamValues: false,
-            storeProjectSelection: false
-        };
+    it('renders projects reverse chronologically', async () => {
+        vi.spyOn(config, 'projectSortOrder', 'get').mockReturnValue(SortOrder.ReverseChronological);
+
         const projects = {
             banana: ProjectConfigFactory.propsFrom({
                 title: 'Banana',
@@ -123,7 +96,6 @@ describe('ProjectListPanel rendering', () => {
             })
         };
         render(ProjectListPanel, {
-            sketchbookConfig: sketchbookConfig,
             projects: projects,
             selectedProjectKey: 'banana'
         });
@@ -135,17 +107,9 @@ describe('ProjectListPanel rendering', () => {
         expect(listItems[2].textContent).toContain('Banana');
     });
 
-    it('selects the proper project via selectedProjectKey', async () => {
-        const sketchbookConfig: SketchbookConfig = {
-            title: 'Test Title',
-            subtitle: undefined,
-            description: undefined,
-            footer: undefined,
-            sorting: ProjectSortType.Date,
-            defaultGroup: undefined,
-            storeParamValues: false,
-            storeProjectSelection: false
-        };
+    it('renders projects chronologically', async () => {
+        vi.spyOn(config, 'projectSortOrder', 'get').mockReturnValue(SortOrder.Chronological);
+
         const projects = {
             banana: ProjectConfigFactory.propsFrom({
                 title: 'Banana',
@@ -161,7 +125,33 @@ describe('ProjectListPanel rendering', () => {
             })
         };
         render(ProjectListPanel, {
-            sketchbookConfig: sketchbookConfig,
+            projects: projects,
+            selectedProjectKey: 'banana'
+        });
+
+        const listItems = screen.getAllByTestId('project-list-item');
+        expect(listItems.length).toBe(3);
+        expect(listItems[0].textContent).toContain('Banana');
+        expect(listItems[1].textContent).toContain('Apple');
+        expect(listItems[2].textContent).toContain('Carrot');
+    });
+
+    it('selects the proper project via selectedProjectKey', async () => {
+        const projects = {
+            banana: ProjectConfigFactory.propsFrom({
+                title: 'Banana',
+                date: '2021-01-01'
+            }),
+            apple: ProjectConfigFactory.propsFrom({
+                title: 'Apple',
+                date: '2021-01-03'
+            }),
+            carrot: ProjectConfigFactory.propsFrom({
+                title: 'Carrot',
+                date: '2022-01-02'
+            })
+        };
+        render(ProjectListPanel, {
             projects: projects,
             selectedProjectKey: 'apple'
         });
@@ -175,16 +165,6 @@ describe('ProjectListPanel interaction', () => {
     afterEach(cleanup);
 
     beforeAll(() => {
-        const sketchbookConfig: SketchbookConfig = {
-            title: 'Test Title',
-            subtitle: undefined,
-            description: undefined,
-            footer: undefined,
-            sorting: ProjectSortType.Date,
-            defaultGroup: undefined,
-            storeParamValues: false,
-            storeProjectSelection: false
-        };
         const projects = {
             banana: ProjectConfigFactory.propsFrom({
                 title: 'Banana',
@@ -203,7 +183,6 @@ describe('ProjectListPanel interaction', () => {
             })
         };
         render(ProjectListPanel, {
-            sketchbookConfig: sketchbookConfig,
             projects: projects,
             selectedProjectKey: 'Banana'
         });
