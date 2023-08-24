@@ -1,21 +1,23 @@
 <script lang="ts">
-    import { ProjectSortType } from '$lib/base/FileLoading/SketchbookConfig';
     import type { ProjectConfig } from '$lib/base/ProjectConfig/ProjectConfig';
+    import { SortOrder } from '../../config/config';
 
     export let projects: Record<string, ProjectConfig>;
     export let selectedProjectKey: string;
-    export let sorting: ProjectSortType = ProjectSortType.Date;
+    export let sorting: SortOrder = SortOrder.ReverseChronological;
     export let selectedGroup: string | undefined = undefined;
 
     $: sortedKeys = Object.keys(projects).sort((a, b) => {
         const projectA = projects[a];
         const projectB = projects[b];
+        const timeA = projectA.date ? projectA.date.getTime() : 0;
+        const timeB = projectB.date ? projectB.date.getTime() : 0;
         switch (sorting) {
-            case ProjectSortType.Alphabetical:
+            case SortOrder.Alphabetical:
                 return projectA.title.localeCompare(projectB.title);
-            case ProjectSortType.Date:
-                const timeA = projectA.date ? projectA.date.getTime() : 0;
-                const timeB = projectB.date ? projectB.date.getTime() : 0;
+            case SortOrder.Chronological:
+                return timeA - timeB;
+            case SortOrder.ReverseChronological:
                 return timeB - timeA;
         }
     });

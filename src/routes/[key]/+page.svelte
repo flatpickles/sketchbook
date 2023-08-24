@@ -11,10 +11,6 @@
     <title>{data.projectTuple.props.title}</title>
 </svelte:head>
 
-<ProjectListPanel
-    projects={data.projects}
-    sketchbookConfig={data.sketchbook}
-    selectedProjectKey={data.projectKey}
-/>
+<ProjectListPanel projects={data.projects} selectedProjectKey={data.projectKey} />
 <CanvasViewer project={data.projectTuple.project} />
 <ProjectDetailPanel projectTuple={data.projectTuple} />

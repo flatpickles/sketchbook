@@ -2,7 +2,8 @@
     import { fade } from 'svelte/transition';
 
     import Content from '../../config/content';
-    import type { SketchbookConfig } from '$lib/base/FileLoading/SketchbookConfig';
+    import { AppStateStore } from '$lib/base/AppState';
+
     import type { ProjectConfig } from '$lib/base/ProjectConfig/ProjectConfig';
     import GroupSelector from './GroupSelector.svelte';
     import Panel from './Panel.svelte';
@@ -11,7 +12,6 @@
     import ProjectList from './ProjectList.svelte';
     import SettingsContent from './Settings/SettingsContent.svelte';
 
-    export let sketchbookConfig: SketchbookConfig;
     export let projects: Record<string, ProjectConfig>;
 
     export let selectedProjectKey: string;
@@ -48,7 +48,7 @@
                     {projects}
                     {selectedGroup}
                     {selectedProjectKey}
-                    sorting={sketchbookConfig.sorting}
+                    sorting={$AppStateStore.projectSortOrder}
                 />
                 <PanelFooter
                     footerText={Content.footer}

@@ -18,14 +18,16 @@ function createStateStore() {
         // Otherwise, use the value in local storage
         initialState[key] = JSON.parse(localStorage.getItem(key) || fileValue);
     }
-    const { subscribe, set } = writable(initialState);
+
+    // Create the backing store, using typeof config for member completion
+    const { subscribe, set } = writable(initialState as typeof config);
 
     // Persist only values that are specified in userSettingsLabels
     const setAndPersist = (state: Record<string, AnyParamValueType>) => {
         for (const key in userSettingsLabels) {
             localStorage.setItem(key, JSON.stringify(state[key]));
         }
-        set(state);
+        set(state as typeof config);
     };
 
     return {

@@ -3,7 +3,7 @@ const showExperiments = false;
 
 // The default state of the project list and detail panels
 // Panels can toggle between 'hidden' and 'visible', but will not be present if set to 'unavailable'
-enum PanelState {
+export enum PanelState {
     Hidden = 'hidden',
     Visible = 'visible',
     Unavailable = 'unavailable'
@@ -12,7 +12,7 @@ const defaultProjectListState = PanelState.Visible;
 const defaultProjectDetailState = PanelState.Visible;
 
 // Project and group label sorting
-enum SortOrder {
+export enum SortOrder {
     Alphabetical = 'alphabetical',
     Chronological = 'chronological',
     ReverseChronological = 'reverse-chronological'

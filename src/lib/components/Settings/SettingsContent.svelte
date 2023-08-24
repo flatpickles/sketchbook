@@ -34,7 +34,11 @@
             throw new Error("Function params shouldn't be present in the settings panel");
         } else {
             const value: ParamValueType<typeof updatedConfig> = event.detail.value;
-            $AppStateStore[updatedConfig.key] = value;
+            const newState = {
+                ...get(AppStateStore),
+                [updatedConfig.key]: value
+            };
+            AppStateStore.set(newState);
         }
     }
 
@@ -58,7 +62,7 @@
         {/each}
     </div>
     <div class="reset-wrapper">
-        <FunctionInput buttonText={Content.resetButtonLabel} on:click={resetSketchbook} />
+        <FunctionInput buttonText={Content.settingsTitle} on:click={resetSketchbook} />
     </div>
 </div>
 
