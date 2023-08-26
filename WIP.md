@@ -6,6 +6,10 @@ Ongoing notes for Sketchbook development.
 
 # Current scope:
 
+-   Rename singletons with Capital
+-   Move AppState somewhere sensible
+-   Resolve todo at bottom of AppState
+
 ## Johan's feedback (8/23):
 
 -   maybe rename update method; "update" implies it runs every frame
@@ -98,7 +102,6 @@ Use cases: modes (w/ options), sections, functionality only defined with some va
 ## Miscellany
 
 -   Test coverage:
-    -   App state store
     -   Settings panel
     -   Project detail panel (component tests)
 -   Project sorting: put projects with no date at the top when sorting chronologically

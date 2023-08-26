@@ -4,20 +4,24 @@ import type { AnyParamValueType } from './ParamConfig/ParamTypes';
 
 function createStateStore() {
     // Restore only values that are specified in userSettingsLabels
-    const initialState: Record<string, AnyParamValueType> = config;
-    for (const key in userSettingsLabels) {
-        // Use the new value in the backing file if it's been changed
-        const fileValue = JSON.stringify(initialState[key]);
-        const lastFileValue = localStorage.getItem(`lastFileValue_${key}`);
-        localStorage.setItem(`lastFileValue_${key}`, fileValue);
-        if (lastFileValue && lastFileValue !== fileValue) {
-            localStorage.setItem(key, fileValue);
-            continue;
-        }
+    let initialState: Record<string, AnyParamValueType> = config;
+    const resetState = () => {
+        initialState = config;
+        for (const key in userSettingsLabels) {
+            // Use the new value in the backing file if it's been changed
+            const fileValue = JSON.stringify(initialState[key]);
+            const lastFileValue = localStorage.getItem(`lastFileValue_${key}`);
+            localStorage.setItem(`lastFileValue_${key}`, fileValue);
+            if (lastFileValue && lastFileValue !== fileValue) {
+                localStorage.setItem(key, fileValue);
+                continue;
+            }
 
-        // Otherwise, use the value in local storage
-        initialState[key] = JSON.parse(localStorage.getItem(key) || fileValue);
-    }
+            // Otherwise, use the value in local storage
+            initialState[key] = JSON.parse(localStorage.getItem(key) || fileValue);
+        }
+    };
+    resetState();
 
     // Create the backing store, using typeof config for member completion
     const { subscribe, set } = writable(initialState as typeof config);
@@ -30,9 +34,16 @@ function createStateStore() {
         set(state as typeof config);
     };
 
+    // Reset the store to the initial state (closure ftw)
+    const reset = () => {
+        resetState();
+        set(initialState as typeof config);
+    };
+
     return {
         subscribe,
-        set: setAndPersist
+        set: setAndPersist,
+        reset
     };
 }
 
