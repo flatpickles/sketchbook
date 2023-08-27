@@ -2,7 +2,7 @@
     import { fade } from 'svelte/transition';
 
     import { content } from '../../config/content';
-    import { AppStateStore } from '$lib/base/AppState';
+    import { settingsStore } from '$lib/base/Util/AppState';
 
     import type { ProjectConfig } from '$lib/base/ProjectConfig/ProjectConfig';
     import GroupSelector from './GroupSelector.svelte';
@@ -47,7 +47,7 @@
                     {projects}
                     {selectedGroup}
                     {selectedProjectKey}
-                    sorting={$AppStateStore.projectSortOrder}
+                    sorting={$settingsStore.projectSortOrder}
                 />
                 <PanelFooter
                     footerText={content.footer}

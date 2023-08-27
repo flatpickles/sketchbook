@@ -1,8 +1,13 @@
 import { writable } from 'svelte/store';
-import { config, userSettingsLabels } from '../../config/config';
-import type { AnyParamValueType } from './ParamConfig/ParamTypes';
+import { config, userSettingsLabels } from '../../../config/config';
+import type { AnyParamValueType } from '../ParamConfig/ParamTypes';
+import { persisted } from 'svelte-local-storage-store';
 
-function createStateStore() {
+/**
+ * Custom Svelte store that wraps the config object and persists config values
+ * that are specified in userSettingsLabels to local storage.
+ */
+function createSettingsStore() {
     // Restore only values that are specified in userSettingsLabels
     let initialState: Record<string, AnyParamValueType> = config;
     const resetState = () => {
@@ -47,7 +52,12 @@ function createStateStore() {
     };
 }
 
-export const AppStateStore = createStateStore();
-
-// todo: this should be "app config store" maybe, and we can also have a
-// state store for stuff like selected project, etc...
+// Create and export stores for app settings and state
+const settingsStore = createSettingsStore();
+const stateStore = persisted('state', {
+    projectListState: config.defaultProjectListState,
+    projectDetailState: config.defaultProjectDetailState,
+    selectedProjectKey: '',
+    selectedGroupName: ''
+});
+export { settingsStore, stateStore };

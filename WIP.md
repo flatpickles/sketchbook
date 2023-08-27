@@ -6,10 +6,6 @@ Ongoing notes for Sketchbook development.
 
 # Current scope:
 
--   Rename singletons with Capital
--   Move AppState somewhere sensible
--   Resolve todo at bottom of AppState
-
 ## Johan's feedback (8/23):
 
 -   maybe rename update method; "update" implies it runs every frame
@@ -24,8 +20,6 @@ Ongoing notes for Sketchbook development.
 -   Wouldn't often want to see project list as a first-class citizen during dev mode. That's kind of a portfolio feature. Could be remedied just by keeping the panel closed.
 
 ## Settings // app configuration
-
-For each setting, user can configure default value, and whether it's shown in the user's settings panel (does this work for everything?)
 
 Maybe in content.ts (what's on the page)
 
@@ -80,6 +74,7 @@ Maybe in theme.scss (how it looks)
     -   Save these so we can see when the user updated default, to use this instead of saved state (with no preset selected)
     -   Use these with double-click to reset to default (when no preset is selected)
 -   Min/max range slider? (style for 2-member numeric array, maybe)
+-   Full width description text paired with a param input (useful in settings)
 
 ### Value Effects
 
@@ -104,6 +99,7 @@ Use cases: modes (w/ options), sections, functionality only defined with some va
 -   Test coverage:
     -   Settings panel
     -   Project detail panel (component tests)
+    -   Project list panel (header/footer components etc)
 -   Project sorting: put projects with no date at the top when sorting chronologically
 -   Group sorting options...
 -   Section sorting options...
@@ -138,6 +134,7 @@ Use cases: modes (w/ options), sections, functionality only defined with some va
     -   Defaults for all settings
     -   (maybe this is just user-visible stuff? see below)
 -   In config interfaces, maybe use optional members?
+-   Preserve project state through a session (ie don't reinstantiate project and keep loaded files)
 
 # Miscellaneous / notes:
 

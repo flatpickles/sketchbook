@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach } from 'vitest';
-import { AppStateStore } from '$lib/base/AppState';
+import { settingsStore } from '$lib/base/Util/AppState';
 
 import { PanelState, SortOrder, config } from '../../src/config/config';
 import { get } from 'svelte/store';
@@ -7,30 +7,30 @@ import { get } from 'svelte/store';
 describe('AppStateStore', () => {
     afterEach(() => {
         localStorage.clear();
-        AppStateStore.reset();
+        settingsStore.reset();
     });
 
     it('stores and restores properly typed settings', () => {
         // Check default values
-        expect(get(AppStateStore).showExperiments).toBe(config.showExperiments);
-        expect(get(AppStateStore).projectSortOrder).toBe(config.projectSortOrder);
-        expect(get(AppStateStore).groupSortOrder).toBe(config.groupSortOrder);
-        expect(get(AppStateStore).defaultProjectListState).toBe(config.defaultProjectListState);
-        expect(get(AppStateStore).defaultProjectDetailState).toBe(config.defaultProjectDetailState);
+        expect(get(settingsStore).showExperiments).toBe(config.showExperiments);
+        expect(get(settingsStore).projectSortOrder).toBe(config.projectSortOrder);
+        expect(get(settingsStore).groupSortOrder).toBe(config.groupSortOrder);
+        expect(get(settingsStore).defaultProjectListState).toBe(config.defaultProjectListState);
+        expect(get(settingsStore).defaultProjectDetailState).toBe(config.defaultProjectDetailState);
 
         // Check set values (these should be different than the config defaults)
-        AppStateStore.set({
+        settingsStore.set({
             showExperiments: true,
             projectSortOrder: SortOrder.Alphabetical,
             groupSortOrder: SortOrder.Chronological,
             defaultProjectListState: PanelState.Visible,
             defaultProjectDetailState: PanelState.Unavailable
         });
-        expect(get(AppStateStore).showExperiments).toBe(true);
-        expect(get(AppStateStore).projectSortOrder).toBe(SortOrder.Alphabetical);
-        expect(get(AppStateStore).groupSortOrder).toBe(SortOrder.Chronological);
-        expect(get(AppStateStore).defaultProjectListState).toBe(PanelState.Visible);
-        expect(get(AppStateStore).defaultProjectDetailState).toBe(PanelState.Unavailable);
+        expect(get(settingsStore).showExperiments).toBe(true);
+        expect(get(settingsStore).projectSortOrder).toBe(SortOrder.Alphabetical);
+        expect(get(settingsStore).groupSortOrder).toBe(SortOrder.Chronological);
+        expect(get(settingsStore).defaultProjectListState).toBe(PanelState.Visible);
+        expect(get(settingsStore).defaultProjectDetailState).toBe(PanelState.Unavailable);
     });
 
     it('only persists values that are specified in userSettingsLabels', () => {
@@ -39,7 +39,7 @@ describe('AppStateStore', () => {
         expect(localStorage.getItem('projectSortOrder')).toBeNull();
 
         // Check set values (these should be different than the config defaults)
-        AppStateStore.set({
+        settingsStore.set({
             showExperiments: true,
             projectSortOrder: SortOrder.ReverseChronological,
             groupSortOrder: SortOrder.Alphabetical,
@@ -63,9 +63,9 @@ describe('AppStateStore', () => {
         // despite projectSortOrder in LS, which would be the last user setting here
         localStorage.setItem('lastFileValue_projectSortOrder', 'reverse-chronological');
         localStorage.setItem('projectSortOrder', 'alphabetical');
-        AppStateStore.reset();
-        expect(get(AppStateStore).showExperiments).toBe(false);
-        expect(get(AppStateStore).projectSortOrder).toBe(SortOrder.Chronological);
+        settingsStore.reset();
+        expect(get(settingsStore).showExperiments).toBe(false);
+        expect(get(settingsStore).projectSortOrder).toBe(SortOrder.Chronological);
         expect(localStorage.getItem('lastFileValue_projectSortOrder')).toContain('chronological');
         expect(localStorage.getItem('projectSortOrder')).toContain('chronological');
     });

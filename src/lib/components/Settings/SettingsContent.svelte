@@ -1,7 +1,7 @@
 <script lang="ts">
     import ParamItem from '../ParamItem/ParamItem.svelte';
     import { get } from 'svelte/store';
-    import { AppStateStore } from '$lib/base/AppState';
+    import { settingsStore } from '$lib/base/Util/AppState';
     import { userSettingsLabels } from '../../../config/config';
 
     import {
@@ -35,16 +35,16 @@
         } else {
             const value: ParamValueType<typeof updatedConfig> = event.detail.value;
             const newState = {
-                ...get(AppStateStore),
+                ...get(settingsStore),
                 [updatedConfig.key]: value
             };
-            AppStateStore.set(newState);
+            settingsStore.set(newState);
         }
     }
 
     // Get the properly typed initial value for a given param
     function initialValueForParam<T extends ParamConfig>(paramConfig: T): ParamValueType<T> {
-        const currentSettings: Record<string, AnyParamValueType> = get(AppStateStore);
+        const currentSettings: Record<string, AnyParamValueType> = get(settingsStore);
         return currentSettings[paramConfig.key] as ParamValueType<T>;
     }
 </script>
