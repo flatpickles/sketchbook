@@ -2,8 +2,16 @@ import CanvasViewer from '$lib/components/CanvasViewer.svelte';
 import Project from '$lib/base/Project';
 
 import { render, cleanup } from '@testing-library/svelte';
-import { describe, it, expect, vi, afterEach } from 'vitest';
+import { describe, it, expect, vi, afterEach, type Mock } from 'vitest';
+import P5Project from '$lib/base/P5Project';
 
+// P5 throws errors when running in unit tests, so we mock it out fully.
+// This precludes more rigorous DOM testing, but it's better than nothing.
+import * as exportsP5 from 'p5';
+const mockedP5: Mock = vi.spyOn(exportsP5, 'default');
+mockedP5.mockImplementation(() => vi.fn());
+
+// Mocking for getContext is required for HTMLCanvasElement to work with Jest
 // https://github.com/hustcc/jest-canvas-mock/issues/2
 global.HTMLCanvasElement.prototype.getContext = () => null;
 
@@ -15,7 +23,7 @@ describe('CanvasViewer', () => {
             project: new Project()
         });
 
-        const canvas = getByTestId('main-canvas');
+        const canvas = getByTestId('shared-canvas');
         expect(canvas).toBeDefined();
     });
 
@@ -30,17 +38,19 @@ describe('CanvasViewer', () => {
         expect(proj.init).toHaveBeenCalled();
         expect(proj.update).toHaveBeenCalled();
 
-        const canvas = getByTestId('main-canvas');
+        const canvas = getByTestId('shared-canvas');
         expect(canvas).toBeDefined();
+        expect(canvas.classList.contains('hidden')).toBe(false);
     });
 
-    it('defines a canvas object for the project when rendering', async () => {
+    it('defines canvas and container objects for the project when rendering', async () => {
         const proj = new Project();
         expect(proj.canvas).toBeUndefined();
         render(CanvasViewer, {
             project: proj
         });
         expect(proj.canvas).toBeDefined();
+        expect(proj.container).toBeDefined();
     });
 
     it('destroys an old project when rendering a new one', async () => {
@@ -53,5 +63,23 @@ describe('CanvasViewer', () => {
 
         component.project = new Project();
         expect(proj1.destroy).toHaveBeenCalled();
+    });
+});
+
+describe('CanvasViewer w/ P5', () => {
+    afterEach(cleanup);
+
+    it("doesn't use the shared canvas, instead instantiates P5", async () => {
+        const proj = new P5Project();
+
+        expect(mockedP5).toHaveBeenCalledTimes(0);
+        const { getByTestId } = render(CanvasViewer, {
+            project: proj
+        });
+
+        const canvas = getByTestId('shared-canvas');
+        expect(canvas.classList.contains('hidden')).toBe(true);
+        expect(proj.canvas).toBeUndefined();
+        expect(mockedP5).toHaveBeenCalledTimes(1);
     });
 });

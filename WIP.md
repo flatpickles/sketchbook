@@ -6,6 +6,8 @@ Ongoing notes for Sketchbook development.
 
 # Current scope:
 
+-   Flash of white when loading P5 projects (and maybe others) - can this be avoided?
+
 ## Johan's feedback (8/23):
 
 -   maybe rename update method; "update" implies it runs every frame
@@ -93,6 +95,7 @@ Use cases: modes (w/ options), sections, functionality only defined with some va
     -   Settings panel
     -   Project detail panel (component tests)
     -   Project list panel (header/footer components etc)
+-   Check to see if classes are actually Project subclasses when loading (otherwise we get confusing errors)
 -   Project key:
     -   Use key instead of name in saved state
     -   User-defined keys used for project URL
@@ -216,7 +219,7 @@ Use cases: modes (w/ options), sections, functionality only defined with some va
 -   Prototype & publish in the same place:
     -   Start a project as quickly as possible: idea to pixels without losing a train of thought. Creative workflow optimized from the moment of first concept.
     -   Create something that's inviting for others to play with. Comprehensive and intuitive presentation out of the box, with options to enable even more functionality.
--   Light-weight but heavy-duty.
+-   Light-weight ergonomics // heavy-duty functionality.
     -   Opt-in customizablility. Sketchbook presents options for deep flexibility, but you can start any project without even creating a config file, and add complexity as you need it.
     -   Create portable work. Easily carry your projects into another context (client work, etc) with minimal transportation cost (redesigning, rebuilding).
 

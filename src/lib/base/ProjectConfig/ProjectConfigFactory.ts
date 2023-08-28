@@ -1,7 +1,10 @@
 import type { ParamConfig } from '../ParamConfig/ParamConfig';
 import { ParamConfigFactory } from '../ParamConfig/ParamConfigFactory';
-import Project from '../Project';
+import type Project from '../Project';
 import { type ProjectConfig, ProjectConfigDefaults } from './ProjectConfig';
+
+// Keys that should be ignored when creating a ProjectConfig object from a Project object
+const paramKeysToIgnore = ['canvas', 'container', 'useSharedCanvas'];
 
 export class ProjectConfigFactory {
     /**
@@ -50,17 +53,15 @@ export class ProjectConfigFactory {
         const params: ParamConfig[] = [];
 
         // Get the list of params from the Project object
-        const templateProject = new Project();
-        const baseProperties = Object.getOwnPropertyNames(templateProject);
         const paramKeys = Object.getOwnPropertyNames(project).filter(
-            (key) => baseProperties.indexOf(key) < 0
+            (key) => paramKeysToIgnore.indexOf(key) < 0
         );
 
         // Create ParamConfig objects for each param, using config data if available
         for (const key of paramKeys) {
             // Derive a ParamConfig object
             const propertyDescriptor = Object.getOwnPropertyDescriptor(project, key);
-            if (!propertyDescriptor || !propertyDescriptor.value)
+            if (!propertyDescriptor || propertyDescriptor.value == undefined)
                 throw new Error('No param value available: ' + key);
             const configData = data ? data[key] : undefined;
             const paramConfig = ParamConfigFactory.configFrom(

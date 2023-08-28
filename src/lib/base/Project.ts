@@ -1,30 +1,45 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 
 /**
- * A simple base class for all projects in src/art.
+ * A base class for all projects in src/art.
  */
 export default class Project {
     /**
-     * The canvas element that this project will draw to, set automatically when
-     * the project is selected.
+     * A canvas element that this project can draw to. This will be set automatically before init
+     * is called, and the size will be set to fill to the container div (its parent). It will be
+     * undefined if useSharedCanvas (below) is set to `false`.
      */
-    canvas: HTMLCanvasElement | undefined;
+    canvas?: HTMLCanvasElement;
 
     /**
-     * init is called once when the project is first loaded, after this.canvas
-       becomes available. Override this with any custom initialization behavior.
+     * A div element that this project will use as a container. This will be set automatically
+     * before init is called, and the size will be set to fill as much space as possible (dependant
+     * on your layout configuration).
+     */
+    container!: HTMLDivElement;
+
+    /**
+     * Whether this project will use the shared canvas element (above), or create its own. You may
+     * wish to override this to `false` if you're using a library that creates its own canvas (e.g.
+     * P5), or if you're working on a project that isn't canvas-based.
+     */
+    useSharedCanvas = true;
+
+    /**
+     * init is called once when the project is first loaded, after this.canvas and this.container
+       become available. Override this with any custom initialization behavior.
      */
     public init() {}
 
     /**
-     * update is called after init, and then whenever any parameters are updated.
-     * Override this with your custom drawing code.
+     * update is called after init, and then whenever any parameters are updated. Override this with
+     * your custom drawing code.
      */
     public update() {}
 
     /**
-     * destroy is called when the project is unloaded, i.e. when another project
-     * is selected. Override this with any custom cleanup behavior.
+     * destroy is called when the project is unloaded, i.e. when another project is selected.
+     * Override this with any custom cleanup behavior.
      */
     public destroy() {
         // By default, clear the canvas when the project is unloaded.
