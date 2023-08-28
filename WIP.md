@@ -21,16 +21,9 @@ Ongoing notes for Sketchbook development.
 
 ## Settings // app configuration
 
-Maybe in content.ts (what's on the page)
+content.ts: what's on the page
 
--   Title
--   Subtitle
--   Description
--   Footer
--   Info link
--   Default group
-
-Maybe in config.ts (how it behaves)
+config.ts: how it behaves
 
 -   Show experimental projects
 -   Canvas size // sizing behavior
@@ -39,7 +32,7 @@ Maybe in config.ts (how it behaves)
     -   Enable/disable
     -   Shown/hidden defaults
     -   Show/hide behavior (mouse hover / movement / double click / etc)
--   Project sorting // group sorting
+-   Project sorting // group sorting (done)
 -   App state storage behavior (on/off)
     -   project selection, for navigation to (/)
     -   preset selection + set parameter values
@@ -100,8 +93,7 @@ Use cases: modes (w/ options), sections, functionality only defined with some va
     -   Settings panel
     -   Project detail panel (component tests)
     -   Project list panel (header/footer components etc)
--   Group sorting options...
--   Section sorting options...
+-   Experiments!
 -   Project key:
     -   Use key instead of name in saved state
     -   User-defined keys used for project URL

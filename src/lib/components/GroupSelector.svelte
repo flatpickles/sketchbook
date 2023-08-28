@@ -1,18 +1,31 @@
 <script lang="ts">
     import type { ProjectConfig } from '$lib/base/ProjectConfig/ProjectConfig';
+    import { SortOrder } from '../../config/config';
     export let projects: ProjectConfig[];
+    export let sorting: SortOrder = SortOrder.Alphabetical;
     export let selectedGroup: string | undefined = undefined;
 
     // Procure the sorted groups list
+    const chronologicalProjects = projects.sort((a, b) => {
+        const timeA = a.date ? a.date.getTime() : Date.now();
+        const timeB = b.date ? b.date.getTime() : Date.now();
+        return timeA - timeB;
+    });
     const groups = new Set(
-        projects.reduce((acc, project) => {
+        chronologicalProjects.reduce((acc, project) => {
             if (project.groups && project.groups.length > 0) {
                 return acc.concat(project.groups);
             }
             return acc;
         }, [] as string[])
     );
-    const sortedGroups = Array.from(groups).sort((a, b) => a.localeCompare(b));
+    const groupsArray = Array.from(groups);
+    const sortedGroups =
+        sorting === SortOrder.Chronological
+            ? groupsArray
+            : sorting === SortOrder.ReverseChronological
+            ? groupsArray.reverse()
+            : groupsArray.sort((a, b) => a.localeCompare(b));
 
     // Handle group clicks
     function handleGroupClick(event: UIEvent) {

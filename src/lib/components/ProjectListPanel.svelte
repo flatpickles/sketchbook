@@ -42,7 +42,11 @@
                     description={content.description}
                     on:close={closePanel}
                 />
-                <GroupSelector projects={Object.values(projects)} bind:selectedGroup />
+                <GroupSelector
+                    projects={Object.values(projects)}
+                    bind:selectedGroup
+                    sorting={$settingsStore.groupSortOrder}
+                />
                 <ProjectList
                     {projects}
                     {selectedGroup}

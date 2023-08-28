@@ -9,4 +9,4 @@ Hopefully you've read about Sketchbook's motivation and basics at the [project r
 -   **[Parameters](./params.md):** Explore project parameterization options in detail.
 -   **[Other Libraries](./customization.md):** Learn how to use other creative coding libraries within Sketchbook, including P5, REGL, and canvas-sketch.
 -   **[Customization](./customization.md):** Customize Sketchbook to fit your aesthetic and meet your needs.
--   **[Developer Notes](./dev-notes.md):** Notes on the architecture and inner workings of Sketchbook, with suggestions for contributors.
+-   **[Developer Notes](./dev-notes.md):** Read about the architecture and inner workings of Sketchbook, including notes for contributors.

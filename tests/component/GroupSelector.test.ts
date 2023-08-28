@@ -2,11 +2,13 @@ import { render, fireEvent, screen, cleanup } from '@testing-library/svelte';
 import { describe, it, expect, afterEach } from 'vitest';
 import { type ProjectConfig, ProjectConfigDefaults } from '$lib/base/ProjectConfig/ProjectConfig';
 import GroupSelector from '$lib/components/GroupSelector.svelte';
+import { SortOrder } from '../../src/config/config';
 
-function projectWithGroups(groups: string[]): ProjectConfig {
+function projectWithGroups(groups: string[], date: number): ProjectConfig {
     const props = {} as ProjectConfig;
     Object.assign(props, ProjectConfigDefaults);
     props.groups = groups;
+    props.date = new Date(date);
     return props;
 }
 
@@ -15,8 +17,8 @@ describe('GroupSelector', () => {
 
     it('renders and dedupes groups', async () => {
         const projects: ProjectConfig[] = [
-            projectWithGroups(['banana', 'dog']),
-            projectWithGroups(['dog', 'apple'])
+            projectWithGroups(['banana', 'dog'], 0),
+            projectWithGroups(['dog', 'apple'], 0)
         ];
         render(GroupSelector, {
             projects: projects
@@ -29,13 +31,14 @@ describe('GroupSelector', () => {
         expect(groupItems.length).toBe(4); // "all" + 3 groups
     });
 
-    it('orders groups correctly', async () => {
+    it('orders groups correctly (alphabetical)', async () => {
         const projects: ProjectConfig[] = [
-            projectWithGroups(['banana', 'dog']),
-            projectWithGroups(['dog', 'apple'])
+            projectWithGroups(['banana', 'dog'], 0),
+            projectWithGroups(['dog', 'apple'], 0)
         ];
         render(GroupSelector, {
-            projects: projects
+            projects: projects,
+            sorting: SortOrder.Alphabetical
         });
 
         const groupItems = screen.getAllByTestId('group-item');
@@ -45,10 +48,46 @@ describe('GroupSelector', () => {
         expect(groupItems[3].textContent).toContain('dog');
     });
 
+    it('orders groups correctly (chronological)', async () => {
+        const projects: ProjectConfig[] = [
+            projectWithGroups(['apple'], 0),
+            projectWithGroups(['banana'], 200),
+            projectWithGroups(['dog'], 100)
+        ];
+        render(GroupSelector, {
+            projects: projects,
+            sorting: SortOrder.Chronological
+        });
+
+        const groupItems = screen.getAllByTestId('group-item');
+        expect(groupItems[0].textContent).toBe('All');
+        expect(groupItems[1].textContent).toContain('apple');
+        expect(groupItems[2].textContent).toContain('dog');
+        expect(groupItems[3].textContent).toContain('banana');
+    });
+
+    it('orders groups correctly (reverse-chron)', async () => {
+        const projects: ProjectConfig[] = [
+            projectWithGroups(['apple'], 0),
+            projectWithGroups(['banana'], 200),
+            projectWithGroups(['dog'], 100)
+        ];
+        render(GroupSelector, {
+            projects: projects,
+            sorting: SortOrder.ReverseChronological
+        });
+
+        const groupItems = screen.getAllByTestId('group-item');
+        expect(groupItems[0].textContent).toBe('All');
+        expect(groupItems[1].textContent).toContain('banana');
+        expect(groupItems[2].textContent).toContain('dog');
+        expect(groupItems[3].textContent).toContain('apple');
+    });
+
     it('initializes with selected group if provided', async () => {
         const projects: ProjectConfig[] = [
-            projectWithGroups(['banana', 'dog']),
-            projectWithGroups(['dog', 'apple'])
+            projectWithGroups(['banana', 'dog'], 0),
+            projectWithGroups(['dog', 'apple'], 0)
         ];
         const { component } = render(GroupSelector, {
             projects: projects,
@@ -65,8 +104,8 @@ describe('GroupSelector', () => {
 
     it('selects All by default; updates selected group with clicks', async () => {
         const projects: ProjectConfig[] = [
-            projectWithGroups(['banana', 'dog']),
-            projectWithGroups(['dog', 'apple'])
+            projectWithGroups(['banana', 'dog'], 0),
+            projectWithGroups(['dog', 'apple'], 0)
         ];
         const { component } = render(GroupSelector, {
             projects: projects
@@ -88,7 +127,7 @@ describe('GroupSelector', () => {
     });
 
     it('does not render with no groups', async () => {
-        const projects: ProjectConfig[] = [projectWithGroups([]), projectWithGroups([])];
+        const projects: ProjectConfig[] = [projectWithGroups([], 0), projectWithGroups([], 0)];
         render(GroupSelector, {
             projects: projects
         });
