@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { PageData } from './$types';
-    import CanvasViewer from '$lib/components/CanvasViewer.svelte';
+    import ProjectViewer from '$lib/components/ProjectViewer.svelte';
     import ProjectDetailPanel from '$lib/components/ProjectDetailPanel.svelte';
     import ProjectListPanel from '$lib/components/ProjectListPanel.svelte';
 
@@ -12,5 +12,5 @@
 </svelte:head>
 
 <ProjectListPanel projects={data.projects} selectedProjectKey={data.projectKey} />
-<CanvasViewer project={data.projectTuple.project} />
+<ProjectViewer project={data.projectTuple.project} />
 <ProjectDetailPanel projectTuple={data.projectTuple} />

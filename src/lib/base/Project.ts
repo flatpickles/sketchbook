@@ -7,7 +7,7 @@ export default class Project {
     /**
      * A canvas element that this project can draw to. This will be set automatically before init
      * is called, and the size will be set to fill to the container div (its parent). It will be
-     * undefined if accessed in a project's constructor, or if useSharedCanvas (below) is `false`.
+     * undefined if accessed in a project's constructor, or when using CanvasType.None (below).
      */
     canvas?: HTMLCanvasElement;
 
@@ -19,11 +19,11 @@ export default class Project {
     container?: HTMLDivElement;
 
     /**
-     * Whether this project will use the shared canvas element (above), or create its own. You may
-     * wish to override this to `false` if you're using a library that creates its own canvas (e.g.
-     * P5), or if you're working on a project that isn't canvas-based.
+     * The canvasType used by this project; similarly typed canvases will be reused as new projects
+     * are loaded. The canvasType selected should match the type of context you expect to use with
+     * this.canvas.getContext(), or CanvasType.None if you don't need a canvas.
      */
-    useSharedCanvas = true;
+    canvasType = CanvasType.Context2D;
 
     /**
      * init is called once when the project is first loaded, after this.canvas and this.container
@@ -42,10 +42,19 @@ export default class Project {
      * Override this with any custom cleanup behavior.
      */
     public destroy() {
-        // By default, clear the canvas when the project is unloaded.
+        // By default, clear the shared canvas when the project is unloaded.
         const context = this.canvas?.getContext('2d');
         if (context && this.canvas) {
             context.clearRect(0, 0, this.canvas.width, this.canvas.height);
         }
     }
+}
+
+/**
+ * The type of canvas context that will be used by a project.
+ */
+export enum CanvasType {
+    Context2D = '2d',
+    WebGL = 'webgl',
+    None = 'none'
 }

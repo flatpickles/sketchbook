@@ -1,10 +1,12 @@
 <script lang="ts">
     import type Project from '$lib/base/Project';
+    import { CanvasType } from '$lib/base/Project';
     import { onMount } from 'svelte';
 
     export let project: Project;
     let previousProject: Project | undefined;
-    let canvasElement: HTMLCanvasElement;
+    let canvasElement2D: HTMLCanvasElement;
+    let canvasElementWebGL: HTMLCanvasElement;
     let containerElement: HTMLDivElement;
 
     onMount(() => {
@@ -23,8 +25,9 @@
     }
 
     function projectUpdated(newProject: Project) {
-        // When loading a project & using the shared canvas for the first time, resize the canvas
-        const shouldResize = !previousProject?.useSharedCanvas && newProject.useSharedCanvas;
+        // When loading a first project or changing the canvas type, resize the canvas
+        const shouldResize =
+            !previousProject || previousProject.canvasType !== newProject.canvasType;
 
         // Track the previous project so we can destroy it
         previousProject?.destroy();
@@ -32,14 +35,19 @@
 
         // Destroy previous non-shared contents of the canvas container
         for (const child of containerElement.children) {
-            if (child !== canvasElement) {
+            if (child !== canvasElement2D && child !== canvasElementWebGL) {
                 containerElement.removeChild(child);
             }
         }
 
         // Assign the canvas reference if the project uses a shared canvas
         newProject.container = containerElement;
-        newProject.canvas = newProject.useSharedCanvas ? canvasElement : undefined;
+        newProject.canvas =
+            newProject.canvasType === CanvasType.Context2D
+                ? canvasElement2D
+                : newProject.canvasType === CanvasType.WebGL
+                ? canvasElementWebGL
+                : undefined;
 
         // Initialize and update the new project
         if (shouldResize) setCanvasSize();
@@ -53,9 +61,11 @@
         // todo: tests for canvas sizing behavior?
         // todo: clears canvas - not desired?
 
-        // canvasElement.clientSize is 0 if display is none, so use container size instead
-        canvasElement.width = containerElement.clientWidth * 2;
-        canvasElement.height = containerElement.clientHeight * 2;
+        // canvasElement.clientSize can be 0 (when display is none), so use container size instead
+        canvasElement2D.width = containerElement.clientWidth * 2;
+        canvasElement2D.height = containerElement.clientHeight * 2;
+        canvasElementWebGL.width = containerElement.clientWidth * 2;
+        canvasElementWebGL.height = containerElement.clientHeight * 2;
     }
 
     function fixP5Containment() {
@@ -72,8 +82,14 @@
     <canvas
         class="shared-canvas"
         data-testid="shared-canvas"
-        bind:this={canvasElement}
-        class:hidden={!project.useSharedCanvas}
+        bind:this={canvasElement2D}
+        class:hidden={project.canvasType !== CanvasType.Context2D}
+    />
+    <canvas
+        class="shared-canvas"
+        data-testid="shared-canvas"
+        bind:this={canvasElementWebGL}
+        class:hidden={project.canvasType !== CanvasType.WebGL}
     />
 </div>
 
