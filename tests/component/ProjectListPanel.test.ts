@@ -225,4 +225,65 @@ describe('ProjectListPanel interaction', () => {
         listItems = screen.getAllByTestId('project-list-item');
         expect(listItems.length).toBe(3);
     });
+
+    it('shows experimental projects when showExperiments is true', async () => {
+        vi.spyOn(config, 'showExperiments', 'get').mockReturnValue(true);
+
+        const projects = {
+            banana: ProjectConfigFactory.propsFrom({
+                title: 'Banana',
+                date: '2021-01-01',
+                experimental: false
+            }),
+            apple: ProjectConfigFactory.propsFrom({
+                title: 'Apple',
+                date: '2021-01-03',
+                experimental: true
+            }),
+            carrot: ProjectConfigFactory.propsFrom({
+                title: 'Carrot',
+                date: '2022-01-02',
+                experimental: false
+            })
+        };
+        render(ProjectListPanel, {
+            projects: projects,
+            selectedProjectKey: 'banana'
+        });
+
+        const listItems = screen.getAllByTestId('project-list-item');
+        expect(listItems.length).toBe(3);
+        const experimentalIcon = screen.getAllByTestId('experimental-icon');
+        expect(experimentalIcon.length).toBe(1);
+    });
+
+    it('hides experimental projects when showExperiments is false', async () => {
+        vi.spyOn(config, 'showExperiments', 'get').mockReturnValue(false);
+
+        const projects = {
+            banana: ProjectConfigFactory.propsFrom({
+                title: 'Banana',
+                date: '2021-01-01',
+                experimental: false
+            }),
+            apple: ProjectConfigFactory.propsFrom({
+                title: 'Apple',
+                date: '2021-01-03',
+                experimental: true
+            }),
+            carrot: ProjectConfigFactory.propsFrom({
+                title: 'Carrot',
+                date: '2022-01-02',
+                experimental: false
+            })
+        };
+        render(ProjectListPanel, {
+            projects: projects,
+            selectedProjectKey: 'banana'
+        });
+
+        const listItems = screen.getAllByTestId('project-list-item');
+        expect(listItems.length).toBe(2);
+        expect(() => screen.getAllByTestId('experimental-icon')).toThrow();
+    });
 });

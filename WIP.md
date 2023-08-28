@@ -25,7 +25,7 @@ content.ts: what's on the page
 
 config.ts: how it behaves
 
--   Show experimental projects
+-   Show experimental projects (done)
 -   Canvas size // sizing behavior
 -   Canvas scale (pixel ratio)
 -   Panel visibility (projects + project details)
@@ -93,7 +93,6 @@ Use cases: modes (w/ options), sections, functionality only defined with some va
     -   Settings panel
     -   Project detail panel (component tests)
     -   Project list panel (header/footer components etc)
--   Experiments!
 -   Project key:
     -   Use key instead of name in saved state
     -   User-defined keys used for project URL

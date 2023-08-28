@@ -1,5 +1,6 @@
 <script lang="ts">
     import type { ProjectConfig } from '$lib/base/ProjectConfig/ProjectConfig';
+    import { settingsStore } from '$lib/base/Util/AppState';
     import { SortOrder } from '../../config/config';
 
     export let projects: Record<string, ProjectConfig>;
@@ -21,11 +22,20 @@
                 return timeB - timeA;
         }
     });
+
+    $: visibleKeys = sortedKeys.filter((key) => {
+        const project = projects[key];
+        if (!project) return false;
+        if (project.experimental && !$settingsStore.showExperiments) return false;
+        if (selectedGroup === undefined) return true;
+        if (!project.groups?.includes(selectedGroup)) return false;
+        return true;
+    });
 </script>
 
 <div class="project-list">
-    {#each sortedKeys as key}
-        {#if selectedGroup === undefined || (projects[key].groups?.includes(selectedGroup) ?? false)}
+    {#each visibleKeys as key}
+        {#if true}
             <a
                 href="/{key}"
                 class="project-list-item"
@@ -33,6 +43,13 @@
                 class:selected={key === selectedProjectKey}
             >
                 {projects[key].title}
+                {#if projects[key].experimental}
+                    <i
+                        class="fa fa-flask experimental"
+                        title="Experimental"
+                        data-testid="experimental-icon"
+                    />
+                {/if}
             </a>
         {/if}
     {/each}
@@ -43,6 +60,11 @@
         text-decoration: none;
         color: inherit;
         display: block;
+
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
     }
 
     .project-list {

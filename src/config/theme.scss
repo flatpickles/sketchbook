@@ -121,6 +121,13 @@ $project-list-item-padding: 0.75rem;
     &:hover:not(.selected) {
         background-color: rgba(0, 0, 0, 0.05);
     }
+
+    // Experimental icon
+    .experimental {
+        font-size: $xs-text-size;
+        color: rgba(0, 0, 0, 0.5);
+        padding-right: calc($panel-content-inset / 2);
+    }
 }
 
 // Preset control

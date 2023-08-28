@@ -1,6 +1,7 @@
 {
     "title": "All The Params",
     "description": "Examples of possible parameter types and styles.",
+    "experimental": true,
     "params": {
         "numberDefault": {
             "name": "Default Number",
