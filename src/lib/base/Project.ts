@@ -7,16 +7,16 @@ export default class Project {
     /**
      * A canvas element that this project can draw to. This will be set automatically before init
      * is called, and the size will be set to fill to the container div (its parent). It will be
-     * undefined if useSharedCanvas (below) is set to `false`.
+     * undefined if accessed in a project's constructor, or if useSharedCanvas (below) is `false`.
      */
     canvas?: HTMLCanvasElement;
 
     /**
      * A div element that this project will use as a container. This will be set automatically
-     * before init is called, and the size will be set to fill as much space as possible (dependant
-     * on your layout configuration).
+     * before init is called, and the container div will fill as much space as possible (dependant
+     * on your layout configuration). It is only undefined if accessed in a project's constructor.
      */
-    container!: HTMLDivElement;
+    container?: HTMLDivElement;
 
     /**
      * Whether this project will use the shared canvas element (above), or create its own. You may

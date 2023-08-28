@@ -6,8 +6,6 @@ Ongoing notes for Sketchbook development.
 
 # Current scope:
 
--   Flash of white when loading P5 projects (and maybe others) - can this be avoided?
-
 ## Johan's feedback (8/23):
 
 -   maybe rename update method; "update" implies it runs every frame
