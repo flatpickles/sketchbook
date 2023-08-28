@@ -10,8 +10,8 @@
     $: sortedKeys = Object.keys(projects).sort((a, b) => {
         const projectA = projects[a];
         const projectB = projects[b];
-        const timeA = projectA.date ? projectA.date.getTime() : 0;
-        const timeB = projectB.date ? projectB.date.getTime() : 0;
+        const timeA = projectA.date ? projectA.date.getTime() : Date.now();
+        const timeB = projectB.date ? projectB.date.getTime() : Date.now();
         switch (sorting) {
             case SortOrder.Alphabetical:
                 return projectA.title.localeCompare(projectB.title);

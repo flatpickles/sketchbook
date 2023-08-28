@@ -64,6 +64,9 @@ describe('ProjectListPanel rendering', () => {
             carrot: ProjectConfigFactory.propsFrom({
                 title: 'Carrot',
                 date: '2021-01-02'
+            }),
+            dateless: ProjectConfigFactory.propsFrom({
+                title: 'Dateless'
             })
         };
         render(ProjectListPanel, {
@@ -72,10 +75,11 @@ describe('ProjectListPanel rendering', () => {
         });
 
         const listItems = screen.getAllByTestId('project-list-item');
-        expect(listItems.length).toBe(3);
+        expect(listItems.length).toBe(4);
         expect(listItems[0].textContent).toContain('Apple');
         expect(listItems[1].textContent).toContain('Banana');
         expect(listItems[2].textContent).toContain('Carrot');
+        expect(listItems[3].textContent).toContain('Dateless');
     });
 
     it('renders projects reverse chronologically', async () => {
@@ -93,6 +97,9 @@ describe('ProjectListPanel rendering', () => {
             carrot: ProjectConfigFactory.propsFrom({
                 title: 'Carrot',
                 date: '2022-01-02'
+            }),
+            dateless: ProjectConfigFactory.propsFrom({
+                title: 'Dateless'
             })
         };
         render(ProjectListPanel, {
@@ -101,10 +108,11 @@ describe('ProjectListPanel rendering', () => {
         });
 
         const listItems = screen.getAllByTestId('project-list-item');
-        expect(listItems.length).toBe(3);
-        expect(listItems[0].textContent).toContain('Carrot');
-        expect(listItems[1].textContent).toContain('Apple');
-        expect(listItems[2].textContent).toContain('Banana');
+        expect(listItems.length).toBe(4);
+        expect(listItems[0].textContent).toContain('Dateless');
+        expect(listItems[1].textContent).toContain('Carrot');
+        expect(listItems[2].textContent).toContain('Apple');
+        expect(listItems[3].textContent).toContain('Banana');
     });
 
     it('renders projects chronologically', async () => {
@@ -122,6 +130,9 @@ describe('ProjectListPanel rendering', () => {
             carrot: ProjectConfigFactory.propsFrom({
                 title: 'Carrot',
                 date: '2022-01-02'
+            }),
+            dateless: ProjectConfigFactory.propsFrom({
+                title: 'Dateless'
             })
         };
         render(ProjectListPanel, {
@@ -130,10 +141,11 @@ describe('ProjectListPanel rendering', () => {
         });
 
         const listItems = screen.getAllByTestId('project-list-item');
-        expect(listItems.length).toBe(3);
+        expect(listItems.length).toBe(4);
         expect(listItems[0].textContent).toContain('Banana');
         expect(listItems[1].textContent).toContain('Apple');
         expect(listItems[2].textContent).toContain('Carrot');
+        expect(listItems[3].textContent).toContain('Dateless');
     });
 
     it('selects the proper project via selectedProjectKey', async () => {
