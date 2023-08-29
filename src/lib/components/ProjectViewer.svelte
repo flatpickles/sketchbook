@@ -1,6 +1,6 @@
 <script lang="ts">
-    import type Project from '$lib/base/Project';
-    import { CanvasType } from '$lib/base/Project';
+    import type Project from '$lib/base/Project/Project';
+    import { CanvasType } from '$lib/base/Project/Project';
     import { onMount } from 'svelte';
 
     export let project: Project;
