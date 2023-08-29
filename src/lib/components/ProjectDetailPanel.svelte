@@ -22,9 +22,12 @@
                 month: 'long'
             })}
             description={projectTuple.props.description}
+            hideClose={true}
             on:close={closePanel}
         />
-        <PresetControl {projectTuple} />
+        {#if projectTuple.props.presetsAvailable}
+            <PresetControl {projectTuple} />
+        {/if}
         {#if projectTuple.params && Object.values(projectTuple.params).length > 0}
             <ProjectParams {projectTuple} />
         {/if}

@@ -52,8 +52,9 @@ $panel-header-section-spacing: 0.5rem;
     font-weight: bold;
 }
 @mixin subtitle-text {
-    font-size: $large-text-size;
+    font-size: $medium-text-size;
     font-weight: normal;
+    color: rgba(0, 0, 0, 0.6);
 }
 @mixin description-text {
     font-size: $medium-text-size;
@@ -142,7 +143,7 @@ $preset-control-item-padding: 0.25rem 0.75rem;
     font-weight: bold;
     color: black;
     background-color: rgba(0, 0, 0, 0.07);
-    $shadow-size: 0.07rem;
+    $shadow-size: 0.0frem;
     box-shadow: 0 $shadow-size $shadow-size rgba(0, 0, 0, 0.3);
 }
 

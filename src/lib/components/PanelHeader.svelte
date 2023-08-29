@@ -4,6 +4,7 @@
     export let title: string;
     export let subtitle: string | undefined = undefined;
     export let description: string | undefined = undefined;
+    export let hideClose = false;
 
     const dispatch = createEventDispatcher();
     function closeClicked() {
@@ -19,7 +20,9 @@
                 <h2 data-testid="header-subtitle">{@html subtitle}</h2>
             {/if}
         </div>
-        <button class="header-button" on:click={closeClicked}><i class="fa fa-xmark" /></button>
+        {#if !hideClose}
+            <button class="header-button" on:click={closeClicked}><i class="fa fa-xmark" /></button>
+        {/if}
     </div>
 
     {#if description}
@@ -61,7 +64,7 @@
 
     h2 {
         @include subtitle-text;
-        padding: 0 $panel-content-inset;
+        padding: calc($panel-header-section-spacing / 4) $panel-content-inset 0 $panel-content-inset;
     }
 
     p {

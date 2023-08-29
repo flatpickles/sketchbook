@@ -1,7 +1,7 @@
 {
-    "title": "Demo Project 2",
+    "title": "Bundled Image",
     "date": "2023-07-20",
-    "description": "This is the description for a demo project.",
+    "description": "This demo project has an image!",
     "liveUpdates": true,
     "groups": ["Live Graphics"],
     "experimental": false,

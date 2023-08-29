@@ -3,9 +3,10 @@ export interface ProjectConfig {
     date?: Date;
     description?: string;
     defaultPresetName?: string;
-    liveUpdates: boolean;
     groups?: string[];
-    experimental?: boolean;
+    liveUpdates: boolean;
+    presetsAvailable: boolean;
+    experimental: boolean;
 }
 
 export const ProjectConfigDefaults: ProjectConfig = {
@@ -13,7 +14,8 @@ export const ProjectConfigDefaults: ProjectConfig = {
     date: undefined,
     description: undefined,
     defaultPresetName: undefined,
-    liveUpdates: true,
     groups: [],
+    liveUpdates: true,
+    presetsAvailable: false,
     experimental: false
 };

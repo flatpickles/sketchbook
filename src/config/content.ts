@@ -1,7 +1,7 @@
 // Project list header content
 const title = 'Sketchbook';
-const subtitle = `by <a href='http://flatpickles.com'>flatpickles</a>`;
-const description = `This is a collection of programmatic art pieces. Code and details <a href='https://github.com/flatpickles/sketchbook'>here</a>.`;
+const subtitle = `Demo Content`;
+const description = `Sketchbook is a dev environment and customizable portfolio for creative coding projects. It is a work in progress!`;
 
 // Project list footer content (use empty string to omit)
 const footer = `Copyright © 2023 <a href='http://flatpickles.com'>Matt Nichols</a>`;

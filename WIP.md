@@ -102,6 +102,7 @@ Use cases: modes (w/ options), sections, functionality only defined with some va
     -   Show buttons from hidden state
 -   Presets
     -   Disable preset picker & controls per-project
+    -   Allow naming "Default Values" (or a default preset option?)
     -   Model work
     -   Selection UI & plumbing
     -   Options: creation, export, import, etc

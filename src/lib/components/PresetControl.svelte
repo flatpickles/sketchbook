@@ -5,8 +5,12 @@
 </script>
 
 <div class="presets-wrapper">
-    <div class="preset-selector">Default Values</div>
-    <div class="control-button"><i class="fa fa-pen-to-square" /></div>
+    <div class="preset-selector">
+        <i class="fa fa-angle-left" style="color: rgba(0, 0, 0, 30%)" />
+        Default Values
+        <i class="fa fa-angle-right" />
+    </div>
+    <!-- <div class="control-button"><i class="fa fa-pen-to-square" /></div> -->
 </div>
 
 <style lang="scss">
@@ -24,10 +28,14 @@
     .preset-selector {
         @include preset-control-item;
         width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
     }
 
-    .control-button {
-        @include preset-control-item;
-        cursor: pointer;
-    }
+    // .control-button {
+    //     @include preset-control-item;
+    //     cursor: pointer;
+    // }
 </style>

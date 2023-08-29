@@ -40,6 +40,7 @@
                     title={content.title}
                     subtitle={content.subtitle}
                     description={content.description}
+                    hideClose={true}
                     on:close={closePanel}
                 />
                 <GroupSelector

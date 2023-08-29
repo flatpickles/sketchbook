@@ -1,20 +1,21 @@
 import Project from '$lib/base/Project';
 import TestImage from './test-image.png';
-import { browser } from '$app/environment';
 
 export default class DemoProject extends Project {
     testBoolean = true;
     size = 0.2;
 
-    #bundledImage: HTMLImageElement | undefined;
+    #bundledImage: HTMLImageElement;
+
+    constructor() {
+        super();
+        this.#bundledImage = new Image();
+        this.#bundledImage.src = TestImage;
+    }
 
     init() {
-        // todo: Don't instantiate in SSR
         // Can't do from constructor because canvas isn't set yet
-        if (!browser) return;
-        this.#bundledImage = new Image();
         this.#bundledImage.onload = this.update.bind(this);
-        this.#bundledImage.src = TestImage;
     }
 
     update() {
