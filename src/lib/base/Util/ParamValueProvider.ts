@@ -1,7 +1,7 @@
 import { browser } from '$app/environment';
 import type { ParamConfig } from '../ParamConfig/ParamConfig';
 import type { ParamValueType } from '../ParamConfig/ParamTypes';
-import type Project from '../Project';
+import type Project from '../Project/Project';
 
 export default class ParamValueProvider {
     public static getValue<T extends ParamConfig>(

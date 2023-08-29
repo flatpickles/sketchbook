@@ -1,4 +1,4 @@
-import Project from '$lib/base/Project';
+import Project from '$lib/base/Project/Project';
 
 // No corresponding config file; ok! Still should be listed as available.
 

@@ -1,5 +1,5 @@
 import REGL from 'regl';
-import Project, { CanvasType } from '$lib/base/Project';
+import Project, { CanvasType } from '$lib/base/Project/Project';
 
 export default class ShaderDemo extends Project {
     #regl?: REGL.Regl;

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-empty-function */
 
-import Project, { CanvasType } from '$lib/base/Project';
+import Project, { CanvasType } from '$lib/base/Project/Project';
 import P5 from 'p5';
 
 /**

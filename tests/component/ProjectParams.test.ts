@@ -1,7 +1,7 @@
 import { render, fireEvent, screen, cleanup, waitFor } from '@testing-library/svelte';
 import { vi, describe, it, expect, afterEach } from 'vitest';
 import ProjectParams from '$lib/components/ProjectParams.svelte';
-import Project from '$lib/base/Project';
+import Project from '$lib/base/Project/Project';
 import type { ProjectTuple } from '$lib/base/FileLoading/ProjectLoader';
 import { ParamType } from '$lib/base/ParamConfig/ParamConfig';
 import { ProjectConfigFactory } from '$lib/base/ProjectConfig/ProjectConfigFactory';

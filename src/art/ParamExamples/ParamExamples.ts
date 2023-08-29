@@ -1,4 +1,4 @@
-import Project from '$lib/base/Project';
+import Project from '$lib/base/Project/Project';
 
 enum StringOptions {
     Option1 = 'option1',

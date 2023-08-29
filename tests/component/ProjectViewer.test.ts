@@ -1,9 +1,9 @@
 import ProjectViewer from '$lib/components/ProjectViewer.svelte';
-import Project, { CanvasType } from '$lib/base/Project';
+import Project, { CanvasType } from '$lib/base/Project/Project';
 
 import { render, cleanup } from '@testing-library/svelte';
 import { describe, it, expect, vi, afterEach, type Mock } from 'vitest';
-import P5Project from '$lib/base/P5Project';
+import P5Project from '$lib/base/Project/P5Project';
 
 // P5 throws errors when running in unit tests, so we mock it out fully.
 // This precludes more rigorous DOM testing, but it's better than nothing.

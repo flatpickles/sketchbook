@@ -1,4 +1,4 @@
-import Project from '$lib/base/Project';
+import Project from '$lib/base/Project/Project';
 import TestImage from './test-image.png';
 
 export default class DemoProject extends Project {

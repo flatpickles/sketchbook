@@ -1,4 +1,4 @@
-import Project from '$lib/base/Project';
+import Project from '$lib/base/Project/Project';
 
 export default class DemoProject extends Project {
     testNumber = 42;

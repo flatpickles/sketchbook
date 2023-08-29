@@ -3,7 +3,7 @@
 import { describe, it, expect, vi, beforeAll, afterEach } from 'vitest';
 
 import * as Environment from '$app/environment';
-import Project from '$lib/base/Project';
+import Project from '$lib/base/Project/Project';
 import ConfigAndSupport from './TestFiles/ConfigAndSupport/ConfigAndSupport';
 import NoConfig from './TestFiles/NoConfig/NoConfig';
 import ProjectLoader from '$lib/base/FileLoading/ProjectLoader';

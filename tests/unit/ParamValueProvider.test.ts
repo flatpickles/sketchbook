@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import * as Environment from '$app/environment';
 import ParamValueProvider from '$lib/base/Util/ParamValueProvider';
 import { cleanup } from '@testing-library/svelte';
-import Project from '$lib/base/Project';
+import Project from '$lib/base/Project/Project';
 import type { NumberParamConfig } from '$lib/base/ParamConfig/NumberParamConfig';
 
 class TestProject extends Project {

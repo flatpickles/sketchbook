@@ -1,5 +1,5 @@
 import { importProjectClassFiles, importProjectConfigFiles } from './FileProviders';
-import type Project from '../Project';
+import type Project from '../Project/Project';
 import { type ProjectConfig, ProjectConfigDefaults } from '../ProjectConfig/ProjectConfig';
 import type { ParamConfig } from '../ParamConfig/ParamConfig';
 import { ProjectConfigFactory } from '../ProjectConfig/ProjectConfigFactory';

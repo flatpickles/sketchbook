@@ -1,4 +1,4 @@
-import P5Project from '$lib/base/P5Project';
+import P5Project from '$lib/base/Project/P5Project';
 import type P5 from 'p5';
 
 export default class P5Demo extends P5Project {
