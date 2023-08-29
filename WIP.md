@@ -250,3 +250,12 @@ Use cases: modes (w/ options), sections, functionality only defined with some va
         -   Example: Image()
         -   init() and update() not called (currently as of 8/13)
     -   Importing bundled images: show example
+
+./readme.md todo:
+
+-   Basic pitch improvements (who's it for? what's it do? what's the workflow)
+-   Include an example
+-   Discuss parameters
+-   Sketchbook features overview
+-   Sketchbook workflow overview
+-   OSS license notes
