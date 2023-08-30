@@ -1,3 +1,9 @@
 {
-    "experimental": true
+    "experimental": true,
+    "params": {
+        "blue": {
+            "name": "Blue",
+            "section": "Test Params"
+        }
+    }
 }

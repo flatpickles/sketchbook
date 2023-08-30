@@ -1,10 +1,15 @@
-import { importProjectClassFiles, importProjectConfigFiles } from './FileProviders';
+import {
+    importProjectClassFiles,
+    importProjectConfigFiles,
+    importProjectTextFiles
+} from './FileProviders';
 import type Project from '../Project/Project';
 import { type ProjectConfig, ProjectConfigDefaults } from '../ProjectConfig/ProjectConfig';
 import type { ParamConfig } from '../ParamConfig/ParamConfig';
 import { ProjectConfigFactory } from '../ProjectConfig/ProjectConfigFactory';
 import ParamValueProvider from '../Util/ParamValueProvider';
 import { browser } from '$app/environment';
+import FragShaderProject from '../Project/FragShaderProject';
 
 export interface ProjectTuple {
     project: Project;
@@ -25,6 +30,7 @@ export default class ProjectLoader {
     public static async loadAvailableProjects(): Promise<Record<string, ProjectConfig>> {
         // Load files
         const projectClassFiles = importProjectClassFiles();
+        const projectTextFiles = importProjectTextFiles();
         const projectConfigFiles = importProjectConfigFiles();
 
         // Collect configuration data from config files, where available
@@ -40,7 +46,8 @@ export default class ProjectLoader {
 
         // Collect projects from class files and assign config data if any
         const availableProjects: Record<string, ProjectConfig> = {};
-        for (const path in projectClassFiles) {
+        const projectPaths = Object.keys(projectClassFiles).concat(Object.keys(projectTextFiles));
+        for (const path of projectPaths) {
             // Find the project key from the file name
             const projectKey = ProjectLoader.#keyFromProjectPath(path);
 
@@ -68,17 +75,38 @@ export default class ProjectLoader {
      * @returns a ProjectTuple object containing the project, its properties, and its params.
      */
     public static async loadProject(key: string): Promise<ProjectTuple | null> {
-        // Load files
+        // Load files and find the project file path
         const projectClassFiles = importProjectClassFiles();
+        const projectTextFiles = importProjectTextFiles();
         const projectConfigFiles = importProjectConfigFiles();
-
-        // Instantiate the proper project class
         const classFilePath = Object.keys(projectClassFiles).filter((path) => {
             return ProjectLoader.#keyFromProjectPath(path) === key;
         })[0];
-        if (!classFilePath) return null;
-        const module = (await projectClassFiles[classFilePath]()) as ProjectModule;
-        const project = new module.default();
+        const textFilePath = Object.keys(projectTextFiles).filter((path) => {
+            return ProjectLoader.#keyFromProjectPath(path) === key;
+        })[0];
+
+        // Instantiate the proper project
+        let project: Project;
+        if (classFilePath) {
+            if (!classFilePath.includes('.ts') && !classFilePath.includes('.js')) {
+                throw new Error(
+                    `Loader: Unsupported project class file type for path: ${classFilePath}`
+                );
+            }
+            const module = (await projectClassFiles[classFilePath]()) as ProjectModule;
+            project = new module.default();
+        } else if (textFilePath) {
+            if (!textFilePath.includes('.frag')) {
+                throw new Error(
+                    `Loader: Unsupported project text file type for path: ${textFilePath}`
+                );
+            }
+            const fragShader: string = (await projectTextFiles[textFilePath]()) as string;
+            project = new FragShaderProject(fragShader);
+        } else {
+            return null;
+        }
 
         // Create props & params with project and config file (if any)
         const configFilePath = Object.keys(projectConfigFiles).filter((path) => {
@@ -126,14 +154,16 @@ export default class ProjectLoader {
     static #keyFromProjectPath(path: string): string {
         const pathComponents = path.split('/');
         const projectKey = pathComponents.pop()?.split('.')[0];
-        if (!projectKey) throw new Error('Loader: Failure to parse project key from project path.');
+        if (!projectKey)
+            throw new Error(`Loader: Failure to parse project key from project path: ${path}`);
         return projectKey;
     }
 
     static #keyFromConfigPath(path: string): string {
         const pathComponents = path.split('/');
         const projectKey = pathComponents[pathComponents.length - 2];
-        if (!projectKey) throw new Error('Loader: Failure to parse project key from config path.');
+        if (!projectKey)
+            throw new Error(`Loader: Failure to parse project key from config path: ${path}`);
         return projectKey;
     }
 }

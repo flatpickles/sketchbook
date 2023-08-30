@@ -6,6 +6,11 @@ Ongoing notes for Sketchbook development.
 
 # Current scope:
 
+## Bugs
+
+-   Experimental sketch selected by default (/ navigation)
+-   Project list items squish before scrolling
+
 ## Johan's feedback (8/23):
 
 -   maybe rename update method; "update" implies it runs every frame

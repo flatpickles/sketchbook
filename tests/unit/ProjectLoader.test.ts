@@ -19,6 +19,7 @@ const testProjects = import.meta.glob('/tests/unit/TestFiles/*/*.ts');
 const testConfigs = import.meta.glob('/tests/unit/TestFiles/*/config.json');
 vi.spyOn(fileProviders, 'importProjectClassFiles').mockReturnValue(testProjects);
 vi.spyOn(fileProviders, 'importProjectConfigFiles').mockReturnValue(testConfigs);
+vi.spyOn(fileProviders, 'importProjectTextFiles').mockReturnValue({});
 
 describe('loading available projects', async () => {
     afterEach(() => {

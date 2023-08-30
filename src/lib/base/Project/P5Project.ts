@@ -1,12 +1,14 @@
+/**
+ * A simple base class for P5-based projects. Subclass this to create projects in Sketchbook that
+ * leverage P5's built-in functionality. See the docs for more info.
+ */
+
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-empty-function */
 
 import Project, { CanvasType } from '$lib/base/Project/Project';
 import P5 from 'p5';
 
-/**
- * A simple base class for P5-based projects.
- */
 export default class P5Project extends Project {
     /**
      * P5 lifecycle functions. Override these with your P5 code. P5 runs in "instance mode", so all

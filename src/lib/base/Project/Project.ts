@@ -1,8 +1,11 @@
+/**
+ * A base class for all projects in src/art. You can subclass this directly to create Sketchbook
+ * projects that use the HTML canvas element directly, or you can subclass one of the more
+ * specialized project types in this directory. See the docs for more info.
+ */
+
 /* eslint-disable @typescript-eslint/no-empty-function */
 
-/**
- * A base class for all projects in src/art.
- */
 export default class Project {
     /**
      * A canvas element that this project can draw to. This will be set automatically before init
