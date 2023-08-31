@@ -1,10 +1,13 @@
 <script lang="ts">
+    import { isNumericArray } from '$lib/base/ParamConfig/NumericArrayParamConfig';
+    import { settingsStore } from '$lib/base/Util/AppState';
     import ColorConversions from '$lib/base/Util/ColorConversions';
     import { createEventDispatcher } from 'svelte';
 
     export let name: string;
     export let value: string | number[];
     export let disabled = false;
+    export let unitColorArrays = false;
 
     const dispatch = createEventDispatcher();
 
@@ -14,13 +17,21 @@
     let fieldValue: string = maybeRgbToHex(value);
     let colorPickerValue: string = maybeRgbToHex(value);
 
-    // Convert rgb to hex if necessary
+    // Convert rgb to hex if necessary, scaling to [0, 1] if using unitColorArrays
     function maybeRgbToHex(maybeRgb: string | number[]): string {
-        if (Array.isArray(maybeRgb)) {
-            return ColorConversions.rgbToHex(maybeRgb);
+        if (isNumericArray(maybeRgb)) {
+            const scaledRGB = unitColorArrays ? maybeRgb.map((v) => Math.round(v * 255)) : maybeRgb;
+            return ColorConversions.rgbToHex(scaledRGB);
         } else {
             return maybeRgb;
         }
+    }
+
+    // Convert hex to rbg, scaling to [0, 1] if using unitColorArrays
+    function hexToScaledRGB(hex: string): number[] {
+        const rgb = ColorConversions.hexToRgb(hex);
+        const scaledRGB = unitColorArrays ? rgb.map((v) => v / 255) : rgb;
+        return scaledRGB;
     }
 
     // The text input field has received an input/change event
@@ -31,6 +42,8 @@
         const hexRegex = /^#[0-9A-F]{6}$/i;
         if (!hexRegex.test(target.value)) {
             if (event.type === 'change') {
+                // Set directly here as well; without binding, the input element won't update
+                // while a user is editing it
                 target.value = maybeRgbToHex(value);
                 fieldValue = maybeRgbToHex(value);
             }
@@ -39,8 +52,8 @@
 
         // All's good, carry on
         colorPickerValue = target.value;
-        if (Array.isArray(value)) {
-            value = ColorConversions.hexToRgb(target.value);
+        if (isNumericArray(value)) {
+            value = hexToScaledRGB(target.value);
         } else {
             value = target.value;
         }
@@ -51,8 +64,8 @@
     function pickerInputEvent(event: Event) {
         const target = event.target as HTMLInputElement;
         fieldValue = target.value;
-        if (Array.isArray(value)) {
-            value = ColorConversions.hexToRgb(target.value);
+        if (isNumericArray(value)) {
+            value = hexToScaledRGB(target.value);
         } else {
             value = target.value;
         }

@@ -96,9 +96,6 @@ export class ParamConfigFactory {
             Object.assign(param, data);
         }
 
-        // If the name is unspecified, use the key as the name
-        param.name = (data?.name as string) ?? key;
-
         // Validate file param config accept value
         if (isFileParamConfig(param)) {
             if (param.mode === FileReaderMode.Image) {
@@ -116,13 +113,36 @@ export class ParamConfigFactory {
 
         // Validate array param config style
         if (isNumericArrayParamConfig(param) && isNumericArray(value)) {
-            if (value.length != 3 && param.style === NumericArrayParamStyle.Color) {
-                throw new Error(`Array param with "color" style must have 3 elements (${key})`);
+            if (
+                param.style === NumericArrayParamStyle.Color ||
+                param.style === NumericArrayParamStyle.UnitColor
+            ) {
+                // Validate number of components
+                if (value.length != 3)
+                    throw new Error(
+                        `Array param with a "color" style must have 3 elements (${key})`
+                    );
+                // Validate color component values (min/max/integer)
+                const style = param.style; // type is no longer narrowed in the forEach below
+                const colorCompUpperBound = style === NumericArrayParamStyle.UnitColor ? 1 : 255;
+                value.forEach((colorComponent) => {
+                    if (colorComponent < 0 || colorComponent > colorCompUpperBound)
+                        throw new Error(
+                            `Array param with a "${style}" style must have values between 0 and ${colorCompUpperBound} (${key})`
+                        );
+                    if (style === NumericArrayParamStyle.Color) {
+                        if (!Number.isInteger(colorComponent))
+                            throw new Error(
+                                `Array param with "color" style must have integer values; use "unitColor" for 0-1 values (${key})`
+                            );
+                    }
+                });
             }
         }
 
         // Return the generated param
         param.key = key;
+        param.name = (data?.name as string) ?? key;
         return param;
     }
 }

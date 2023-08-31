@@ -13,6 +13,12 @@ export default class ColorConversions {
 
     public static rgbToHex(rgb: number[]): string {
         if (rgb.length !== 3) throw new Error('rgbToHex: rgb array must have 3 components');
+        rgb.forEach((component) => {
+            if (component < 0 || component > 255)
+                throw new Error('rgbToHex: rgb components must be between 0 and 255');
+            if (!Number.isInteger(component))
+                throw new Error('rgbToHex: rgb components must be integers');
+        });
         const rHex = ColorConversions.componentToHex(rgb[0]);
         const gHex = ColorConversions.componentToHex(rgb[1]);
         const bHex = ColorConversions.componentToHex(rgb[2]);

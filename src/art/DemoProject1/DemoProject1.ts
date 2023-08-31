@@ -34,7 +34,7 @@ export default class DemoProject extends Project {
 
     stringOptions = 'Second';
 
-    arrayColor = [255, 255, 0];
+    arrayColor = [255, 21, 0];
 
     update() {
         if (!this.canvas) throw new Error('Canvas not set');

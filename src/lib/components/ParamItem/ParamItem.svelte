@@ -145,10 +145,11 @@
                 bind:value
                 on:change={paramUpdated.bind(null, true)}
             />
-        {:else if config.style === NumericArrayParamStyle.Color}
+        {:else if config.style === NumericArrayParamStyle.Color || config.style === NumericArrayParamStyle.UnitColor}
             <ColorInput
                 name={config.name}
                 {disabled}
+                unitColorArrays={config.style === NumericArrayParamStyle.UnitColor}
                 bind:value
                 on:input={paramUpdated.bind(null, false)}
                 on:change={paramUpdated.bind(null, true)}

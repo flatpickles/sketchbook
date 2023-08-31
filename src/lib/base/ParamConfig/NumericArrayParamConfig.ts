@@ -7,7 +7,8 @@ export enum NumericArrayParamStyle {
     CompactSlider = 'compactSlider',
     Slider = 'slider',
     Field = 'field',
-    Color = 'color'
+    Color = 'color',
+    UnitColor = 'unitColor'
 }
 
 export interface NumericArrayParamConfig extends ParamConfig {

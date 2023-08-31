@@ -20,9 +20,9 @@ export enum SortOrder {
 const projectSortOrder = SortOrder.Chronological;
 const groupSortOrder = SortOrder.Alphabetical;
 
-// Anything listed here will appear in the user settings panel with the given label
-// Values changed in the settings panel will be persisted in local storage, and the
-// settings above will be used as defaults.
+// Anything listed here will appear in the user settings panel with the given label. Values changed
+// in the settings panel will be persisted in local storage, and the values set above will be used
+// as defaults.
 export const userSettingsLabels: Record<string, string> = {
     showExperiments: 'Experiments',
     projectSortOrder: 'Project Sorting'
