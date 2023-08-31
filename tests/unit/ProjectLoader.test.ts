@@ -11,15 +11,17 @@ import { ProjectConfigDefaults } from '$lib/base/ProjectConfig/ProjectConfig';
 import * as fileProviders from '$lib/base/FileLoading/FileProviders';
 import { ParamType } from '$lib/base/ParamConfig/ParamConfig';
 import ParamValueProvider from '$lib/base/Util/ParamValueProvider';
+import FragShaderProject from '$lib/base/Project/FragShaderProject';
 vi.spyOn(ParamValueProvider, 'getValue');
 vi.spyOn(ParamValueProvider, 'setValue');
 
 // Use TestProjects directory for loading tests
 const testProjects = import.meta.glob('/tests/unit/TestFiles/*/*.ts');
 const testConfigs = import.meta.glob('/tests/unit/TestFiles/*/config.json');
+const testTextFiles = import.meta.glob('/tests/unit/TestFiles/*/*.frag', { as: 'raw' });
 vi.spyOn(fileProviders, 'importProjectClassFiles').mockReturnValue(testProjects);
 vi.spyOn(fileProviders, 'importProjectConfigFiles').mockReturnValue(testConfigs);
-vi.spyOn(fileProviders, 'importProjectTextFiles').mockReturnValue({});
+vi.spyOn(fileProviders, 'importProjectTextFiles').mockReturnValue(testTextFiles);
 
 describe('loading available projects', async () => {
     afterEach(() => {
@@ -29,7 +31,7 @@ describe('loading available projects', async () => {
     const availableProjects = await ProjectLoader.loadAvailableProjects();
 
     it('has correct number of available projects', () => {
-        expect(Object.values(availableProjects).length).toBe(2);
+        expect(Object.values(availableProjects).length).toBe(3);
     });
 
     it('correctly configures a project without a config file', () => {
@@ -53,6 +55,12 @@ describe('loading available projects', async () => {
         expect(project?.groups).toContain('Test');
         expect(project?.groups?.length).toEqual(1);
         expect(project?.experimental).toEqual(true);
+    });
+
+    it('correctly configures a project with a frag shader file', () => {
+        const project = availableProjects['ShaderProject'];
+        expect(project).toBeDefined();
+        expect(project?.title).toEqual('ShaderProject');
     });
 
     it('does not import a project without a properly named class file', () => {
@@ -159,6 +167,46 @@ describe('loading specific projects', async () => {
         expect(testStringParam.liveUpdates).toEqual(false); // project default
         const testUnusedParam = paramsConfig.filter((param) => param.key === 'testUnusedParam')[0];
         expect(testUnusedParam).toBeUndefined();
+        expect(ParamValueProvider.getValue).toHaveBeenCalledTimes(0);
+    });
+
+    it('loads a project with a frag shader file', async () => {
+        const projectTuple = await ProjectLoader.loadProject('ShaderProject');
+        expect(projectTuple).toBeDefined();
+
+        // Check project class instance
+        const project = projectTuple!.project;
+        expect(project).toBeDefined();
+        expect(project).toBeInstanceOf(Project);
+        expect(project).toBeInstanceOf(FragShaderProject);
+
+        // Check project config
+        const projectProps = projectTuple!.props;
+        expect(projectProps).toBeDefined();
+        expect(projectProps?.title).toEqual('ShaderProject');
+
+        // Check params config
+        const paramsConfig = projectTuple!.params;
+        expect(paramsConfig).toBeDefined();
+        expect(Object.keys(paramsConfig!).length).toEqual(6);
+        const testFloatParam = paramsConfig.filter((param) => param.key === 'testFloat')[0];
+        expect(testFloatParam).toBeDefined();
+        expect(testFloatParam.type).toEqual('number');
+        const testIntParam = paramsConfig.filter((param) => param.key === 'testInt')[0];
+        expect(testIntParam).toBeDefined();
+        expect(testIntParam.type).toEqual('number');
+        const testBoolParam = paramsConfig.filter((param) => param.key === 'testBool')[0];
+        expect(testBoolParam).toBeDefined();
+        expect(testBoolParam.type).toEqual('boolean');
+        const testVec2Param = paramsConfig.filter((param) => param.key === 'testVec2')[0];
+        expect(testVec2Param).toBeDefined();
+        expect(testVec2Param.type).toEqual(ParamType.NumericArray);
+        const testVec3Param = paramsConfig.filter((param) => param.key === 'testVec3')[0];
+        expect(testVec3Param).toBeDefined();
+        expect(testVec3Param.type).toEqual(ParamType.NumericArray);
+        const testVec4Param = paramsConfig.filter((param) => param.key === 'testVec4')[0];
+        expect(testVec4Param).toBeDefined();
+        expect(testVec4Param.type).toEqual(ParamType.NumericArray);
         expect(ParamValueProvider.getValue).toHaveBeenCalledTimes(0);
     });
 

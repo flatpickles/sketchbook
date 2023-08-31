@@ -6,8 +6,6 @@ Ongoing notes for Sketchbook development.
 
 # Current scope:
 
-Tests for FragShaderProject + related ProjectLoader & FileProvider stuff for shader files
-Shaders: See if numeric array color style works with vec3
 Shaders: Documentation
 Shaders: Uniforms for time, size, etc
 
