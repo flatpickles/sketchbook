@@ -5,7 +5,10 @@ import { FunctionParamConfigDefaults, type FunctionParamConfig } from './Functio
 import { StringParamConfigDefaults, type StringParamConfig } from './StringParamConfig';
 import {
     NumericArrayParamConfigDefaults,
-    type NumericArrayParamConfig
+    type NumericArrayParamConfig,
+    isNumericArrayParamConfig,
+    isNumericArray,
+    NumericArrayParamStyle
 } from './NumericArrayParamConfig';
 import { ProjectConfigDefaults } from '../ProjectConfig/ProjectConfig';
 import {
@@ -108,6 +111,13 @@ export class ParamConfigFactory {
                         `File param with "image" mode must include "image" in its accept value (${key})`
                     );
                 }
+            }
+        }
+
+        // Validate array param config style
+        if (isNumericArrayParamConfig(param) && isNumericArray(value)) {
+            if (value.length != 3 && param.style === NumericArrayParamStyle.Color) {
+                throw new Error(`Array param with "color" style must have 3 elements (${key})`);
             }
         }
 

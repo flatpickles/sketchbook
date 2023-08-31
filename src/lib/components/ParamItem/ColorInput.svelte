@@ -1,31 +1,64 @@
 <script lang="ts">
+    import ColorConversions from '$lib/base/Util/ColorConversions';
     import { createEventDispatcher } from 'svelte';
 
     export let name: string;
-    export let value: string;
+    export let value: string | number[];
     export let disabled = false;
-    $: fieldValue = value;
 
     const dispatch = createEventDispatcher();
+
+    // Avoid binding to the value directly within the input elements; depending on the type of
+    // value, we may need to convert rgb <-> hex. Within this component we're using hex only (i.e.
+    // both values below are hex strings)
+    let fieldValue: string = maybeRgbToHex(value);
+    let colorPickerValue: string = maybeRgbToHex(value);
+
+    // Convert rgb to hex if necessary
+    function maybeRgbToHex(maybeRgb: string | number[]): string {
+        if (Array.isArray(maybeRgb)) {
+            return ColorConversions.rgbToHex(maybeRgb);
+        } else {
+            return maybeRgb;
+        }
+    }
+
+    // The text input field has received an input/change event
     function fieldInputEvent(event: Event) {
         const target = event.target as HTMLInputElement;
 
-        // Validate color entry
+        // Validate color entry, reset to current value if failed
         const hexRegex = /^#[0-9A-F]{6}$/i;
         if (!hexRegex.test(target.value)) {
             if (event.type === 'change') {
-                fieldValue = value;
+                target.value = maybeRgbToHex(value);
+                fieldValue = maybeRgbToHex(value);
             }
             return;
         }
 
         // All's good, carry on
-        value = fieldValue;
+        colorPickerValue = target.value;
+        if (Array.isArray(value)) {
+            value = ColorConversions.hexToRgb(target.value);
+        } else {
+            value = target.value;
+        }
+        dispatch(event.type, event);
+    }
+
+    // The color picker input has received an input/change event
+    function pickerInputEvent(event: Event) {
+        const target = event.target as HTMLInputElement;
+        fieldValue = target.value;
+        if (Array.isArray(value)) {
+            value = ColorConversions.hexToRgb(target.value);
+        } else {
+            value = target.value;
+        }
         dispatch(event.type, event);
     }
 </script>
-
-<!-- Currently logs a warning: https://github.com/sveltejs/svelte/issues/8446 -->
 
 <div class="color-input-wrapper">
     <input
@@ -34,7 +67,7 @@
         class="color-field"
         autocomplete="off"
         {disabled}
-        bind:value={fieldValue}
+        value={fieldValue}
         on:input={fieldInputEvent}
         on:change={fieldInputEvent}
         data-testid="color-param-field"
@@ -44,9 +77,9 @@
         id={name}
         class="color-selector"
         {disabled}
-        bind:value
-        on:input
-        on:change
+        value={colorPickerValue}
+        on:input={pickerInputEvent}
+        on:change={pickerInputEvent}
         data-testid="color-param-selector"
     />
 </div>

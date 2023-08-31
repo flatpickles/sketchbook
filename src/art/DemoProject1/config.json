@@ -52,6 +52,9 @@
         "stringOptions": {
             "name": "String Options",
             "options": ["First", "Second", "Third"]
+        },
+        "arrayColor": {
+            "style": "color"
         }
     }
 }

@@ -7,11 +7,6 @@
 import REGL from 'regl';
 import Project, { CanvasType } from './Project';
 
-// todo - tests for this class + new ProjectLoader & FileProvider stuff
-// todo - color style for numeric array params (vec3)
-// todo - documentation
-// todo - uniforms for time, size, etc
-
 const supportedTypes = ['float', 'int', 'bool', 'vec2', 'vec3', 'vec4'] as const;
 type UniformType = (typeof supportedTypes)[number];
 type UniformParamType = number | number[] | boolean;

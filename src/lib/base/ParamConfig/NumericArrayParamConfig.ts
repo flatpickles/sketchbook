@@ -6,7 +6,8 @@ export enum NumericArrayParamStyle {
     CompactField = 'compactField',
     CompactSlider = 'compactSlider',
     Slider = 'slider',
-    Field = 'field'
+    Field = 'field',
+    Color = 'color'
 }
 
 export interface NumericArrayParamConfig extends ParamConfig {
@@ -29,4 +30,13 @@ export const NumericArrayParamConfigDefaults: NumericArrayParamConfig = {
 
 export function isNumericArrayParamConfig(param: ParamConfig): param is NumericArrayParamConfig {
     return param.type === ParamType.NumericArray;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function isNumericArray(value: any): value is number[] {
+    if (!Array.isArray(value)) return false;
+    for (const member of value) {
+        if (typeof member !== 'number') return false;
+    }
+    return true;
 }

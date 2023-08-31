@@ -8,7 +8,10 @@
     import StringInput from './StringInput.svelte';
 
     import { NumberParamStyle } from '$lib/base/ParamConfig/NumberParamConfig';
-    import { NumericArrayParamStyle } from '$lib/base/ParamConfig/NumericArrayParamConfig';
+    import {
+        NumericArrayParamStyle,
+        isNumericArray
+    } from '$lib/base/ParamConfig/NumericArrayParamConfig';
     import { StringParamStyle } from '$lib/base/ParamConfig/StringParamConfig';
     import ColorInput from './ColorInput.svelte';
     import OptionInput from './OptionInput.svelte';
@@ -38,14 +41,6 @@
             config: config,
             value: files
         });
-    }
-
-    export function isNumericArray(value: any): value is number[] {
-        if (!Array.isArray(value)) return false;
-        for (const member of value) {
-            if (typeof member !== 'number') return false;
-        }
-        return true;
     }
 
     function optionsObject<T>(options: T[] | Record<string, T>): Record<string, T> {
@@ -148,6 +143,14 @@
                 options={optionsObject(config.options)}
                 {disabled}
                 bind:value
+                on:change={paramUpdated.bind(null, true)}
+            />
+        {:else if config.style === NumericArrayParamStyle.Color}
+            <ColorInput
+                name={config.name}
+                {disabled}
+                bind:value
+                on:input={paramUpdated.bind(null, false)}
                 on:change={paramUpdated.bind(null, true)}
             />
         {:else}
