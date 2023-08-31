@@ -1,3 +1,4 @@
+import type { FileParamConfig } from '$lib/base/ParamConfig/FileParamConfig';
 import {
     type NumberParamConfig,
     NumberParamConfigDefaults
@@ -15,6 +16,12 @@ describe('ParamConfigFactory', () => {
                 return;
             }, 'func').type
         ).toEqual(ParamType.Function);
+        expect(
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            ParamConfigFactory.configFrom((result: HTMLImageElement) => {
+                return;
+            }, 'func').type
+        ).toEqual(ParamType.File);
         expect(ParamConfigFactory.configFrom('str', 'string').type).toEqual(ParamType.String);
         expect(ParamConfigFactory.configFrom([1, 2, 3], 'number[]').type).toEqual(
             ParamType.NumericArray
@@ -67,5 +74,69 @@ describe('ParamConfigFactory', () => {
     it('assigns default names properly without config', () => {
         const param1 = ParamConfigFactory.configFrom(3, 'number');
         expect(param1.name).toEqual('number');
+    });
+
+    it('validates image file param configuration', () => {
+        const imageConfig = ParamConfigFactory.configFrom(
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            (result: HTMLImageElement) => {
+                return;
+            },
+            'func',
+            { mode: 'image' }
+        ) as FileParamConfig;
+        expect(imageConfig.accept).toEqual('image/*');
+
+        // Accepts image/png for an image mode file
+        expect(() => {
+            ParamConfigFactory.configFrom(
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                (result: HTMLImageElement) => {
+                    return;
+                },
+                'func',
+                { mode: 'image', accept: 'image/png' }
+            );
+        }).not.toThrow();
+
+        // Doesn't accept audio/mp3 for an image mode file
+        expect(() => {
+            ParamConfigFactory.configFrom(
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                (result: HTMLImageElement) => {
+                    return;
+                },
+                'func',
+                { mode: 'image', accept: 'audio/mp3' }
+            );
+        }).toThrow();
+    });
+
+    it('validates array param values', () => {
+        // Color 0-255
+        expect(() => {
+            ParamConfigFactory.configFrom([0, 100, 255], 'param', { style: 'color' });
+        }).not.toThrow();
+        // Color 0-1
+        expect(() => {
+            ParamConfigFactory.configFrom([0, 0.5, 1], 'param', { style: 'unitColor' });
+        }).not.toThrow();
+
+        // Must have 3 elements
+        expect(() => {
+            ParamConfigFactory.configFrom([1, 2, 3, 4], 'param', { style: 'color' });
+        }).toThrow();
+        // Out of bounds 0-255
+        expect(() => {
+            ParamConfigFactory.configFrom([0, 100, 256], 'param', { style: 'color' });
+        }).toThrow();
+        // Out of bounds 0-1
+        expect(() => {
+            ParamConfigFactory.configFrom([0, 100, 255], 'param', { style: 'unitColor' });
+        }).toThrow();
+        // Non-integer values 0-255
+        expect(() => {
+            ParamConfigFactory.configFrom([0, 100.5, 255], 'param', { style: 'color' });
+        }).toThrow();
     });
 });
