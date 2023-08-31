@@ -2,7 +2,7 @@ Sketchbook -> Docs -> Customization
 
 # Customizing Sketchbook
 
-Sketchbook is designed to be adapted to your needs and aesthetics. With some knowledge of the configuration options available, you can customize the look, feel, and behavior of Sketchbook without modifying the underlying SvelteKit code.
+Sketchbook is designed to be adapted to your needs and aesthetics. With some knowledge of the configuration options available, you can extensively customize the look, feel, and behavior of Sketchbook without modifying the underlying SvelteKit code.
 
 ## content.ts
 

@@ -6,9 +6,6 @@ Ongoing notes for Sketchbook development.
 
 # Current scope:
 
-Shaders: Documentation
-Shaders: Uniforms for time, size, etc
-
 ## Bugs
 
 -   Experimental sketch selected by default (/ navigation)

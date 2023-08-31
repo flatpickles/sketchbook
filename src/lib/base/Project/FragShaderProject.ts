@@ -7,6 +7,11 @@
 import REGL from 'regl';
 import Project, { CanvasType } from './Project';
 
+// Uniform names for non-params (i.e. uniforms not specific to a particular project)
+const timeUniformName = 'time';
+const renderSizeUniformName = 'renderSize';
+
+// Uniform typing stuff
 const supportedTypes = ['float', 'int', 'bool', 'vec2', 'vec3', 'vec4'] as const;
 type UniformType = (typeof supportedTypes)[number];
 type UniformParamType = number | number[] | boolean;
@@ -68,6 +73,9 @@ export default class FragShaderProject extends Project {
             const type = uniformLineComponents[uniformTypeIndex];
             const name = uniformLineComponents[uniformTypeIndex + 1];
 
+            // Ignore non-user-defined uniforms
+            if ([timeUniformName, renderSizeUniformName].includes(name)) return;
+
             // Use name and type to parameterize this uniform
             if (isSupportedUniformType(type) && name.length > 0) {
                 // Create a default property value if the uniform type is supported
@@ -97,7 +105,14 @@ export default class FragShaderProject extends Project {
             attributes: {
                 position: positions
             },
-            uniforms: this.#uniformParams,
+            uniforms: {
+                ...this.#uniformParams,
+                [timeUniformName]: ({ time }) => time,
+                [renderSizeUniformName]: ({ viewportWidth, viewportHeight }) => [
+                    viewportWidth,
+                    viewportHeight
+                ]
+            },
             count: positions.length
         });
 

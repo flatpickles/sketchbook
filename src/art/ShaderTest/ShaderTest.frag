@@ -1,13 +1,21 @@
 precision mediump float;
 
 varying vec2 uv;
+
+uniform float time;
+uniform vec2 renderSize;
+
 uniform float blue;
 uniform float green;
-uniform bool showBox;
+uniform bool showCircle;
 uniform vec3 boxColor;
+
 void main() {
-    if (showBox) {
-        if (uv.x < 0.1 || uv.x > 0.9 || uv.y < 0.1 || uv.y > 0.9) {
+    float aspect = renderSize.x / renderSize.y;
+    vec2 scaledUV = vec2(aspect, 1.0) * (uv * 2.0 - 1.0);
+
+    if (showCircle) {
+        if (distance(scaledUV, vec2(0, 0)) > fract(time / 5.0)) {
             gl_FragColor = vec4(boxColor, 1);
             return;
         }

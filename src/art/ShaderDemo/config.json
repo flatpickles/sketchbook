@@ -1,3 +1,16 @@
 {
-    "experimental": false
+    "experimental": true,
+    "params": {
+        "blue": {
+            "name": "Blue",
+            "section": "Colors"
+        },
+        "green": {
+            "name": "Green",
+            "section": "Colors"
+        },
+        "boxColor": {
+            "style": "unitColor"
+        }
+    }
 }
