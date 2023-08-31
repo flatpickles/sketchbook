@@ -98,6 +98,7 @@
 
     .project-list-item {
         user-select: none;
+        flex-shrink: 0;
         @include project-list-item;
     }
 </style>

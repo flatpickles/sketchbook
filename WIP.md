@@ -9,7 +9,6 @@ Ongoing notes for Sketchbook development.
 ## Bugs
 
 -   Experimental sketch selected by default (/ navigation)
--   Project list items squish before scrolling
 
 ## Johan's feedback (8/23):
 
