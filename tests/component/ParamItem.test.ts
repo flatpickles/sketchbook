@@ -443,3 +443,51 @@ describe('Full width ParamItem', () => {
         expect(buttonText).toBeDefined();
     });
 });
+
+describe('Color styles for numeric arrays', () => {
+    afterEach(cleanup);
+
+    it('renders a color input with the "color" style', () => {
+        const param: NumericArrayParamConfig = {
+            key: 'color',
+            name: 'Color',
+            type: ParamType.NumericArray,
+            min: 0,
+            max: 255,
+            step: 1,
+            style: NumericArrayParamStyle.Color,
+            liveUpdates: true,
+            fullWidthInput: false
+        };
+        // @ts-ignore – value type checking isn't working in the render constructor
+        render(ParamItem, { config: param, value: [255, 0, 0], even: false });
+        const label = screen.getByText('Color');
+        expect(label).toBeDefined();
+        const field = screen.getAllByTestId('color-param-field')[0] as HTMLInputElement;
+        expect(field.value).toBe('#ff0000');
+        const selector = screen.getAllByTestId('color-param-selector')[0] as HTMLInputElement;
+        expect(selector.value).toBe('#ff0000');
+    });
+
+    it('renders a color input with the "unitColor" style', () => {
+        const param: NumericArrayParamConfig = {
+            key: 'color',
+            name: 'Color',
+            type: ParamType.NumericArray,
+            min: 0,
+            max: 255,
+            step: 1,
+            style: NumericArrayParamStyle.UnitColor,
+            liveUpdates: true,
+            fullWidthInput: false
+        };
+        // @ts-ignore – value type checking isn't working in the render constructor
+        render(ParamItem, { config: param, value: [1, 0, 0], even: false });
+        const label = screen.getByText('Color');
+        expect(label).toBeDefined();
+        const field = screen.getAllByTestId('color-param-field')[0] as HTMLInputElement;
+        expect(field.value).toBe('#ff0000');
+        const selector = screen.getAllByTestId('color-param-selector')[0] as HTMLInputElement;
+        expect(selector.value).toBe('#ff0000');
+    });
+});
