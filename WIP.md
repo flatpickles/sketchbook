@@ -8,8 +8,6 @@ Ongoing notes for Sketchbook development.
 
 ## Bugs
 
--   Experimental sketch selected by default (/ navigation)
-
 ## Johan's feedback (8/23):
 
 -   maybe rename update method; "update" implies it runs every frame
@@ -72,6 +70,7 @@ Maybe in theme.scss (how it looks)
     -   Use these with double-click to reset to default (when no preset is selected)
 -   Min/max range slider? (style for 2-member numeric array, maybe)
 -   Full width description text paired with a param input (useful in settings)
+-   Toggle switch theme for boolean input
 
 ### Value Effects
 
@@ -97,7 +96,8 @@ Use cases: modes (w/ options), sections, functionality only defined with some va
     -   Settings panel
     -   Project detail panel (component tests)
     -   Project list panel (header/footer components etc)
--   Check to see if classes are actually Project subclasses when loading (otherwise we get confusing errors)
+-   Check to see if classes are actually Project subclasses when loading (otherwise we get confusing errors with improper subclasses in src/art)
+-   Sort projects based on settings in some central location (not just in the ProjectList component) so we can use this in the root +page.server.ts
 -   Project key:
     -   Use key instead of name in saved state
     -   User-defined keys used for project URL

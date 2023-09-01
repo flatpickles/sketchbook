@@ -8,7 +8,7 @@ uniform vec2 renderSize;
 uniform float blue;
 uniform float green;
 uniform bool showCircle;
-uniform vec3 boxColor;
+uniform vec3 bgColor;
 
 void main() {
     float aspect = renderSize.x / renderSize.y;
@@ -16,7 +16,7 @@ void main() {
 
     if (showCircle) {
         if (distance(scaledUV, vec2(0, 0)) > fract(time / 5.0)) {
-            gl_FragColor = vec4(boxColor, 1);
+            gl_FragColor = vec4(bgColor, 1);
             return;
         }
     }

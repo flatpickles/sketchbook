@@ -77,6 +77,7 @@ describe('loading specific projects', async () => {
     it('loads a project with no config file', async () => {
         const projectTuple = await ProjectLoader.loadProject('NoConfig');
         expect(projectTuple).toBeDefined();
+        expect(projectTuple?.key).toEqual('NoConfig');
 
         // Check project class instance
         const project = projectTuple!.project;
@@ -125,6 +126,7 @@ describe('loading specific projects', async () => {
     it('loads a project with a config file', async () => {
         const projectTuple = await ProjectLoader.loadProject('ConfigAndSupport');
         expect(projectTuple).toBeDefined();
+        expect(projectTuple?.key).toEqual('ConfigAndSupport');
 
         // Check project class instance
         const project = projectTuple!.project;
@@ -173,6 +175,7 @@ describe('loading specific projects', async () => {
     it('loads a project with a frag shader file', async () => {
         const projectTuple = await ProjectLoader.loadProject('ShaderProject');
         expect(projectTuple).toBeDefined();
+        expect(projectTuple?.key).toEqual('ShaderProject');
 
         // Check project class instance
         const project = projectTuple!.project;

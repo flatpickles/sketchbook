@@ -12,6 +12,7 @@ import { browser } from '$app/environment';
 import FragShaderProject from '../Project/FragShaderProject';
 
 export interface ProjectTuple {
+    key: string;
     project: Project;
     props: ProjectConfig;
     params: ParamConfig[];
@@ -145,6 +146,7 @@ export default class ProjectLoader {
 
         // Return tuple
         return {
+            key,
             project,
             props,
             params
