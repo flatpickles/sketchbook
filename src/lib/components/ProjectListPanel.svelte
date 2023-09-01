@@ -32,61 +32,51 @@
     }
 </script>
 
-<div class="panel-container">
-    <Panel>
-        {#if !settingsDisplayed}
-            <div class="main-wrapper" transition:fade={{ duration: 200 }}>
-                <PanelHeader
-                    title={content.title}
-                    subtitle={content.subtitle}
-                    description={content.description}
-                    hideClose={true}
-                    on:close={closePanel}
-                />
-                <GroupSelector
-                    projects={Object.values(projects)}
-                    bind:selectedGroup
-                    sorting={$settingsStore.groupSortOrder}
-                />
-                <ProjectList
-                    {projects}
-                    {selectedGroup}
-                    {selectedProjectKey}
-                    sorting={$settingsStore.projectSortOrder}
-                />
-                <PanelFooter
-                    footerText={content.footer}
-                    leftButton={content.leftButtonIcon && content.leftButtonLink
-                        ? content.leftButtonIcon
-                        : undefined}
-                    rightButton="fa-gear"
-                    on:leftbuttonclick={showInfo}
-                    on:rightbuttonclick={toggleSettings}
-                />
-            </div>
-        {:else}
-            <div class="settings-wrapper" transition:fade={{ duration: 200 }}>
-                <PanelHeader
-                    title={content.settingsTitle}
-                    description={content.settingsDescription}
-                    on:close={toggleSettings}
-                />
-                <SettingsContent />
-            </div>
-        {/if}
-    </Panel>
-</div>
+<Panel>
+    {#if !settingsDisplayed}
+        <div class="list-panel-wrapper" transition:fade={{ duration: 200 }}>
+            <PanelHeader
+                title={content.title}
+                subtitle={content.subtitle}
+                description={content.description}
+                hideClose={true}
+                on:close={closePanel}
+            />
+            <GroupSelector
+                projects={Object.values(projects)}
+                bind:selectedGroup
+                sorting={$settingsStore.groupSortOrder}
+            />
+            <ProjectList
+                {projects}
+                {selectedGroup}
+                {selectedProjectKey}
+                sorting={$settingsStore.projectSortOrder}
+            />
+            <PanelFooter
+                footerText={content.footer}
+                leftButton={content.leftButtonIcon && content.leftButtonLink
+                    ? content.leftButtonIcon
+                    : undefined}
+                rightButton="fa-gear"
+                on:leftbuttonclick={showInfo}
+                on:rightbuttonclick={toggleSettings}
+            />
+        </div>
+    {:else}
+        <div class="settings-wrapper" transition:fade={{ duration: 200 }}>
+            <PanelHeader
+                title={content.settingsTitle}
+                description={content.settingsDescription}
+                on:close={toggleSettings}
+            />
+            <SettingsContent />
+        </div>
+    {/if}
+</Panel>
 
 <style lang="scss">
-    .panel-container {
-        position: absolute;
-        top: 0;
-        left: 0;
-        height: 100%;
-        padding: $panel-edge-inset;
-    }
-
-    .main-wrapper {
+    .list-panel-wrapper {
         width: 100%;
         height: 100%;
         display: flex;

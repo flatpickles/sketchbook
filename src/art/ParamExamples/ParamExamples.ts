@@ -58,6 +58,15 @@ export default class AllParams extends Project {
     numericArrayCompactSlider = [0.1, 0.9, 0.8, 0.4];
     numericArrayCompactField = [0.2, 0.7];
     numericArrayOption = [0.3, 0.7];
+
+    update() {
+        // draw a box with this.container size
+        if (!this.canvas || !this.container) throw new Error('stuff not initialized');
+        const ctx = this.canvas.getContext('2d');
+        if (!ctx) throw new Error('Context not initialized');
+        ctx.fillStyle = 'red';
+        ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    }
 }
 
 /* todo...

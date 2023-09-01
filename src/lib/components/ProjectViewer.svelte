@@ -95,10 +95,8 @@
 
 <style lang="scss">
     #container {
-        display: block;
-        width: 100vw;
-        height: 100vh;
-        overflow: hidden;
+        width: 100%;
+        height: 100%;
     }
 
     .shared-canvas {
