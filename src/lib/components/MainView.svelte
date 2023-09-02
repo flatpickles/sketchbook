@@ -30,8 +30,6 @@
 </div>
 
 <style lang="scss">
-    $overlay: false;
-
     .main-wrapper {
         display: flex;
         flex-direction: row;
@@ -43,7 +41,7 @@
     }
 
     @mixin panel-wrapper {
-        position: if($overlay, absolute, relative);
+        position: if($overlay-panels, absolute, relative);
         z-index: 1;
 
         // Enable panel min-height despite absolute inheritance:
@@ -63,8 +61,8 @@
     }
 
     .panel {
-        padding: if($overlay, $panel-edge-inset, 0);
-        min-height: if($overlay, 0, 100%);
+        padding: if($overlay-panels, $panel-edge-inset, 0);
+        min-height: if($full-height-panels or not $overlay-panels, 100%, 0);
         max-height: 100%;
     }
 

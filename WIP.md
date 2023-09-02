@@ -8,12 +8,8 @@ Ongoing notes for Sketchbook development.
 
 ## Main view layout:
 
--   Extract customization values to theme.scss
--   Enable full height panels with overlay
--   Remove rounded corners with non-overlay
--   Assess borders, drop shadows, etc
 -   Floating panel design - footer space? Min height (optional)?
--   Separate overlay settings for each panel?
+-   Separate style settings for each panel, including overlay?
 -   Panel show/hide animations
     -   in non-overlay, can animate widths of wrappers to impact flex layout
 -   Fix settings with overlay (maybe just pull out into its own modal)

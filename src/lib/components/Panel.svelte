@@ -14,7 +14,7 @@
         backdrop-filter: $panel-bg-filter;
         -webkit-backdrop-filter: $panel-bg-filter;
 
-        border-radius: $panel-border-radius;
+        border-radius: if($overlay-panels, $panel-border-radius, 0);
         box-shadow: $panel-shadow;
         outline: $panel-outline;
         overflow: hidden;

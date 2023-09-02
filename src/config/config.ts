@@ -5,6 +5,7 @@ const showExperiments = false;
 export enum PanelState {
     Hidden = 'hidden', // not shown, can toggle to visible
     Visible = 'visible', // shown, can toggle to hidden
+    // todo: mouse stuff
     Static = 'static', // shown, cannot toggle
     Unavailable = 'unavailable' // not shown, cannot toggle
 }
