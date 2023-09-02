@@ -18,10 +18,6 @@
     let selectedGroup: string | undefined;
     let settingsDisplayed = false;
 
-    function closePanel() {
-        alert('todo: close panel');
-    }
-
     function showInfo() {
         if (!content.leftButtonLink) throw new Error('No info link defined');
         document.location.href = content.leftButtonLink;
@@ -39,8 +35,8 @@
                 title={content.title}
                 subtitle={content.subtitle}
                 description={content.description}
-                hideClose={true}
-                on:close={closePanel}
+                hideClose={false}
+                on:close
             />
             <GroupSelector
                 projects={Object.values(projects)}
