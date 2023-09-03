@@ -8,6 +8,10 @@ const footer = `Copyright © 2023 <a href='http://flatpickles.com'>Matt Nichols<
 const leftButtonIcon = `fa-brands fa-github`;
 const leftButtonLink = `https://github.com/flatpickles/sketchbook2`;
 
+// Show panel buttons
+const projectListIcon = `fa-solid fa-bars`;
+const projectDetailIcon = `fa-solid fa-sliders`;
+
 // Settings panel content
 const settingsTitle = 'Settings';
 const settingsDescription = ``;
@@ -21,6 +25,8 @@ export const content = {
     footer,
     leftButtonIcon,
     leftButtonLink,
+    projectListIcon,
+    projectDetailIcon,
     settingsTitle,
     settingsDescription,
     resetButtonLabel

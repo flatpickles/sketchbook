@@ -6,15 +6,24 @@ Ongoing notes for Sketchbook development.
 
 # Current scope:
 
-## Main view layout:
+## Main view panels
 
--   Floating panel design - footer space? Min height (optional)?
--   Separate style settings for each panel, including overlay?
--   Panel show/hide animations
-    -   in non-overlay, can animate widths of wrappers to impact flex layout
+-   Persist panel state
+-   Apply other default panel state settings
+-   Implement optional panel state settings for direct project links (vs. navigation to /)
+-   Mouse show/hide behavior (optionally hide buttons with no mouse movement, desktop only)
+-   Non-overlay: fix outline & drop shadow visibility when hidden
+-   Non-overlay: update and resize canvas throughout animation
+-   Reset canvas size when switching overlay setting with live reload (if possible)
+
+-   Visible button presentation for light/dark content
 -   Fix settings with overlay (maybe just pull out into its own modal)
--   Reset canvas when switching setting with live reload (if possible)
--   Lightweight project switcher option? No left panel as currently imagined...
+-   Separate overlay & style settings for each panel
+-   Floating panel design - footer space? Min height (optional)?
+
+-   Tests for new functionality
+-   Mobile layout
+-   Lightweight project switcher option? (long list)
 
 ## Johan's feedback (8/23):
 
@@ -106,6 +115,7 @@ Use cases: modes (w/ options), sections, functionality only defined with some va
     -   Project list panel (header/footer components etc)
 -   Check to see if classes are actually Project subclasses when loading (otherwise we get confusing errors with improper subclasses in src/art)
 -   Sort projects based on settings in some central location (not just in the ProjectList component) so we can use this in the root +page.server.ts
+-   Limit panel description text height // enable scrolling
 -   Project key:
     -   Use key instead of name in saved state
     -   User-defined keys used for project URL

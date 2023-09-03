@@ -2,6 +2,7 @@
     import ProjectViewer from '$lib/components/ProjectViewer.svelte';
     import ProjectDetailPanel from '$lib/components/ProjectDetailPanel.svelte';
     import ProjectListPanel from '$lib/components/ProjectListPanel.svelte';
+    import { content } from '../../config/content';
 
     import type { ProjectTuple } from '$lib/base/FileLoading/ProjectLoader';
     import type { ProjectConfig } from '$lib/base/ProjectConfig/ProjectConfig';
@@ -9,45 +10,60 @@
     export let projectConfigs: Record<string, ProjectConfig>;
     export let selectedProjectTuple: ProjectTuple;
 
-    let leftPanelClosed = false;
-    let rightPanelClosed = false;
+    let leftPanelShown = true;
+    let rightPanelShown = true;
 
-    function closeLeftPanel() {
-        console.log('closeLeftPanel');
-        leftPanelClosed = true;
+    function showLeftPanel(show = true) {
+        leftPanelShown = show;
     }
 
-    function closeRightPanel() {
-        console.log('closeRightPanel');
-        rightPanelClosed = true;
+    function showRightPanel(show = true) {
+        rightPanelShown = show;
     }
 </script>
 
 <div class="main-wrapper">
-    <div class="left-panel-wrapper" class:closed={leftPanelClosed}>
-        <div class="panel" class:leftClosed={leftPanelClosed}>
+    <div class="left-panel-wrapper" class:closed={!leftPanelShown}>
+        <div class="panel" class:leftClosed={!leftPanelShown}>
             <ProjectListPanel
                 projects={projectConfigs}
                 selectedProjectKey={selectedProjectTuple.key}
-                on:close={closeLeftPanel}
+                on:close={showLeftPanel.bind(null, false)}
             />
         </div>
     </div>
     <div class="project-viewer">
         <ProjectViewer project={selectedProjectTuple.project} />
     </div>
-    <div class="right-panel-wrapper" class:closed={rightPanelClosed}>
+    <div class="right-panel-wrapper" class:closed={!rightPanelShown}>
         <div class="panel">
-            <ProjectDetailPanel projectTuple={selectedProjectTuple} on:close={closeRightPanel} />
+            <ProjectDetailPanel
+                projectTuple={selectedProjectTuple}
+                on:close={showRightPanel.bind(null, false)}
+            />
         </div>
     </div>
 </div>
 
-<style lang="scss">
-    // To animate panel wrapper width changes, we need to set width explicitly
-    $panelWrapperWidth: if($overlay-panels, $panel-edge-inset * 2, 0) + $panel-width;
-    $panelAnimationDuration: 0.5s;
+<div
+    class="left-show"
+    class:hidden={leftPanelShown}
+    on:click={showLeftPanel.bind(null, true)}
+    on:keypress={showLeftPanel.bind(null, true)}
+>
+    <i class={content.projectListIcon} />
+</div>
 
+<div
+    class="right-show"
+    class:hidden={rightPanelShown}
+    on:click={showRightPanel.bind(null, true)}
+    on:keypress={showRightPanel.bind(null, true)}
+>
+    <i class={content.projectDetailIcon} />
+</div>
+
+<style lang="scss">
     .main-wrapper {
         display: flex;
         flex-direction: row;
@@ -58,9 +74,57 @@
         overflow: hidden;
     }
 
+    .project-viewer {
+        flex-grow: 1;
+
+        overflow: hidden;
+        z-index: 0;
+    }
+
+    /* Show buttons */
+
+    @mixin show-button {
+        @include panel-show-button;
+        position: absolute;
+        top: 0;
+        z-index: 1;
+        cursor: pointer;
+
+        // Transition opacity (with +0.1s buffer)
+        opacity: 100%;
+        transition: opacity $panel-show-button-animation-duration ease-in-out;
+        transition-delay: calc($panel-animation-duration + 0.1s);
+        &.hidden {
+            opacity: 0;
+            transition-delay: 0.1s;
+        }
+    }
+
+    .left-show {
+        @include show-button;
+        left: 0;
+    }
+
+    .right-show {
+        @include show-button;
+        right: 0;
+    }
+
+    /* Panels */
+
+    // To animate panel wrapper width changes, we need to set width explicitly
+    $panel-wrapper-width: if($overlay-panels, $panel-edge-inset * 2, 0) + $panel-width;
+
     @mixin panel-wrapper {
         position: if($overlay-panels, absolute, relative);
-        z-index: 1;
+        z-index: 2;
+
+        // Transition width
+        width: $panel-wrapper-width;
+        transition: width $panel-animation-duration ease-in-out;
+        &.closed {
+            width: 0;
+        }
 
         // Enable panel min-height despite absolute inheritance:
         display: flex;
@@ -71,43 +135,25 @@
     .left-panel-wrapper {
         @include panel-wrapper;
         left: 0;
-        transition: width $panelAnimationDuration ease-in-out;
-        width: $panelWrapperWidth;
-
-        &.closed {
-            width: 0;
-        }
     }
 
     .right-panel-wrapper {
         @include panel-wrapper;
         right: 0;
-        transition: width $panelAnimationDuration ease-in-out;
-        width: $panelWrapperWidth;
-
-        &.closed {
-            width: 0;
-        }
     }
 
     .panel {
         position: relative;
         padding: if($overlay-panels, $panel-edge-inset, 0);
-        min-height: if($full-height-panels or not $overlay-panels, 100%, 0);
+        min-height: $panel-min-height;
         max-height: 100%;
-        transition: left $panelAnimationDuration ease-in-out;
-        left: 0;
 
+        // Transition left (for left panel only)
+        left: 0;
+        transition: left $panel-animation-duration ease-in-out;
         &.leftClosed {
             // Align to the right side of a zero-width panel:
-            left: calc(-1 * $panelWrapperWidth);
+            left: calc(-1 * $panel-wrapper-width);
         }
-    }
-
-    .project-viewer {
-        flex-grow: 1;
-
-        overflow: hidden;
-        z-index: 0;
     }
 </style>

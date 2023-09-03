@@ -16,9 +16,18 @@ $medium-text-size: 0.9rem;
 $small-text-size: 0.8rem;
 $xs-text-size: 0.7rem;
 
+// Panel buttons
+@mixin panel-show-button {
+    font-size: 1rem;
+    padding: 0.5rem;
+    color: rgba(0, 0, 0, 0.5);
+}
+$panel-animation-duration: 0.3s;
+$panel-show-button-animation-duration: 0.7s;
+
 // Panels
 $overlay-panels: true;
-$full-height-panels: false;
+$panel-min-height: 0;
 $panel-width: 16rem;
 $panel-edge-inset: 0.5rem;
 $panel-border-radius: 0.5rem;
@@ -31,6 +40,7 @@ $panel-outline: 1px solid rgba(0, 0, 0, 0.1);
 $panel-content-inset: 0.75rem;
 $panel-section-spacing: 0.75rem;
 @mixin panel-button {
+    // todo: border stuff should be moved in here
     font-size: $small-text-size;
     color: rgba(0, 0, 0, 0.5);
     width: 1.5rem;
