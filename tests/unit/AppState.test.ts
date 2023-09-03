@@ -36,8 +36,8 @@ describe('AppStateStore', () => {
 
     it('only persists values that are specified in userSettingsLabels', () => {
         // Check default values
-        expect(localStorage.getItem('showExperiments')).toBeNull();
-        expect(localStorage.getItem('projectSortOrder')).toBeNull();
+        expect(localStorage.getItem('settings_showExperiments')).toBeNull();
+        expect(localStorage.getItem('settings_projectSortOrder')).toBeNull();
 
         // Check set values (these should be different than the config defaults)
         settingsStore.set({
@@ -47,27 +47,33 @@ describe('AppStateStore', () => {
             defaultProjectListState: 'visible',
             defaultProjectDetailState: 'unavailable'
         });
-        expect(localStorage.getItem('showExperiments')).toContain('true');
-        expect(localStorage.getItem('projectSortOrder')).toContain('reverse-chronological');
-        expect(localStorage.getItem('groupSortOrder')).toBeNull();
-        expect(localStorage.getItem('defaultProjectListState')).toBeNull();
-        expect(localStorage.getItem('defaultProjectDetailState')).toBeNull();
+        expect(localStorage.getItem('settings_showExperiments')).toContain('true');
+        expect(localStorage.getItem('settings_projectSortOrder')).toContain(
+            'reverse-chronological'
+        );
+        expect(localStorage.getItem('settings_groupSortOrder')).toBeNull();
+        expect(localStorage.getItem('settings_defaultProjectListState')).toBeNull();
+        expect(localStorage.getItem('settings_defaultProjectDetailState')).toBeNull();
     });
 
-    it('properly updates with new file values when reset', () => {
+    it('properly updates with new file values when reset (settingsStore)', () => {
         // Check default values after first load/reset (just in case)
-        expect(localStorage.getItem('projectSortOrder')).toBeNull();
-        expect(localStorage.getItem('lastFileValue_projectSortOrder')).toContain('chronological');
+        expect(localStorage.getItem('settings_projectSortOrder')).toBeNull();
+        expect(localStorage.getItem('settings_lastInitialValue_projectSortOrder')).toContain(
+            'chronological'
+        );
 
         // If we had set projectSortOrder as reverse chron in the file for a previous load,
         // it should now reset to original file value (lastFileValue_projectSortOrder in LS)
         // despite projectSortOrder in LS, which would be the last user setting here
-        localStorage.setItem('lastFileValue_projectSortOrder', 'reverse-chronological');
-        localStorage.setItem('projectSortOrder', 'alphabetical');
+        localStorage.setItem('settings_lastInitialValue_projectSortOrder', 'reverse-chronological');
+        localStorage.setItem('settings_projectSortOrder', 'alphabetical');
         settingsStore.reset();
         expect(get(settingsStore).showExperiments).toBe(false);
         expect(get(settingsStore).projectSortOrder).toBe(SortOrder.Chronological);
-        expect(localStorage.getItem('lastFileValue_projectSortOrder')).toContain('chronological');
-        expect(localStorage.getItem('projectSortOrder')).toContain('chronological');
+        expect(localStorage.getItem('settings_lastInitialValue_projectSortOrder')).toContain(
+            'chronological'
+        );
+        expect(localStorage.getItem('settings_projectSortOrder')).toContain('chronological');
     });
 });

@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { ProjectConfig } from '$lib/base/ProjectConfig/ProjectConfig';
-    import { SortOrder } from '../../config/config';
+    import { SortOrder } from '$lib/base/Util/ConfigTypes';
     export let projects: ProjectConfig[];
     export let sorting: SortOrder = SortOrder.Alphabetical;
     export let selectedGroup: string | undefined = undefined;
