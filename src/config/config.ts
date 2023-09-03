@@ -7,6 +7,10 @@ const showExperiments = false;
 const defaultProjectListState = PanelState.Visible;
 const defaultProjectDetailState = PanelState.Visible;
 
+// When using mouse-triggering options for the project list and detail panels above, this is the
+// width of the trigger areas on the left & right, in pixels
+const panelMouseTriggerWidth = 50;
+
 // Project and group label sorting
 const projectSortOrder = SortOrder.Chronological;
 const groupSortOrder = SortOrder.Alphabetical;
@@ -24,6 +28,7 @@ export const config = {
     showExperiments,
     defaultProjectListState,
     defaultProjectDetailState,
+    panelMouseTriggerWidth,
     projectSortOrder,
     groupSortOrder
 };

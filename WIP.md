@@ -8,9 +8,6 @@ Ongoing notes for Sketchbook development.
 
 ## Main view panels
 
--   Mouse show/hide:
-    -   mouse-visible state when pinned, close toggles to mouse-hidden
-    -   mouse-hidden state when unpinned; hovering shows the panel and allows interaction, and can be pinned (top button w/ "fa-solid fa-thumbtack")
 -   Implement optional panel state settings for direct project links (vs. navigation to /)
 -   Non-overlay: fix outline & drop shadow visibility when hidden
 -   Non-overlay: update and resize canvas throughout animation
@@ -21,8 +18,8 @@ Ongoing notes for Sketchbook development.
 -   Separate overlay & style settings for each panel
 -   Floating panel design - footer space? Min height (optional)?
 
--   Tests for new functionality
--   Mobile layout
+-   Tests for MainView functionality
+-   Mobile layout (reassess mouse behavior fallbacks)
 -   Lightweight project switcher option? (long list)
 
 ## Johan's feedback (8/23):

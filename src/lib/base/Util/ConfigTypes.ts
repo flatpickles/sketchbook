@@ -2,8 +2,9 @@
 export enum PanelState {
     Visible = 'visible', // shown, can toggle to hidden
     Hidden = 'hidden', // not shown, can toggle to visible
-    MouseVisible = 'mouse-visible', // shown, toggles to mouse-hidden
-    MouseHidden = 'mouse-hidden', // hidden, toggles to mouse-visible
+    MousePinned = 'mouse-pinned', // shown, toggles to mouse-pinnable
+    MousePinnable = 'mouse-pinnable', // shows & hides with mouse position, toggles to mouse-pinned
+    MouseUnpinnable = 'mouse-unpinnable', // shows & hides with mouse position, cannot toggle
     Static = 'static', // shown, cannot toggle
     Unavailable = 'unavailable' // not shown, cannot toggle
 }
