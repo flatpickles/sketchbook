@@ -8,7 +8,6 @@ Ongoing notes for Sketchbook development.
 
 ## Main view panels
 
--   Implement static/unavailable panel settings
 -   Mouse show/hide:
     -   mouse-visible state when pinned, close toggles to mouse-hidden
     -   mouse-hidden state when unpinned; hovering shows the panel and allows interaction, and can be pinned (top button w/ "fa-solid fa-thumbtack")

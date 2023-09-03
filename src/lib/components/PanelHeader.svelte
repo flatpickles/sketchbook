@@ -4,11 +4,11 @@
     export let title: string;
     export let subtitle: string | undefined = undefined;
     export let description: string | undefined = undefined;
-    export let hideClose = false;
+    export let headerButtonIcon: string | undefined = undefined;
 
     const dispatch = createEventDispatcher();
-    function closeClicked() {
-        dispatch('close');
+    function buttonClicked() {
+        dispatch('headeraction');
     }
 </script>
 
@@ -20,8 +20,10 @@
                 <h2 data-testid="header-subtitle">{@html subtitle}</h2>
             {/if}
         </div>
-        {#if !hideClose}
-            <button class="header-button" on:click={closeClicked}><i class="fa fa-xmark" /></button>
+        {#if headerButtonIcon != undefined}
+            <button class="header-button" on:click={buttonClicked}
+                ><i class={`fa ${headerButtonIcon}`} /></button
+            >
         {/if}
     </div>
 

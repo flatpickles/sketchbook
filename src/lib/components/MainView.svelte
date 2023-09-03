@@ -12,8 +12,25 @@
     export let projectConfigs: Record<string, ProjectConfig>;
     export let selectedProjectTuple: ProjectTuple;
 
-    $: leftPanelShown = $stateStore.projectListState === PanelState.Visible;
-    $: rightPanelShown = $stateStore.projectDetailState === PanelState.Visible;
+    $: leftPanelShown = [PanelState.Visible, PanelState.Static].includes(
+        $stateStore.projectListState
+    );
+    $: rightPanelShown = [PanelState.Visible, PanelState.Static].includes(
+        $stateStore.projectDetailState
+    );
+    $: leftPanelHeaderIcon = headerIconForPanelState($stateStore.projectListState);
+    $: rightPanelHeaderIcon = headerIconForPanelState($stateStore.projectDetailState);
+
+    function headerIconForPanelState(state: PanelState) {
+        switch (state) {
+            case PanelState.Visible:
+                return 'fa-close';
+            case PanelState.Hidden:
+                return 'fa-close';
+            default:
+                return undefined;
+        }
+    }
 
     function showLeftPanel(show = true) {
         $stateStore.projectListState = show ? PanelState.Visible : PanelState.Hidden;
@@ -30,7 +47,8 @@
             <ProjectListPanel
                 projects={projectConfigs}
                 selectedProjectKey={selectedProjectTuple.key}
-                on:close={showLeftPanel.bind(null, false)}
+                headerButtonIcon={leftPanelHeaderIcon}
+                on:headeraction={showLeftPanel.bind(null, false)}
             />
         </div>
     </div>
@@ -41,29 +59,34 @@
         <div class="panel">
             <ProjectDetailPanel
                 projectTuple={selectedProjectTuple}
-                on:close={showRightPanel.bind(null, false)}
+                headerButtonIcon={rightPanelHeaderIcon}
+                on:headeraction={showRightPanel.bind(null, false)}
             />
         </div>
     </div>
 </div>
 
-<div
-    class="left-show"
-    class:hidden={leftPanelShown}
-    on:click={showLeftPanel.bind(null, true)}
-    on:keypress={showLeftPanel.bind(null, true)}
->
-    <i class={content.projectListIcon} />
-</div>
+{#if ![PanelState.Unavailable, PanelState.Static].includes($stateStore.projectListState)}
+    <div
+        class="left-show"
+        class:hidden={leftPanelShown}
+        on:click={showLeftPanel.bind(null, true)}
+        on:keypress={showLeftPanel.bind(null, true)}
+    >
+        <i class={content.projectListIcon} />
+    </div>
+{/if}
 
-<div
-    class="right-show"
-    class:hidden={rightPanelShown}
-    on:click={showRightPanel.bind(null, true)}
-    on:keypress={showRightPanel.bind(null, true)}
->
-    <i class={content.projectDetailIcon} />
-</div>
+{#if ![PanelState.Unavailable, PanelState.Static].includes($stateStore.projectDetailState)}
+    <div
+        class="right-show"
+        class:hidden={rightPanelShown}
+        on:click={showRightPanel.bind(null, true)}
+        on:keypress={showRightPanel.bind(null, true)}
+    >
+        <i class={content.projectDetailIcon} />
+    </div>
+{/if}
 
 <style lang="scss">
     .main-wrapper {

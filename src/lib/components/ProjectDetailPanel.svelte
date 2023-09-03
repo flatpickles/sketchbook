@@ -6,6 +6,7 @@
     import ProjectParams from './ProjectParams.svelte';
 
     export let projectTuple: ProjectTuple;
+    export let headerButtonIcon: string | undefined;
 </script>
 
 <Panel>
@@ -17,8 +18,8 @@
             month: 'long'
         })}
         description={projectTuple.props.description}
-        hideClose={false}
-        on:close
+        {headerButtonIcon}
+        on:headeraction
     />
     {#if projectTuple.props.presetsAvailable}
         <PresetControl {projectTuple} />

@@ -14,6 +14,7 @@
 
     export let projects: Record<string, ProjectConfig>;
     export let selectedProjectKey: string;
+    export let headerButtonIcon: string | undefined;
 
     let selectedGroup: string | undefined;
     let settingsDisplayed = false;
@@ -35,8 +36,8 @@
                 title={content.title}
                 subtitle={content.subtitle}
                 description={content.description}
-                hideClose={false}
-                on:close
+                {headerButtonIcon}
+                on:headeraction
             />
             <GroupSelector
                 projects={Object.values(projects)}
