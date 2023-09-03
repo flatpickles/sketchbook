@@ -1,23 +1,13 @@
+import { PanelState, SortOrder } from '$lib/base/Util/ConfigTypes';
+
 // Experimental projects will only appear in the project list if this is set to true
 const showExperiments = false;
 
 // The default state of the project list and detail panels
-export enum PanelState {
-    Hidden = 'hidden', // not shown, can toggle to visible
-    Visible = 'visible', // shown, can toggle to hidden
-    // todo: mouse stuff
-    Static = 'static', // shown, cannot toggle
-    Unavailable = 'unavailable' // not shown, cannot toggle
-}
-const defaultProjectListState = PanelState.Static;
-const defaultProjectDetailState = PanelState.Static;
+const defaultProjectListState = PanelState.Visible;
+const defaultProjectDetailState = PanelState.Visible;
 
 // Project and group label sorting
-export enum SortOrder {
-    Alphabetical = 'alphabetical',
-    Chronological = 'chronological',
-    ReverseChronological = 'reverse-chronological'
-}
 const projectSortOrder = SortOrder.Chronological;
 const groupSortOrder = SortOrder.Alphabetical;
 

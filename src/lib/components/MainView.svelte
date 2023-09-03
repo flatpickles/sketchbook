@@ -4,21 +4,23 @@
     import ProjectListPanel from '$lib/components/ProjectListPanel.svelte';
     import { content } from '../../config/content';
 
+    import { stateStore } from '$lib/base/Util/AppState';
     import type { ProjectTuple } from '$lib/base/FileLoading/ProjectLoader';
     import type { ProjectConfig } from '$lib/base/ProjectConfig/ProjectConfig';
+    import { PanelState } from '$lib/base/Util/ConfigTypes';
 
     export let projectConfigs: Record<string, ProjectConfig>;
     export let selectedProjectTuple: ProjectTuple;
 
-    let leftPanelShown = true;
-    let rightPanelShown = true;
+    $: leftPanelShown = $stateStore.projectListState === PanelState.Visible;
+    $: rightPanelShown = $stateStore.projectDetailState === PanelState.Visible;
 
     function showLeftPanel(show = true) {
-        leftPanelShown = show;
+        $stateStore.projectListState = show ? PanelState.Visible : PanelState.Hidden;
     }
 
     function showRightPanel(show = true) {
-        rightPanelShown = show;
+        $stateStore.projectDetailState = show ? PanelState.Visible : PanelState.Hidden;
     }
 </script>
 
@@ -145,7 +147,7 @@
     .panel {
         position: relative;
         padding: if($overlay-panels, $panel-edge-inset, 0);
-        min-height: $panel-min-height;
+        min-height: if($overlay-panels, $panel-min-height, 100%);
         max-height: 100%;
 
         // Transition left (for left panel only)

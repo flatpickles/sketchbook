@@ -8,10 +8,12 @@ Ongoing notes for Sketchbook development.
 
 ## Main view panels
 
--   Persist panel state
--   Apply other default panel state settings
+-   Implement static/unavailable panel settings
+-   Mouse show/hide:
+    -   mouse-visible state when pinned, close toggles to mouse-hidden
+    -   mouse-hidden state when unpinned; hovering shows the panel and allows interaction, and can be pinned (top button w/ "fa-solid fa-thumbtack")
+-   AppState: enable backing-file change updates for stateStore as well (obviate reset)
 -   Implement optional panel state settings for direct project links (vs. navigation to /)
--   Mouse show/hide behavior (optionally hide buttons with no mouse movement, desktop only)
 -   Non-overlay: fix outline & drop shadow visibility when hidden
 -   Non-overlay: update and resize canvas throughout animation
 -   Reset canvas size when switching overlay setting with live reload (if possible)
