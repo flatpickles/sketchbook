@@ -148,8 +148,16 @@
 </script>
 
 <div class="main-wrapper" data-testid="main-wrapper">
-    <div class="left-panel-wrapper" class:closed={!leftPanelShown}>
-        <div class="panel" class:leftClosed={!leftPanelShown}>
+    <div
+        class="left-panel-wrapper"
+        class:closed={!leftPanelShown}
+        class:overlaid={$settingsStore.overlayPanels}
+    >
+        <div
+            class="panel"
+            class:leftClosed={!leftPanelShown}
+            class:overlaid={$settingsStore.overlayPanels}
+        >
             <ProjectListPanel
                 projects={projectConfigs}
                 selectedProjectKey={selectedProjectTuple.key}
@@ -161,8 +169,12 @@
     <div class="project-viewer">
         <ProjectViewer project={selectedProjectTuple.project} />
     </div>
-    <div class="right-panel-wrapper" class:closed={!rightPanelShown}>
-        <div class="panel">
+    <div
+        class="right-panel-wrapper"
+        class:closed={!rightPanelShown}
+        class:overlaid={$settingsStore.overlayPanels}
+    >
+        <div class="panel" class:overlaid={$settingsStore.overlayPanels}>
             <ProjectDetailPanel
                 projectTuple={selectedProjectTuple}
                 headerButtonIcon={rightPanelHeaderIcon}
@@ -195,7 +207,11 @@
 {/if}
 
 <!-- Use this dummy to expose $panel-wrapper-width from SCSS below -->
-<div class="panel-dummy" bind:clientWidth={panelMaxWidth} />
+<div
+    class="panel-dummy"
+    bind:clientWidth={panelMaxWidth}
+    class:overlaid={$settingsStore.overlayPanels}
+/>
 
 <style lang="scss">
     .main-wrapper {
@@ -246,24 +262,27 @@
 
     /* Panels */
 
-    // To animate panel wrapper width changes, we need to set width explicitly
-    $panel-wrapper-width: if($overlay-panels, $panel-edge-inset * 2, 0) + $panel-width;
-
     @mixin panel-wrapper {
-        position: if($overlay-panels, absolute, relative);
         z-index: 2;
-
-        // Transition width
-        width: $panel-wrapper-width;
-        transition: width $panel-animation-duration ease-in-out;
-        &.closed {
-            width: 0;
-        }
 
         // Enable panel min-height despite absolute inheritance:
         display: flex;
         flex-direction: column;
         height: 100vh;
+
+        // Setup differently if overlaid
+        position: relative;
+        width: $panel-width;
+        &.overlaid {
+            position: absolute;
+            width: $panel-edge-inset * 2 + $panel-width;
+        }
+
+        // Transition width
+        transition: width $panel-animation-duration ease-in-out;
+        &.closed {
+            width: 0;
+        }
     }
 
     .left-panel-wrapper {
@@ -278,27 +297,39 @@
 
     .panel {
         position: relative;
-        padding: if($overlay-panels, $panel-edge-inset, 0);
-        min-height: if($overlay-panels, $panel-min-height, 100%);
+        min-height: 100%;
         max-height: 100%;
+
+        // Setup differently if overlaid
+        &.overlaid {
+            padding: $panel-edge-inset;
+            min-height: $panel-min-height;
+        }
 
         // Transition left (for left panel only)
         left: 0;
         transition: left $panel-animation-duration ease-in-out;
         &.leftClosed {
             // Align to the right side of a zero-width panel:
-            left: calc(-1 * $panel-wrapper-width);
+            left: calc(-1 * $panel-width);
+            &.overlaid {
+                left: calc(-1 * ($panel-edge-inset * 2 + $panel-width));
+            }
         }
     }
 
     .panel-dummy {
-        // We'll use clientWidth to expose this value
-        width: $panel-wrapper-width;
-
         // Avoid displaying this dummy to the user
         position: absolute;
-        left: calc(-1 * $panel-wrapper-width);
         z-index: -100;
         opacity: 0;
+
+        // Setup differently if overlaid
+        width: $panel-width;
+        left: calc(-1 * $panel-width);
+        &.overlaid {
+            width: $panel-edge-inset * 2 + $panel-width;
+            left: calc(-1 * ($panel-edge-inset * 2 + $panel-width));
+        }
     }
 </style>

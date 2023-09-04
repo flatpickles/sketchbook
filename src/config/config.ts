@@ -3,6 +3,9 @@ import { PanelState, SortOrder } from '$lib/base/Util/ConfigTypes';
 // Experimental projects will only appear in the project list if this is set to true
 const showExperiments = false;
 
+// If true, the project list and detail panels will float over project content
+const overlayPanels = false;
+
 // The default state of the project list and detail panels
 const defaultProjectListState = PanelState.Visible;
 const defaultProjectDetailState = PanelState.Visible;
@@ -26,6 +29,7 @@ export const userSettingsLabels: Record<string, string> = {
 // Export all settings for use elsewhere in the app
 export const config = {
     showExperiments,
+    overlayPanels,
     defaultProjectListState,
     defaultProjectDetailState,
     panelMouseTriggerWidth,

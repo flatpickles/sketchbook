@@ -26,11 +26,10 @@ $panel-animation-duration: 0.3s;
 $panel-show-button-animation-duration: 0.7s;
 
 // Panels
-$overlay-panels: true;
-$panel-min-height: 0;
 $panel-width: 16rem;
-$panel-edge-inset: 0.5rem;
-$panel-border-radius: 0.5rem;
+$panel-min-height: 0; // ignored if settingsStore.overlayPanels is true
+$panel-edge-inset: 0.5rem; // ignored if settingsStore.overlayPanels is false
+$panel-border-radius: 0.5rem; // ignored if settingsStore.overlayPanels is false
 $panel-bg-color: rgba(255, 254, 233, 0.85);
 $panel-bg-filter: blur(1rem);
 $panel-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.3);

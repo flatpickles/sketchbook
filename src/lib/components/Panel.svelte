@@ -1,4 +1,8 @@
-<div class="panel-container">
+<script lang="ts">
+    import { settingsStore } from '$lib/base/Util/AppState';
+</script>
+
+<div class="panel-container" class:overlaid={$settingsStore.overlayPanels}>
     <slot />
 </div>
 
@@ -14,9 +18,12 @@
         backdrop-filter: $panel-bg-filter;
         -webkit-backdrop-filter: $panel-bg-filter;
 
-        border-radius: if($overlay-panels, $panel-border-radius, 0);
         box-shadow: $panel-shadow;
         outline: $panel-outline;
         overflow: hidden;
+
+        &.overlaid {
+            border-radius: $panel-border-radius;
+        }
     }
 </style>
