@@ -4,7 +4,7 @@ import { PanelState, SortOrder } from '$lib/base/Util/ConfigTypes';
 const showExperiments = false;
 
 // If true, the project list and detail panels will float over project content
-const overlayPanels = false;
+const overlayPanels = true;
 
 // The default state of the project list and detail panels
 const defaultProjectListState = PanelState.Visible;

@@ -1,4 +1,7 @@
 <script lang="ts">
+    import { onMount } from 'svelte';
+    import { fade } from 'svelte/transition';
+
     import ProjectViewer from '$lib/components/ProjectViewer.svelte';
     import ProjectDetailPanel from '$lib/components/ProjectDetailPanel.svelte';
     import ProjectListPanel from '$lib/components/ProjectListPanel.svelte';
@@ -8,7 +11,7 @@
     import type { ProjectTuple } from '$lib/base/FileLoading/ProjectLoader';
     import type { ProjectConfig } from '$lib/base/ProjectConfig/ProjectConfig';
     import { PanelState } from '$lib/base/Util/ConfigTypes';
-    import { onMount } from 'svelte';
+    import SettingsPanel from './Settings/SettingsPanel.svelte';
 
     export let projectConfigs: Record<string, ProjectConfig>;
     export let selectedProjectTuple: ProjectTuple;
@@ -145,6 +148,10 @@
             if (event.clientX < rightThresholds.in) currentMouse = MouseState.NoTrigger;
         }
     }
+
+    function toggleSettings() {
+        $stateStore.settingsPresented = !$stateStore.settingsPresented;
+    }
 </script>
 
 <div class="main-wrapper" data-testid="main-wrapper">
@@ -163,6 +170,7 @@
                 selectedProjectKey={selectedProjectTuple.key}
                 headerButtonIcon={leftPanelHeaderIcon}
                 on:headeraction={toggleLeftPanel.bind(null, false)}
+                on:showsettings={toggleSettings}
             />
         </div>
     </div>
@@ -203,6 +211,14 @@
         on:keypress={toggleRightPanel.bind(null, true)}
     >
         <i class={content.projectDetailIcon} />
+    </div>
+{/if}
+
+{#if $stateStore.settingsPresented}
+    <div class="settings-overlay" transition:fade={{ duration: 300 }}>
+        <div class="settings-container">
+            <SettingsPanel on:headeraction={toggleSettings} />
+        </div>
     </div>
 {/if}
 
@@ -331,5 +347,27 @@
             width: $panel-edge-inset * 2 + $panel-width;
             left: calc(-1 * ($panel-edge-inset * 2 + $panel-width));
         }
+    }
+
+    /* Settings */
+
+    .settings-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 3;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .settings-container {
+        // todo - nice container presentation stuff
+        max-height: 50%;
     }
 </style>

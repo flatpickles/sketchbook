@@ -69,7 +69,8 @@ const stateDefaults = {
     projectListState: config.defaultProjectListState,
     projectDetailState: config.defaultProjectDetailState,
     selectedProjectKey: '',
-    selectedGroupName: ''
+    selectedGroupName: '',
+    settingsPresented: false
 };
 const stateStore = createSemiPersistedStore('state', stateDefaults);
 

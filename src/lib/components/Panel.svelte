@@ -1,8 +1,8 @@
 <script lang="ts">
-    import { settingsStore } from '$lib/base/Util/AppState';
+    export let overlaid = false;
 </script>
 
-<div class="panel-container" class:overlaid={$settingsStore.overlayPanels}>
+<div class="panel-container" class:overlaid>
     <slot />
 </div>
 
