@@ -110,6 +110,11 @@ Use cases: modes (w/ options), sections, functionality only defined with some va
     -   Settings panel
     -   Project detail panel (component tests)
     -   Project list panel (header/footer components etc)
+-   Asset import rework: define params as instances of objects that can then provide files once imported. Enable:
+    -   stateless asset-dependent implementations
+    -   bundled defaults
+    -   cached file values (when switching away from / to a project)
+    -   different approach to styling?
 -   Check to see if classes are actually Project subclasses when loading (otherwise we get confusing errors with improper subclasses in src/art)
 -   Sort projects based on settings in some central location (not just in the ProjectList component) so we can use this in the root +page.server.ts
 -   Limit panel description text height // enable scrolling

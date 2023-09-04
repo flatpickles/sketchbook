@@ -37,9 +37,7 @@
     $: leftPanelHeaderIcon = headerIconForPanelState($stateStore.projectListState);
     $: rightPanelHeaderIcon = headerIconForPanelState($stateStore.projectDetailState);
 
-    onMount(() => {
-        addEventListener('mousemove', mouseMoved);
-    });
+    /* State helpers - no side effects */
 
     function panelShown(panelState: PanelState, mouseState: MouseState, mouseTest: MouseState) {
         const explicitlyVisible = [
@@ -82,6 +80,12 @@
                 return state;
         }
     }
+
+    /* Event bindings */
+
+    onMount(() => {
+        addEventListener('mousemove', mouseMoved);
+    });
 
     function toggleLeftPanel(showClicked = false) {
         // Toggle from current state
@@ -143,7 +147,7 @@
     }
 </script>
 
-<div class="main-wrapper">
+<div class="main-wrapper" data-testid="main-wrapper">
     <div class="left-panel-wrapper" class:closed={!leftPanelShown}>
         <div class="panel" class:leftClosed={!leftPanelShown}>
             <ProjectListPanel
