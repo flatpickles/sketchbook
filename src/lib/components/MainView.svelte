@@ -161,7 +161,7 @@
         class:overlaid={$settingsStore.overlayPanels}
     >
         <div
-            class="panel"
+            class="panel left-panel"
             class:leftClosed={!leftPanelShown}
             class:overlaid={$settingsStore.overlayPanels}
         >
@@ -182,7 +182,7 @@
         class:closed={!rightPanelShown}
         class:overlaid={$settingsStore.overlayPanels}
     >
-        <div class="panel" class:overlaid={$settingsStore.overlayPanels}>
+        <div class="panel right-panel" class:overlaid={$settingsStore.overlayPanels}>
             <ProjectDetailPanel
                 projectTuple={selectedProjectTuple}
                 headerButtonIcon={rightPanelHeaderIcon}
@@ -289,9 +289,9 @@
         // Setup differently if overlaid
         position: relative;
         width: $panel-width;
+        box-sizing: border-box;
         &.overlaid {
             position: absolute;
-            width: $panel-edge-inset * 2 + $panel-width;
         }
 
         // Transition width
@@ -321,6 +321,12 @@
         &.overlaid {
             padding: $panel-edge-inset;
             min-height: $panel-min-height;
+            &.left-panel {
+                padding-right: 0;
+            }
+            &.right-panel {
+                padding-left: 0;
+            }
         }
 
         // Transition left (for left panel only)

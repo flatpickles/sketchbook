@@ -8,7 +8,7 @@ Ongoing notes for Sketchbook development.
 
 ## Main view panels
 
--   Show overlay & panel state config in settings overlay
+-   Show panel state config in settings overlay
 -   Implement optional panel state settings for direct project links (vs. navigation to /)
 -   Non-overlay: fix outline & drop shadow visibility when hidden
 -   Non-overlay: update and resize canvas throughout animation

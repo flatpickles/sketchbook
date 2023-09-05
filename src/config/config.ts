@@ -23,7 +23,8 @@ const groupSortOrder = SortOrder.Alphabetical;
 // as defaults.
 export const userSettingsLabels: Record<string, string> = {
     showExperiments: 'Experiments',
-    projectSortOrder: 'Project Sorting'
+    projectSortOrder: 'Project Sorting',
+    overlayPanels: 'Overlay Panels'
 };
 
 // Export all settings for use elsewhere in the app

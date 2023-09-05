@@ -25,8 +25,8 @@ export const settingsParamConfigs: ParamConfig[] = [
         ...StringParamConfigDefaults,
         key: 'projectSortOrder',
         options: {
-            'Alphabetical': 'alphabetical',
-            'Chronological': 'chronological',
+            Alphabetical: 'alphabetical',
+            Chronological: 'chronological',
             'Reverse Chron': 'reverse-chronological'
         }
     } as StringParamConfig,
@@ -37,7 +37,11 @@ export const settingsParamConfigs: ParamConfig[] = [
         step: 1,
         min: 0,
         max: 100000
-    } as NumericArrayParamConfig
+    } as NumericArrayParamConfig,
+    {
+        ...BooleanParamConfigDefaults,
+        key: 'overlayPanels'
+    } as BooleanParamConfig
 ].map((paramConfig) => {
     // Add the label to each ParamConfig from config.ts
     paramConfig.name = userSettingsLabels[paramConfig.key];

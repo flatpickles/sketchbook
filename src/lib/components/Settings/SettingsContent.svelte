@@ -108,7 +108,6 @@
         width: 100%;
         display: flex;
         padding: $panel-edge-inset;
-        padding-top: 0;
         justify-content: center;
     }
 </style>
