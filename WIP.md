@@ -8,14 +8,14 @@ Ongoing notes for Sketchbook development.
 
 ## Main view panels
 
+-   Show overlay & panel state config in settings overlay
 -   Implement optional panel state settings for direct project links (vs. navigation to /)
 -   Non-overlay: fix outline & drop shadow visibility when hidden
 -   Non-overlay: update and resize canvas throughout animation
 -   Reset canvas size when switching overlay setting with live reload (if possible)
 
 -   Visible button presentation for light/dark content
--   Fix settings with overlay (maybe just pull out into its own modal)
--   Separate overlay & style settings for each panel
+-   Separate overlay & style settings for each panel (?)
 -   Floating panel design - footer space? Min height (optional)?
 
 -   Tests for MainView functionality

@@ -315,6 +315,7 @@
         position: relative;
         min-height: 100%;
         max-height: 100%;
+        width: $panel-width;
 
         // Setup differently if overlaid
         &.overlaid {
@@ -367,7 +368,11 @@
     }
 
     .settings-container {
-        // todo - nice container presentation stuff
-        max-height: 50%;
+        width: 400px;
+        height: 400px;
+        max-width: 100%;
+        max-height: 100%;
+        padding: $panel-edge-inset;
+        box-sizing: border-box;
     }
 </style>

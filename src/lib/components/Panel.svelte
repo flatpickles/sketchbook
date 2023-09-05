@@ -13,7 +13,7 @@
         justify-content: top;
 
         height: 100%;
-        width: $panel-width;
+        width: 100%;
         background-color: $panel-bg-color;
         backdrop-filter: $panel-bg-filter;
         -webkit-backdrop-filter: $panel-bg-filter;

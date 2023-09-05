@@ -99,7 +99,7 @@
     .settings-grid {
         width: 100%;
         display: grid;
-        grid-template-columns: fit-content($parameter-label-max-width) 1fr;
+        grid-template-columns: 1fr 1fr;
         row-gap: $parameter-item-spacing-vertical;
         align-items: center;
     }
@@ -107,7 +107,8 @@
     .reset-wrapper {
         width: 100%;
         display: flex;
-        padding: 0 $panel-edge-inset;
+        padding: $panel-edge-inset;
+        padding-top: 0;
         justify-content: center;
     }
 </style>
