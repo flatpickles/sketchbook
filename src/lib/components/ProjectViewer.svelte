@@ -1,6 +1,7 @@
 <script lang="ts">
     import type Project from '$lib/base/Project/Project';
     import { CanvasType } from '$lib/base/Project/Project';
+    import { settingsStore } from '$lib/base/Util/AppState';
     import { onMount } from 'svelte';
 
     export let project: Project;
@@ -21,6 +22,14 @@
     $: {
         if (containerElement) {
             projectUpdated(project);
+        }
+    }
+
+    // Reset the canvas size when the overlay configuration changes
+    $: {
+        if (containerElement) {
+            $settingsStore.overlayPanels && setCanvasSize();
+            !$settingsStore.overlayPanels && setCanvasSize();
         }
     }
 
