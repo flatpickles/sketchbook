@@ -320,6 +320,16 @@ describe('number param input', () => {
         expect(numberInput.value).toBe('44');
         expect(project.testNumber).toBe(44);
         expect(updateHandler).toHaveBeenCalledTimes(2);
+
+        // Validate paramupdated event
+        expect(updateHandler).toHaveBeenCalledWith(
+            expect.objectContaining({
+                detail: {
+                    updatedProject: project,
+                    paramKey: 'testNumber'
+                }
+            })
+        );
     });
 
     it('updates a number param when the input changes (!liveUpdates)', async () => {
@@ -337,6 +347,16 @@ describe('number param input', () => {
         expect(numberInput.value).toBe('44');
         expect(project.testNumber).toBe(44);
         expect(ParamValueProvider.setValue).toHaveBeenCalledTimes(1);
+
+        // Validate paramupdated event
+        expect(updateHandler).toHaveBeenCalledWith(
+            expect.objectContaining({
+                detail: {
+                    updatedProject: project,
+                    paramKey: 'testNumber'
+                }
+            })
+        );
     });
 });
 
@@ -354,6 +374,16 @@ describe('boolean param input', () => {
         expect(booleanInput.checked).toBe(false);
         expect(project.testBoolean).toBe(false);
         expect(ParamValueProvider.setValue).toHaveBeenCalledTimes(1);
+
+        // Validate paramupdated event
+        expect(updateHandler).toHaveBeenCalledWith(
+            expect.objectContaining({
+                detail: {
+                    updatedProject: project,
+                    paramKey: 'testBoolean'
+                }
+            })
+        );
     });
 });
 
@@ -373,6 +403,16 @@ describe('string param input', () => {
         fireEvent.change(stringInput);
         expect(updateHandler).toHaveBeenCalledTimes(2);
         expect(ParamValueProvider.setValue).toHaveBeenCalledTimes(2);
+
+        // Validate paramupdated event
+        expect(updateHandler).toHaveBeenCalledWith(
+            expect.objectContaining({
+                detail: {
+                    updatedProject: project,
+                    paramKey: 'testString'
+                }
+            })
+        );
     });
 
     it('updates a string param when the input changes (!liveUpdates)', async () => {
@@ -390,6 +430,16 @@ describe('string param input', () => {
         expect(stringInput.value).toBe('goodbye');
         expect(project.testString).toBe('goodbye');
         expect(ParamValueProvider.setValue).toHaveBeenCalledTimes(1);
+
+        // Validate paramupdated event
+        expect(updateHandler).toHaveBeenCalledWith(
+            expect.objectContaining({
+                detail: {
+                    updatedProject: project,
+                    paramKey: 'testString'
+                }
+            })
+        );
     });
 });
 
@@ -417,6 +467,16 @@ describe('numeric array param input', () => {
         expect(numericArrayInput[1].value).toBe('5');
         expect(project.testNumericArray).toEqual([4, 5, 3]);
         expect(ParamValueProvider.setValue).toHaveBeenCalledTimes(2);
+
+        // Validate paramupdated event
+        expect(updateHandler).toHaveBeenCalledWith(
+            expect.objectContaining({
+                detail: {
+                    updatedProject: project,
+                    paramKey: 'testNumericArray'
+                }
+            })
+        );
     });
 
     it('updates a numeric array param when the input changes (!liveUpdates)', async () => {
@@ -440,6 +500,16 @@ describe('numeric array param input', () => {
         expect(numericArrayInput[1].value).toBe('5');
         expect(project.testNumericArray).toEqual([4, 5, 3]);
         expect(ParamValueProvider.setValue).toHaveBeenCalledTimes(1);
+
+        // Validate paramupdated event
+        expect(updateHandler).toHaveBeenCalledWith(
+            expect.objectContaining({
+                detail: {
+                    updatedProject: project,
+                    paramKey: 'testNumericArray'
+                }
+            })
+        );
     });
 });
 
@@ -456,6 +526,16 @@ describe('function param input', () => {
         await waitFor(() => expect(project.testFunction).toHaveBeenCalledTimes(1));
         await waitFor(() => expect(updateHandler).toHaveBeenCalledTimes(1));
         expect(ParamValueProvider.setValue).toHaveBeenCalledTimes(0);
+
+        // Validate paramupdated event
+        expect(updateHandler).toHaveBeenCalledWith(
+            expect.objectContaining({
+                detail: {
+                    updatedProject: project,
+                    paramKey: 'testFunction'
+                }
+            })
+        );
     });
 });
 
@@ -515,5 +595,15 @@ describe('file param input', () => {
         );
         await waitFor(() => expect(updateHandler).toHaveBeenCalledTimes(1));
         expect(ParamValueProvider.setValue).toHaveBeenCalledTimes(0);
+
+        // Validate paramupdated event
+        expect(updateHandler).toHaveBeenCalledWith(
+            expect.objectContaining({
+                detail: {
+                    updatedProject: project,
+                    paramKey: 'testFile'
+                }
+            })
+        );
     });
 });

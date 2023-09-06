@@ -10,7 +10,6 @@ Ongoing notes for Sketchbook development.
 
 -   MainView
 -   ProjectViewer updates + canvas sizing
--   ProjectParams updates
 -   Settings panel
 -   Project detail panel (component tests)
 -   Project list panel (header/footer components etc)
