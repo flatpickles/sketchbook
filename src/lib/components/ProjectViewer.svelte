@@ -10,6 +10,8 @@
     let canvasElementWebGL: HTMLCanvasElement;
     let containerElement: HTMLDivElement;
 
+    /* Svelte events & reactivity */
+
     onMount(() => {
         // Update the canvas size whenever the window is resized
         window.addEventListener('resize', () => {
@@ -20,20 +22,26 @@
 
     // Initialize and update the project when loading & changing projects
     $: {
-        if (containerElement) {
-            projectUpdated(project);
-        }
+        if (containerElement) projectUpdated(project);
     }
 
     // Reset the canvas size when the overlay configuration changes
-    $: {
-        if (containerElement) {
-            $settingsStore.overlayPanels && setCanvasSize();
-            !$settingsStore.overlayPanels && setCanvasSize();
+    let panelsOverlaid = $settingsStore.overlayPanels;
+    $: ((newPanelsValue: boolean) => {
+        if (newPanelsValue !== panelsOverlaid) {
+            setCanvasSize();
+            project.update();
+            panelsOverlaid = newPanelsValue;
         }
-    }
+    })($settingsStore.overlayPanels);
+
+    /* Project & canvas management */
 
     function projectUpdated(newProject: Project) {
+        if (!containerElement) {
+            throw new Error("Cannot update a project when the container doesn't exist");
+        }
+
         // When loading a first project or changing the canvas type, resize the canvas
         const shouldResize =
             !previousProject || previousProject.canvasType !== newProject.canvasType;
@@ -70,7 +78,8 @@
         // todo: tests for canvas sizing behavior?
         // todo: clears canvas - not desired?
 
-        // canvasElement.clientSize can be 0 (when display is none), so use container size instead
+        if (!containerElement)
+            throw new Error("Cannot set canvas size when the container doesn't exist");
         canvasElement2D.width = containerElement.clientWidth * 2;
         canvasElement2D.height = containerElement.clientHeight * 2;
         canvasElementWebGL.width = containerElement.clientWidth * 2;

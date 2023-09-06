@@ -6,6 +6,10 @@ Ongoing notes for Sketchbook development.
 
 # Current scope:
 
+## Test coverage
+
+-
+
 ## Main view panels
 
 -   Show panel state config in settings overlay
@@ -106,10 +110,6 @@ Use cases: modes (w/ options), sections, functionality only defined with some va
 
 ## Miscellany
 
--   Test coverage:
-    -   Settings panel
-    -   Project detail panel (component tests)
-    -   Project list panel (header/footer components etc)
 -   Asset import rework: define params as instances of objects that can then provide files once imported. Enable:
     -   stateless asset-dependent implementations
     -   bundled defaults

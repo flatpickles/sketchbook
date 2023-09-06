@@ -7,7 +7,7 @@ const showExperiments = false;
 const overlayPanels = true;
 
 // The default state of the project list and detail panels
-const defaultProjectListState = PanelState.Visible;
+const defaultProjectListState = PanelState.MousePinnable;
 const defaultProjectDetailState = PanelState.Visible;
 
 // When using mouse-triggering options for the project list and detail panels above, this is the
