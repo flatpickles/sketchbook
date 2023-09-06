@@ -5,10 +5,48 @@
     import { onMount } from 'svelte';
 
     export let project: Project;
+    export let containerResizing = false; // The container is being resized
+    export let updateEachFrame = false; // Update the project on each frame (todo: config setup)
+
     let previousProject: Project | undefined;
     let canvasElement2D: HTMLCanvasElement;
     let canvasElementWebGL: HTMLCanvasElement;
     let containerElement: HTMLDivElement;
+
+    // Local state used when updating project
+    let frameCount = 0;
+    let startTime = Date.now();
+    let updatedParamKeys: string[] = [];
+    let projectNeedsUpdate = false;
+
+    // Called externally when the project's params are updated
+    export function paramUpdated(event: CustomEvent) {
+        const { updatedProject, paramKey } = event.detail;
+        if (updatedProject != project)
+            throw new Error('Updated project does not match current project');
+        if (!updatedParamKeys.includes(paramKey)) updatedParamKeys.push(paramKey);
+        projectNeedsUpdate = true;
+    }
+
+    // Update the project, component, and DOM state each frame / when appropriate
+    const updateLoop = () => {
+        if (containerElement) {
+            const shouldUpdate = updateEachFrame || containerResizing || projectNeedsUpdate;
+            if (containerResizing) setCanvasSize();
+            if (shouldUpdate) {
+                project.update({
+                    frame: frameCount,
+                    time: Date.now() - startTime,
+                    paramKeys: updatedParamKeys
+                });
+                projectNeedsUpdate = false;
+                frameCount += 1;
+                updatedParamKeys = [];
+            }
+        }
+        requestAnimationFrame(updateLoop);
+    };
+    updateLoop();
 
     /* Svelte events & reactivity */
 
@@ -16,13 +54,13 @@
         // Update the canvas size whenever the window is resized
         window.addEventListener('resize', () => {
             setCanvasSize();
-            project.update();
+            projectNeedsUpdate = true;
         });
     });
 
     // Initialize and update the project when loading & changing projects
     $: {
-        if (containerElement) projectUpdated(project);
+        if (containerElement) projectLoaded(project);
     }
 
     // Reset the canvas size when the overlay configuration changes
@@ -30,14 +68,15 @@
     $: ((newPanelsValue: boolean) => {
         if (newPanelsValue !== panelsOverlaid) {
             setCanvasSize();
-            project.update();
+            projectNeedsUpdate = true;
             panelsOverlaid = newPanelsValue;
         }
     })($settingsStore.overlayPanels);
 
     /* Project & canvas management */
 
-    function projectUpdated(newProject: Project) {
+    // Called when the current `project` reference changes (i.e. a new project is loaded)
+    function projectLoaded(newProject: Project) {
         if (!containerElement) {
             throw new Error("Cannot update a project when the container doesn't exist");
         }
@@ -66,13 +105,19 @@
                 ? canvasElementWebGL
                 : undefined;
 
-        // Initialize and update the new project
+        // Initialize the new project
         if (shouldResize) setCanvasSize();
         newProject.init();
+
+        // Update component & DOM state
         fixP5Containment();
-        newProject.update();
+        frameCount = 0;
+        startTime = Date.now();
+        updatedParamKeys = [];
+        projectNeedsUpdate = true;
     }
 
+    // Called to reset the canvas size to match the container
     function setCanvasSize() {
         if (!containerElement)
             throw new Error("Cannot set canvas size when the container doesn't exist");
@@ -83,8 +128,8 @@
         canvasElementWebGL.height = containerElement.clientHeight * pixelRatio;
     }
 
+    // If a p5 canvas is present, position it within the parent container
     function fixP5Containment() {
-        // If a p5 canvas is present, position it within the parent container
         const p5Canvas = document.querySelector('.p5Canvas');
         if (p5Canvas) {
             p5Canvas.remove();

@@ -9,15 +9,18 @@ Ongoing notes for Sketchbook development.
 ## Test coverage
 
 -   MainView
+-   ProjectViewer updates + canvas sizing
+-   ProjectParams updates
 -   Settings panel
 -   Project detail panel (component tests)
 -   Project list panel (header/footer components etc)
--   ProjectViewer canvas sizing
 
 ## Main view panels
 
--   Update and resize canvas throughout animation
--   Fix outline & drop shadow visibility when hidden
+-   Fix tests...
+-   Processing sketch still not updating when changing overlay setting
+-   Projects & general config for updateEachFrame
+-   Panels: Fix outline & drop shadow visibility when hidden
 -   Floating panel design - footer space? Min height (optional)?
 
 -   Visible button presentation for light/dark content

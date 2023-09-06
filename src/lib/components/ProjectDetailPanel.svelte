@@ -26,6 +26,6 @@
         <PresetControl {projectTuple} />
     {/if}
     {#if projectTuple.params && Object.values(projectTuple.params).length > 0}
-        <ProjectParams {projectTuple} />
+        <ProjectParams {projectTuple} on:paramupdated />
     {/if}
 </Panel>

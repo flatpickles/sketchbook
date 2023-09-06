@@ -24,6 +24,7 @@ export default class DemoProject extends Project {
         if (!ctx) throw new Error('Could not get 2D context');
         ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         ctx.fillStyle = '#00FF00';
+        // console.log(this.canvas.width, this.canvas.height);
         if (this.#bundledImage && this.testBoolean)
             ctx.drawImage(this.#bundledImage, 0, 0, this.canvas.width, this.canvas.height);
         ctx.fillRect(200, 200, this.size * this.canvas.width, this.size * this.canvas.height);

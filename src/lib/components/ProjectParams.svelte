@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { createEventDispatcher } from 'svelte';
+
     import type { ProjectTuple } from '$lib/base/FileLoading/ProjectLoader';
     import { type ParamConfig, getParamSections } from '$lib/base/ParamConfig/ParamConfig';
     import { ParamGuards, type ParamValueType } from '$lib/base/ParamConfig/ParamTypes';
@@ -9,6 +11,7 @@
 
     export let projectTuple: ProjectTuple;
     $: [noSectionParams, paramSections] = getParamSections(projectTuple.params);
+    const dispatch = createEventDispatcher();
 
     // Apply the updated param (or call the associated function)
     async function paramUpdated(event: CustomEvent) {
@@ -23,7 +26,6 @@
             );
             if (descriptor?.value) {
                 await descriptor.value();
-                projectTuple.project.update();
             }
         } else if (ParamGuards.isFileParamConfig(updatedConfig)) {
             // If it's a file param, load the file(s) then call the associated function
@@ -39,7 +41,6 @@
                 );
                 if (descriptor?.value) {
                     await descriptor.value(fileLoadResult.result, fileLoadResult.metadata);
-                    projectTuple.project.update();
                 }
             } catch (e) {
                 console.error(e);
@@ -56,9 +57,14 @@
                 enumerable: true,
                 configurable: true
             });
-            projectTuple.project.update();
             ParamValueProvider.setValue(updatedConfig, projectTuple.props.title, value);
         }
+
+        // Dispatch updated event - project.update() is called in ProjectViewer
+        dispatch('paramupdated', {
+            updatedProject: projectTuple.project,
+            paramKey: updatedConfig.key
+        });
     }
 
     // Get the properly typed initial value for a given param

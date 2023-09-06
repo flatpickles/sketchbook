@@ -53,9 +53,9 @@ const positions = [
 export default class FragShaderProject extends Project {
     canvasType = CanvasType.WebGL;
 
-    #regl?: REGL.Regl;
     #fragShader: string;
     #uniformParams: REGLUniformMap = {};
+    #regl?: REGL.Regl;
 
     constructor(fragShader: string) {
         super();
@@ -99,7 +99,7 @@ export default class FragShaderProject extends Project {
 
         // Initialize regl with the shader & uniforms (loaded in the constructor)
         this.#regl = REGL(this.canvas);
-        const drawShader = this.#regl({
+        const drawFrame = this.#regl({
             frag: this.#fragShader,
             vert: vertShader,
             attributes: {
@@ -117,8 +117,8 @@ export default class FragShaderProject extends Project {
         });
 
         // Immediate draw + animation loop
-        drawShader();
-        this.#regl.frame(drawShader);
+        drawFrame();
+        this.#regl.frame(drawFrame);
     }
 
     destroy(): void {

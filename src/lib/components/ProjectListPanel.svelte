@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { fade } from 'svelte/transition';
     import { createEventDispatcher } from 'svelte';
 
     import { content } from '../../config/content';

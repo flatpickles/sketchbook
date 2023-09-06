@@ -5,6 +5,7 @@
  */
 
 /* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 export default class Project {
     /**
@@ -36,9 +37,12 @@ export default class Project {
 
     /**
      * update is called after init, and then whenever any parameters are updated. Override this with
-     * your custom drawing code.
+     * your custom drawing code. The detail object contains the following properties:
+     * - frame: the current frame number (0 at project load, incremented by 1 for each update call)
+     * - time: milliseconds passed since project load (i.e. since init was called)
+     * - paramKeys: the property names of any parameters updated since the last update call
      */
-    public update() {}
+    public update(detail: { frame: number; time: number; paramKeys: string[] }) {}
 
     /**
      * destroy is called when the project is unloaded, i.e. when another project is selected.

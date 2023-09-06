@@ -24,8 +24,10 @@
         RightTrigger = 'rightTrigger'
     }
 
-    let currentMouse: MouseState = MouseState.NoTrigger;
     let panelMaxWidth: number;
+    let panelResizing = false;
+    let currentMouse: MouseState = MouseState.NoTrigger;
+    let viewer: ProjectViewer;
 
     $: leftPanelShown = panelShown(
         $stateStore.projectListState,
@@ -87,7 +89,25 @@
     /* Event bindings */
 
     onMount(() => {
+        // Mouse movement
         addEventListener('mousemove', mouseMoved);
+
+        // Panel transitions
+        const eventIsResizingContainer = (event: TransitionEvent): boolean => {
+            return (
+                !$settingsStore.overlayPanels &&
+                event.target instanceof HTMLElement &&
+                event.propertyName === 'width' &&
+                (event.target.classList.contains('left-panel-wrapper') ||
+                    event.target.classList.contains('right-panel-wrapper'))
+            );
+        };
+        addEventListener('transitionstart', (event: TransitionEvent) => {
+            if (eventIsResizingContainer(event)) panelResizing = true;
+        });
+        addEventListener('transitionend', (event: TransitionEvent) => {
+            if (eventIsResizingContainer(event)) panelResizing = true;
+        });
     });
 
     function toggleLeftPanel(showClicked = false) {
@@ -175,7 +195,11 @@
         </div>
     </div>
     <div class="project-viewer">
-        <ProjectViewer project={selectedProjectTuple.project} />
+        <ProjectViewer
+            project={selectedProjectTuple.project}
+            containerResizing={panelResizing}
+            bind:this={viewer}
+        />
     </div>
     <div
         class="right-panel-wrapper"
@@ -187,6 +211,7 @@
                 projectTuple={selectedProjectTuple}
                 headerButtonIcon={rightPanelHeaderIcon}
                 on:headeraction={toggleRightPanel.bind(null, false)}
+                on:paramupdated={viewer.paramUpdated}
             />
         </div>
     </div>
