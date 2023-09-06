@@ -17,7 +17,6 @@ Ongoing notes for Sketchbook development.
 
 ## Main view panels
 
--   Fix tests...
 -   Processing sketch still not updating when changing overlay setting
 -   Projects & general config for updateEachFrame
 -   Panels: Fix outline & drop shadow visibility when hidden

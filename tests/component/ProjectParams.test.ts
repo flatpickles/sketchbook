@@ -102,21 +102,27 @@ function paramsWithLiveUpdates(
 function renderParams(
     liveUpdates = true,
     sectionOption: SectionOption = SectionOption.NoSections
-): TestProject {
-    const testProject = new TestProject();
+): { project: TestProject; updateHandler: typeof vi.fn } {
+    const project = new TestProject();
     const testProjectConfig = ProjectConfigFactory.propsFrom({
         liveUpdates: liveUpdates
     });
     const testTuple: ProjectTuple = {
-        project: testProject,
+        key: 'testProject',
+        project: project,
         props: testProjectConfig,
         params: paramsWithLiveUpdates(liveUpdates, sectionOption)
     };
-    render(ProjectParams, {
+    const { component } = render(ProjectParams, {
         projectTuple: testTuple
     });
+
+    const updateHandler = vi.fn();
+    component.$on('paramupdated', updateHandler);
     expect(ParamValueProvider.getValue).toHaveBeenCalledTimes(6);
-    return testProject;
+    expect(ParamValueProvider.setValue).toHaveBeenCalledTimes(0);
+    expect(updateHandler).toHaveBeenCalledTimes(0);
+    return { project, updateHandler };
 }
 
 function cleanupParams() {
@@ -300,34 +306,34 @@ describe('number param input', () => {
     afterEach(cleanupParams);
 
     it('updates a number param when the input changes (liveUpdates)', async () => {
-        const project = renderParams(true);
+        const { project, updateHandler } = renderParams(true);
         vi.spyOn(project, 'update');
         const numberInput = screen.getAllByTestId('number-param-slider')[0] as HTMLInputElement;
         expect(numberInput.value).toBe('42');
         expect(project.testNumber).toBe(42);
         fireEvent.input(numberInput, { target: { value: '43' } });
-        expect(project.update).toHaveBeenCalledTimes(1);
+        expect(updateHandler).toHaveBeenCalledTimes(1);
         expect(numberInput.value).toBe('43');
         expect(project.testNumber).toBe(43);
         fireEvent.change(numberInput, { target: { value: '44' } });
-        expect(project.update).toHaveBeenCalledTimes(2);
+        expect(updateHandler).toHaveBeenCalledTimes(2);
         expect(numberInput.value).toBe('44');
         expect(project.testNumber).toBe(44);
-        expect(ParamValueProvider.setValue).toHaveBeenCalledTimes(2);
+        expect(updateHandler).toHaveBeenCalledTimes(2);
     });
 
     it('updates a number param when the input changes (!liveUpdates)', async () => {
-        const project = renderParams(false);
+        const { project, updateHandler } = renderParams(false);
         vi.spyOn(project, 'update');
         const numberInput = screen.getAllByTestId('number-param-slider')[0] as HTMLInputElement;
         expect(numberInput.value).toBe('42');
         expect(project.testNumber).toBe(42);
         fireEvent.input(numberInput, { target: { value: '43' } });
-        expect(project.update).toHaveBeenCalledTimes(0);
+        expect(updateHandler).toHaveBeenCalledTimes(0);
         expect(numberInput.value).toBe('43');
         expect(project.testNumber).toBe(42);
         fireEvent.change(numberInput, { target: { value: '44' } });
-        expect(project.update).toHaveBeenCalledTimes(1);
+        expect(updateHandler).toHaveBeenCalledTimes(1);
         expect(numberInput.value).toBe('44');
         expect(project.testNumber).toBe(44);
         expect(ParamValueProvider.setValue).toHaveBeenCalledTimes(1);
@@ -338,13 +344,13 @@ describe('boolean param input', () => {
     afterEach(cleanupParams);
 
     it('updates a boolean param when the input changes', async () => {
-        const project = renderParams(true);
+        const { project, updateHandler } = renderParams(true);
         vi.spyOn(project, 'update');
         const booleanInput = screen.getByTestId('boolean-param-input') as HTMLInputElement;
         expect(booleanInput.checked).toBe(true);
         expect(project.testBoolean).toBe(true);
         fireEvent.click(booleanInput);
-        expect(project.update).toHaveBeenCalledTimes(1);
+        expect(updateHandler).toHaveBeenCalledTimes(1);
         expect(booleanInput.checked).toBe(false);
         expect(project.testBoolean).toBe(false);
         expect(ParamValueProvider.setValue).toHaveBeenCalledTimes(1);
@@ -355,32 +361,32 @@ describe('string param input', () => {
     afterEach(cleanupParams);
 
     it('updates a string param when the input changes (liveUpdates)', async () => {
-        const project = renderParams(true);
+        const { project, updateHandler } = renderParams(true);
         vi.spyOn(project, 'update');
         const stringInput = screen.getByTestId('string-param-input-singleline') as HTMLInputElement;
         expect(stringInput.value).toBe('hello');
         expect(project.testString).toBe('hello');
         fireEvent.input(stringInput, { target: { value: 'goodbye' } });
-        expect(project.update).toHaveBeenCalledTimes(1);
+        expect(updateHandler).toHaveBeenCalledTimes(1);
         expect(stringInput.value).toBe('goodbye');
         expect(project.testString).toBe('goodbye');
         fireEvent.change(stringInput);
-        expect(project.update).toHaveBeenCalledTimes(2);
+        expect(updateHandler).toHaveBeenCalledTimes(2);
         expect(ParamValueProvider.setValue).toHaveBeenCalledTimes(2);
     });
 
     it('updates a string param when the input changes (!liveUpdates)', async () => {
-        const project = renderParams(false);
+        const { project, updateHandler } = renderParams(false);
         vi.spyOn(project, 'update');
         const stringInput = screen.getByTestId('string-param-input-singleline') as HTMLInputElement;
         expect(stringInput.value).toBe('hello');
         expect(project.testString).toBe('hello');
         fireEvent.input(stringInput, { target: { value: 'goodbye' } });
-        expect(project.update).toHaveBeenCalledTimes(0);
+        expect(updateHandler).toHaveBeenCalledTimes(0);
         expect(stringInput.value).toBe('goodbye');
         expect(project.testString).toBe('hello');
         fireEvent.change(stringInput);
-        expect(project.update).toHaveBeenCalledTimes(1);
+        expect(updateHandler).toHaveBeenCalledTimes(1);
         expect(stringInput.value).toBe('goodbye');
         expect(project.testString).toBe('goodbye');
         expect(ParamValueProvider.setValue).toHaveBeenCalledTimes(1);
@@ -391,7 +397,7 @@ describe('numeric array param input', () => {
     afterEach(cleanupParams);
 
     it('updates a numeric array param when the input changes (liveUpdates)', async () => {
-        const project = renderParams(true);
+        const { project, updateHandler } = renderParams(true);
         vi.spyOn(project, 'update');
         const numericArrayInput = screen.getAllByTestId(
             'number-param-slider'
@@ -403,18 +409,18 @@ describe('numeric array param input', () => {
         expect(numericArrayInput[2].value).toBe('3');
         expect(project.testNumericArray).toEqual([1, 2, 3]);
         fireEvent.input(numericArrayInput[0], { target: { value: '4' } });
-        expect(project.update).toHaveBeenCalledTimes(1);
+        expect(updateHandler).toHaveBeenCalledTimes(1);
         expect(numericArrayInput[0].value).toBe('4');
         expect(project.testNumericArray).toEqual([4, 2, 3]);
         fireEvent.change(numericArrayInput[1], { target: { value: '5' } });
-        expect(project.update).toHaveBeenCalledTimes(2);
+        expect(updateHandler).toHaveBeenCalledTimes(2);
         expect(numericArrayInput[1].value).toBe('5');
         expect(project.testNumericArray).toEqual([4, 5, 3]);
         expect(ParamValueProvider.setValue).toHaveBeenCalledTimes(2);
     });
 
     it('updates a numeric array param when the input changes (!liveUpdates)', async () => {
-        const project = renderParams(false);
+        const { project, updateHandler } = renderParams(false);
         vi.spyOn(project, 'update');
         const numericArrayInput = screen.getAllByTestId(
             'number-param-slider'
@@ -426,11 +432,11 @@ describe('numeric array param input', () => {
         expect(numericArrayInput[2].value).toBe('3');
         expect(project.testNumericArray).toEqual([1, 2, 3]);
         fireEvent.input(numericArrayInput[0], { target: { value: '4' } });
-        expect(project.update).toHaveBeenCalledTimes(0);
+        expect(updateHandler).toHaveBeenCalledTimes(0);
         expect(numericArrayInput[0].value).toBe('4');
         expect(project.testNumericArray).toEqual([1, 2, 3]);
         fireEvent.change(numericArrayInput[1], { target: { value: '5' } });
-        expect(project.update).toHaveBeenCalledTimes(1);
+        expect(updateHandler).toHaveBeenCalledTimes(1);
         expect(numericArrayInput[1].value).toBe('5');
         expect(project.testNumericArray).toEqual([4, 5, 3]);
         expect(ParamValueProvider.setValue).toHaveBeenCalledTimes(1);
@@ -441,14 +447,14 @@ describe('function param input', () => {
     afterEach(cleanupParams);
 
     it('calls a param-ized function when the button is clicked', async () => {
-        const project = renderParams(true);
+        const { project, updateHandler } = renderParams(true);
         vi.spyOn(project, 'update');
         vi.spyOn(project, 'testFunction');
         const functionButton = screen.getByTestId('function-param-input');
         expect(project.testFunction).toHaveBeenCalledTimes(0);
         fireEvent.click(functionButton);
         await waitFor(() => expect(project.testFunction).toHaveBeenCalledTimes(1));
-        await waitFor(() => expect(project.update).toHaveBeenCalledTimes(1));
+        await waitFor(() => expect(updateHandler).toHaveBeenCalledTimes(1));
         expect(ParamValueProvider.setValue).toHaveBeenCalledTimes(0);
     });
 });
@@ -494,7 +500,7 @@ describe('file param input', () => {
     // Actual tests...
 
     it('attempts to load files when the input changes', async () => {
-        const project = renderParams(true);
+        const { project, updateHandler } = renderParams(true);
         vi.spyOn(project, 'update');
         vi.spyOn(project, 'testFile');
         const fileInput = screen.getByTestId('native-file-input') as HTMLInputElement;
@@ -507,7 +513,7 @@ describe('file param input', () => {
                 mockFiles.map((file) => file.fileObject)
             )
         );
-        await waitFor(() => expect(project.update).toHaveBeenCalledTimes(1));
+        await waitFor(() => expect(updateHandler).toHaveBeenCalledTimes(1));
         expect(ParamValueProvider.setValue).toHaveBeenCalledTimes(0);
     });
 });

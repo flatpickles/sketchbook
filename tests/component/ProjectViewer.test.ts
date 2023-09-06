@@ -1,7 +1,7 @@
 import ProjectViewer from '$lib/components/ProjectViewer.svelte';
 import Project, { CanvasType } from '$lib/base/Project/Project';
 
-import { render, cleanup } from '@testing-library/svelte';
+import { render, cleanup, waitFor } from '@testing-library/svelte';
 import { describe, it, expect, vi, afterEach, type Mock } from 'vitest';
 import P5Project from '$lib/base/Project/P5Project';
 
@@ -38,7 +38,7 @@ describe('CanvasViewer', () => {
             project: proj
         });
         expect(proj.init).toHaveBeenCalled();
-        expect(proj.update).toHaveBeenCalled();
+        await waitFor(() => expect(proj.update).toHaveBeenCalled());
 
         const canvases = getAllByTestId('shared-canvas');
         expect(canvases.length).toBe(2);
@@ -56,7 +56,7 @@ describe('CanvasViewer', () => {
             project: proj
         });
         expect(proj.init).toHaveBeenCalled();
-        expect(proj.update).toHaveBeenCalled();
+        await waitFor(() => expect(proj.update).toHaveBeenCalled());
 
         const canvases = getAllByTestId('shared-canvas');
         expect(canvases.length).toBe(2);
