@@ -1,9 +1,11 @@
 import ProjectViewer from '$lib/components/ProjectViewer.svelte';
 import Project, { CanvasType } from '$lib/base/Project/Project';
 
-import { render, cleanup, waitFor, getByTestId } from '@testing-library/svelte';
+import { render, cleanup, waitFor } from '@testing-library/svelte';
 import { describe, it, expect, vi, afterEach, type Mock } from 'vitest';
 import P5Project from '$lib/base/Project/P5Project';
+
+import { settingsStore } from '$lib/base/Util/AppState';
 
 // P5 throws errors when running in unit tests, so we mock it out fully.
 // This precludes more rigorous DOM testing, but it's better than nothing.
@@ -212,6 +214,28 @@ describe('Project update calls from CanvasViewer', () => {
                 paramKeys: ['testKey']
             })
         );
+    });
+
+    it('calls update when overlayPanels value changes', async () => {
+        const project = new Project();
+        let callCount = 0;
+        vi.spyOn(project, 'update').mockImplementation(() => {
+            callCount++;
+        });
+
+        settingsStore.set({
+            overlayPanels: false
+        });
+        render(ProjectViewer, {
+            project: project,
+            updateEachFrame: false
+        });
+        await waitFor(() => expect(callCount).toEqual(1));
+
+        settingsStore.set({
+            overlayPanels: true
+        });
+        await waitFor(() => expect(callCount).toEqual(2));
     });
 });
 
