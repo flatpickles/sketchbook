@@ -1,7 +1,7 @@
 import ProjectViewer from '$lib/components/ProjectViewer.svelte';
 import Project, { CanvasType } from '$lib/base/Project/Project';
 
-import { render, cleanup, waitFor } from '@testing-library/svelte';
+import { render, cleanup, waitFor, getByTestId } from '@testing-library/svelte';
 import { describe, it, expect, vi, afterEach, type Mock } from 'vitest';
 import P5Project from '$lib/base/Project/P5Project';
 
@@ -84,6 +84,134 @@ describe('CanvasViewer', () => {
 
         component.project = new Project();
         expect(proj1.destroy).toHaveBeenCalled();
+    });
+
+    it('resets local state (for update) when loading a new project', async () => {
+        let lastTime = 0;
+        let lastFrame = 0;
+
+        const proj1 = new Project();
+        vi.spyOn(proj1, 'destroy');
+        vi.spyOn(proj1, 'update').mockImplementation(({ frame, time }) => {
+            lastFrame = frame;
+            lastTime = time;
+        });
+
+        // Render first project with per-frame updates and let it roll for 0.25 seconds
+        const { component } = render(ProjectViewer, {
+            project: proj1,
+            updateEachFrame: true
+        });
+        await waitFor(() => expect(lastTime).toBeGreaterThanOrEqual(250));
+        const previousTime = lastTime;
+
+        const proj2 = new Project();
+        vi.spyOn(proj2, 'init');
+        vi.spyOn(proj2, 'update').mockImplementation(({ frame, time }) => {
+            lastFrame = frame;
+            lastTime = time;
+        });
+
+        // Render second project with per-frame updates disabled, and check params to update
+        component.updateEachFrame = false;
+        component.project = proj2;
+        expect(proj1.destroy).toHaveBeenCalled();
+        expect(proj2.init).toHaveBeenCalled();
+        await waitFor(() => expect(proj2.update).toHaveBeenCalled());
+        expect(lastFrame).toBe(0);
+        expect(lastTime).toBeLessThan(previousTime);
+    });
+});
+
+describe('Project update calls from CanvasViewer', () => {
+    afterEach(cleanup);
+
+    it('calls proj update only once if updateEachFrame = false', async () => {
+        const project = new Project();
+        let callCount = 0;
+        vi.spyOn(project, 'update').mockImplementation(() => {
+            callCount++;
+        });
+
+        render(ProjectViewer, {
+            project: project,
+            updateEachFrame: false
+        });
+        await waitFor(() => expect(project.update).toHaveBeenCalledTimes(1));
+        await new Promise((r) => setTimeout(r, 250)); // wait 0.25 seconds
+        await waitFor(() => expect(project.update).toHaveBeenCalledTimes(1));
+        expect(callCount).toBe(1);
+    });
+
+    it('calls proj update multiple times when updateEachFrame = true', async () => {
+        const project = new Project();
+        let callCount = 0;
+        vi.spyOn(project, 'update').mockImplementation(() => {
+            callCount++;
+        });
+
+        render(ProjectViewer, {
+            project: project,
+            updateEachFrame: true
+        });
+        await waitFor(() => expect(callCount).toBeGreaterThan(1));
+    });
+
+    it('calls proj update multiple times while containerResizing', async () => {
+        const project = new Project();
+        let callCount = 0;
+        vi.spyOn(project, 'update').mockImplementation(() => {
+            callCount++;
+        });
+
+        const { component } = render(ProjectViewer, {
+            project: project,
+            updateEachFrame: false
+        });
+        component.containerResizing = true;
+        await waitFor(() => expect(callCount).toBeGreaterThan(1));
+
+        const currentCallCount = callCount;
+        component.containerResizing = false;
+        await new Promise((r) => setTimeout(r, 250)); // wait 0.5 seconds
+        expect(callCount).toBe(currentCallCount);
+    });
+
+    it('calls proj update after paramUpdated is called with expected parameters', async () => {
+        const project = new Project();
+        let callCount = 0;
+        vi.spyOn(project, 'update').mockImplementation(() => {
+            callCount++;
+        });
+
+        // First update call should have no paramKeys, and frame 0
+        const { component } = render(ProjectViewer, {
+            project: project,
+            updateEachFrame: false
+        });
+        await waitFor(() => expect(callCount).toEqual(1));
+        expect(project.update).toHaveBeenLastCalledWith(
+            expect.objectContaining({
+                frame: 0,
+                paramKeys: []
+            })
+        );
+
+        // After paramUpdated, paramKeys should reflect the updated param, and frame count should
+        // increment to 1
+        component.paramUpdated({
+            detail: {
+                updatedProject: project,
+                paramKey: 'testKey'
+            }
+        } as CustomEvent);
+        await waitFor(() => expect(callCount).toEqual(2));
+        expect(project.update).toHaveBeenLastCalledWith(
+            expect.objectContaining({
+                frame: 1,
+                paramKeys: ['testKey']
+            })
+        );
     });
 });
 

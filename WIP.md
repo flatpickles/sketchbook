@@ -9,7 +9,6 @@ Ongoing notes for Sketchbook development.
 ## Test coverage
 
 -   MainView
--   ProjectViewer updates + canvas sizing
 -   Settings panel
 -   Project detail panel (component tests)
 -   Project list panel (header/footer components etc)
@@ -214,6 +213,8 @@ Use cases: modes (w/ options), sections, functionality only defined with some va
     -   Project switching
 -   Undo/redo for parameter changes (w/ key command)
 -   Lightweight project switcher option (more like a file system menu)
+-   E2E testing:
+    -   Canvas/container sizing
 
 # Long-term goals:
 
