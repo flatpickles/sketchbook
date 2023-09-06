@@ -8,23 +8,22 @@ Ongoing notes for Sketchbook development.
 
 ## Test coverage
 
--
+-   MainView
+-   Settings panel
+-   Project detail panel (component tests)
+-   Project list panel (header/footer components etc)
+-   ProjectViewer canvas sizing
 
 ## Main view panels
 
--   Show panel state config in settings overlay
--   Implement optional panel state settings for direct project links (vs. navigation to /)
--   Non-overlay: fix outline & drop shadow visibility when hidden
--   Non-overlay: update and resize canvas throughout animation
--   Reset canvas size when switching overlay setting with live reload (if possible)
-
--   Visible button presentation for light/dark content
--   Separate overlay & style settings for each panel (?)
+-   Update and resize canvas throughout animation
+-   Fix outline & drop shadow visibility when hidden
 -   Floating panel design - footer space? Min height (optional)?
 
--   Tests for MainView functionality
+-   Visible button presentation for light/dark content
+-   Implement optional panel state settings for direct project links (vs. navigation to /)
 -   Mobile layout (reassess mouse behavior fallbacks)
--   Lightweight project switcher option? (long list)
+-   Separate overlay & style settings for each panel (?)
 
 ## Johan's feedback (8/23):
 
@@ -213,6 +212,7 @@ Use cases: modes (w/ options), sections, functionality only defined with some va
     -   Hide/show panels
     -   Project switching
 -   Undo/redo for parameter changes (w/ key command)
+-   Lightweight project switcher option (more like a file system menu)
 
 # Long-term goals:
 

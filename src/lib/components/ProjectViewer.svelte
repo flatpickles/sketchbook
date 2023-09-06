@@ -74,16 +74,13 @@
     }
 
     function setCanvasSize() {
-        // todo: optional 2x resolution
-        // todo: tests for canvas sizing behavior?
-        // todo: clears canvas - not desired?
-
         if (!containerElement)
             throw new Error("Cannot set canvas size when the container doesn't exist");
-        canvasElement2D.width = containerElement.clientWidth * 2;
-        canvasElement2D.height = containerElement.clientHeight * 2;
-        canvasElementWebGL.width = containerElement.clientWidth * 2;
-        canvasElementWebGL.height = containerElement.clientHeight * 2;
+        const pixelRatio = window.devicePixelRatio;
+        canvasElement2D.width = containerElement.clientWidth * pixelRatio;
+        canvasElement2D.height = containerElement.clientHeight * pixelRatio;
+        canvasElementWebGL.width = containerElement.clientWidth * pixelRatio;
+        canvasElementWebGL.height = containerElement.clientHeight * pixelRatio;
     }
 
     function fixP5Containment() {

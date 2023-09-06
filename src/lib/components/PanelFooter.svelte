@@ -72,7 +72,7 @@
         margin: calc($panel-section-spacing / 2) calc($panel-section-spacing / 2) 0 0;
         border: $panel-outline;
         border-style: solid solid none none;
-        border-radius: 0 $panel-border-radius 0 $panel-border-radius;
+        border-radius: 0 $panel-border-radius 0 0;
     }
 
     .right-button {
@@ -81,7 +81,7 @@
         margin: calc($panel-section-spacing / 2) 0 0 calc($panel-section-spacing / 2);
         border: $panel-outline;
         border-style: solid none none solid;
-        border-radius: $panel-border-radius 0 $panel-border-radius 0;
+        border-radius: $panel-border-radius 0 0 0;
     }
 
     .hidden {

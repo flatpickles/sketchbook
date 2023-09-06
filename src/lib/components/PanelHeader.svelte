@@ -56,7 +56,7 @@
         margin: 0 0 calc($panel-header-section-spacing / 2) calc($panel-header-section-spacing / 2);
         border: $panel-outline;
         border-style: none none solid solid;
-        border-radius: 0 $panel-border-radius 0 $panel-border-radius;
+        border-radius: 0 0 0 $panel-border-radius;
     }
 
     h1 {
