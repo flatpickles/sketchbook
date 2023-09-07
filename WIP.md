@@ -8,9 +8,7 @@ Ongoing notes for Sketchbook development.
 
 ## Test coverage
 
--   MainView
--   tests/component/ProjectListPanel.test.ts > ProjectListPanel rendering > selects the proper project via selectedProjectKey (etc)
--   MouseState & PanelState
+-   PanelState
 -   ProjectViewer 2D vs 3D canvases
 -   Settings panel
 -   Project detail panel (component tests)
