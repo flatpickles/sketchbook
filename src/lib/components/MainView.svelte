@@ -60,7 +60,7 @@
             if (eventIsResizingContainer(event)) panelResizing = true;
         });
         addEventListener('transitionend', (event: TransitionEvent) => {
-            if (eventIsResizingContainer(event)) panelResizing = true;
+            if (eventIsResizingContainer(event)) panelResizing = false;
         });
     });
 
