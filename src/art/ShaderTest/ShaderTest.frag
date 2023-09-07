@@ -15,7 +15,7 @@ void main() {
     vec2 scaledUV = vec2(aspect, 1.0) * (uv * 2.0 - 1.0);
 
     if (showCircle) {
-        if (distance(scaledUV, vec2(0, 0)) > fract(time / 5.0)) {
+        if (distance(scaledUV, vec2(0, 0)) > fract(time / 10.0)) {
             gl_FragColor = vec4(bgColor, 1);
             return;
         }

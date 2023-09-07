@@ -5,86 +5,40 @@
     import ProjectViewer from '$lib/components/ProjectViewer.svelte';
     import ProjectDetailPanel from '$lib/components/ProjectDetailPanel.svelte';
     import ProjectListPanel from '$lib/components/ProjectListPanel.svelte';
-    import { content } from '../../config/content';
+    import SettingsPanel from './Settings/SettingsPanel.svelte';
 
+    import { content } from '../../config/content';
     import { settingsStore, stateStore } from '$lib/base/Util/AppState';
     import type { ProjectTuple } from '$lib/base/FileLoading/ProjectLoader';
     import type { ProjectConfig } from '$lib/base/ProjectConfig/ProjectConfig';
-    import { PanelState } from '$lib/base/Util/ConfigTypes';
-    import SettingsPanel from './Settings/SettingsPanel.svelte';
+    import {
+        PanelState,
+        toggledPanelState,
+        panelShown,
+        headerIconForPanelState
+    } from '$lib/base/Util/PanelState';
+    import { MouseState, mouseStateTransition } from '$lib/base/Util/MouseState';
 
     export let projectConfigs: Record<string, ProjectConfig>;
     export let selectedProjectTuple: ProjectTuple;
 
-    enum MouseState {
-        LeftTrigger = 'leftTrigger',
-        ClearedLeft = 'clearedLeft',
-        NoTrigger = 'noTrigger',
-        ClearedRight = 'clearedRight',
-        RightTrigger = 'rightTrigger'
-    }
-
     let panelMaxWidth: number;
     let panelResizing = false;
-    let currentMouse: MouseState = MouseState.NoTrigger;
+    let currentMouseState: MouseState = MouseState.NoTrigger;
     let viewer: ProjectViewer;
 
     $: leftPanelShown = panelShown(
         $stateStore.projectListState,
-        currentMouse,
+        currentMouseState,
         MouseState.LeftTrigger
     );
     $: rightPanelShown = panelShown(
         $stateStore.projectDetailState,
-        currentMouse,
+        currentMouseState,
         MouseState.RightTrigger
     );
     $: leftPanelHeaderIcon = headerIconForPanelState($stateStore.projectListState);
     $: rightPanelHeaderIcon = headerIconForPanelState($stateStore.projectDetailState);
-
-    /* State helpers - no side effects */
-
-    function panelShown(panelState: PanelState, mouseState: MouseState, mouseTest: MouseState) {
-        const explicitlyVisible = [
-            PanelState.Visible,
-            PanelState.Static,
-            PanelState.MousePinned
-        ].includes(panelState);
-        const mouseShowable = [PanelState.MousePinnable, PanelState.MouseUnpinnable].includes(
-            panelState
-        );
-        return explicitlyVisible || (mouseShowable && mouseState === mouseTest);
-    }
-
-    function headerIconForPanelState(state: PanelState) {
-        switch (state) {
-            case PanelState.Visible:
-                return 'fa-close';
-            case PanelState.Hidden:
-                return 'fa-close';
-            case PanelState.MousePinned:
-                return 'fa-close';
-            case PanelState.MousePinnable:
-                return 'fa-plus';
-            default:
-                return undefined;
-        }
-    }
-
-    function toggleState(state: PanelState) {
-        switch (state) {
-            case PanelState.Visible:
-                return PanelState.Hidden;
-            case PanelState.Hidden:
-                return PanelState.Visible;
-            case PanelState.MousePinnable:
-                return PanelState.MousePinned;
-            case PanelState.MousePinned:
-                return PanelState.MousePinnable;
-            default:
-                return state;
-        }
-    }
 
     /* Event bindings */
 
@@ -112,7 +66,7 @@
 
     function toggleLeftPanel(showClicked = false) {
         // Toggle from current state
-        $stateStore.projectListState = toggleState($stateStore.projectListState);
+        $stateStore.projectListState = toggledPanelState($stateStore.projectListState);
 
         // If showClicked with PanelState.MouseUnpinnable, it's likely mouse movement isn't working
         // on this device; PanelState.MousePinned falls back to click-based toggling
@@ -121,12 +75,12 @@
         }
 
         // Clear the mouse state
-        currentMouse = MouseState.ClearedLeft;
+        currentMouseState = MouseState.ClearedLeft;
     }
 
     function toggleRightPanel(showClicked = false) {
         // Toggle from current state
-        $stateStore.projectDetailState = toggleState($stateStore.projectDetailState);
+        $stateStore.projectDetailState = toggledPanelState($stateStore.projectDetailState);
 
         // If showClicked with PanelState.MouseUnpinnable, it's likely mouse movement isn't working
         // on this device; PanelState.MousePinned falls back to click-based toggling
@@ -135,7 +89,7 @@
         }
 
         // Clear the mouse state
-        currentMouse = MouseState.ClearedRight;
+        currentMouseState = MouseState.ClearedRight;
     }
 
     function mouseMoved(event: MouseEvent) {
@@ -149,24 +103,13 @@
             out: document.body.clientWidth - panelMaxWidth
         };
 
-        // Apply ins & outs based on current mouse state
-        if (currentMouse === MouseState.NoTrigger) {
-            // Trigger with movement into left/right trigger zones
-            if (event.clientX < leftThresholds.in) currentMouse = MouseState.LeftTrigger;
-            else if (event.clientX > rightThresholds.in) currentMouse = MouseState.RightTrigger;
-        } else if (currentMouse === MouseState.LeftTrigger) {
-            // Untrigger with movement out of left interaction zone
-            if (event.clientX > leftThresholds.out) currentMouse = MouseState.NoTrigger;
-        } else if (currentMouse === MouseState.RightTrigger) {
-            // Untrigger with movement out of right interaction zone
-            if (event.clientX < rightThresholds.out) currentMouse = MouseState.NoTrigger;
-        } else if (currentMouse == MouseState.ClearedLeft) {
-            // Untrigger with movement out of left trigger zone after clearing
-            if (event.clientX > leftThresholds.in) currentMouse = MouseState.NoTrigger;
-        } else if (currentMouse == MouseState.ClearedRight) {
-            // Untrigger with movement out of right trigger zone after clearing
-            if (event.clientX < rightThresholds.in) currentMouse = MouseState.NoTrigger;
-        }
+        // Update the mouse state
+        currentMouseState = mouseStateTransition(
+            currentMouseState,
+            event.clientX,
+            leftThresholds,
+            rightThresholds
+        );
     }
 
     function toggleSettings() {
@@ -175,25 +118,28 @@
 </script>
 
 <div class="main-wrapper" data-testid="main-wrapper">
-    <div
-        class="left-panel-wrapper"
-        class:closed={!leftPanelShown}
-        class:overlaid={$settingsStore.overlayPanels}
-    >
+    {#if $stateStore.projectListState != PanelState.Unavailable}
         <div
-            class="panel left-panel"
-            class:leftClosed={!leftPanelShown}
+            class="left-panel-wrapper"
+            class:closed={!leftPanelShown}
             class:overlaid={$settingsStore.overlayPanels}
         >
-            <ProjectListPanel
-                projects={projectConfigs}
-                selectedProjectKey={selectedProjectTuple.key}
-                headerButtonIcon={leftPanelHeaderIcon}
-                on:headeraction={toggleLeftPanel.bind(null, false)}
-                on:showsettings={toggleSettings}
-            />
+            <div
+                class="panel left-panel"
+                class:leftClosed={!leftPanelShown}
+                class:overlaid={$settingsStore.overlayPanels}
+            >
+                <ProjectListPanel
+                    projects={projectConfigs}
+                    selectedProjectKey={selectedProjectTuple.key}
+                    headerButtonIcon={leftPanelHeaderIcon}
+                    on:headeraction={toggleLeftPanel.bind(null, false)}
+                    on:showsettings={toggleSettings}
+                />
+            </div>
         </div>
-    </div>
+    {/if}
+
     <div class="project-viewer">
         <ProjectViewer
             project={selectedProjectTuple.project}
@@ -201,20 +147,23 @@
             bind:this={viewer}
         />
     </div>
-    <div
-        class="right-panel-wrapper"
-        class:closed={!rightPanelShown}
-        class:overlaid={$settingsStore.overlayPanels}
-    >
-        <div class="panel right-panel" class:overlaid={$settingsStore.overlayPanels}>
-            <ProjectDetailPanel
-                projectTuple={selectedProjectTuple}
-                headerButtonIcon={rightPanelHeaderIcon}
-                on:headeraction={toggleRightPanel.bind(null, false)}
-                on:paramupdated={viewer.paramUpdated}
-            />
+
+    {#if $stateStore.projectDetailState != PanelState.Unavailable}
+        <div
+            class="right-panel-wrapper"
+            class:closed={!rightPanelShown}
+            class:overlaid={$settingsStore.overlayPanels}
+        >
+            <div class="panel right-panel" class:overlaid={$settingsStore.overlayPanels}>
+                <ProjectDetailPanel
+                    projectTuple={selectedProjectTuple}
+                    headerButtonIcon={rightPanelHeaderIcon}
+                    on:headeraction={toggleRightPanel.bind(null, false)}
+                    on:paramupdated={viewer.paramUpdated}
+                />
+            </div>
         </div>
-    </div>
+    {/if}
 </div>
 
 {#if ![PanelState.Unavailable, PanelState.Static].includes($stateStore.projectListState)}
@@ -240,7 +189,11 @@
 {/if}
 
 {#if $stateStore.settingsPresented}
-    <div class="settings-overlay" transition:fade={{ duration: 300 }}>
+    <div
+        class="settings-overlay"
+        data-testid="settings-overlay"
+        transition:fade={{ duration: 300 }}
+    >
         <div class="settings-container">
             <SettingsPanel on:headeraction={toggleSettings} />
         </div>

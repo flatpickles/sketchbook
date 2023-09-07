@@ -9,6 +9,7 @@ Ongoing notes for Sketchbook development.
 ## Test coverage
 
 -   MainView
+-   ProjectViewer 2D vs 3D canvases
 -   Settings panel
 -   Project detail panel (component tests)
 -   Project list panel (header/footer components etc)
@@ -114,6 +115,7 @@ Use cases: modes (w/ options), sections, functionality only defined with some va
     -   bundled defaults
     -   cached file values (when switching away from / to a project)
     -   different approach to styling?
+-   Empty state for project detail panel (awkward especially in overlay mode)
 -   Check to see if classes are actually Project subclasses when loading (otherwise we get confusing errors with improper subclasses in src/art)
 -   Sort projects based on settings in some central location (not just in the ProjectList component) so we can use this in the root +page.server.ts
 -   Limit panel description text height // enable scrolling
@@ -169,6 +171,7 @@ Use cases: modes (w/ options), sections, functionality only defined with some va
     -   Ideally this change is represented in params UI; e.g. load a text file into a multi-line text param
     -   Maybe they sync on project update?
 -   Can we enable DOM-based projects, e.g. vanilla Svelte prototypes that aren't entirely on a canvas?
+-   Should ConfigTypes.ts exist?
 
 # Ongoing:
 

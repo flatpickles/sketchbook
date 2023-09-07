@@ -18,6 +18,7 @@
     {#if leftButton != undefined}
         <button
             class="left-button"
+            data-testid="left-footer-button"
             class:hidden={leftButton == undefined}
             on:click={leftButtonClicked}
             on:keypress={leftButtonClicked}
@@ -35,6 +36,7 @@
     </div>
     <button
         class="right-button"
+        data-testid="right-footer-button"
         class:hidden={rightButton == undefined}
         on:click={rightButtonClicked}
         on:keypress={rightButtonClicked}

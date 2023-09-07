@@ -1,4 +1,5 @@
-import { PanelState, SortOrder } from '$lib/base/Util/ConfigTypes';
+import { SortOrder } from '$lib/base/Util/ConfigTypes';
+import { PanelState } from '$lib/base/Util/PanelState';
 
 // Experimental projects will only appear in the project list if this is set to true
 const showExperiments = false;

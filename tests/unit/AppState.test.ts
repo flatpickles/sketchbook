@@ -2,7 +2,8 @@ import { describe, it, expect, afterEach } from 'vitest';
 import { settingsStore } from '$lib/base/Util/AppState';
 
 import { config } from '../../src/config/config';
-import { PanelState, SortOrder } from '$lib/base/Util/ConfigTypes';
+import { SortOrder } from '$lib/base/Util/ConfigTypes';
+import { PanelState } from '$lib/base/Util/PanelState';
 import { get } from 'svelte/store';
 
 describe('AppStateStore', () => {

@@ -21,7 +21,7 @@
             {/if}
         </div>
         {#if headerButtonIcon != undefined}
-            <button class="header-button" on:click={buttonClicked}
+            <button class="header-button" data-testid="right-header-button" on:click={buttonClicked}
                 ><i class={`fa ${headerButtonIcon}`} /></button
             >
         {/if}
