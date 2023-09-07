@@ -15,7 +15,10 @@ export default defineConfig({
             'tests/unit/**/*.{test,spec}.{js,ts}',
             'tests/component/**/*.{test,spec}.{js,ts}'
         ],
-        environment: 'jsdom'
+        environment: 'jsdom',
+
+        // https://stackoverflow.com/a/76615709/280404
+        alias: [{ find: /^svelte$/, replacement: 'svelte/internal' }]
     },
     server: {
         fs: {

@@ -99,8 +99,8 @@
             out: panelMaxWidth
         };
         const rightThresholds = {
-            in: document.body.clientWidth - $settingsStore.panelMouseTriggerWidth,
-            out: document.body.clientWidth - panelMaxWidth
+            in: window.innerWidth - $settingsStore.panelMouseTriggerWidth,
+            out: window.innerWidth - panelMaxWidth
         };
 
         // Update the mouse state

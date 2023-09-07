@@ -3,9 +3,10 @@ import { describe, it, expect, afterEach } from 'vitest';
 import MainView from '$lib/components/MainView.svelte';
 import { ProjectConfigDefaults } from '$lib/base/ProjectConfig/ProjectConfig';
 import Project from '$lib/base/Project/Project';
-import { stateStore } from '$lib/base/Util/AppState';
+import { settingsStore, stateStore } from '$lib/base/Util/AppState';
 import { get } from 'svelte/store';
 import { PanelState } from '$lib/base/Util/PanelState';
+import userEvent from '@testing-library/user-event';
 
 const configs = {
     Untitled: ProjectConfigDefaults
@@ -234,7 +235,270 @@ describe('PanelState.Visible <-> PanelState.Hidden', () => {
     });
 });
 
-// describe('Panels: PanelState.MousePinnable <-> PanelState.MousePinned', () => {});
+describe('Panels: PanelState.MousePinnable <-> PanelState.MousePinned', () => {
+    afterEach(cleanup);
+
+    it('starting with PanelState.MousePinned, shows both panels on first render', async () => {
+        // Set panel state and render
+        stateStore.set({
+            projectListState: PanelState.MousePinned,
+            projectDetailState: PanelState.MousePinned
+        });
+        const { getByTestId } = render(MainView, {
+            projectConfigs: configs,
+            selectedProjectTuple: projectTuple
+        });
+
+        // Find & validate left panel wrapper
+        const leftPanelWrapper = getByTestId('left-panel-wrapper');
+        expect(leftPanelWrapper).toBeDefined();
+        expect(leftPanelWrapper.classList.contains('closed')).toBe(false);
+
+        // Find & validate right panel wrapper
+        const rightPanelWrapper = getByTestId('right-panel-wrapper');
+        expect(rightPanelWrapper).toBeDefined();
+        expect(rightPanelWrapper.classList.contains('closed')).toBe(false);
+    });
+
+    it('starting with PanelState.MousePinnable, shows and hides the project list panel', async () => {
+        // Set panel state and render
+        stateStore.set({
+            projectListState: PanelState.MousePinnable
+        });
+        const { getByTestId } = render(MainView, {
+            projectConfigs: configs,
+            selectedProjectTuple: projectTuple
+        });
+
+        // Find & validate left panel wrapper
+        const leftPanelWrapper = getByTestId('left-panel-wrapper');
+        expect(leftPanelWrapper).toBeDefined();
+        expect(leftPanelWrapper.classList.contains('closed')).toBe(true);
+
+        // Move the mouse outside of the trigger area & check that the panel is unaffected
+        const wrapper = screen.getByTestId('main-wrapper');
+        const leftTriggerPosition = get(settingsStore).panelMouseTriggerWidth;
+        const leftUntriggerPosition = leftTriggerPosition + 300; // (estimated panel width)
+        userEvent.pointer({
+            target: wrapper,
+            coords: { clientX: leftTriggerPosition + 10, clientY: 5 }
+        });
+        await waitFor(() => expect(leftPanelWrapper.classList.contains('closed')).toBe(true));
+        expect(get(stateStore).projectListState).toBe(PanelState.MousePinnable);
+
+        // Move the mouse into the left panel trigger area & check that it opens the panel
+        userEvent.pointer({
+            target: wrapper,
+            coords: { clientX: leftTriggerPosition - 10, clientY: 5 }
+        });
+        await waitFor(() => expect(leftPanelWrapper.classList.contains('closed')).toBe(false));
+        expect(get(stateStore).projectListState).toBe(PanelState.MousePinnable);
+
+        // Move the mouse outside of the trigger area & check that the panel is unaffected
+        userEvent.pointer({
+            target: wrapper,
+            coords: { clientX: leftTriggerPosition + 10, clientY: 5 }
+        });
+        await waitFor(() => expect(leftPanelWrapper.classList.contains('closed')).toBe(false));
+        expect(get(stateStore).projectListState).toBe(PanelState.MousePinnable);
+
+        // Move the mouse outside of the interaction area & check that the panel closes
+        userEvent.pointer({
+            target: wrapper,
+            coords: { clientX: leftUntriggerPosition, clientY: 5 }
+        });
+        await waitFor(() => expect(leftPanelWrapper.classList.contains('closed')).toBe(true));
+        expect(get(stateStore).projectListState).toBe(PanelState.MousePinnable);
+
+        // Open the panel again, then click the pin button
+        userEvent.pointer({
+            target: wrapper,
+            coords: { clientX: leftTriggerPosition - 10, clientY: 5 }
+        });
+        await waitFor(() => expect(leftPanelWrapper.classList.contains('closed')).toBe(false));
+        within(leftPanelWrapper).getByTestId('right-header-button').click();
+        await waitFor(() => expect(get(stateStore).projectListState).toBe(PanelState.MousePinned));
+
+        // Move the mouse outside of the interaction area & check that the panel stays open
+        userEvent.pointer({
+            target: wrapper,
+            coords: { clientX: leftUntriggerPosition, clientY: 5 }
+        });
+        await waitFor(() => expect(leftPanelWrapper.classList.contains('closed')).toBe(false));
+        await waitFor(() => expect(get(stateStore).projectListState).toBe(PanelState.MousePinned));
+
+        // Within the panel, click the pin button, check that it unpins and then closes the panel
+        userEvent.pointer({
+            target: wrapper,
+            coords: { clientX: leftTriggerPosition - 10, clientY: 5 }
+        });
+        within(leftPanelWrapper).getByTestId('right-header-button').click();
+        await waitFor(() =>
+            expect(get(stateStore).projectListState).toBe(PanelState.MousePinnable)
+        );
+        await waitFor(() => expect(leftPanelWrapper.classList.contains('closed')).toBe(true));
+
+        // Now moving the mouse within the trigger area shouldn't show the panel ...
+        userEvent.pointer({
+            target: wrapper,
+            coords: { clientX: leftTriggerPosition - 15, clientY: 5 }
+        });
+        await waitFor(() => expect(leftPanelWrapper.classList.contains('closed')).toBe(true));
+
+        // ... until we move the mouse outside of the interaction area ...
+        userEvent.pointer({
+            target: wrapper,
+            coords: { clientX: leftUntriggerPosition, clientY: 5 }
+        });
+        await waitFor(() => expect(leftPanelWrapper.classList.contains('closed')).toBe(true));
+
+        // ... and back in!
+        userEvent.pointer({
+            target: wrapper,
+            coords: { clientX: leftTriggerPosition - 15, clientY: 5 }
+        });
+        await waitFor(() => expect(leftPanelWrapper.classList.contains('closed')).toBe(false));
+        await waitFor(() =>
+            expect(get(stateStore).projectListState).toBe(PanelState.MousePinnable)
+        );
+    });
+
+    it('starting with PanelState.MousePinnable, shows and hides the project detail panel', async () => {
+        // Set panel state and render
+        stateStore.set({
+            projectDetailState: PanelState.MousePinnable
+        });
+        const { getByTestId } = render(MainView, {
+            projectConfigs: configs,
+            selectedProjectTuple: projectTuple
+        });
+
+        // Find & validate left panel wrapper
+        const rightPanelWrapper = getByTestId('right-panel-wrapper');
+        expect(rightPanelWrapper).toBeDefined();
+        expect(rightPanelWrapper.classList.contains('closed')).toBe(true);
+
+        // Move the mouse outside of the trigger area & check that the panel is unaffected
+        const wrapper = screen.getByTestId('main-wrapper');
+        const rightTriggerPosition = window.innerWidth - get(settingsStore).panelMouseTriggerWidth;
+        const rightUntriggerPosition = rightTriggerPosition - 300; // (estimated panel width)
+        userEvent.pointer({
+            target: wrapper,
+            coords: { clientX: rightTriggerPosition - 10, clientY: 5 }
+        });
+        await waitFor(() => expect(rightPanelWrapper.classList.contains('closed')).toBe(true));
+        expect(get(stateStore).projectDetailState).toBe(PanelState.MousePinnable);
+
+        // Move the mouse into the left panel trigger area & check that it opens the panel
+        userEvent.pointer({
+            target: wrapper,
+            coords: { clientX: rightTriggerPosition + 10, clientY: 5 }
+        });
+        await waitFor(() => expect(rightPanelWrapper.classList.contains('closed')).toBe(false));
+        expect(get(stateStore).projectDetailState).toBe(PanelState.MousePinnable);
+
+        // Move the mouse outside of the trigger area & check that the panel is unaffected
+        userEvent.pointer({
+            target: wrapper,
+            coords: { clientX: rightTriggerPosition - 10, clientY: 5 }
+        });
+        await waitFor(() => expect(rightPanelWrapper.classList.contains('closed')).toBe(false));
+        expect(get(stateStore).projectDetailState).toBe(PanelState.MousePinnable);
+
+        // Move the mouse outside of the interaction area & check that the panel closes
+        userEvent.pointer({
+            target: wrapper,
+            coords: { clientX: rightUntriggerPosition, clientY: 5 }
+        });
+        await waitFor(() => expect(rightPanelWrapper.classList.contains('closed')).toBe(true));
+        expect(get(stateStore).projectDetailState).toBe(PanelState.MousePinnable);
+
+        // Open the panel again, then click the pin button
+        userEvent.pointer({
+            target: wrapper,
+            coords: { clientX: rightTriggerPosition + 10, clientY: 5 }
+        });
+        await waitFor(() => expect(rightPanelWrapper.classList.contains('closed')).toBe(false));
+        within(rightPanelWrapper).getByTestId('right-header-button').click();
+        await waitFor(() =>
+            expect(get(stateStore).projectDetailState).toBe(PanelState.MousePinned)
+        );
+
+        // Move the mouse outside of the interaction area & check that the panel stays open
+        userEvent.pointer({
+            target: wrapper,
+            coords: { clientX: rightUntriggerPosition, clientY: 5 }
+        });
+        await waitFor(() => expect(rightPanelWrapper.classList.contains('closed')).toBe(false));
+        await waitFor(() =>
+            expect(get(stateStore).projectDetailState).toBe(PanelState.MousePinned)
+        );
+
+        // Within the panel, click the pin button, check that it unpins and then closes the panel
+        userEvent.pointer({
+            target: wrapper,
+            coords: { clientX: rightTriggerPosition + 10, clientY: 5 }
+        });
+        within(rightPanelWrapper).getByTestId('right-header-button').click();
+        await waitFor(() =>
+            expect(get(stateStore).projectDetailState).toBe(PanelState.MousePinnable)
+        );
+        await waitFor(() => expect(rightPanelWrapper.classList.contains('closed')).toBe(true));
+
+        // Now moving the mouse within the trigger area shouldn't show the panel ...
+        userEvent.pointer({
+            target: wrapper,
+            coords: { clientX: rightTriggerPosition + 15, clientY: 5 }
+        });
+        await waitFor(() => expect(rightPanelWrapper.classList.contains('closed')).toBe(true));
+
+        // ... until we move the mouse outside of the interaction area ...
+        userEvent.pointer({
+            target: wrapper,
+            coords: { clientX: rightUntriggerPosition, clientY: 5 }
+        });
+        await waitFor(() => expect(rightPanelWrapper.classList.contains('closed')).toBe(true));
+
+        // ... and back in!
+        userEvent.pointer({
+            target: wrapper,
+            coords: { clientX: rightTriggerPosition + 15, clientY: 5 }
+        });
+        await waitFor(() => expect(rightPanelWrapper.classList.contains('closed')).toBe(false));
+        await waitFor(() =>
+            expect(get(stateStore).projectDetailState).toBe(PanelState.MousePinnable)
+        );
+    });
+
+    it('pins the panels when the show buttons are clicked (backup for non-mouse devices)', async () => {
+        // Set panel state and render
+        stateStore.set({
+            projectListState: PanelState.MousePinnable,
+            projectDetailState: PanelState.MousePinnable
+        });
+        const { getByTestId } = render(MainView, {
+            projectConfigs: configs,
+            selectedProjectTuple: projectTuple
+        });
+        const leftPanelWrapper = getByTestId('left-panel-wrapper');
+        const rightPanelWrapper = getByTestId('right-panel-wrapper');
+        expect(leftPanelWrapper.classList.contains('closed')).toBe(true);
+        expect(rightPanelWrapper.classList.contains('closed')).toBe(true);
+
+        // Click the show buttons
+        const leftShowButton = getByTestId('left-show');
+        const rightShowButton = getByTestId('right-show');
+        fireEvent.click(leftShowButton);
+        fireEvent.click(rightShowButton);
+        await waitFor(() => expect(get(stateStore).projectListState).toBe(PanelState.MousePinned));
+        await waitFor(() =>
+            expect(get(stateStore).projectDetailState).toBe(PanelState.MousePinned)
+        );
+        expect(leftPanelWrapper.classList.contains('closed')).toBe(false);
+        expect(rightPanelWrapper.classList.contains('closed')).toBe(false);
+    });
+});
+
 // describe('Panels: PanelState.MouseUnpinnable', () => {
 //     it("doesn't render close buttons", async () => {});
 //     it('shows and hides the project list panel', async () => {});
