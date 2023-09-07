@@ -9,6 +9,7 @@ Ongoing notes for Sketchbook development.
 ## Test coverage
 
 -   MainView
+-   MouseState & PanelState
 -   ProjectViewer 2D vs 3D canvases
 -   Settings panel
 -   Project detail panel (component tests)

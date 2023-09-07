@@ -121,6 +121,7 @@
     {#if $stateStore.projectListState != PanelState.Unavailable}
         <div
             class="left-panel-wrapper"
+            data-testid="left-panel-wrapper"
             class:closed={!leftPanelShown}
             class:overlaid={$settingsStore.overlayPanels}
         >
@@ -151,6 +152,7 @@
     {#if $stateStore.projectDetailState != PanelState.Unavailable}
         <div
             class="right-panel-wrapper"
+            data-testid="right-panel-wrapper"
             class:closed={!rightPanelShown}
             class:overlaid={$settingsStore.overlayPanels}
         >
@@ -169,6 +171,7 @@
 {#if ![PanelState.Unavailable, PanelState.Static].includes($stateStore.projectListState)}
     <div
         class="left-show"
+        data-testid="left-show"
         class:hidden={leftPanelShown}
         on:click={toggleLeftPanel.bind(null, true)}
         on:keypress={toggleLeftPanel.bind(null, true)}
@@ -180,6 +183,7 @@
 {#if ![PanelState.Unavailable, PanelState.Static].includes($stateStore.projectDetailState)}
     <div
         class="right-show"
+        data-testid="right-show"
         class:hidden={rightPanelShown}
         on:click={toggleRightPanel.bind(null, true)}
         on:keypress={toggleRightPanel.bind(null, true)}

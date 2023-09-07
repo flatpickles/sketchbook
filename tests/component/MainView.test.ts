@@ -5,7 +5,7 @@ import { ProjectConfigDefaults } from '$lib/base/ProjectConfig/ProjectConfig';
 import Project from '$lib/base/Project/Project';
 import { stateStore } from '$lib/base/Util/AppState';
 import { get } from 'svelte/store';
-import type { PanelState } from '$lib/base/Util/PanelState';
+import { PanelState } from '$lib/base/Util/PanelState';
 
 const configs = {
     Untitled: ProjectConfigDefaults
@@ -32,6 +32,7 @@ describe('MainView layout', () => {
 });
 
 describe('Settings', () => {
+    afterEach(cleanup);
     it('shows and hides the settings panel', async () => {
         const { getByTestId } = render(MainView, {
             projectConfigs: configs,
@@ -59,11 +60,98 @@ describe('Settings', () => {
     });
 });
 
-// describe('Panels: PanelState.Visible <-> PanelState.Hidden', () => {
-//     // check default states with stateStore values // here or elsewherez
-//     // it('shows and hides the project list panel', async () => {});
-//     // it('shows and hides the project detail panel', async () => {});
-// });
+describe('PanelState.Visible <-> PanelState.Hidden', () => {
+    afterEach(cleanup);
+
+    it('starting with PanelState.Hidden, hides both panels on first render', async () => {
+        // Set panel state and render
+        stateStore.set({
+            projectListState: PanelState.Hidden,
+            projectDetailState: PanelState.Hidden
+        });
+        const { getByTestId } = render(MainView, {
+            projectConfigs: configs,
+            selectedProjectTuple: projectTuple
+        });
+
+        // Find & validate left panel wrapper
+        const leftPanelWrapper = getByTestId('left-panel-wrapper');
+        expect(leftPanelWrapper).toBeDefined();
+        expect(leftPanelWrapper.classList.contains('closed')).toBe(true);
+
+        // Find & validate right panel wrapper
+        const rightPanelWrapper = getByTestId('right-panel-wrapper');
+        expect(rightPanelWrapper).toBeDefined();
+        expect(rightPanelWrapper.classList.contains('closed')).toBe(true);
+    });
+
+    it('starting with PanelState.Visible, shows and hides the project list panel', async () => {
+        // Set panel state and render
+        stateStore.set({
+            projectListState: PanelState.Visible
+        });
+        const { getByTestId } = render(MainView, {
+            projectConfigs: configs,
+            selectedProjectTuple: projectTuple
+        });
+
+        // Find & validate left panel wrapper
+        const leftPanelWrapper = getByTestId('left-panel-wrapper');
+        expect(leftPanelWrapper).toBeDefined();
+        expect(leftPanelWrapper.classList.contains('closed')).toBe(false);
+
+        // Click the close button & check that it closes the panel
+        within(leftPanelWrapper).getByTestId('right-header-button').click();
+        await waitFor(() => expect(leftPanelWrapper.classList.contains('closed')).toBe(true));
+        expect(get(stateStore).projectListState).toBe(PanelState.Hidden);
+
+        // Click the open button & check that it opens the panel
+        const openButton = getByTestId('left-show');
+        fireEvent.click(openButton);
+        await waitFor(() => expect(leftPanelWrapper.classList.contains('closed')).toBe(false));
+        expect(get(stateStore).projectListState).toBe(PanelState.Visible);
+
+        // Check that setting the stateStore to Hidden from elsewhere closes the panel
+        stateStore.set({
+            projectListState: PanelState.Hidden
+        });
+        await waitFor(() => expect(leftPanelWrapper.classList.contains('closed')).toBe(true));
+    });
+
+    it('starting with PanelState.Visible, shows and hides the project detail panel', async () => {
+        // Set panel state and render
+        stateStore.set({
+            projectDetailState: PanelState.Visible
+        });
+        const { getByTestId } = render(MainView, {
+            projectConfigs: configs,
+            selectedProjectTuple: projectTuple
+        });
+
+        // Find & validate left panel wrapper
+        const rightPanelWrapper = getByTestId('right-panel-wrapper');
+        expect(rightPanelWrapper).toBeDefined();
+        expect(rightPanelWrapper.classList.contains('closed')).toBe(false);
+
+        // Click the close button & check that it closes the panel
+        within(rightPanelWrapper).getByTestId('right-header-button').click();
+        await waitFor(() => expect(rightPanelWrapper.classList.contains('closed')).toBe(true));
+        expect(get(stateStore).projectDetailState).toBe(PanelState.Hidden);
+
+        // Click the open button & check that it opens the panel
+        const openButton = getByTestId('right-show');
+        fireEvent.click(openButton);
+        await waitFor(() => expect(rightPanelWrapper.classList.contains('closed')).toBe(false));
+        expect(get(stateStore).projectDetailState).toBe(PanelState.Visible);
+
+        // Check that setting the stateStore to Hidden from elsewhere closes the panel
+        stateStore.set({
+            projectDetailState: PanelState.Hidden
+        });
+        await waitFor(() => expect(rightPanelWrapper.classList.contains('closed')).toBe(true));
+    });
+});
+
 // describe('Panels: PanelState.MousePinnable <-> PanelState.MousePinned', () => {});
 // describe('Panels: PanelState.MouseUnpinnable', () => {
 //     it("doesn't render close buttons", async () => {});
