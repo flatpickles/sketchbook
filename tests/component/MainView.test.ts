@@ -60,6 +60,88 @@ describe('Settings', () => {
     });
 });
 
+describe('PanelState.Unavailable', () => {
+    afterEach(cleanup);
+
+    it('does not render the project list panel or show button', async () => {
+        // Set panel state and render
+        stateStore.set({
+            projectListState: PanelState.Unavailable
+        });
+        const { getByTestId } = render(MainView, {
+            projectConfigs: configs,
+            selectedProjectTuple: projectTuple
+        });
+
+        // Find & validate left panel wrapper and button absence
+        expect(() => getByTestId('left-panel-wrapper')).toThrow();
+        expect(() => getByTestId('left-show')).toThrow();
+    });
+
+    it('does not render the project detail panel or show button', async () => {
+        // Set panel state and render
+        stateStore.set({
+            projectDetailState: PanelState.Unavailable
+        });
+        const { getByTestId } = render(MainView, {
+            projectConfigs: configs,
+            selectedProjectTuple: projectTuple
+        });
+
+        // Find & validate right panel wrapper and button absence
+        expect(() => getByTestId('right-panel-wrapper')).toThrow();
+        expect(() => getByTestId('right-show')).toThrow();
+    });
+});
+
+describe('PanelState.Static', () => {
+    afterEach(cleanup);
+
+    it('renders the project list panel with no hide/show UI', async () => {
+        // Set panel state and render
+        stateStore.set({
+            projectListState: PanelState.Static
+        });
+        const { getByTestId } = render(MainView, {
+            projectConfigs: configs,
+            selectedProjectTuple: projectTuple
+        });
+
+        // Find & validate left panel wrapper
+        const leftPanelWrapper = getByTestId('left-panel-wrapper');
+        expect(leftPanelWrapper).toBeDefined();
+        expect(leftPanelWrapper.classList.contains('closed')).toBe(false);
+
+        // Find & validate left panel show button absence
+        expect(() => getByTestId('left-show')).toThrow();
+
+        // Find & validate left panel hide button absence
+        expect(() => within(leftPanelWrapper).getByTestId('right-header-button')).toThrow();
+    });
+
+    it('renders the project detail panel with no hide/show UI', async () => {
+        // Set panel state and render
+        stateStore.set({
+            projectDetailState: PanelState.Static
+        });
+        const { getByTestId } = render(MainView, {
+            projectConfigs: configs,
+            selectedProjectTuple: projectTuple
+        });
+
+        // Find & validate right panel wrapper
+        const rightPanelWrapper = getByTestId('right-panel-wrapper');
+        expect(rightPanelWrapper).toBeDefined();
+        expect(rightPanelWrapper.classList.contains('closed')).toBe(false);
+
+        // Find & validate right panel show button absence
+        expect(() => getByTestId('right-show')).toThrow();
+
+        // Find & validate right panel hide button absence
+        expect(() => within(rightPanelWrapper).getByTestId('right-header-button')).toThrow();
+    });
+});
+
 describe('PanelState.Visible <-> PanelState.Hidden', () => {
     afterEach(cleanup);
 
