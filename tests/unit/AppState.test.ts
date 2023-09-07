@@ -70,7 +70,7 @@ describe('AppStateStore', () => {
         localStorage.setItem('settings_lastInitialValue_projectSortOrder', 'reverse-chronological');
         localStorage.setItem('settings_projectSortOrder', 'alphabetical');
         settingsStore.reset();
-        expect(get(settingsStore).showExperiments).toBe(false);
+        expect(get(settingsStore).showExperiments).toBe(config.showExperiments);
         expect(get(settingsStore).projectSortOrder).toBe(SortOrder.Chronological);
         expect(localStorage.getItem('settings_lastInitialValue_projectSortOrder')).toContain(
             'chronological'

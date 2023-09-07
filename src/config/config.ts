@@ -1,8 +1,12 @@
 import { SortOrder } from '$lib/base/Util/ConfigTypes';
 import { PanelState } from '$lib/base/Util/PanelState';
 
+// The imported `dev` boolean will be true locally, but false in production. Use this for any
+// development-specific default settings below.
+import { dev } from '$app/environment';
+
 // Experimental projects will only appear in the project list if this is set to true
-const showExperiments = false;
+const showExperiments = dev;
 
 // If true, the project list and detail panels will float over project content
 const overlayPanels = true;

@@ -8,8 +8,6 @@ Ongoing notes for Sketchbook development.
 
 ## Test coverage
 
--   PanelState
--   ProjectViewer 2D vs 3D canvases
 -   Settings panel
 -   Project detail panel (component tests)
 -   Project list panel (header/footer components etc)
@@ -28,16 +26,16 @@ Ongoing notes for Sketchbook development.
 
 ## Johan's feedback (8/23):
 
--   maybe rename update method; "update" implies it runs every frame
--   passed to update:
+-   [addressed] maybe rename update method; "update" implies it runs every frame
+-   [addressed] passed to update:
     -   parameter key (from update)
     -   time (ms + frame count)
 -   think about how much infrastructure to provide / leave to other frameworks. Probably as minimal as possible
 -   check Unity lifecycle for ideas
 -   animation mode?
--   dev mode vs. prod mode
--   design: the art feels secondary with the panels floating over the top. Could be remedied with dedicated space for the canvas // no floating panels.
--   Wouldn't often want to see project list as a first-class citizen during dev mode. That's kind of a portfolio feature. Could be remedied just by keeping the panel closed.
+-   [addressed] dev mode vs. prod mode
+-   [addressed] design: the art feels secondary with the panels floating over the top. Could be remedied with dedicated space for the canvas // no floating panels.
+-   [addressed] Wouldn't often want to see project list as a first-class citizen during dev mode. That's kind of a portfolio feature. Could be remedied just by keeping the panel closed.
 
 ## Settings // app configuration
 
@@ -110,6 +108,7 @@ Use cases: modes (w/ options), sections, functionality only defined with some va
 
 ## Miscellany
 
+-   Fix issues listed in Chrome dev tools (mostly related to form ids & labels)
 -   Asset import rework: define params as instances of objects that can then provide files once imported. Enable:
     -   stateless asset-dependent implementations
     -   bundled defaults
