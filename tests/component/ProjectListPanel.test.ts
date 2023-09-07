@@ -18,7 +18,8 @@ describe('ProjectListPanel rendering', () => {
 
         render(ProjectListPanel, {
             projects: {},
-            selectedProjectKey: 'test'
+            selectedProjectKey: 'test',
+            headerButtonIcon: 'fa-close'
         });
 
         const title = screen.getByTestId('header-title');
@@ -30,16 +31,20 @@ describe('ProjectListPanel rendering', () => {
         expect(description.textContent).toBe('test description');
         const footer = screen.getByTestId('footer-text');
         expect(footer.textContent).toBe('test footer');
+
+        const headerButton = screen.getByTestId('right-header-button');
+        expect(headerButton.firstElementChild?.classList.contains('fa-close')).toBe(true);
     });
 
-    it('does not render subtitle or description if not provided', async () => {
+    it('does not render subtitle, description, or button if not provided', async () => {
         vi.spyOn(content, 'title', 'get').mockReturnValue('test title');
         vi.spyOn(content, 'subtitle', 'get').mockReturnValue('');
         vi.spyOn(content, 'description', 'get').mockReturnValue('');
 
         render(ProjectListPanel, {
             projects: {},
-            selectedProjectKey: 'test'
+            selectedProjectKey: 'test',
+            headerButtonIcon: undefined
         });
 
         const title = screen.queryByTestId('header-title');
@@ -48,6 +53,8 @@ describe('ProjectListPanel rendering', () => {
         expect(subtitle).toBeNull();
         const description = screen.queryByTestId('header-description');
         expect(description).toBeNull();
+        const button = screen.queryByTestId('right-header-button');
+        expect(button).toBeNull();
     });
 
     it('renders projects alphabetically', async () => {
@@ -72,7 +79,8 @@ describe('ProjectListPanel rendering', () => {
         };
         render(ProjectListPanel, {
             projects: projects,
-            selectedProjectKey: 'banana'
+            selectedProjectKey: 'banana',
+            headerButtonIcon: undefined
         });
 
         const listItems = screen.getAllByTestId('project-list-item');
@@ -105,7 +113,8 @@ describe('ProjectListPanel rendering', () => {
         };
         render(ProjectListPanel, {
             projects: projects,
-            selectedProjectKey: 'banana'
+            selectedProjectKey: 'banana',
+            headerButtonIcon: undefined
         });
 
         const listItems = screen.getAllByTestId('project-list-item');
@@ -138,7 +147,8 @@ describe('ProjectListPanel rendering', () => {
         };
         render(ProjectListPanel, {
             projects: projects,
-            selectedProjectKey: 'banana'
+            selectedProjectKey: 'banana',
+            headerButtonIcon: undefined
         });
 
         const listItems = screen.getAllByTestId('project-list-item');
@@ -166,7 +176,8 @@ describe('ProjectListPanel rendering', () => {
         };
         render(ProjectListPanel, {
             projects: projects,
-            selectedProjectKey: 'apple'
+            selectedProjectKey: 'apple',
+            headerButtonIcon: undefined
         });
 
         const appleItem = screen.getByText('Apple');
@@ -197,7 +208,8 @@ describe('ProjectListPanel interaction', () => {
         };
         render(ProjectListPanel, {
             projects: projects,
-            selectedProjectKey: 'Banana'
+            selectedProjectKey: 'Banana',
+            headerButtonIcon: undefined
         });
     });
 
@@ -249,7 +261,8 @@ describe('ProjectListPanel interaction', () => {
         };
         render(ProjectListPanel, {
             projects: projects,
-            selectedProjectKey: 'banana'
+            selectedProjectKey: 'banana',
+            headerButtonIcon: undefined
         });
 
         const listItems = screen.getAllByTestId('project-list-item');
@@ -280,7 +293,8 @@ describe('ProjectListPanel interaction', () => {
         };
         render(ProjectListPanel, {
             projects: projects,
-            selectedProjectKey: 'banana'
+            selectedProjectKey: 'banana',
+            headerButtonIcon: undefined
         });
 
         const listItems = screen.getAllByTestId('project-list-item');
