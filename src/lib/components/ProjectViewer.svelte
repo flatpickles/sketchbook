@@ -7,7 +7,7 @@
 
     export let project: Project;
     export let containerResizing = false; // The container is being resized
-    export let updateEachFrame = ProjectConfigDefaults.renderLoop; // Update the project each frame
+    $: updateEachFrame = project.enableRenderLoop; // Update the project each frame
 
     let previousProject: Project | undefined;
     let canvasElement2D: HTMLCanvasElement;

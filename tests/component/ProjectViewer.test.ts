@@ -101,13 +101,13 @@ describe('CanvasViewer', () => {
 
         // Render first project with per-frame updates and let it roll for 0.25 seconds
         const { component } = render(ProjectViewer, {
-            project: proj1,
-            updateEachFrame: true
+            project: proj1
         });
         await waitFor(() => expect(lastTime).toBeGreaterThanOrEqual(250));
         const previousTime = lastTime;
 
         const proj2 = new Project();
+        proj2.enableRenderLoop = false;
         vi.spyOn(proj2, 'init');
         vi.spyOn(proj2, 'update').mockImplementation(({ frame, time }) => {
             lastFrame = frame;
@@ -130,14 +130,14 @@ describe('Project update calls from CanvasViewer', () => {
 
     it('calls proj update only once if updateEachFrame = false', async () => {
         const project = new Project();
+        project.enableRenderLoop = false;
         let callCount = 0;
         vi.spyOn(project, 'update').mockImplementation(() => {
             callCount++;
         });
 
         render(ProjectViewer, {
-            project: project,
-            updateEachFrame: false
+            project: project
         });
         await waitFor(() => expect(project.update).toHaveBeenCalledTimes(1));
         await new Promise((r) => setTimeout(r, 250)); // wait 0.25 seconds
@@ -153,22 +153,21 @@ describe('Project update calls from CanvasViewer', () => {
         });
 
         render(ProjectViewer, {
-            project: project,
-            updateEachFrame: true
+            project: project
         });
         await waitFor(() => expect(callCount).toBeGreaterThan(1));
     });
 
     it('calls proj update multiple times while containerResizing', async () => {
         const project = new Project();
+        project.enableRenderLoop = false;
         let callCount = 0;
         vi.spyOn(project, 'update').mockImplementation(() => {
             callCount++;
         });
 
         const { component } = render(ProjectViewer, {
-            project: project,
-            updateEachFrame: false
+            project: project
         });
         component.containerResizing = true;
         await waitFor(() => expect(callCount).toBeGreaterThan(1));
@@ -181,6 +180,7 @@ describe('Project update calls from CanvasViewer', () => {
 
     it('calls proj update after paramUpdated is called with expected parameters', async () => {
         const project = new Project();
+        project.enableRenderLoop = false;
         let callCount = 0;
         vi.spyOn(project, 'update').mockImplementation(() => {
             callCount++;
@@ -188,8 +188,7 @@ describe('Project update calls from CanvasViewer', () => {
 
         // First update call should have no paramKeys, and frame 0
         const { component } = render(ProjectViewer, {
-            project: project,
-            updateEachFrame: false
+            project: project
         });
         await waitFor(() => expect(callCount).toEqual(1));
         expect(project.update).toHaveBeenLastCalledWith(
@@ -218,6 +217,7 @@ describe('Project update calls from CanvasViewer', () => {
 
     it('calls update when overlayPanels value changes', async () => {
         const project = new Project();
+        project.enableRenderLoop = false;
         let callCount = 0;
         vi.spyOn(project, 'update').mockImplementation(() => {
             callCount++;
@@ -227,8 +227,7 @@ describe('Project update calls from CanvasViewer', () => {
             overlayPanels: false
         });
         render(ProjectViewer, {
-            project: project,
-            updateEachFrame: false
+            project: project
         });
         await waitFor(() => expect(callCount).toEqual(1));
 

@@ -15,6 +15,6 @@ Styles: any irrelevant options will be ignored
 ## Advanced Options
 
 -   Sections
--   Live updates
+-   applyDuringInput - note behavior is unaffected by enableRenderLoop
 -   Options (always overrides any style settings)
 -   Full width display

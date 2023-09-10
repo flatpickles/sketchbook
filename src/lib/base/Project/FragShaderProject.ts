@@ -52,6 +52,7 @@ const positions = [
 
 export default class FragShaderProject extends Project {
     canvasType = CanvasType.WebGL;
+    enableRenderLoop = false; // Disable the default render loop, since we're using regl
 
     #fragShader: string;
     #uniformParams: REGLUniformMap = {};

@@ -6,7 +6,6 @@ export interface ProjectConfig {
     groups: string[];
     presetsAvailable: boolean;
     experimental: boolean;
-    renderLoop: boolean;
     paramsApplyDuringInput: boolean;
 }
 
@@ -18,6 +17,5 @@ export const ProjectConfigDefaults: ProjectConfig = {
     groups: [],
     presetsAvailable: false,
     experimental: false,
-    renderLoop: true,
     paramsApplyDuringInput: true
 };

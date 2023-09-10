@@ -4,7 +4,6 @@
     "description": "This is the description for a demo project.",
     "groups": ["Print Media", "Test Category"],
     "experimental": false,
-    "renderLoop": false,
     "paramsApplyDuringInput": true,
 
     "params": {

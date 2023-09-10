@@ -162,6 +162,7 @@ Use cases: modes (w/ options), sections, functionality only defined with some va
 -   Can we enable DOM-based projects, e.g. vanilla Svelte prototypes that aren't entirely on a canvas?
 -   Should ConfigTypes.ts exist?
 -   Does glslify in ShaderProject work?
+-   Error for setting Project class properties after initialization?
 
 # Ongoing:
 

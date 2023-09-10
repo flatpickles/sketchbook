@@ -8,11 +8,15 @@ todo: project anatomy, etc (reference design-doc.md)
 
 ## Properties
 
+Setting any of these properties directly after a project is initialized is unsupported.
+
 ### canvas
 
 ### container
 
 ### canvasType
+
+### enableRenderLoop
 
 ## Class Methods
 
@@ -20,7 +24,7 @@ todo: project anatomy, etc (reference design-doc.md)
 
 ### update
 
-... when the `renderLoop` config setting false, update will only be called after init, after parameters are updated, and after canvas size changes.
+... when `enableRenderLoop` is false, update will only be called after init, after parameters are updated, and after canvas size changes.
 
 ### destroy
 
