@@ -1,13 +1,11 @@
 <script lang="ts">
     import type Project from '$lib/base/Project/Project';
     import { CanvasType } from '$lib/base/Project/Project';
-    import { ProjectConfigDefaults } from '$lib/base/ProjectConfig/ProjectConfig';
     import { settingsStore } from '$lib/base/Util/AppState';
     import { onMount } from 'svelte';
 
     export let project: Project;
-    export let containerResizing = false; // The container is being resized
-    $: updateEachFrame = project.enableRenderLoop; // Update the project each frame
+    export let containerResizing = false;
 
     let previousProject: Project | undefined;
     let canvasElement2D: HTMLCanvasElement;
@@ -17,32 +15,28 @@
     // Local state used when updating project
     let frameCount = 0;
     let startTime = Date.now();
-    let updatedParamKeys: string[] = [];
-    let projectNeedsUpdate = false;
 
     // Called externally when the project's params are updated
     export function paramUpdated(event: CustomEvent) {
         const { updatedProject, paramKey } = event.detail;
         if (updatedProject != project)
             throw new Error('Updated project does not match current project');
-        if (!updatedParamKeys.includes(paramKey)) updatedParamKeys.push(paramKey);
-        projectNeedsUpdate = true;
+        project.paramChanged({ paramKey });
     }
 
-    // Update the project, component, and DOM state each frame / when appropriate
+    // Update the project, component, and DOM state each frame
     const updateLoop = () => {
         if (containerElement) {
-            const shouldUpdate = updateEachFrame || containerResizing || projectNeedsUpdate;
+            // Set the canvas size each frame if the container is actively resizing
             if (containerResizing) setCanvasSize();
-            if (shouldUpdate) {
+
+            // Update the project, if update is implemented
+            if (Object.getPrototypeOf(project).hasOwnProperty('update')) {
                 project.update({
                     frame: frameCount,
-                    time: Date.now() - startTime,
-                    paramKeys: updatedParamKeys
+                    time: Date.now() - startTime
                 });
-                projectNeedsUpdate = false;
                 frameCount += 1;
-                updatedParamKeys = [];
             }
         }
         requestAnimationFrame(updateLoop);
@@ -55,7 +49,6 @@
         // Update the canvas size whenever the window is resized
         window.addEventListener('resize', () => {
             setCanvasSize();
-            projectNeedsUpdate = true;
         });
     });
 
@@ -69,7 +62,6 @@
     $: ((newPanelsValue: boolean) => {
         if (newPanelsValue !== panelsOverlaid) {
             setCanvasSize();
-            projectNeedsUpdate = true;
             panelsOverlaid = newPanelsValue;
         }
     })($settingsStore.overlayPanels);
@@ -107,19 +99,18 @@
                 : undefined;
 
         // Initialize the new project
-        if (shouldResize) setCanvasSize();
+        if (shouldResize) setCanvasSize(false);
         newProject.init();
 
         // Update component & DOM state
         fixP5Containment();
         frameCount = 0;
         startTime = Date.now();
-        updatedParamKeys = [];
-        projectNeedsUpdate = true;
     }
 
     // Called to reset the canvas size to match the container
-    function setCanvasSize() {
+    function setCanvasSize(callProjectResize = true) {
+        // Update the canvas state
         if (!containerElement)
             throw new Error("Cannot set canvas size when the container doesn't exist");
         const pixelRatio = window.devicePixelRatio;
@@ -127,6 +118,20 @@
         canvasElement2D.height = containerElement.clientHeight * pixelRatio;
         canvasElementWebGL.width = containerElement.clientWidth * pixelRatio;
         canvasElementWebGL.height = containerElement.clientHeight * pixelRatio;
+
+        // Call the project's resize method when appropriate
+        if (!callProjectResize) return;
+        const containerSize: [number, number] = [
+            containerElement.clientWidth,
+            containerElement.clientHeight
+        ];
+        const canvasSize: [number, number] | undefined =
+            project.canvasType == CanvasType.Context2D
+                ? [canvasElement2D.width, canvasElement2D.height]
+                : project.canvasType == CanvasType.WebGL
+                ? [canvasElementWebGL.width, canvasElementWebGL.height]
+                : undefined;
+        project.resized({ containerSize, canvasSize });
     }
 
     // If a p5 canvas is present, position it within the parent container

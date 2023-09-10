@@ -16,15 +16,15 @@ Setting any of these properties directly after a project is initialized is unsup
 
 ### canvasType
 
-### enableRenderLoop
-
 ## Class Methods
 
 ### init
 
 ### update
 
-... when `enableRenderLoop` is false, update will only be called after init, after parameters are updated, and after canvas size changes.
+### paramUpdated
+
+### resized
 
 ### destroy
 

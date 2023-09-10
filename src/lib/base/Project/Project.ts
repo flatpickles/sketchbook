@@ -30,27 +30,33 @@ export default class Project {
     canvasType = CanvasType.Context2D;
 
     /**
-     * Whether or not to call update() in a requestAnimationFrame loop. If false, update() will only
-     * be called after init, after any parameter changes, and after a canvas resize. Consider
-     * overriding this to false if you want to control the update loop yourself, or if you want to
-     * update the canvas only when a parameter changes.
-     */
-    enableRenderLoop = true;
-
-    /**
      * init is called once when the project is first loaded, after this.canvas and this.container
      * become available. Override this with any custom initialization behavior.
      */
     public init() {}
 
     /**
-     * Override update with your custom drawing code; its behavior will depend on the value of
-     * enableRenderLoop (see above). The detail object contains the following:
+     * update is called continuously in a requestAnimationFrame loop. Override this with your custom
+     * drawing code. The detail object contains the following:
      * - frame: the current frame number (0 at project load, incremented by 1 for each update call)
      * - time: milliseconds passed since project load (i.e. since init was called)
-     * - paramKeys: the property names of any parameters updated since the last update call
      */
-    public update(detail: { frame: number; time: number; paramKeys: string[] }) {}
+    public update(detail: { frame: number; time: number }) {}
+
+    /**
+     * paramChanged is called when a parameter is changed in the UI. The detail object contains the
+     * following:
+     * - paramKey: the key of the parameter that was changed
+     */
+    public paramChanged(detail: { paramKey: string }) {}
+
+    /**
+     * resized is called when the container div and/or active canvas is resized. The detail object
+     * contains the following:
+     * - containerSize: the new size of the container div, in pixels
+     * - canvasSize: the new size of the canvas, in pixels (only available if using a canvas)
+     */
+    public resized(detail: { containerSize: [number, number]; canvasSize?: [number, number] }) {}
 
     /**
      * destroy is called when the project is unloaded, i.e. when another project is selected.
