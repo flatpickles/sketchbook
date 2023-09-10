@@ -48,9 +48,11 @@ describe('ParamConfigFactory', () => {
         }).toThrow();
     });
 
-    it('uses the proper liveUpdates values', () => {
-        expect(ParamConfigFactory.configFrom(3, 'number').liveUpdates).toEqual(true);
-        expect(ParamConfigFactory.configFrom(3, 'number', {}, false).liveUpdates).toEqual(false);
+    it('uses the proper applyDuringInput values', () => {
+        expect(ParamConfigFactory.configFrom(3, 'number').applyDuringInput).toEqual(true);
+        expect(ParamConfigFactory.configFrom(3, 'number', {}, false).applyDuringInput).toEqual(
+            false
+        );
     });
 
     it('assigns config fields to the param', () => {
@@ -61,7 +63,7 @@ describe('ParamConfigFactory', () => {
         expect(numberParam.min).toEqual(1);
         expect(numberParam.max).toEqual(5);
         expect(numberParam.step).toEqual(NumberParamConfigDefaults.step);
-        expect(numberParam.liveUpdates).toEqual(NumberParamConfigDefaults.liveUpdates);
+        expect(numberParam.applyDuringInput).toEqual(NumberParamConfigDefaults.applyDuringInput);
         expect(numberParam.style).toEqual(NumberParamConfigDefaults.style);
     });
 

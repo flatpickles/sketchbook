@@ -57,7 +57,7 @@
                 enumerable: true,
                 configurable: true
             });
-            ParamValueProvider.setValue(updatedConfig, projectTuple.props.title, value);
+            ParamValueProvider.setValue(updatedConfig, projectTuple.config.title, value);
         }
 
         // Dispatch updated event - project.update() is called in ProjectViewer
@@ -71,7 +71,7 @@
     function initialValueForParam<T extends ParamConfig>(paramConfig: T): ParamValueType<T> {
         return ParamValueProvider.getValue(
             paramConfig,
-            projectTuple.props.title,
+            projectTuple.config.title,
             projectTuple.project
         );
     }

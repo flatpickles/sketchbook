@@ -82,7 +82,7 @@ Config files are optional, as are each of the properties you may include. All pr
     "date": "2023-06-17",
     "description": "This is the description for a demo project, that will show up alongside the artwork. HTML tags may be used, e.g. for <a href='http://zombo.com'>links</a>.",
     "defaultPresetName": "Preset Name",
-    "liveUpdates": true,
+    "applyDuringInput": true,
     "groups": ["Plotter Art"],
     "experimental": false,
     "params": {
@@ -91,7 +91,7 @@ Config files are optional, as are each of the properties you may include. All pr
             "min": 0,
             "max": 1,
             "step": 0.01,
-            "liveUpdates": true,
+            "applyDuringInput": true,
             "style": "slider"
         },
         "numericArrayParam": {
@@ -100,7 +100,7 @@ Config files are optional, as are each of the properties you may include. All pr
             "min": 0,
             "max": 1,
             "step": 0.01,
-            "liveUpdates": true,
+            "applyDuringInput": true,
             "style": "field",
             "section": "Section 1"
         },
@@ -112,7 +112,7 @@ Config files are optional, as are each of the properties you may include. All pr
         "stringParam": {
             "name": "String Param",
             "style": "single",
-            "liveUpdates": true,
+            "applyDuringInput": true,
             "options": [],
             "section": "Section 1"
         },
@@ -137,7 +137,7 @@ Options (and parenthesized defaults) for the project are as follows:
 -   `date` (`undefined`): The date displayed for the project, used in the project details overlay (no date displayed if undefined). Optionally used for sorting.
 -   `description`: (`undefined`): The description displayed for the project, used in the project details overlay (no description displayed if undefined).
 -   `defaultPresetName` (`undefined`):
--   `liveUpdates` (`true`)
+-   `applyDuringInput` (`true`)
 -   `groups` ([])
 -   `experimental` (`false`)
 -   `params` ({}): Parameter configuration for the project, as described below.
@@ -162,16 +162,16 @@ Options (and parenthesized defaults) for each type are as follows:
     -   `min` (0): Minimum value.
     -   `max` (1): Maximum value.
     -   `step` (0.01): Freehand input is snapped to an increment of this value, and slider displays use this as their step value.
-    -   `liveUpdates` (`project.liveUpdates`): When true, values will update as they're changed; when false, sketchbook will wait for field blur or mouse up. This will override the configured `project.liveUpdates` value, i.e. that will be used as its default.
+    -   `applyDuringInput` (`project.applyDuringInput`): When true, values will update as they're changed; when false, sketchbook will wait for field blur or mouse up. This will override the configured `project.applyDuringInput` value, i.e. that will be used as its default.
     -   `style` ("slider"): A string indicating the display style for this param. Options include:
         -   "slider": Show a range slider allowing the user to set via dragging.
         -   "field": Show an input field allowing the user to type a number.
     -   `section` (`undefined`): String name for the named section that this param should be grouped within, or undefined if it's a top level param. Params are displayed in the order they are defined in the file unless `section` is defined; sectioned params will be grouped together in the position of the first listed parameter.
 -   **Numeric array:**
-    -   `name`, `min`, `max`, `step`, `liveUpdates`, and `section` as above.
+    -   `name`, `min`, `max`, `step`, `applyDuringInput`, and `section` as above.
     -   `style` TODO
 -   **String:**
-    -   `name`, `liveUpdates`, and `section` as above.
+    -   `name`, `applyDuringInput`, and `section` as above.
     -   `style` ("single"): A string indicating the display style for this param. Options include:
         -   "single": A single-line text field input.
         -   "multi": A multi-line text field input.

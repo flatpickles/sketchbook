@@ -14,20 +14,20 @@ export interface ParamConfig {
     type: ParamType;
     key: string;
     name: string;
-    liveUpdates: boolean;
     fullWidthInput: boolean;
     section?: string;
     hoverText?: string;
+    applyDuringInput: boolean;
 }
 
 export const ParamConfigDefaults: ParamConfig = {
     type: ParamType.Undefined,
     key: 'untitledParam',
     name: 'Untitled Param',
-    liveUpdates: ProjectConfigDefaults.liveUpdates,
     fullWidthInput: false,
     section: undefined,
-    hoverText: undefined
+    hoverText: undefined,
+    applyDuringInput: ProjectConfigDefaults.paramsApplyDuringInput
 } as const;
 
 export type ParamSection = {

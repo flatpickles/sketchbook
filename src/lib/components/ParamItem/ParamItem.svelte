@@ -24,8 +24,8 @@
 
     const dispatch = createEventDispatcher();
     function paramUpdated(complete: boolean) {
-        // If the param update isn't complete and liveUpdates isn't set, we shan't proceed
-        if (!config.liveUpdates && !complete) return;
+        // If the param update isn't complete and applyDuringInput isn't set, we shan't proceed
+        if (!config.applyDuringInput && !complete) return;
 
         // Dispatch the update event
         dispatch('update', {

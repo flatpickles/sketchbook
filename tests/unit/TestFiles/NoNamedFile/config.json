@@ -2,7 +2,7 @@
     "title": "No Named File",
     "date": "2023-06-27",
     "description": "This test project doesn't have a properly named 'NoNamedFile' file/class within it, so it won't be listed.",
-    "liveUpdates": true,
+    "paramsApplyDuringInput": true,
     "groups": ["Test"],
     "experimental": false,
 
@@ -12,13 +12,13 @@
             "min": 0,
             "max": 1,
             "step": 0.01,
-            "liveUpdates": true,
+            "applyDuringInput": true,
             "style": "slider",
             "options": []
         },
         "testBoolean": {
             "name": "Boolean Param",
-            "liveUpdates": true,
+            "applyDuringInput": true,
             "enables": []
         }
     },

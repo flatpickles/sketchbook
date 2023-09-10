@@ -40,7 +40,9 @@ describe('loading available projects', async () => {
         expect(project?.title).toEqual('NoConfig');
         expect(project?.date).toEqual(ProjectConfigDefaults.date);
         expect(project?.description).toEqual(ProjectConfigDefaults.description);
-        expect(project?.liveUpdates).toEqual(ProjectConfigDefaults.liveUpdates);
+        expect(project?.paramsApplyDuringInput).toEqual(
+            ProjectConfigDefaults.paramsApplyDuringInput
+        );
         expect(project?.groups).toEqual(ProjectConfigDefaults.groups);
         expect(project?.experimental).toEqual(ProjectConfigDefaults.experimental);
     });
@@ -51,9 +53,9 @@ describe('loading available projects', async () => {
         expect(project?.title).toEqual('Config and Support');
         expect(project?.date).toEqual(new Date('2023-06-27'));
         expect(project?.description).toContain('config file');
-        expect(project?.liveUpdates).toEqual(false);
+        expect(project?.paramsApplyDuringInput).toEqual(false);
         expect(project?.groups).toContain('Test');
-        expect(project?.groups?.length).toEqual(1);
+        expect(project?.groups.length).toEqual(1);
         expect(project?.experimental).toEqual(true);
     });
 
@@ -94,12 +96,14 @@ describe('loading specific projects', async () => {
         expect(numericArrayDescriptor?.value).toEqual([1, 2, 3]);
 
         // Check project config
-        const projectProps = projectTuple!.props;
+        const projectProps = projectTuple!.config;
         expect(projectProps).toBeDefined();
         expect(projectProps?.title).toEqual('NoConfig');
         expect(projectProps?.date).toEqual(ProjectConfigDefaults.date);
         expect(projectProps?.description).toEqual(ProjectConfigDefaults.description);
-        expect(projectProps?.liveUpdates).toEqual(ProjectConfigDefaults.liveUpdates);
+        expect(projectProps?.paramsApplyDuringInput).toEqual(
+            ProjectConfigDefaults.paramsApplyDuringInput
+        );
         expect(projectProps?.groups).toEqual(ProjectConfigDefaults.groups);
         expect(projectProps?.experimental).toEqual(ProjectConfigDefaults.experimental);
 
@@ -141,14 +145,14 @@ describe('loading specific projects', async () => {
         expect(stringDescriptor?.value).toEqual('test string');
 
         // Check project config
-        const projectProps = projectTuple!.props;
+        const projectProps = projectTuple!.config;
         expect(projectProps).toBeDefined();
         expect(projectProps?.title).toEqual('Config and Support');
         expect(projectProps?.date).toEqual(new Date('2023-06-27'));
         expect(projectProps?.description).toContain('config file');
-        expect(projectProps?.liveUpdates).toEqual(false);
+        expect(projectProps?.paramsApplyDuringInput).toEqual(false);
         expect(projectProps?.groups).toContain('Test');
-        expect(projectProps?.groups?.length).toEqual(1);
+        expect(projectProps?.groups.length).toEqual(1);
         expect(projectProps?.experimental).toEqual(true);
 
         // Check params config
@@ -159,14 +163,14 @@ describe('loading specific projects', async () => {
         expect(testNumberParam).toBeDefined();
         expect(testNumberParam.type).toEqual(ParamType.Number);
         expect(testNumberParam.name).toEqual('Number Param');
-        expect(testNumberParam.liveUpdates).toEqual(true); // explicit definition
+        expect(testNumberParam.applyDuringInput).toEqual(true); // explicit definition
         const testBooleanParam = paramsConfig.filter((param) => param.key === 'testBoolean')[0];
         expect(testBooleanParam).toBeUndefined();
         const testStringParam = paramsConfig.filter((param) => param.key === 'testString')[0];
         expect(testStringParam).toBeDefined();
         expect(testStringParam.type).toEqual(ParamType.String);
         expect(testStringParam.name).toEqual('String Param');
-        expect(testStringParam.liveUpdates).toEqual(false); // project default
+        expect(testStringParam.applyDuringInput).toEqual(false); // project default
         const testUnusedParam = paramsConfig.filter((param) => param.key === 'testUnusedParam')[0];
         expect(testUnusedParam).toBeUndefined();
         expect(ParamValueProvider.getValue).toHaveBeenCalledTimes(0);
@@ -184,7 +188,7 @@ describe('loading specific projects', async () => {
         expect(project).toBeInstanceOf(FragShaderProject);
 
         // Check project config
-        const projectProps = projectTuple!.props;
+        const projectProps = projectTuple!.config;
         expect(projectProps).toBeDefined();
         expect(projectProps?.title).toEqual('ShaderProject');
 

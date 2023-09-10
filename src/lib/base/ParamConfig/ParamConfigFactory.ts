@@ -24,7 +24,7 @@ export class ParamConfigFactory {
      * @param value - the value to create a config for
      * @param key - the key for this parameter value
      * @param data - optional config data to reference
-     * @param liveUpdatesDefault - the default value for liveUpdates
+     * @param applyDuringInputDefault - the default value for applyDuringInput
      * @returns a config object
      * @throws if the value type is unsupported
      * @throws if the config data contains unsupported fields
@@ -33,7 +33,7 @@ export class ParamConfigFactory {
         value: unknown,
         key: string,
         data?: Record<string, unknown>,
-        liveUpdatesDefault = ProjectConfigDefaults.liveUpdates
+        applyDuringInputDefault = ProjectConfigDefaults.paramsApplyDuringInput
     ): ParamConfig {
         // Create the proper type for the value and assign defaults
         let param: ParamConfig;
@@ -79,8 +79,9 @@ export class ParamConfigFactory {
             throw new Error(`${typeof value} params are unsupported (${key})`);
         }
 
-        // Assign sketchbook liveUpdates value to this param
-        param.liveUpdates = liveUpdatesDefault;
+        // Assign applyDuringInputDefault value to this param, derived from the project config's
+        // paramsApplyDuringInput value, and potentially overridden per-param in the assign below
+        param.applyDuringInput = applyDuringInputDefault;
 
         // If the config exists, assign its properties to the param
         if (data) {

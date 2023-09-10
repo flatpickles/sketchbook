@@ -30,8 +30,8 @@ enum SectionOption {
     AllSections = 'allSectioned' // all params in sections
 }
 
-function paramsWithLiveUpdates(
-    liveUpdates = true,
+function paramsWithApplyDuringInput(
+    applyDuringInput = true,
     sectionOption: SectionOption = SectionOption.NoSections
 ) {
     return [
@@ -39,7 +39,7 @@ function paramsWithLiveUpdates(
             type: ParamType.Number,
             key: 'testNumber',
             name: 'Test Number',
-            liveUpdates: liveUpdates,
+            applyDuringInput: applyDuringInput,
             fullWidthInput: false,
             style: 'combo',
             section: sectionOption === SectionOption.AllSections ? 'Section 1' : undefined
@@ -48,7 +48,7 @@ function paramsWithLiveUpdates(
             type: ParamType.Boolean,
             key: 'testBoolean',
             name: 'Test Boolean',
-            liveUpdates: liveUpdates,
+            applyDuringInput: applyDuringInput,
             fullWidthInput: false,
             section: [SectionOption.SomeSections, SectionOption.AllSections].includes(sectionOption)
                 ? 'Section 1'
@@ -58,7 +58,7 @@ function paramsWithLiveUpdates(
             type: ParamType.String,
             key: 'testString',
             name: 'Test String',
-            liveUpdates: liveUpdates,
+            applyDuringInput: applyDuringInput,
             fullWidthInput: false,
             style: 'single',
             section: [SectionOption.SomeSections, SectionOption.AllSections].includes(sectionOption)
@@ -69,7 +69,7 @@ function paramsWithLiveUpdates(
             type: ParamType.NumericArray,
             key: 'testNumericArray',
             name: 'Test Numeric Array',
-            liveUpdates: liveUpdates,
+            applyDuringInput: applyDuringInput,
             fullWidthInput: false,
             style: 'slider',
             section: [SectionOption.SomeSections, SectionOption.AllSections].includes(sectionOption)
@@ -80,7 +80,7 @@ function paramsWithLiveUpdates(
             type: ParamType.Function,
             key: 'testFunction',
             name: 'Test Function',
-            liveUpdates: liveUpdates,
+            applyDuringInput: applyDuringInput,
             fullWidthInput: false,
             section: [SectionOption.SomeSections, SectionOption.AllSections].includes(sectionOption)
                 ? 'Section 2'
@@ -90,7 +90,7 @@ function paramsWithLiveUpdates(
             type: ParamType.File,
             key: 'testFile',
             name: 'Test File',
-            liveUpdates: liveUpdates,
+            applyDuringInput: applyDuringInput,
             fullWidthInput: false,
             section: [SectionOption.SomeSections, SectionOption.AllSections].includes(sectionOption)
                 ? 'Section 2'
@@ -100,18 +100,18 @@ function paramsWithLiveUpdates(
 }
 
 function renderParams(
-    liveUpdates = true,
+    applyDuringInput = true,
     sectionOption: SectionOption = SectionOption.NoSections
 ): { project: TestProject; updateHandler: typeof vi.fn } {
     const project = new TestProject();
     const testProjectConfig = ProjectConfigFactory.propsFrom({
-        liveUpdates: liveUpdates
+        applyDuringInput: applyDuringInput
     });
     const testTuple: ProjectTuple = {
         key: 'testProject',
         project: project,
-        props: testProjectConfig,
-        params: paramsWithLiveUpdates(liveUpdates, sectionOption)
+        config: testProjectConfig,
+        params: paramsWithApplyDuringInput(applyDuringInput, sectionOption)
     };
     const { component } = render(ProjectParams, {
         projectTuple: testTuple
@@ -305,7 +305,7 @@ describe('ProjectParams sections', () => {
 describe('number param input', () => {
     afterEach(cleanupParams);
 
-    it('updates a number param when the input changes (liveUpdates)', async () => {
+    it('updates a number param when the input changes (applyDuringInput)', async () => {
         const { project, updateHandler } = renderParams(true);
         vi.spyOn(project, 'update');
         const numberInput = screen.getAllByTestId('number-param-slider')[0] as HTMLInputElement;
@@ -332,7 +332,7 @@ describe('number param input', () => {
         );
     });
 
-    it('updates a number param when the input changes (!liveUpdates)', async () => {
+    it('updates a number param when the input changes (!applyDuringInput)', async () => {
         const { project, updateHandler } = renderParams(false);
         vi.spyOn(project, 'update');
         const numberInput = screen.getAllByTestId('number-param-slider')[0] as HTMLInputElement;
@@ -390,7 +390,7 @@ describe('boolean param input', () => {
 describe('string param input', () => {
     afterEach(cleanupParams);
 
-    it('updates a string param when the input changes (liveUpdates)', async () => {
+    it('updates a string param when the input changes (applyDuringInput)', async () => {
         const { project, updateHandler } = renderParams(true);
         vi.spyOn(project, 'update');
         const stringInput = screen.getByTestId('string-param-input-singleline') as HTMLInputElement;
@@ -415,7 +415,7 @@ describe('string param input', () => {
         );
     });
 
-    it('updates a string param when the input changes (!liveUpdates)', async () => {
+    it('updates a string param when the input changes (!applyDuringInput)', async () => {
         const { project, updateHandler } = renderParams(false);
         vi.spyOn(project, 'update');
         const stringInput = screen.getByTestId('string-param-input-singleline') as HTMLInputElement;
@@ -446,7 +446,7 @@ describe('string param input', () => {
 describe('numeric array param input', () => {
     afterEach(cleanupParams);
 
-    it('updates a numeric array param when the input changes (liveUpdates)', async () => {
+    it('updates a numeric array param when the input changes (applyDuringInput)', async () => {
         const { project, updateHandler } = renderParams(true);
         vi.spyOn(project, 'update');
         const numericArrayInput = screen.getAllByTestId(
@@ -479,7 +479,7 @@ describe('numeric array param input', () => {
         );
     });
 
-    it('updates a numeric array param when the input changes (!liveUpdates)', async () => {
+    it('updates a numeric array param when the input changes (!applyDuringInput)', async () => {
         const { project, updateHandler } = renderParams(false);
         vi.spyOn(project, 'update');
         const numericArrayInput = screen.getAllByTestId(

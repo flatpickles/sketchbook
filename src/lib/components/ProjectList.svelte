@@ -28,7 +28,7 @@
         if (!project) return false;
         if (project.experimental && !$settingsStore.showExperiments) return false;
         if (selectedGroup === undefined) return true;
-        if (!project.groups?.includes(selectedGroup)) return false;
+        if (!project.groups.includes(selectedGroup)) return false;
         return true;
     });
 </script>

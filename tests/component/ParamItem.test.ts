@@ -25,7 +25,7 @@ describe('ParamItem', () => {
             max: 10,
             step: 1,
             style: NumberParamStyle.Slider,
-            liveUpdates: true,
+            applyDuringInput: true,
             fullWidthInput: false,
             hoverText: 'Hover text'
         };
@@ -51,7 +51,7 @@ describe('ParamItem number styles', () => {
             max: 10,
             step: 1,
             style: NumberParamStyle.Combo,
-            liveUpdates: true,
+            applyDuringInput: true,
             fullWidthInput: false
         };
         // @ts-ignore – value type checking isn't working in the render constructor
@@ -73,7 +73,7 @@ describe('ParamItem number styles', () => {
             max: 10,
             step: 1,
             style: NumberParamStyle.Slider,
-            liveUpdates: true,
+            applyDuringInput: true,
             fullWidthInput: false
         };
         // @ts-ignore – value type checking isn't working in the render constructor
@@ -96,7 +96,7 @@ describe('ParamItem number styles', () => {
             max: 10,
             step: 1,
             style: NumberParamStyle.Field,
-            liveUpdates: true,
+            applyDuringInput: true,
             fullWidthInput: false
         };
         // @ts-ignore – value type checking isn't working in the render constructor
@@ -119,7 +119,7 @@ describe('ParamItem boolean styles', () => {
             key: 'boolean',
             name: 'Boolean',
             type: ParamType.Boolean,
-            liveUpdates: true,
+            applyDuringInput: true,
             fullWidthInput: false
         };
         // @ts-ignore – value type checking isn't working in the render constructor
@@ -139,7 +139,7 @@ describe('ParamItem function styles', () => {
             key: 'function',
             name: 'Function',
             type: ParamType.Function,
-            liveUpdates: true,
+            applyDuringInput: true,
             fullWidthInput: false,
             buttonText: 'Bananas'
         };
@@ -168,7 +168,7 @@ describe('ParamItem string styles', () => {
             key: 'string',
             name: 'String',
             type: ParamType.String,
-            liveUpdates: true,
+            applyDuringInput: true,
             fullWidthInput: false,
             style: StringParamStyle.SingleLine
         };
@@ -185,7 +185,7 @@ describe('ParamItem string styles', () => {
             key: 'string',
             name: 'String',
             type: ParamType.String,
-            liveUpdates: true,
+            applyDuringInput: true,
             fullWidthInput: false,
             style: StringParamStyle.MultiLine
         };
@@ -202,7 +202,7 @@ describe('ParamItem string styles', () => {
             key: 'string',
             name: 'String',
             type: ParamType.String,
-            liveUpdates: true,
+            applyDuringInput: true,
             fullWidthInput: false,
             style: StringParamStyle.Color
         };
@@ -226,7 +226,7 @@ describe('ParamItem with options', () => {
             key: 'number',
             name: 'Number',
             type: ParamType.Number,
-            liveUpdates: true,
+            applyDuringInput: true,
             fullWidthInput: false,
             style: NumberParamStyle.Combo,
             options: {
@@ -261,7 +261,7 @@ describe('ParamItem with options', () => {
             key: 'number',
             name: 'Number',
             type: ParamType.Number,
-            liveUpdates: true,
+            applyDuringInput: true,
             fullWidthInput: false,
             style: NumberParamStyle.Combo,
             options: [3, 4, 5, 6],
@@ -291,7 +291,7 @@ describe('ParamItem with options', () => {
             key: 'string',
             name: 'String',
             type: ParamType.String,
-            liveUpdates: true,
+            applyDuringInput: true,
             fullWidthInput: false,
             style: StringParamStyle.SingleLine,
             options: {
@@ -326,7 +326,7 @@ describe('ParamItem with options', () => {
             key: 'string',
             name: 'String',
             type: ParamType.String,
-            liveUpdates: true,
+            applyDuringInput: true,
             fullWidthInput: false,
             style: StringParamStyle.SingleLine,
             options: ['hello', 'world', 'sup']
@@ -353,7 +353,7 @@ describe('ParamItem with options', () => {
             key: 'number',
             name: 'Number',
             type: ParamType.NumericArray,
-            liveUpdates: true,
+            applyDuringInput: true,
             fullWidthInput: false,
             style: NumericArrayParamStyle.Combo,
             options: [
@@ -387,7 +387,7 @@ describe('ParamItem with options', () => {
             key: 'number',
             name: 'Number',
             type: ParamType.NumericArray,
-            liveUpdates: true,
+            applyDuringInput: true,
             fullWidthInput: false,
             style: NumericArrayParamStyle.Combo,
             options: {
@@ -424,7 +424,7 @@ describe('Full width ParamItem', () => {
             key: 'function',
             name: 'Function',
             type: ParamType.Function,
-            liveUpdates: true,
+            applyDuringInput: true,
             fullWidthInput: true,
             buttonText: 'Bananas'
         };
@@ -456,7 +456,7 @@ describe('Color styles for numeric arrays', () => {
             max: 255,
             step: 1,
             style: NumericArrayParamStyle.Color,
-            liveUpdates: true,
+            applyDuringInput: true,
             fullWidthInput: false
         };
         // @ts-ignore – value type checking isn't working in the render constructor
@@ -478,7 +478,7 @@ describe('Color styles for numeric arrays', () => {
             max: 255,
             step: 1,
             style: NumericArrayParamStyle.UnitColor,
-            liveUpdates: true,
+            applyDuringInput: true,
             fullWidthInput: false
         };
         // @ts-ignore – value type checking isn't working in the render constructor

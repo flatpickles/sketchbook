@@ -13,7 +13,7 @@ const numberParamConfig = {
     type: 'number',
     key: 'testParamKey',
     name: 'Untitled Param',
-    liveUpdates: false,
+    applyDuringInput: false,
     fullWidthInput: false,
     min: 0,
     max: 50,

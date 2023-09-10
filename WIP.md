@@ -101,8 +101,6 @@ Use cases: modes (w/ options), sections, functionality only defined with some va
 
 ## Miscellany
 
--   Global & project config for updateEachFrame (renderLoop)
--   Global, project, & parameter config for deferredParamUpdates (currently "live")
 -   Fix issues listed in Chrome dev tools (mostly related to form ids & labels)
 -   Asset import rework: define params as instances of objects that can then provide files once imported. Enable:
     -   stateless asset-dependent implementations
@@ -110,7 +108,7 @@ Use cases: modes (w/ options), sections, functionality only defined with some va
     -   cached file values (when switching away from / to a project)
     -   different approach to styling?
 -   Check to see if classes are actually Project subclasses when loading (otherwise we get confusing errors with improper subclasses in src/art)
--   Sort projects based on settings in some central location (not just in the ProjectList component) so we can use this in the root +page.server.ts
+-   Sort projects based on settings in some central location (not just in the ProjectList component) so we can use this in the root +page.server.ts (cannot use localStorage in this scenario, so might not be configurable like other settings?)
 -   Limit panel description text height // enable scrolling
 -   Show perf data (where?! in settings panel?)
 -   Project key:
@@ -163,6 +161,7 @@ Use cases: modes (w/ options), sections, functionality only defined with some va
     -   Maybe they sync on project update?
 -   Can we enable DOM-based projects, e.g. vanilla Svelte prototypes that aren't entirely on a canvas?
 -   Should ConfigTypes.ts exist?
+-   Does glslify in ShaderProject work?
 
 # Ongoing:
 
@@ -241,13 +240,6 @@ Use cases: modes (w/ options), sections, functionality only defined with some va
 -   Light-weight ergonomics // heavy-duty functionality.
     -   Opt-in customizablility. Sketchbook presents options for deep flexibility, but you can start any project without even creating a config file, and add complexity as you need it.
     -   Create portable work. Easily carry your projects into another context (client work, etc) with minimal transportation cost (redesigning, rebuilding).
-
-# Questions for beta testers:
-
--   Casing in JSON fields, e.g. "liveUpdates", "dataURL" etc
--   Documentation:
-    -   Formatting: website vs. markdown files on GitHub
--   Would you rather this was flatpickles/Sketchbook or Longitude-Labs/Sketchbook on GitHub?
 
 # Utils:
 

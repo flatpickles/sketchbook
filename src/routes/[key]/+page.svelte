@@ -6,7 +6,7 @@
 </script>
 
 <svelte:head>
-    <title>{data.projectTuple.props.title}</title>
+    <title>{data.projectTuple.config.title}</title>
 </svelte:head>
 
 <MainView projectConfigs={data.projects} selectedProjectTuple={data.projectTuple} />

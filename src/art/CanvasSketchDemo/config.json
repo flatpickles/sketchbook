@@ -2,21 +2,21 @@
     "title": "canvas-sketch Demo",
     "date": "2021-06-27",
     "description": "This is a basic canvas-sketch demo, just to make sure it works as expected.",
-    "liveUpdates": true,
+    "paramsApplyDuringInput": false,
     "experimental": true,
     "params": {
         "displayText": {
             "name": "Display Text",
-            "liveUpdates": true
+            "applyDuringInput": true
         },
         "multiText": {
             "name": "Multi-line Text",
-            "liveUpdates": true,
+            "applyDuringInput": true,
             "style": "multi"
         },
         "enumTest": {
             "name": "Enum Test",
-            "liveUpdates": true,
+            "applyDuringInput": true,
             "options": ["yes", "no", "maybe"]
         },
         "randomize": {
@@ -26,23 +26,22 @@
         },
         "bgSize": {
             "name": "Background Size",
-            "liveUpdates": true,
+            "applyDuringInput": true,
             "section": "Sizes",
             "style": "compactField"
         },
         "size": {
             "name": "Size",
-            "liveUpdates": false,
             "section": "Sizes"
         },
         "colored": {
             "name": "Colored",
-            "liveUpdates": true,
+            "applyDuringInput": true,
             "section": "Colors"
         },
         "bgColor": {
             "name": "BG Color",
-            "liveUpdates": true,
+            "applyDuringInput": true,
             "section": "Colors",
             "style": "color"
         }

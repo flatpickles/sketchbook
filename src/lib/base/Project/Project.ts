@@ -36,8 +36,9 @@ export default class Project {
     public init() {}
 
     /**
-     * update is called after init, and then whenever any parameters are updated. Override this with
-     * your custom drawing code. The detail object contains the following properties:
+     * update is called in a requestAnimationFrame loop by default, though changing the "renderLoop"
+     * setting in config.json will alter this behavior; see the docs for more details. Override
+     * update with your custom drawing code. The detail object contains the following:
      * - frame: the current frame number (0 at project load, incremented by 1 for each update call)
      * - time: milliseconds passed since project load (i.e. since init was called)
      * - paramKeys: the property names of any parameters updated since the last update call

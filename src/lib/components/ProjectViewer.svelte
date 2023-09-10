@@ -1,12 +1,13 @@
 <script lang="ts">
     import type Project from '$lib/base/Project/Project';
     import { CanvasType } from '$lib/base/Project/Project';
+    import { ProjectConfigDefaults } from '$lib/base/ProjectConfig/ProjectConfig';
     import { settingsStore } from '$lib/base/Util/AppState';
     import { onMount } from 'svelte';
 
     export let project: Project;
     export let containerResizing = false; // The container is being resized
-    export let updateEachFrame = false; // Update the project on each frame (todo: config setup)
+    export let updateEachFrame = ProjectConfigDefaults.renderLoop; // Update the project each frame
 
     let previousProject: Project | undefined;
     let canvasElement2D: HTMLCanvasElement;

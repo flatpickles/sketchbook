@@ -145,6 +145,7 @@
         <ProjectViewer
             project={selectedProjectTuple.project}
             containerResizing={panelResizing}
+            updateEachFrame={selectedProjectTuple.config.renderLoop}
             bind:this={viewer}
         />
     </div>

@@ -4,6 +4,30 @@ Sketchbook -> Docs -> Core Concepts
 
 todo: project anatomy, etc (reference design-doc.md)
 
+# The Project Class
+
+## Properties
+
+### canvas
+
+### container
+
+### canvasType
+
+## Class Methods
+
+### init
+
+### update
+
+... when the `renderLoop` config setting false, update will only be called after init, after parameters are updated, and after canvas size changes.
+
+### destroy
+
+# config.json
+
+Param config & project config options (JSON fields) - maybe in a different file?
+
 # Common necessities:
 
 -   time (in projects)

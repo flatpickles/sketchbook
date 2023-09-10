@@ -14,7 +14,7 @@ import FragShaderProject from '../Project/FragShaderProject';
 export interface ProjectTuple {
     key: string;
     project: Project;
-    props: ProjectConfig;
+    config: ProjectConfig;
     params: ParamConfig[];
 }
 
@@ -122,7 +122,7 @@ export default class ProjectLoader {
         const params = ProjectConfigFactory.paramsFrom(
             project,
             configModule?.params as Record<string, Record<string, unknown>> | undefined,
-            props.liveUpdates
+            props.paramsApplyDuringInput
         );
 
         // Assign the project title if unset
@@ -148,7 +148,7 @@ export default class ProjectLoader {
         return {
             key,
             project,
-            props,
+            config: props,
             params
         };
     }

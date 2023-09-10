@@ -2,7 +2,7 @@
     "title": "Bundled Image",
     "date": "2023-07-20",
     "description": "This demo project has an image!",
-    "liveUpdates": true,
+    "paramsApplyDuringInput": true,
     "groups": ["Live Graphics"],
     "experimental": false,
 
@@ -12,7 +12,7 @@
             "min": 0,
             "max": 1,
             "step": 0.01,
-            "liveUpdates": true,
+            "applyDuringInput": true,
             "style": "slider"
         },
         "testBoolean": {

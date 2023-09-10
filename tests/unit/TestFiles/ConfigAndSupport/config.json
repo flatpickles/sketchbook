@@ -2,7 +2,7 @@
     "title": "Config and Support",
     "date": "2023-06-27",
     "description": "This project has both a config file and a supporting TS file.",
-    "liveUpdates": false,
+    "paramsApplyDuringInput": false,
     "groups": ["Test"],
     "experimental": true,
 
@@ -12,17 +12,17 @@
             "min": 0,
             "max": 1,
             "step": 0.01,
-            "liveUpdates": true,
+            "applyDuringInput": true,
             "style": "slider"
         },
         "testUnusedParam": {
             "name": "Unused Param",
-            "liveUpdates": true,
+            "applyDuringInput": true,
             "enables": []
         },
         "testBoolean": {
             "name": "Boolean Param",
-            "liveUpdates": false,
+            "applyDuringInput": false,
             "enables": []
         },
         "testString": {

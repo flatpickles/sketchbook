@@ -15,7 +15,7 @@ describe('ProjectConfigFactory.propsFrom', () => {
         expect(props.date).toEqual(ProjectConfigDefaults.date);
         expect(props.description).toEqual(ProjectConfigDefaults.description);
         expect(props.defaultPresetName).toEqual(ProjectConfigDefaults.defaultPresetName);
-        expect(props.liveUpdates).toEqual(ProjectConfigDefaults.liveUpdates);
+        expect(props.paramsApplyDuringInput).toEqual(ProjectConfigDefaults.paramsApplyDuringInput);
         expect(props.groups).toEqual(ProjectConfigDefaults.groups);
         expect(props.experimental).toEqual(ProjectConfigDefaults.experimental);
     });
@@ -26,7 +26,7 @@ describe('ProjectConfigFactory.propsFrom', () => {
             date: '2023-07-06',
             description: 'Test description',
             defaultPresetName: 'Test Preset',
-            liveUpdates: false,
+            paramsApplyDuringInput: false,
             groups: ['Test'],
             experimental: true
         };
@@ -35,7 +35,7 @@ describe('ProjectConfigFactory.propsFrom', () => {
         expect(props.date).toEqual(new Date(configData.date));
         expect(props.description).toEqual(configData.description);
         expect(props.defaultPresetName).toEqual(configData.defaultPresetName);
-        expect(props.liveUpdates).toEqual(configData.liveUpdates);
+        expect(props.paramsApplyDuringInput).toEqual(configData.paramsApplyDuringInput);
         expect(props.groups).toEqual(configData.groups);
         expect(props.experimental).toEqual(configData.experimental);
     });
@@ -50,7 +50,7 @@ describe('ProjectConfigFactory.propsFrom', () => {
         expect(props.date).toEqual(new Date(configData.date));
         expect(props.description).toEqual(ProjectConfigDefaults.description);
         expect(props.defaultPresetName).toEqual(ProjectConfigDefaults.defaultPresetName);
-        expect(props.liveUpdates).toEqual(ProjectConfigDefaults.liveUpdates);
+        expect(props.paramsApplyDuringInput).toEqual(ProjectConfigDefaults.paramsApplyDuringInput);
         expect(props.groups).toEqual(ProjectConfigDefaults.groups);
         expect(props.experimental).toEqual(ProjectConfigDefaults.experimental);
     });
@@ -79,7 +79,7 @@ describe('ProjectConfigFactory.propsFrom', () => {
         // Check default values
         expect(numberParam.name).toEqual('testNumber');
         expect(numberParam.step).toEqual(NumberParamConfigDefaults.step);
-        expect(numberParam.liveUpdates).toEqual(NumberParamConfigDefaults.liveUpdates);
+        expect(numberParam.applyDuringInput).toEqual(NumberParamConfigDefaults.applyDuringInput);
         expect(numberParam.style).toEqual(NumberParamConfigDefaults.style);
     });
 
@@ -97,11 +97,11 @@ describe('ProjectConfigFactory.propsFrom', () => {
         expect(numberParam.min).toEqual(NumberParamConfigDefaults.min);
         expect(numberParam.max).toEqual(NumberParamConfigDefaults.max);
         expect(numberParam.step).toEqual(NumberParamConfigDefaults.step);
-        expect(numberParam.liveUpdates).toEqual(NumberParamConfigDefaults.liveUpdates);
+        expect(numberParam.applyDuringInput).toEqual(NumberParamConfigDefaults.applyDuringInput);
         expect(numberParam.style).toEqual(NumberParamConfigDefaults.style);
     });
 
-    it('applies liveUpdatesDefault properly', () => {
+    it('applies applyDuringInputDefault properly', () => {
         // Initialize with no config data
         const testProject = new NoConfig();
 
@@ -110,6 +110,6 @@ describe('ProjectConfigFactory.propsFrom', () => {
         const testParam = params.filter((param) => param.key === 'testNumber')[0];
         expect(testParam).toBeDefined();
         const numberParam = testParam as NumberParamConfig;
-        expect(numberParam.liveUpdates).toEqual(false);
+        expect(numberParam.applyDuringInput).toEqual(false);
     });
 });

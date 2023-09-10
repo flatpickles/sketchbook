@@ -124,7 +124,7 @@ describe('FileParamLoader', () => {
             type: ParamType.File,
             key: 'testFile',
             name: 'testFile',
-            liveUpdates: false,
+            applyDuringInput: false,
             fullWidthInput: false
         };
         const { result, metadata } = await FileParamLoader.loadFileList(
@@ -154,7 +154,7 @@ describe('FileParamLoader', () => {
             type: ParamType.File,
             key: 'testFile',
             name: 'testFile',
-            liveUpdates: false,
+            applyDuringInput: false,
             fullWidthInput: false
         };
         const { result, metadata } = await FileParamLoader.loadFileList(
@@ -184,7 +184,7 @@ describe('FileParamLoader', () => {
             type: ParamType.File,
             key: 'testFile',
             name: 'testFile',
-            liveUpdates: false,
+            applyDuringInput: false,
             fullWidthInput: false
         };
         const { result, metadata } = await FileParamLoader.loadFileList(
@@ -212,7 +212,7 @@ describe('FileParamLoader', () => {
             type: ParamType.File,
             key: 'testFile',
             name: 'testFile',
-            liveUpdates: false,
+            applyDuringInput: false,
             fullWidthInput: false
         };
         const { result, metadata } = await FileParamLoader.loadFileList(
@@ -251,7 +251,7 @@ describe('FileParamLoader', () => {
             type: ParamType.File,
             key: 'testFile',
             name: 'testFile',
-            liveUpdates: false,
+            applyDuringInput: false,
             fullWidthInput: false
         };
         const { result, metadata } = await FileParamLoader.loadFileList(
@@ -279,7 +279,7 @@ describe('FileParamLoader', () => {
             type: ParamType.File,
             key: 'testFile',
             name: 'testFile',
-            liveUpdates: false,
+            applyDuringInput: false,
             fullWidthInput: false
         };
         const { result, metadata } = await FileParamLoader.loadFileList(

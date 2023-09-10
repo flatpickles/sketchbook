@@ -17,16 +17,16 @@
 <Panel overlaid={$settingsStore.overlayPanels}>
     <div class="detail-wrapper" class:margin-bottom={marginBottom}>
         <PanelHeader
-            title={projectTuple.props.title}
-            subtitle={projectTuple.props.date?.toLocaleDateString('en-us', {
+            title={projectTuple.config.title}
+            subtitle={projectTuple.config.date?.toLocaleDateString('en-us', {
                 year: 'numeric',
                 month: 'long'
             })}
-            description={projectTuple.props.description}
+            description={projectTuple.config.description}
             {headerButtonIcon}
             on:headeraction
         />
-        {#if projectTuple.props.presetsAvailable}
+        {#if projectTuple.config.presetsAvailable}
             <PresetControl {projectTuple} />
         {/if}
         {#if projectTuple.params && Object.values(projectTuple.params).length > 0}

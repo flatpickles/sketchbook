@@ -13,7 +13,7 @@
     });
     const groups = new Set(
         chronologicalProjects.reduce((acc, project) => {
-            if (project.groups && project.groups.length > 0) {
+            if (project.groups.length > 0) {
                 return acc.concat(project.groups);
             }
             return acc;

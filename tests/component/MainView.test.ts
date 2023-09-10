@@ -14,7 +14,7 @@ const configs = {
 const projectTuple = {
     key: 'Untitled',
     project: new Project(),
-    props: ProjectConfigDefaults,
+    config: ProjectConfigDefaults,
     params: []
 };
 
