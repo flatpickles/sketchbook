@@ -15,10 +15,10 @@ Ongoing notes for Sketchbook development.
 ## Main view panels
 
 -   Processing sketch still not updating when changing overlay setting
--   Projects & general config for updateEachFrame
 -   Panels: Fix outline & drop shadow visibility when hidden
 -   Floating panel design - footer space? Min height (optional)?
 
+-   Don't show detail panel when no details or params are specified
 -   Visible button presentation for light/dark content
 -   Implement optional panel state settings for direct project links (vs. navigation to /)
 -   Mobile layout (reassess mouse behavior fallbacks)
@@ -26,13 +26,11 @@ Ongoing notes for Sketchbook development.
 
 ## Johan's feedback (8/23):
 
--   [addressed] maybe rename update method; "update" implies it runs every frame
--   [addressed] passed to update:
-    -   parameter key (from update)
-    -   time (ms + frame count)
--   think about how much infrastructure to provide / leave to other frameworks. Probably as minimal as possible
--   check Unity lifecycle for ideas
 -   animation mode?
+-   [addressed] maybe rename update method; "update" implies it runs every frame
+-   [addressed] passed to update: parameter key (from update), time (ms + frame count)
+-   think about how much infrastructure to provide / leave to other frameworks. Probably as minimal as possible
+-   [addressed] check Unity lifecycle for ideas
 -   [addressed] dev mode vs. prod mode
 -   [addressed] design: the art feels secondary with the panels floating over the top. Could be remedied with dedicated space for the canvas // no floating panels.
 -   [addressed] Wouldn't often want to see project list as a first-class citizen during dev mode. That's kind of a portfolio feature. Could be remedied just by keeping the panel closed.
@@ -43,14 +41,13 @@ content.ts: what's on the page
 
 config.ts: how it behaves
 
--   Show experimental projects (done)
 -   Canvas size // sizing behavior
--   Canvas scale (pixel ratio)
+    -   Full screen (on/off)
+    -   Pixel size (vec2) - used when not full screen; max at full screen; use value effects
 -   Panel visibility (projects + project details)
     -   Enable/disable
     -   Shown/hidden defaults
     -   Show/hide behavior (mouse hover / movement / double click / etc)
--   Project sorting // group sorting (done)
 -   App state storage behavior (on/off)
     -   project selection, for navigation to (/)
     -   preset selection + set parameter values
@@ -64,13 +61,9 @@ config.ts: how it behaves
 -   Project defaults:
     -   Live updates (when unspecified per-param)
     -   Show presets UI (default: shown only if presets exist)
--   Show perf data (where?! in settings panel?)
-
-Maybe in theme.scss (how it looks)
-
--   Overlay panels (vs. true sidebar behavior)
--   Full-height panels (overlay + desktop only?)
--   Dark mode?
+-   customizable date formatting
+-   [done] Project sorting // group sorting
+-   [done] Show experimental projects
 
 ## Params
 
@@ -86,7 +79,7 @@ Maybe in theme.scss (how it looks)
     -   Use these with double-click to reset to default (when no preset is selected)
 -   Min/max range slider? (style for 2-member numeric array, maybe)
 -   Full width description text paired with a param input (useful in settings)
--   Toggle switch theme for boolean input
+-   Toggle switch style for boolean input
 
 ### Value Effects
 
@@ -108,16 +101,18 @@ Use cases: modes (w/ options), sections, functionality only defined with some va
 
 ## Miscellany
 
+-   Global & project config for updateEachFrame (renderLoop)
+-   Global, project, & parameter config for deferredParamUpdates (currently "live")
 -   Fix issues listed in Chrome dev tools (mostly related to form ids & labels)
 -   Asset import rework: define params as instances of objects that can then provide files once imported. Enable:
     -   stateless asset-dependent implementations
     -   bundled defaults
     -   cached file values (when switching away from / to a project)
     -   different approach to styling?
--   Empty state for project detail panel (awkward especially in overlay mode)
 -   Check to see if classes are actually Project subclasses when loading (otherwise we get confusing errors with improper subclasses in src/art)
 -   Sort projects based on settings in some central location (not just in the ProjectList component) so we can use this in the root +page.server.ts
 -   Limit panel description text height // enable scrolling
+-   Show perf data (where?! in settings panel?)
 -   Project key:
     -   Use key instead of name in saved state
     -   User-defined keys used for project URL
@@ -131,21 +126,17 @@ Use cases: modes (w/ options), sections, functionality only defined with some va
     -   Selection UI & plumbing
     -   Options: creation, export, import, etc
     -   URL hash location set w/ preset (loads preset automatically)
--   Base project subclasses:
-    -   Canvas Sketch
-    -   P5
-    -   REGL
+-   Canvas Sketch base project subclass
 -   Mobile layout & behavior
 -   No Signal display
     -   Display when no projects are loaded
     -   Also include error text; catch project errors
 -   Catch and display error if rendering passes a time limit (e.g. infinite loop in project)
--   Link previews
+-   Link previews // metadata
 -   Theming / styling:
     -   Expose only high-level adjustments in theme.scss; move finer details elsewhere (closer to components probably)
     -   Enable SBv1 style (or something mono/sharp)
     -   Enable dark mode configuration, somehow
-    -   Enable constrained viewport, i.e. using _only_ the space between panels (no overlaid panels, except maybe on mobile)
 -   Configuration in config.json
     -   Defaults for all settings
     -   (maybe this is just user-visible stuff? see below)
@@ -154,6 +145,7 @@ Use cases: modes (w/ options), sections, functionality only defined with some va
 
 # Miscellaneous / notes:
 
+-   Double-check padding vs. margin in header (and elsewhere?)
 -   SSR: currently projects are initialized, but init() and update() aren't called.
     -   Either projects shouldn't be initialized (so we don't have to do `browser` checks within projects, e.g. to load bundled images), or init() and update() should be called once each, to draw canvas contents.
     -   Check if canvas drawing is possible with SSR; only benefit there really would be link previews, and these could just be static images if needed.

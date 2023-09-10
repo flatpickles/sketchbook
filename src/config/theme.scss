@@ -27,7 +27,7 @@ $panel-show-button-animation-duration: 0.7s;
 
 // Panels
 $panel-width: 16rem;
-$panel-min-height: 0; // ignored if settingsStore.overlayPanels is true
+$panel-min-height: 0%; // ignored if settingsStore.overlayPanels is true
 $panel-edge-inset: 0.5rem; // ignored if settingsStore.overlayPanels is false
 $panel-border-radius: 0.5rem; // ignored if settingsStore.overlayPanels is false
 $panel-bg-color: rgba(255, 254, 233, 0.85);
@@ -36,6 +36,7 @@ $panel-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.3);
 $panel-outline: 1px solid rgba(0, 0, 0, 0.1);
 
 // Panel content
+// todo: should the following two be the same variable?
 $panel-content-inset: 0.75rem;
 $panel-section-spacing: 0.75rem;
 @mixin panel-button {
