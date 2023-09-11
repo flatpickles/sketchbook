@@ -37,20 +37,25 @@ $panel-edge-inset: 0.5rem; // ignored if settingsStore.overlayPanels is false
 $panel-border-radius: 0.5rem; // ignored if settingsStore.overlayPanels is false
 $panel-bg-color: rgba(255, 254, 233, 0.85);
 $panel-bg-filter: blur(1rem);
-$panel-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.3);
-$panel-outline: 1px solid rgba(0, 0, 0, 0.1);
+$panel-shadow-size: 0.5rem;
+$panel-shadow-color: rgba(0, 0, 0, 0.3);
+$panel-border-size: 1px;
+$panel-overlay-border-size: 1px;
+$panel-border-color: rgba(0, 0, 0, 0.1);
+$panel-shadow: 0 calc($panel-shadow-size / 2) $panel-shadow-size $panel-shadow-color;
+$panel-border: $panel-border-size solid $panel-border-color;
 
 // Panel content
 // todo: should the following two be the same variable?
 $panel-content-inset: 0.75rem;
 $panel-section-spacing: 0.75rem;
 @mixin panel-button {
-    // todo: border stuff should be moved in here
     font-size: $small-text-size;
     color: rgba(0, 0, 0, 0.5);
     width: 1.5rem;
     height: 1.5rem;
     background-color: rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(0, 0, 0, 0.1);
     &:hover {
         background-color: rgba(0, 0, 0, 0.05);
         color: rgba(0, 0, 0, 0.55);

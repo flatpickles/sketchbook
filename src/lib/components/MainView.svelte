@@ -190,7 +190,11 @@
             class:closed={!rightPanelShown}
             class:overlaid={$settingsStore.overlayPanels}
         >
-            <div class="panel right-panel" class:overlaid={$settingsStore.overlayPanels}>
+            <div
+                class="panel right-panel"
+                class:rightClosed={!rightPanelShown}
+                class:overlaid={$settingsStore.overlayPanels}
+            >
                 <ProjectDetailPanel
                     projectTuple={selectedProjectTuple}
                     headerButtonIcon={rightPanelHeaderIcon}
@@ -248,6 +252,8 @@
 />
 
 <style lang="scss">
+    @use 'sass:math';
+
     .main-wrapper {
         display: flex;
         flex-direction: row;
@@ -373,31 +379,32 @@
             }
         }
 
-        // Transition left (for left panel only)
+        // Transition left for left and right panels
         left: 0;
         transition: left $panel-animation-duration-quick ease-in-out;
+        $extraWidth: math.max($panel-edge-inset, $panel-shadow-size);
         &.leftClosed {
-            // Align to the right side of a zero-width panel:
+            // Align to the right side of a zero-width panel
             left: calc(-1 * $panel-width);
             &.overlaid {
-                left: calc(-1 * ($panel-edge-inset * 2 + $panel-width));
+                // Inset extra width to account for padding and/or shadow
+                left: calc(-1 * ($panel-width + $extraWidth));
             }
+        }
+        &.rightClosed.overlaid {
+            // Inset extra width to account for padding and/or shadow
+            left: $extraWidth;
         }
     }
 
     .panel-dummy {
+        // Dummy used to access rendered width of panels in script, for mouse interactivity
         // Avoid displaying this dummy to the user
         position: absolute;
         z-index: -100;
         opacity: 0;
-
-        // Setup differently if overlaid
         width: $panel-width;
         left: calc(-1 * $panel-width);
-        &.overlaid {
-            width: $panel-edge-inset * 2 + $panel-width;
-            left: calc(-1 * ($panel-edge-inset * 2 + $panel-width));
-        }
     }
 
     /* Settings */

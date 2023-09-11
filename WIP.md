@@ -14,10 +14,8 @@ Ongoing notes for Sketchbook development.
 
 ## Main view panels
 
--   Panels: Fix outline & drop shadow visibility when hidden
 -   Implement optional panel state settings for direct project links (vs. navigation to /)
 -   Mobile layout (reassess mouse behavior fallbacks)
--   Separate overlay & style settings for each panel (?)
 
 ## Settings // app configuration
 
@@ -213,6 +211,7 @@ Use cases: modes (w/ options), sections, functionality only defined with some va
         -   Alpha overlay for custom cutouts, wipes, etc
         -   Maybe a base Sketch class function called when transition begins?
 -   Password protected projects
+-   Separate overlay & style settings for each panel (?)
 
 # Philosophy:
 

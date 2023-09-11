@@ -5,7 +5,7 @@
     import { content } from '../../../config/content';
 </script>
 
-<Panel overlaid={true}>
+<Panel>
     <PanelHeader
         title={content.settingsTitle}
         description={content.settingsDescription}

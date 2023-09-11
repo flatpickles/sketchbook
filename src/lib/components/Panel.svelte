@@ -1,8 +1,8 @@
 <script lang="ts">
-    export let overlaid = false;
+    export let style: 'overlay' | 'left-fill' | 'right-fill' = 'overlay';
 </script>
 
-<div class="panel-container" class:overlaid>
+<div class={`panel-container ${style}`}>
     <slot />
 </div>
 
@@ -18,12 +18,21 @@
         backdrop-filter: $panel-bg-filter;
         -webkit-backdrop-filter: $panel-bg-filter;
 
-        box-shadow: $panel-shadow;
-        outline: $panel-outline;
+        border: $panel-border;
         overflow: hidden;
 
-        &.overlaid {
+        &.overlay {
             border-radius: $panel-border-radius;
+            box-shadow: $panel-shadow;
+            border-width: $panel-overlay-border-size;
+        }
+
+        &.left-fill {
+            border-style: none solid none none;
+        }
+
+        &.right-fill {
+            border-style: none none none solid;
         }
     }
 </style>

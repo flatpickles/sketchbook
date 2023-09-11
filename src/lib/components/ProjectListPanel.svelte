@@ -28,7 +28,7 @@
     }
 </script>
 
-<Panel overlaid={$settingsStore.overlayPanels}>
+<Panel style={$settingsStore.overlayPanels ? 'overlay' : 'left-fill'}>
     <PanelHeader
         title={content.title}
         subtitle={content.subtitle}

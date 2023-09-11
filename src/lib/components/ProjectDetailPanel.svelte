@@ -14,7 +14,7 @@
     $: marginBottom = $settingsStore.overlayPanels && projectTuple.params.length == 0;
 </script>
 
-<Panel overlaid={$settingsStore.overlayPanels}>
+<Panel style={$settingsStore.overlayPanels ? 'overlay' : 'right-fill'}>
     <div class="detail-wrapper" class:margin-bottom={marginBottom}>
         <PanelHeader
             title={projectTuple.config.title}
