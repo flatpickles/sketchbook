@@ -98,9 +98,6 @@ Use cases: modes (w/ options), sections, functionality only defined with some va
 -   Project key:
     -   Use key instead of name in saved state
     -   User-defined keys used for project URL
--   Show & hide panels in desktop layout
-    -   Show/hide animation
-    -   Show buttons from hidden state
 -   Presets
     -   Disable preset picker & controls per-project
     -   Allow naming "Default Values" (or a default preset option?)

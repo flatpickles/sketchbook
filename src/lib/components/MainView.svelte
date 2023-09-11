@@ -27,6 +27,10 @@
     let currentMouseState: MouseState = MouseState.NoTrigger;
     let viewer: ProjectViewer;
 
+    // Track when the UI is active (to hide/show panel show buttons)
+    let uiActive = true;
+    let uiActiveTimeout: ReturnType<typeof setTimeout>;
+
     // Left panel reactive state
     $: leftPanelAvailable = $stateStore.projectListState !== PanelState.Unavailable;
     $: leftPanelShown =
@@ -51,11 +55,11 @@
     onMount(() => {
         // Mouse movement
         addEventListener('mousemove', mouseMoved);
+        uiActivated();
 
         // Panel transitions
         const eventIsResizingContainer = (event: TransitionEvent): boolean => {
             return (
-                !$settingsStore.overlayPanels &&
                 event.target instanceof HTMLElement &&
                 event.propertyName === 'width' &&
                 (event.target.classList.contains('left-panel-wrapper') ||
@@ -63,10 +67,16 @@
             );
         };
         addEventListener('transitionstart', (event: TransitionEvent) => {
-            if (eventIsResizingContainer(event)) panelResizing = true;
+            if (eventIsResizingContainer(event)) {
+                panelResizing = true;
+                uiActivated();
+            }
         });
         addEventListener('transitionend', (event: TransitionEvent) => {
-            if (eventIsResizingContainer(event)) panelResizing = false;
+            if (eventIsResizingContainer(event)) {
+                panelResizing = false;
+                uiActivated();
+            }
         });
     });
 
@@ -99,6 +109,8 @@
     }
 
     function mouseMoved(event: MouseEvent) {
+        uiActivated();
+
         // Trigger with movement into trigger zone, untrigger with movement out of interaction zone
         const leftThresholds = {
             in: $settingsStore.panelMouseTriggerWidth,
@@ -116,6 +128,22 @@
             leftThresholds,
             rightThresholds
         );
+    }
+
+    // Called when the mouse moves, or the UI is otherwise activated
+    function uiActivated() {
+        if (uiActiveTimeout) clearTimeout(uiActiveTimeout);
+        uiActive = true;
+
+        // Start a new timeout for deactivation
+        const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+        const enableDeactivation =
+            $settingsStore.hidePanelButtonsTimeout != undefined && !isTouchDevice;
+        if (enableDeactivation) {
+            uiActiveTimeout = setTimeout(() => {
+                uiActive = false;
+            }, $settingsStore.hidePanelButtonsTimeout);
+        }
     }
 
     function toggleSettings() {
@@ -150,7 +178,7 @@
     <div class="project-viewer">
         <ProjectViewer
             project={selectedProjectTuple.project}
-            containerResizing={panelResizing}
+            containerResizing={!$settingsStore.overlayPanels && panelResizing}
             bind:this={viewer}
         />
     </div>
@@ -174,29 +202,31 @@
     {/if}
 </div>
 
-{#if leftPanelAvailable && $stateStore.projectListState !== PanelState.Static}
-    <div
-        class="left-show"
-        data-testid="left-show"
-        class:hidden={leftPanelShown}
-        on:click={toggleLeftPanel.bind(null, true)}
-        on:keypress={toggleLeftPanel.bind(null, true)}
-    >
-        <i class={content.projectListIcon} />
-    </div>
-{/if}
+<div class="show-buttons" data-testid="show-buttons" class:hidden={!uiActive}>
+    {#if leftPanelAvailable && $stateStore.projectListState !== PanelState.Static}
+        <div
+            class="left-show"
+            data-testid="left-show"
+            class:hidden={leftPanelShown}
+            on:click={toggleLeftPanel.bind(null, true)}
+            on:keypress={toggleLeftPanel.bind(null, true)}
+        >
+            <i class={content.projectListIcon} />
+        </div>
+    {/if}
 
-{#if rightPanelAvailable && $stateStore.projectDetailState !== PanelState.Static}
-    <div
-        class="right-show"
-        data-testid="right-show"
-        class:hidden={rightPanelShown}
-        on:click={toggleRightPanel.bind(null, true)}
-        on:keypress={toggleRightPanel.bind(null, true)}
-    >
-        <i class={content.projectDetailIcon} />
-    </div>
-{/if}
+    {#if rightPanelAvailable && $stateStore.projectDetailState !== PanelState.Static}
+        <div
+            class="right-show"
+            data-testid="right-show"
+            class:hidden={rightPanelShown}
+            on:click={toggleRightPanel.bind(null, true)}
+            on:keypress={toggleRightPanel.bind(null, true)}
+        >
+            <i class={content.projectDetailIcon} />
+        </div>
+    {/if}
+</div>
 
 {#if $stateStore.settingsPresented}
     <div
@@ -223,6 +253,7 @@
         flex-direction: row;
         justify-content: space-between;
 
+        position: relative;
         width: 100%;
         height: 100%;
         overflow: hidden;
@@ -237,29 +268,45 @@
 
     /* Show buttons */
 
-    @mixin show-button {
-        @include panel-show-button;
-
-        // Position & appearance
+    .show-buttons {
         position: absolute;
         top: 0;
         z-index: 1;
-        cursor: pointer;
 
-        // Layout
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+
+        // Transition opacity when mouse isn't moving
+        opacity: 1;
+        transition: opacity $panel-animation-duration-quick ease-in-out;
+        &.hidden {
+            opacity: 0;
+            transition-duration: $panel-animation-duration-slow;
+        }
+    }
+
+    @mixin show-button {
+        @include panel-show-button;
+
+        cursor: pointer;
         display: flex;
         justify-content: center;
         align-items: center;
 
         // Transition opacity
-        transition: opacity $panel-show-button-animation-duration ease-in-out;
-        transition-delay: calc($panel-animation-duration);
+        transition: opacity $panel-animation-duration-slow ease-in-out;
+        transition-delay: $panel-animation-duration-quick;
         &.hidden {
             opacity: 0;
             transition-delay: 0s;
 
-            // Fade out quickly while panel slides over
-            transition-duration: calc($panel-animation-duration / 2);
+            // Fade out even more quickly while panel slides over
+            transition-duration: calc($panel-animation-duration-quick / 2);
         }
     }
 
@@ -292,7 +339,7 @@
         }
 
         // Transition width
-        transition: width $panel-animation-duration ease-in-out;
+        transition: width $panel-animation-duration-quick ease-in-out;
         &.closed {
             width: 0;
         }
@@ -328,7 +375,7 @@
 
         // Transition left (for left panel only)
         left: 0;
-        transition: left $panel-animation-duration ease-in-out;
+        transition: left $panel-animation-duration-quick ease-in-out;
         &.leftClosed {
             // Align to the right side of a zero-width panel:
             left: calc(-1 * $panel-width);

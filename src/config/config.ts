@@ -24,6 +24,10 @@ const defaultProjectDetailState = PanelState.Visible;
 // width of the trigger areas on the left & right, in pixels.
 const panelMouseTriggerWidth = 50;
 
+// When panels are closed, their "show" buttons will be hidden after this many milliseconds (if
+// defined). Mouse movement will make them reappear. Buttons are always visible on touch devices.
+const hidePanelButtonsTimeout: number | undefined = 2000;
+
 // Project and group label sorting
 const projectSortOrder = SortOrder.Chronological;
 const groupSortOrder = SortOrder.Alphabetical;
@@ -44,6 +48,7 @@ export const config = {
     defaultProjectListState,
     defaultProjectDetailState,
     panelMouseTriggerWidth,
+    hidePanelButtonsTimeout,
     projectSortOrder,
     groupSortOrder
 };

@@ -47,9 +47,7 @@
 
     onMount(() => {
         // Update the canvas size whenever the window is resized
-        window.addEventListener('resize', () => {
-            setCanvasSize();
-        });
+        window.addEventListener('resize', setCanvasSize.bind(null, true));
     });
 
     // Initialize and update the project when loading & changing projects

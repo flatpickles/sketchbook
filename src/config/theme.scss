@@ -18,17 +18,17 @@ $xs-text-size: 0.7rem;
 
 // Panel buttons
 @mixin panel-show-button {
-    font-size: 1rem;
+    font-size: 0.9rem;
     width: 1.5rem;
     height: 1.5rem;
     color: rgba(0, 0, 0, 0.7);
-    background-color: $panel-bg-color;
+    background-color: rgba(255, 255, 255, 0.7);
     margin: calc($panel-edge-inset / 2);
     border-radius: calc($panel-border-radius / 2);
     opacity: 0.5;
 }
-$panel-animation-duration: 0.3s;
-$panel-show-button-animation-duration: 0.7s;
+$panel-animation-duration-quick: 0.3s;
+$panel-animation-duration-slow: 0.7s;
 
 // Panels
 $panel-width: 16rem;

@@ -1,5 +1,5 @@
 import { render, fireEvent, screen, cleanup, waitFor, within } from '@testing-library/svelte';
-import { describe, it, expect, afterEach } from 'vitest';
+import { vi, describe, it, expect, afterEach } from 'vitest';
 import MainView from '$lib/components/MainView.svelte';
 import { ProjectConfigDefaults } from '$lib/base/ProjectConfig/ProjectConfig';
 import Project from '$lib/base/Project/Project';
@@ -45,6 +45,89 @@ describe('MainView layout', () => {
 
         const detailPanel = screen.queryByTestId('right-panel-wrapper');
         expect(detailPanel).toBeNull();
+    });
+});
+
+describe('Panel button visibility', () => {
+    afterEach(cleanup);
+
+    it('hides panel show buttons after a timeout then shows panel show buttons on mousemove', async () => {
+        // Set hidePanelButtonsTimeout
+        settingsStore.set({
+            ...get(settingsStore),
+            hidePanelButtonsTimeout: 10
+        });
+
+        // Render
+        const { getByTestId } = render(MainView, {
+            projectConfigs: configs,
+            selectedProjectTuple: projectTuple
+        });
+
+        // Find & validate show buttons wrapper
+        const showButtonsWrapper = getByTestId('show-buttons');
+        expect(showButtonsWrapper).toBeDefined();
+        expect(showButtonsWrapper.classList.contains('hidden')).toBe(false);
+
+        // Wait then check again
+        await new Promise((r) => setTimeout(r, 20));
+        expect(showButtonsWrapper.classList.contains('hidden')).toBe(true);
+
+        // Move the mouse then check again
+        const wrapper = screen.getByTestId('main-wrapper');
+        userEvent.pointer({
+            target: wrapper,
+            coords: { clientX: 5, clientY: 5 }
+        });
+        await waitFor(() => expect(showButtonsWrapper.classList.contains('hidden')).toBe(false));
+    });
+
+    it("doesn't hide if hidePanelButtonsTimeout is undefined", async () => {
+        // Set hidePanelButtonsTimeout
+        settingsStore.set({
+            ...get(settingsStore),
+            hidePanelButtonsTimeout: undefined
+        });
+
+        // Render
+        const { getByTestId } = render(MainView, {
+            projectConfigs: configs,
+            selectedProjectTuple: projectTuple
+        });
+
+        // Find & validate show buttons wrapper
+        const showButtonsWrapper = getByTestId('show-buttons');
+        expect(showButtonsWrapper).toBeDefined();
+        expect(showButtonsWrapper.classList.contains('hidden')).toBe(false);
+
+        // Wait then check again
+        await new Promise((r) => setTimeout(r, 100));
+        expect(showButtonsWrapper.classList.contains('hidden')).toBe(false);
+    });
+
+    it("doesn't hide if hidePanelButtonsTimeout is defined but we're on a touch client", async () => {
+        window.ontouchstart = vi.fn(); // mock touch client
+
+        // Set hidePanelButtonsTimeout
+        settingsStore.set({
+            ...get(settingsStore),
+            hidePanelButtonsTimeout: 10
+        });
+
+        // Render
+        const { getByTestId } = render(MainView, {
+            projectConfigs: configs,
+            selectedProjectTuple: projectTuple
+        });
+
+        // Find & validate show buttons wrapper
+        const showButtonsWrapper = getByTestId('show-buttons');
+        expect(showButtonsWrapper).toBeDefined();
+        expect(showButtonsWrapper.classList.contains('hidden')).toBe(false);
+
+        // Wait then check again
+        await new Promise((r) => setTimeout(r, 20));
+        expect(showButtonsWrapper.classList.contains('hidden')).toBe(false);
     });
 });
 

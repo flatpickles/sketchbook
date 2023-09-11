@@ -15,6 +15,7 @@
     :global(body) {
         font-family: $font-family;
         height: 100%;
+        overflow: hidden;
     }
 
     :global(a) {
