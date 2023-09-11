@@ -14,11 +14,7 @@ Ongoing notes for Sketchbook development.
 
 ## Main view panels
 
--   Processing sketch still not updating when changing overlay setting
 -   Panels: Fix outline & drop shadow visibility when hidden
--   Floating panel design - footer space? Min height (optional)?
-
--   Don't show detail panel when no details or params are specified
 -   Visible button presentation for light/dark content
 -   Implement optional panel state settings for direct project links (vs. navigation to /)
 -   Mobile layout (reassess mouse behavior fallbacks)

@@ -9,12 +9,15 @@ import { PanelState } from '$lib/base/Util/PanelState';
 import userEvent from '@testing-library/user-event';
 
 const configs = {
-    Untitled: ProjectConfigDefaults
+    untitled: {
+        ...ProjectConfigDefaults,
+        description: 'When a description is present, we render the project detail panel.'
+    }
 };
 const projectTuple = {
     key: 'Untitled',
     project: new Project(),
-    config: ProjectConfigDefaults,
+    config: configs.untitled,
     params: []
 };
 
@@ -29,6 +32,19 @@ describe('MainView layout', () => {
 
         const wrapper = screen.getByTestId('main-wrapper');
         expect(wrapper).toBeDefined();
+    });
+
+    it("doesn't show detail panel when the project doesn't have details", async () => {
+        render(MainView, {
+            projectConfigs: { untitled: ProjectConfigDefaults },
+            selectedProjectTuple: {
+                ...projectTuple,
+                config: ProjectConfigDefaults
+            }
+        });
+
+        const detailPanel = screen.queryByTestId('right-panel-wrapper');
+        expect(detailPanel).toBeNull();
     });
 });
 

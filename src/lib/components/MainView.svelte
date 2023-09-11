@@ -27,17 +27,23 @@
     let currentMouseState: MouseState = MouseState.NoTrigger;
     let viewer: ProjectViewer;
 
-    $: leftPanelShown = panelShown(
-        $stateStore.projectListState,
-        currentMouseState,
-        MouseState.LeftTrigger
-    );
-    $: rightPanelShown = panelShown(
-        $stateStore.projectDetailState,
-        currentMouseState,
-        MouseState.RightTrigger
-    );
+    // Left panel reactive state
+    $: leftPanelAvailable = $stateStore.projectListState !== PanelState.Unavailable;
+    $: leftPanelShown =
+        leftPanelAvailable &&
+        panelShown($stateStore.projectListState, currentMouseState, MouseState.LeftTrigger);
     $: leftPanelHeaderIcon = headerIconForPanelState($stateStore.projectListState);
+
+    // Right panel reactive state
+    $: projectHasDetail =
+        selectedProjectTuple.config.date !== undefined ||
+        selectedProjectTuple.config.description !== undefined ||
+        selectedProjectTuple.params.length > 0; // todo: incorporate presets, once implemented
+    $: rightPanelAvailable =
+        projectHasDetail && $stateStore.projectDetailState !== PanelState.Unavailable;
+    $: rightPanelShown =
+        rightPanelAvailable &&
+        panelShown($stateStore.projectDetailState, currentMouseState, MouseState.RightTrigger);
     $: rightPanelHeaderIcon = headerIconForPanelState($stateStore.projectDetailState);
 
     /* Event bindings */
@@ -118,7 +124,7 @@
 </script>
 
 <div class="main-wrapper" data-testid="main-wrapper">
-    {#if $stateStore.projectListState != PanelState.Unavailable}
+    {#if leftPanelAvailable}
         <div
             class="left-panel-wrapper"
             data-testid="left-panel-wrapper"
@@ -149,7 +155,7 @@
         />
     </div>
 
-    {#if $stateStore.projectDetailState != PanelState.Unavailable}
+    {#if rightPanelAvailable}
         <div
             class="right-panel-wrapper"
             data-testid="right-panel-wrapper"
@@ -168,7 +174,7 @@
     {/if}
 </div>
 
-{#if ![PanelState.Unavailable, PanelState.Static].includes($stateStore.projectListState)}
+{#if leftPanelAvailable && $stateStore.projectListState !== PanelState.Static}
     <div
         class="left-show"
         data-testid="left-show"
@@ -180,7 +186,7 @@
     </div>
 {/if}
 
-{#if ![PanelState.Unavailable, PanelState.Static].includes($stateStore.projectDetailState)}
+{#if rightPanelAvailable && $stateStore.projectDetailState !== PanelState.Static}
     <div
         class="right-show"
         data-testid="right-show"
@@ -238,13 +244,16 @@
         z-index: 1;
         cursor: pointer;
 
-        // Transition opacity (with +0.1s buffer)
+        // Transition opacity
         opacity: 100%;
         transition: opacity $panel-show-button-animation-duration ease-in-out;
-        transition-delay: calc($panel-animation-duration + 0.1s);
+        transition-delay: calc($panel-animation-duration);
         &.hidden {
             opacity: 0;
-            transition-delay: 0.1s;
+            transition-delay: 0s;
+
+            // Fade out quickly while panel slides over
+            transition-duration: $panel-animation-duration;
         }
     }
 
