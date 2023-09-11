@@ -239,13 +239,19 @@
 
     @mixin show-button {
         @include panel-show-button;
+
+        // Position & appearance
         position: absolute;
         top: 0;
         z-index: 1;
         cursor: pointer;
 
+        // Layout
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
         // Transition opacity
-        opacity: 100%;
         transition: opacity $panel-show-button-animation-duration ease-in-out;
         transition-delay: calc($panel-animation-duration);
         &.hidden {
@@ -253,7 +259,7 @@
             transition-delay: 0s;
 
             // Fade out quickly while panel slides over
-            transition-duration: $panel-animation-duration;
+            transition-duration: calc($panel-animation-duration / 2);
         }
     }
 

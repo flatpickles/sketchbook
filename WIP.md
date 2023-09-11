@@ -15,21 +15,9 @@ Ongoing notes for Sketchbook development.
 ## Main view panels
 
 -   Panels: Fix outline & drop shadow visibility when hidden
--   Visible button presentation for light/dark content
 -   Implement optional panel state settings for direct project links (vs. navigation to /)
 -   Mobile layout (reassess mouse behavior fallbacks)
 -   Separate overlay & style settings for each panel (?)
-
-## Johan's feedback (8/23):
-
--   animation mode?
--   [addressed] maybe rename update method; "update" implies it runs every frame
--   [addressed] passed to update: parameter key (from update), time (ms + frame count)
--   think about how much infrastructure to provide / leave to other frameworks. Probably as minimal as possible
--   [addressed] check Unity lifecycle for ideas
--   [addressed] dev mode vs. prod mode
--   [addressed] design: the art feels secondary with the panels floating over the top. Could be remedied with dedicated space for the canvas // no floating panels.
--   [addressed] Wouldn't often want to see project list as a first-class citizen during dev mode. That's kind of a portfolio feature. Could be remedied just by keeping the panel closed.
 
 ## Settings // app configuration
 

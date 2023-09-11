@@ -19,8 +19,13 @@ $xs-text-size: 0.7rem;
 // Panel buttons
 @mixin panel-show-button {
     font-size: 1rem;
-    padding: 0.5rem;
-    color: rgba(0, 0, 0, 0.5);
+    width: 1.5rem;
+    height: 1.5rem;
+    color: rgba(0, 0, 0, 0.7);
+    background-color: $panel-bg-color;
+    margin: calc($panel-edge-inset / 2);
+    border-radius: calc($panel-border-radius / 2);
+    opacity: 0.5;
 }
 $panel-animation-duration: 0.3s;
 $panel-show-button-animation-duration: 0.7s;
