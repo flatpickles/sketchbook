@@ -14,7 +14,6 @@ Ongoing notes for Sketchbook development.
 
 ## Main view panels
 
--   P5 sketch can resize to be too narrow, occasionally
 -   Mobile layout (reassess mouse behavior fallbacks)
 -   Implement optional panel state settings for direct project links (vs. navigation to /)
 
@@ -22,10 +21,12 @@ Ongoing notes for Sketchbook development.
 
 MVP (responsive):
 
+-   Extreme MVP: details panel just straight up isn't available
 -   Don't allow panels to overlap
 -   Keep canvas size in non-overlay and just push it to the side (?)
 -   iPhone still allows zooming, and does so automatically?!
 -   Reassess mouse behavior fallbacks
+-   Flashes white then black before loading on mobile safari
 
 Mobile Mode™
 

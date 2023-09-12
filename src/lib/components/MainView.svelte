@@ -74,7 +74,10 @@
         });
         addEventListener('transitionend', (event: TransitionEvent) => {
             if (eventIsResizingContainer(event)) {
-                panelResizing = false;
+                setTimeout(() => {
+                    // Set this on the next event loop (in case project has already updated)
+                    panelResizing = false;
+                }, 0);
                 uiActivated();
             }
         });

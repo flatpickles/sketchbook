@@ -33,7 +33,6 @@ export default class P5Project extends Project {
      * Project superclass overrides; you shouldn't need to change these.
      */
     canvasType = CanvasType.None;
-    enableRenderLoop = false;
     init() {
         const processingFn = (p5: P5) => {
             p5.preload = this.preload.bind(this, p5);

@@ -4,7 +4,7 @@ import type Project from '../Project/Project';
 import { type ProjectConfig, ProjectConfigDefaults } from './ProjectConfig';
 
 // Keys that should be ignored when creating a ProjectConfig object from a Project object
-const paramKeysToIgnore = ['canvas', 'container', 'canvasType', 'enableRenderLoop', 'p5'];
+const paramKeysToIgnore = ['canvas', 'container', 'canvasType', 'p5'];
 
 export class ProjectConfigFactory {
     /**

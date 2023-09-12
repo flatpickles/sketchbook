@@ -37,7 +37,7 @@ export default class DemoProject extends Project {
     arrayColor = [255, 21, 0];
 
     #xPos = 300;
-    update({ frame, time }: { frame: number; time: number }) {
+    update({ frame }: { frame: number; time: number }) {
         if (!this.canvas) throw new Error('Canvas not set');
         const ctx = this.canvas.getContext('2d');
         if (!ctx) throw new Error('Could not get 2D context');
@@ -49,7 +49,5 @@ export default class DemoProject extends Project {
 
         ctx.fillStyle = `rgb(${this.arrayColor[0]}, ${this.arrayColor[1]}, ${this.arrayColor[2]})`;
         ctx.fillRect(400, 400, 550, 700);
-
-        console.log(time);
     }
 }
