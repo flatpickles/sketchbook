@@ -334,7 +334,7 @@
         // Enable panel min-height despite absolute inheritance:
         display: flex;
         flex-direction: column;
-        height: 100vh;
+        height: 100%;
 
         // Setup differently if overlaid
         position: relative;
