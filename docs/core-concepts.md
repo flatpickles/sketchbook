@@ -4,6 +4,14 @@ Sketchbook -> Docs -> Core Concepts
 
 todo: project anatomy, etc (reference design-doc.md)
 
+-   Project subclasses:
+    -   Using constructor:
+        -   this.canvas will not be defined
+    -   SSR notes: browser features may not be available
+        -   Example: Image()
+        -   init() and update() not called (currently as of 8/13)
+    -   Importing bundled images: show example
+
 # The Project Class
 
 ## Properties
