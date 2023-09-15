@@ -39,6 +39,7 @@
                 [updatedConfig.key]: value
             };
             settingsStore.set(newState);
+            // todo: cookies warning
         }
     }
 

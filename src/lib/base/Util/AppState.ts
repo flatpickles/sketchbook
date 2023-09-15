@@ -1,9 +1,14 @@
 import { config, userSettingsLabels } from '../../../config/config';
-import { createSemiPersistedStore } from './SemiPersistedStore';
+import { createPersistedStore } from './PersistedStore';
 
 // The settingsStore is backed by values in config. Only values specified in userSettingsLabels
-// will be persisted, and will be reset to their initial values when these values change.
-const settingsStore = createSemiPersistedStore('settings', config, Object.keys(userSettingsLabels));
+// will be persisted as cookies, and will be reset to their initial values when these values change.
+export const settingsStore = createPersistedStore(
+    'settings',
+    config,
+    Object.keys(userSettingsLabels),
+    true
+);
 
 // The stateStore is fully persisted, and maintains the state of the app (informed by settingsStore)
 const stateDefaults = {
@@ -13,7 +18,4 @@ const stateDefaults = {
     selectedGroupName: '',
     settingsPresented: false
 };
-const stateStore = createSemiPersistedStore('state', stateDefaults);
-
-// Export the stores!
-export { settingsStore, stateStore };
+export const stateStore = createPersistedStore('state', stateDefaults);
