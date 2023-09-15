@@ -1,36 +1,20 @@
 <script lang="ts">
+    import ProjectPresentation from '$lib/base/FileLoading/ProjectPresentation';
     import type { ProjectConfig } from '$lib/base/ProjectConfig/ProjectConfig';
     import { settingsStore } from '$lib/base/Util/AppState';
-    import { SortOrder } from '$lib/base/Util/ConfigTypes';
+    import { SortOrder } from '$lib/base/FileLoading/ProjectPresentation';
 
     export let projects: Record<string, ProjectConfig>;
     export let selectedProjectKey: string;
     export let sorting: SortOrder = SortOrder.ReverseChronological;
     export let selectedGroup: string | undefined = undefined;
 
-    $: sortedKeys = Object.keys(projects).sort((a, b) => {
-        const projectA = projects[a];
-        const projectB = projects[b];
-        const timeA = projectA.date ? projectA.date.getTime() : Date.now();
-        const timeB = projectB.date ? projectB.date.getTime() : Date.now();
-        switch (sorting) {
-            case SortOrder.Alphabetical:
-                return projectA.title.localeCompare(projectB.title);
-            case SortOrder.Chronological:
-                return timeA - timeB;
-            case SortOrder.ReverseChronological:
-                return timeB - timeA;
-        }
-    });
-
-    $: visibleKeys = sortedKeys.filter((key) => {
-        const project = projects[key];
-        if (!project) return false;
-        if (project.experimental && !$settingsStore.showExperiments) return false;
-        if (selectedGroup === undefined) return true;
-        if (!project.groups.includes(selectedGroup)) return false;
-        return true;
-    });
+    $: visibleKeys = ProjectPresentation.presentedKeys(
+        projects,
+        sorting,
+        $settingsStore.showExperiments,
+        selectedGroup
+    );
 </script>
 
 <div class="project-list">

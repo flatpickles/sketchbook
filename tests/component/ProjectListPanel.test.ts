@@ -5,7 +5,7 @@ import ProjectListPanel from '$lib/components/ProjectListPanel.svelte';
 
 import { content } from '../../src/config/content';
 import { config } from '../../src/config/config';
-import { SortOrder } from '$lib/base/Util/ConfigTypes';
+import { SortOrder } from '$lib/base/FileLoading/ProjectPresentation';
 
 describe('ProjectListPanel rendering', () => {
     afterEach(cleanup);

@@ -1,4 +1,4 @@
-import { SortOrder } from '$lib/base/Util/ConfigTypes';
+import { SortOrder } from '$lib/base/FileLoading/ProjectPresentation';
 import { PanelState } from '$lib/base/Util/PanelState';
 
 /**
