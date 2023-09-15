@@ -1,10 +1,21 @@
 import { describe, it, expect, afterEach } from 'vitest';
-import { settingsStore } from '$lib/base/Util/AppState';
-
-import { config } from '../../src/config/config';
+import { createSemiPersistedStore } from '$lib/base/Util/SemiPersistedStore';
 import { SortOrder } from '$lib/base/Util/ConfigTypes';
 import { PanelState } from '$lib/base/Util/PanelState';
 import { get } from 'svelte/store';
+
+// A little mock config for these tests
+const config = {
+    showExperiments: false,
+    projectSortOrder: SortOrder.Chronological,
+    groupSortOrder: SortOrder.Alphabetical,
+    defaultProjectListState: PanelState.Visible,
+    defaultProjectDetailState: PanelState.Visible
+};
+const settingsStore = createSemiPersistedStore('settings', config, [
+    'showExperiments',
+    'projectSortOrder'
+]);
 
 describe('AppStateStore', () => {
     afterEach(() => {
@@ -35,7 +46,7 @@ describe('AppStateStore', () => {
         expect(get(settingsStore).defaultProjectDetailState).toBe(PanelState.Unavailable);
     });
 
-    it('only persists values that are specified in userSettingsLabels', () => {
+    it('only persists values that are specified', () => {
         // Check default values
         expect(localStorage.getItem('settings_showExperiments')).toBeNull();
         expect(localStorage.getItem('settings_projectSortOrder')).toBeNull();
