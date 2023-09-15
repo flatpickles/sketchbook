@@ -1,6 +1,6 @@
 {
     "name": "sketchbook2",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "private": true,
     "scripts": {
         "dev": "vite dev",
@@ -41,7 +41,9 @@
     },
     "type": "module",
     "dependencies": {
+        "@types/js-cookie": "^3.0.3",
         "canvas-sketch": "^0.7.7",
+        "js-cookie": "^3.0.5",
         "regl": "^2.1.0",
         "ress": "^5.0.2"
     }

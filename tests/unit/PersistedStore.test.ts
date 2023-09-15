@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach } from 'vitest';
-import { createSemiPersistedStore } from '$lib/base/Util/SemiPersistedStore';
+import { createPersistedStore } from '$lib/base/Util/PersistedStore';
 import { SortOrder } from '$lib/base/Util/ConfigTypes';
 import { PanelState } from '$lib/base/Util/PanelState';
 import { get } from 'svelte/store';
@@ -12,7 +12,7 @@ const config = {
     defaultProjectListState: PanelState.Visible,
     defaultProjectDetailState: PanelState.Visible
 };
-const settingsStore = createSemiPersistedStore('settings', config, [
+const settingsStore = createPersistedStore('settings', config, [
     'showExperiments',
     'projectSortOrder'
 ]);

@@ -1,3 +1,4 @@
+import Cookies from 'js-cookie';
 import { writable } from 'svelte/store';
 import type { AnyParamValueType } from '../ParamConfig/ParamTypes';
 
@@ -9,14 +10,28 @@ import type { AnyParamValueType } from '../ParamConfig/ParamTypes';
  * @param storeKey The key to use for this store in local storage
  * @param initialValues The initial values for this store
  * @param persistKeys The keys to persist (if not specified, all keys will be persisted)
+ * @param useCookies Whether to use cookies instead of local storage
  */
-export function createSemiPersistedStore<T>(
+export function createPersistedStore<T>(
     storeKey: string,
     initialValues: T,
-    persistKeys?: string[]
+    persistKeys?: string[],
+    useCookies = false
 ) {
     let initialState = initialValues as Record<string, AnyParamValueType>;
     const keysToPersist: string[] = persistKeys || Object.keys(initialState);
+
+    // Set & get functions
+    const setItem = (key: string, value: string, useCookies = false) => {
+        const prefixedKey = `${storeKey}_${key}`;
+        if (useCookies) Cookies.set(prefixedKey, value, { expires: 365 });
+        else localStorage.setItem(prefixedKey, value);
+    };
+    const getItem = (key: string, useCookies = false) => {
+        const prefixedKey = `${storeKey}_${key}`;
+        if (useCookies) return Cookies.get(prefixedKey);
+        else return localStorage.getItem(prefixedKey);
+    };
 
     // Restore only values that are specified in keysToPersist
     const resetState = () => {
@@ -26,19 +41,18 @@ export function createSemiPersistedStore<T>(
             if (initialState[key] === undefined)
                 throw new Error(`Key ${key} not found in initial state`);
             // Derive the keys for the initial value and the last initial value
-            const lastInitialValueKey = `${storeKey}_lastInitialValue_${key}`;
-            const valueKey = `${storeKey}_${key}`;
+            const lastInitialValueKey = `lastInitialValue_${key}`;
             // Use the new value from initialValues if it's been changed
             const initialValue = JSON.stringify(initialState[key]);
-            const lastInitialValue = localStorage.getItem(lastInitialValueKey);
-            localStorage.setItem(lastInitialValueKey, initialValue);
+            const lastInitialValue = getItem(lastInitialValueKey);
+            setItem(lastInitialValueKey, initialValue);
             if (lastInitialValue && lastInitialValue !== initialValue) {
-                localStorage.setItem(valueKey, initialValue);
+                setItem(key, initialValue, useCookies);
                 continue;
             }
 
             // Otherwise, use the value in local storage
-            const value = localStorage.getItem(valueKey) || initialValue;
+            const value = getItem(key, useCookies) || initialValue;
             initialState[key] = JSON.parse(value);
         }
     };
@@ -50,7 +64,7 @@ export function createSemiPersistedStore<T>(
     // Persist only values that are specified in keysToPersist
     const setAndPersist = (state: Record<string, AnyParamValueType>) => {
         for (const key of keysToPersist) {
-            localStorage.setItem(`${storeKey}_${key}`, JSON.stringify(state[key]));
+            setItem(key, JSON.stringify(state[key]), useCookies);
         }
         set(state as T);
     };
