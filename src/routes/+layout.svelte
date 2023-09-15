@@ -10,7 +10,7 @@
         height: 100%;
         overflow: hidden;
         box-sizing: content-box; // unset non-standard box-sizing: border-box (ress)
-        background-color: black; // color for header space on mobile safari
+        background-color: black; // for header on mobile safari, and behind transparent canvases
     }
 
     :global(body) {

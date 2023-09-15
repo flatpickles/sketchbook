@@ -1,15 +1,32 @@
+import { config } from '../config/config';
+import ProjectPresentation, { SortOrder } from '../lib/base/FileLoading/ProjectPresentation';
 import type { PageServerLoad } from './$types';
 import { redirect } from '@sveltejs/kit';
 
 export const load = (async ({ parent, cookies }) => {
     const { projects } = await parent();
-    console.log(cookies.get('settings_projectSortOrder'));
+
+    // Load settings from cookies, or use defaults
+    const cookieSortOrder = cookies.get('settings_projectSortOrder');
+    const cookieExperimentsEnabled = cookies.get('settings_showExperiments');
+    const projectSortOrder = cookieSortOrder
+        ? (cookieSortOrder as SortOrder)
+        : config.projectSortOrder;
+    const experimentsEnabled = cookieExperimentsEnabled
+        ? cookieExperimentsEnabled === 'true'
+        : config.showExperiments;
+
+    // Get presentation order for project keys, so we can navigate to the first one
+    const presentationOrder = ProjectPresentation.presentedKeys(
+        projects,
+        projectSortOrder,
+        experimentsEnabled
+    );
+
+    // If there are no projects, throw an error (for now)
+    if (presentationOrder.length === 0) throw new Error('No projects found');
 
     // Redirect to the first project
-    // todo: handle no projects; sorting; etc
-    const projectKeys = Object.keys(projects);
-    if (projectKeys.length > 0) {
-        const firstProject = projectKeys[0];
-        throw redirect(307, `/${firstProject}`);
-    }
+    const firstProject = presentationOrder[0];
+    throw redirect(307, `/${firstProject}`);
 }) satisfies PageServerLoad;
