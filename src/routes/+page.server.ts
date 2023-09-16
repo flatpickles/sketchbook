@@ -7,7 +7,7 @@ export const load = (async ({ parent, cookies }) => {
     const { projects } = await parent();
 
     // Load settings from cookies, or use defaults
-    const cookieSortOrder = cookies.get('settings_projectSortOrder');
+    const cookieSortOrder = cookies.get('settings_projectSortOrder')?.replaceAll('"', '');
     const cookieExperimentsEnabled = cookies.get('settings_showExperiments');
     const projectSortOrder = cookieSortOrder
         ? (cookieSortOrder as SortOrder)

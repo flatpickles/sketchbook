@@ -25,6 +25,8 @@ export default class ProjectPresentation {
                     return timeA - timeB;
                 case SortOrder.ReverseChronological:
                     return timeB - timeA;
+                default:
+                    throw new Error(`Unknown sort order: ${sorting}`);
             }
         });
 
