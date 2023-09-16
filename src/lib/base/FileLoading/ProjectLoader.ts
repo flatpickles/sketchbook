@@ -3,7 +3,7 @@ import {
     importProjectConfigFiles,
     importProjectTextFiles
 } from './FileProviders';
-import type Project from '../Project/Project';
+import Project from '../Project/Project';
 import { type ProjectConfig, ProjectConfigDefaults } from '../ProjectConfig/ProjectConfig';
 import type { ParamConfig } from '../ParamConfig/ParamConfig';
 import { ProjectConfigFactory } from '../ProjectConfig/ProjectConfigFactory';
@@ -91,17 +91,24 @@ export default class ProjectLoader {
         let project: Project;
         if (classFilePath) {
             if (!classFilePath.includes('.ts') && !classFilePath.includes('.js')) {
-                throw new Error(
-                    `Loader: Unsupported project class file type for path: ${classFilePath}`
-                );
+                // The project file must be a .ts or .js file
+                throw new Error(`Unsupported project class file type for path: ${classFilePath}`);
             }
             const module = (await projectClassFiles[classFilePath]()) as ProjectModule;
+            if (!module.default) {
+                // The project file must export a default class
+                throw new Error(`No default export for ${classFilePath}`);
+            }
             project = new module.default();
+            if (!(project instanceof Project)) {
+                // The project must be a subclass of Project
+                throw new Error(
+                    `Project class file at path ${classFilePath} is not a subclass of Project`
+                );
+            }
         } else if (textFilePath) {
             if (!textFilePath.includes('.frag')) {
-                throw new Error(
-                    `Loader: Unsupported project text file type for path: ${textFilePath}`
-                );
+                throw new Error(`Unsupported project text file type for path: ${textFilePath}`);
             }
             const fragShader: string = (await projectTextFiles[textFilePath]()) as string;
             project = new FragShaderProject(fragShader);
@@ -156,16 +163,14 @@ export default class ProjectLoader {
     static #keyFromProjectPath(path: string): string {
         const pathComponents = path.split('/');
         const projectKey = pathComponents.pop()?.split('.')[0];
-        if (!projectKey)
-            throw new Error(`Loader: Failure to parse project key from project path: ${path}`);
+        if (!projectKey) throw new Error(`Failure to parse project key from project path: ${path}`);
         return projectKey;
     }
 
     static #keyFromConfigPath(path: string): string {
         const pathComponents = path.split('/');
         const projectKey = pathComponents[pathComponents.length - 2];
-        if (!projectKey)
-            throw new Error(`Loader: Failure to parse project key from config path: ${path}`);
+        if (!projectKey) throw new Error(`Failure to parse project key from config path: ${path}`);
         return projectKey;
     }
 }

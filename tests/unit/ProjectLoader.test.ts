@@ -31,7 +31,7 @@ describe('loading available projects', async () => {
     const availableProjects = await ProjectLoader.loadAvailableProjects();
 
     it('has correct number of available projects', () => {
-        expect(Object.values(availableProjects).length).toBe(3);
+        expect(Object.values(availableProjects).length).toBe(5);
     });
 
     it('correctly configures a project without a config file', () => {
@@ -225,6 +225,18 @@ describe('loading specific projects', async () => {
     it('does not load a non-existent project', async () => {
         const projectTuple = await ProjectLoader.loadProject('NonExistent');
         expect(projectTuple).toBeNull();
+    });
+
+    it('throws an error when loading a project with no default export', async () => {
+        await expect(ProjectLoader.loadProject('NoDefaultExport')).rejects.toThrow(
+            'No default export for /tests/unit/TestFiles/NoDefaultExport/NoDefaultExport.ts'
+        );
+    });
+
+    it('throws an error when loading a project that does not subclass Project', async () => {
+        await expect(ProjectLoader.loadProject('NoProjectSubclass')).rejects.toThrow(
+            'Project class file at path /tests/unit/TestFiles/NoProjectSubclass/NoProjectSubclass.ts is not a subclass of Project'
+        );
     });
 });
 
