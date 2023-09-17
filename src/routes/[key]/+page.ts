@@ -1,4 +1,4 @@
-import ProjectLoader from '$lib/base/FileLoading/ProjectLoader';
+import ProjectLoader from '$lib/base/ProjectLoading/ProjectLoader';
 import type { PageLoad } from './$types';
 import { error } from '@sveltejs/kit';
 

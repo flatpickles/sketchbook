@@ -1,8 +1,11 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import FileParamLoader from '$lib/base/Util/FileParamLoader';
-import { FileReaderMode, type FileParamConfig } from '$lib/base/ParamConfig/FileParamConfig';
-import { ParamType } from '$lib/base/ParamConfig/ParamConfig';
+import {
+    FileReaderMode,
+    type FileParamConfig
+} from '$lib/base/ConfigModels/ParamConfigs/FileParamConfig';
+import { ParamType } from '$lib/base/ConfigModels/ParamConfig';
 
 /**
  * FileReader seems particularly hard to mock, so we're going to mock each

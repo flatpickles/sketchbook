@@ -1,6 +1,6 @@
-import { getParamSections } from '$lib/base/ParamConfig/ParamConfig';
+import { getParamSections } from '$lib/base/ConfigModels/ParamConfig';
 import { describe, it, expect } from 'vitest';
-import { ParamConfigDefaults } from '$lib/base/ParamConfig/ParamConfig';
+import { ParamConfigDefaults } from '$lib/base/ConfigModels/ParamConfig';
 
 describe('getParamSections', () => {
     it('returns empty arrays when no params are passed', () => {

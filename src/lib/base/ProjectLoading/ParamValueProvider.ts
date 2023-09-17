@@ -1,6 +1,6 @@
 import { browser } from '$app/environment';
-import type { ParamConfig } from '../ParamConfig/ParamConfig';
-import type { ParamValueType } from '../ParamConfig/ParamTypes';
+import type { ParamConfig } from '../ConfigModels/ParamConfig';
+import type { ParamValueType } from '../ConfigModels/ParamTypes';
 import type Project from '../Project/Project';
 
 export default class ParamValueProvider {

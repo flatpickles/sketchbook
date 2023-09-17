@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { ProjectTuple } from '$lib/base/FileLoading/ProjectLoader';
+    import type { ProjectTuple } from '$lib/base/ProjectLoading/ProjectLoader';
 
     export let projectTuple: ProjectTuple;
 </script>

@@ -1,4 +1,4 @@
-import { type ParamConfig, ParamType, ParamConfigDefaults } from './ParamConfig';
+import { type ParamConfig, ParamType, ParamConfigDefaults } from '../ParamConfig';
 
 export enum StringParamStyle {
     SingleLine = 'single',

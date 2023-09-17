@@ -1,4 +1,4 @@
-import { type ParamConfig, ParamType, ParamConfigDefaults } from './ParamConfig';
+import { type ParamConfig, ParamType, ParamConfigDefaults } from '../ParamConfig';
 
 export interface BooleanParamConfig extends ParamConfig {
     enables?: string[];

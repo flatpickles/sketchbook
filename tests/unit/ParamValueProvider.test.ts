@@ -1,9 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import * as Environment from '$app/environment';
-import ParamValueProvider from '$lib/base/Util/ParamValueProvider';
+import ParamValueProvider from '$lib/base/ProjectLoading/ParamValueProvider';
 import { cleanup } from '@testing-library/svelte';
 import Project from '$lib/base/Project/Project';
-import type { NumberParamConfig } from '$lib/base/ParamConfig/NumberParamConfig';
+import type { NumberParamConfig } from '$lib/base/ConfigModels/ParamConfigs/NumberParamConfig';
 
 class TestProject extends Project {
     testParamKey = 42;

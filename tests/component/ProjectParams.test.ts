@@ -2,14 +2,14 @@ import { render, fireEvent, screen, cleanup, waitFor } from '@testing-library/sv
 import { vi, describe, it, expect, afterEach } from 'vitest';
 import ProjectParams from '$lib/components/ProjectParams.svelte';
 import Project from '$lib/base/Project/Project';
-import type { ProjectTuple } from '$lib/base/FileLoading/ProjectLoader';
-import { ParamType } from '$lib/base/ParamConfig/ParamConfig';
-import { ProjectConfigFactory } from '$lib/base/ProjectConfig/ProjectConfigFactory';
+import type { ProjectTuple } from '$lib/base/ProjectLoading/ProjectLoader';
+import { ParamType } from '$lib/base/ConfigModels/ParamConfig';
+import { ProjectConfigFactory } from '$lib/base/ProjectLoading/ProjectConfigFactory';
 
-import type { UserFileLoaderReturnType } from '$lib/base/ParamConfig/ParamTypes';
+import type { UserFileLoaderReturnType } from '$lib/base/ConfigModels/ParamTypes';
 import FileParamLoader from '$lib/base/Util/FileParamLoader';
 
-import ParamValueProvider from '$lib/base/Util/ParamValueProvider';
+import ParamValueProvider from '$lib/base/ProjectLoading/ParamValueProvider';
 vi.spyOn(ParamValueProvider, 'getValue');
 vi.spyOn(ParamValueProvider, 'setValue');
 

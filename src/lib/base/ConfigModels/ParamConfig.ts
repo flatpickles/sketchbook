@@ -1,4 +1,4 @@
-import { ProjectConfigDefaults } from '../ProjectConfig/ProjectConfig';
+import { ProjectConfigDefaults } from './ProjectConfig';
 
 export enum ParamType {
     Undefined = 'undefined',

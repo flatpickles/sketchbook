@@ -1,6 +1,6 @@
 import { describe, it, expect, afterEach } from 'vitest';
 import { createPersistedStore } from '$lib/base/Util/PersistedStore';
-import { SortOrder } from '$lib/base/FileLoading/ProjectPresentation';
+import { SortOrder } from '$lib/base/ProjectLoading/ProjectPresentation';
 import { PanelState } from '$lib/base/Util/PanelState';
 import { get } from 'svelte/store';
 

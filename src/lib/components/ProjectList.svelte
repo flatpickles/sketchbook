@@ -1,8 +1,8 @@
 <script lang="ts">
-    import ProjectPresentation from '$lib/base/FileLoading/ProjectPresentation';
-    import type { ProjectConfig } from '$lib/base/ProjectConfig/ProjectConfig';
+    import ProjectPresentation from '$lib/base/ProjectLoading/ProjectPresentation';
+    import type { ProjectConfig } from '$lib/base/ConfigModels/ProjectConfig';
     import { settingsStore } from '$lib/base/Util/AppState';
-    import { SortOrder } from '$lib/base/FileLoading/ProjectPresentation';
+    import { SortOrder } from '$lib/base/ProjectLoading/ProjectPresentation';
 
     export let projects: Record<string, ProjectConfig>;
     export let selectedProjectKey: string;

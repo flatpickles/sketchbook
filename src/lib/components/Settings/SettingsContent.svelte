@@ -8,8 +8,8 @@
         type ParamValueType,
         type AnyParamValueType,
         ParamGuards
-    } from '$lib/base/ParamConfig/ParamTypes';
-    import type { ParamConfig } from '$lib/base/ParamConfig/ParamConfig';
+    } from '$lib/base/ConfigModels/ParamTypes';
+    import type { ParamConfig } from '$lib/base/ConfigModels/ParamConfig';
     import { settingsParamConfigs } from './SettingsParamConfigs';
     import FunctionInput from '../ParamItem/FunctionInput.svelte';
     import { content } from '../../../config/content';

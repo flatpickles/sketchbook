@@ -1,6 +1,6 @@
 import Cookies from 'js-cookie';
 import { writable } from 'svelte/store';
-import type { AnyParamValueType } from '../ParamConfig/ParamTypes';
+import type { AnyParamValueType } from '../ConfigModels/ParamTypes';
 
 /**
  * Custom Svelte store that enables persistence of only specified entries in either localStorage

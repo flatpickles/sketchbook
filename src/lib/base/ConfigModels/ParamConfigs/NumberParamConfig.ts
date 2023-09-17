@@ -1,4 +1,4 @@
-import { type ParamConfig, ParamConfigDefaults, ParamType } from './ParamConfig';
+import { type ParamConfig, ParamConfigDefaults, ParamType } from '../ParamConfig';
 
 export enum NumberParamStyle {
     Combo = 'combo',

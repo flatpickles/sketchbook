@@ -1,9 +1,9 @@
-import type { ParamConfig } from '../ParamConfig/ParamConfig';
-import { ParamConfigFactory } from '../ParamConfig/ParamConfigFactory';
+import type { ParamConfig } from '../ConfigModels/ParamConfig';
+import { ParamConfigFactory } from './ParamConfigFactory';
 import type Project from '../Project/Project';
-import { type ProjectConfig, ProjectConfigDefaults } from './ProjectConfig';
+import { type ProjectConfig, ProjectConfigDefaults } from '../ConfigModels/ProjectConfig';
 
-// Keys that should be ignored when creating a ProjectConfig object from a Project object
+// Property keys that should be ignored when creating a ProjectConfig object from a Project object
 const paramKeysToIgnore = ['canvas', 'container', 'canvasType', 'p5'];
 
 export class ProjectConfigFactory {

@@ -1,10 +1,10 @@
-import type { FileParamConfig } from '$lib/base/ParamConfig/FileParamConfig';
+import type { FileParamConfig } from '$lib/base/ConfigModels/ParamConfigs/FileParamConfig';
 import {
     type NumberParamConfig,
     NumberParamConfigDefaults
-} from '$lib/base/ParamConfig/NumberParamConfig';
-import { ParamType } from '$lib/base/ParamConfig/ParamConfig';
-import { ParamConfigFactory } from '$lib/base/ParamConfig/ParamConfigFactory';
+} from '$lib/base/ConfigModels/ParamConfigs/NumberParamConfig';
+import { ParamType } from '$lib/base/ConfigModels/ParamConfig';
+import { ParamConfigFactory } from '$lib/base/ProjectLoading/ParamConfigFactory';
 import { describe, it, expect } from 'vitest';
 
 describe('ParamConfigFactory', () => {

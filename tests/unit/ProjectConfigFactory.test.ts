@@ -1,9 +1,9 @@
 import {
     type NumberParamConfig,
     NumberParamConfigDefaults
-} from '$lib/base/ParamConfig/NumberParamConfig';
-import { ProjectConfigDefaults } from '$lib/base/ProjectConfig/ProjectConfig';
-import { ProjectConfigFactory } from '$lib/base/ProjectConfig/ProjectConfigFactory';
+} from '$lib/base/ConfigModels/ParamConfigs/NumberParamConfig';
+import { ProjectConfigDefaults } from '$lib/base/ConfigModels/ProjectConfig';
+import { ProjectConfigFactory } from '$lib/base/ProjectLoading/ProjectConfigFactory';
 import { describe, it, expect } from 'vitest';
 import ConfigAndSupport from './TestFiles/ConfigAndSupport/ConfigAndSupport';
 import NoConfig from './TestFiles/NoConfig/NoConfig';

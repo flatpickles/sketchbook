@@ -1,11 +1,11 @@
-import { FileReaderMode, type FileParamConfig } from '../ParamConfig/FileParamConfig';
+import { FileReaderMode, type FileParamConfig } from '../ConfigModels/ParamConfigs/FileParamConfig';
 import type {
     UserFileLoaderReturnType,
     FileResultType,
     FileMetadataType,
     SingleFileResultType,
     MultipleFileResultType
-} from '../ParamConfig/ParamTypes';
+} from '../ConfigModels/ParamTypes';
 
 export default class FileParamLoader {
     /**

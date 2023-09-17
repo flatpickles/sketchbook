@@ -1,18 +1,18 @@
 <script lang="ts">
     import { createEventDispatcher } from 'svelte';
-    import type { ParamConfig } from '$lib/base/ParamConfig/ParamConfig';
-    import { ParamGuards, type ParamValueType } from '$lib/base/ParamConfig/ParamTypes';
+    import type { ParamConfig } from '$lib/base/ConfigModels/ParamConfig';
+    import { ParamGuards, type ParamValueType } from '$lib/base/ConfigModels/ParamTypes';
     import BooleanInput from './BooleanInput.svelte';
     import FunctionInput from './FunctionInput.svelte';
     import NumberInput from './NumberInput.svelte';
     import StringInput from './StringInput.svelte';
 
-    import { NumberParamStyle } from '$lib/base/ParamConfig/NumberParamConfig';
+    import { NumberParamStyle } from '$lib/base/ConfigModels/NumberParamConfig';
     import {
         NumericArrayParamStyle,
         isNumericArray
-    } from '$lib/base/ParamConfig/NumericArrayParamConfig';
-    import { StringParamStyle } from '$lib/base/ParamConfig/StringParamConfig';
+    } from '$lib/base/ConfigModels/NumericArrayParamConfig';
+    import { StringParamStyle } from '$lib/base/ConfigModels/StringParamConfig';
     import ColorInput from './ColorInput.svelte';
     import OptionInput from './OptionInput.svelte';
     import FileInput from './FileInput.svelte';
