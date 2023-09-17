@@ -29,7 +29,7 @@ const panelMouseTriggerWidth = 50;
 const hidePanelButtonsTimeout: number | undefined = 2000;
 
 // Project and group label sorting
-const projectSortOrder = SortOrder.Chronological;
+const projectSortOrder = SortOrder.Alphabetical;
 const groupSortOrder = SortOrder.Alphabetical;
 
 // Anything listed here will appear in the user settings panel with the given label. Values changed
