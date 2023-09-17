@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { PageData } from './$types';
-    import MainView from '$lib/components/MainView.svelte';
+    import MainView from '$lib/components/MainView/MainView.svelte';
 
     export let data: PageData;
 </script>

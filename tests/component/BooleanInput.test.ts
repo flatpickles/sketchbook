@@ -1,6 +1,6 @@
 import { render, fireEvent, screen, cleanup } from '@testing-library/svelte';
 import { vi, describe, it, expect, afterEach } from 'vitest';
-import BooleanInput from '$lib/components/ParamItem/BooleanInput.svelte';
+import BooleanInput from '$lib/components/Inputs/BooleanInput.svelte';
 
 describe('BooleanInput', () => {
     afterEach(cleanup);

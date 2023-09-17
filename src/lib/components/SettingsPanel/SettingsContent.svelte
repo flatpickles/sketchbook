@@ -1,5 +1,5 @@
 <script lang="ts">
-    import ParamItem from '../ParamItem/ParamItem.svelte';
+    import ParamItem from '../ProjectDetailPanel/ParamItem.svelte';
     import { get } from 'svelte/store';
     import { settingsStore } from '$lib/base/Util/AppState';
     import { userSettingsLabels } from '../../../config/config';
@@ -11,7 +11,7 @@
     } from '$lib/base/ConfigModels/ParamTypes';
     import type { ParamConfig } from '$lib/base/ConfigModels/ParamConfig';
     import { settingsParamConfigs } from './SettingsParamConfigs';
-    import FunctionInput from '../ParamItem/FunctionInput.svelte';
+    import FunctionInput from '../Inputs/FunctionInput.svelte';
     import { content } from '../../../config/content';
 
     // Settings value configs are backed by values in the AppStateStore object

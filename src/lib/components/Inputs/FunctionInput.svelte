@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { FunctionParamConfigDefaults } from '$lib/base/ConfigModels/FunctionParamConfig';
+    import { FunctionParamConfigDefaults } from '$lib/base/ConfigModels/ParamConfigs/FunctionParamConfig';
 
     export let buttonText: string = FunctionParamConfigDefaults.buttonText;
     export let disabled = false;

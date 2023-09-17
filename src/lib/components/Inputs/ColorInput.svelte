@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { isNumericArray } from '$lib/base/ConfigModels/NumericArrayParamConfig';
+    import { isNumericArray } from '$lib/base/ConfigModels/ParamConfigs/NumericArrayParamConfig';
     import ColorConversions from '$lib/base/Util/ColorConversions';
     import { createEventDispatcher } from 'svelte';
 

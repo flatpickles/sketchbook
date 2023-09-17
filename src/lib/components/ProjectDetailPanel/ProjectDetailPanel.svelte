@@ -1,10 +1,10 @@
 <script lang="ts">
     import type { ProjectTuple } from '$lib/base/ProjectLoading/ProjectLoader';
     import { settingsStore } from '$lib/base/Util/AppState';
-    import Panel from './Panel.svelte';
-    import PanelHeader from './PanelHeader.svelte';
+    import Panel from '../Panels/Panel.svelte';
+    import PanelHeader from '../Panels/PanelHeader.svelte';
     import PresetControl from './PresetControl.svelte';
-    import ProjectParams from './ProjectParams.svelte';
+    import ProjectParams from './ParamList.svelte';
 
     export let projectTuple: ProjectTuple;
     export let headerButtonIcon: string | undefined;

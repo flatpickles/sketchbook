@@ -1,7 +1,7 @@
 import { render, fireEvent, screen, cleanup } from '@testing-library/svelte';
 import { vi, describe, it, expect, afterEach, beforeAll } from 'vitest';
 import { ProjectConfigFactory } from '$lib/base/ProjectLoading/ProjectConfigFactory';
-import ProjectListPanel from '$lib/components/ProjectListPanel.svelte';
+import ProjectListPanel from '$lib/components/ProjectListPanel/ProjectListPanel.svelte';
 
 import { content } from '../../src/config/content';
 import { config } from '../../src/config/config';
