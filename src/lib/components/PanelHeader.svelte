@@ -60,16 +60,16 @@
 
     h1 {
         @include title-text;
-        padding: $panel-content-inset $panel-content-inset 0;
+        margin: $panel-content-inset $panel-content-inset 0;
     }
 
     h2 {
         @include subtitle-text;
-        padding: calc($panel-header-section-spacing / 4) $panel-content-inset 0 $panel-content-inset;
+        margin: calc($panel-header-section-spacing / 4) $panel-content-inset 0 $panel-content-inset;
     }
 
     p {
         @include description-text;
-        padding: 0 $panel-content-inset;
+        margin: 0 $panel-content-inset;
     }
 </style>

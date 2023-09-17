@@ -106,9 +106,8 @@
     }
 
     .reset-wrapper {
-        width: 100%;
         display: flex;
-        padding: $panel-edge-inset;
         justify-content: center;
+        margin: $panel-edge-inset;
     }
 </style>

@@ -57,8 +57,8 @@
         @include footer-text;
         text-align: center;
         flex-grow: 1;
-        padding: calc($panel-content-inset / 2) calc($panel-section-spacing / 2)
-            $panel-content-inset calc($panel-section-spacing / 2);
+        margin: calc($panel-content-inset / 2) calc($panel-section-spacing / 2) $panel-content-inset
+            calc($panel-section-spacing / 2);
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
