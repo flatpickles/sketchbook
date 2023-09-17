@@ -4,7 +4,7 @@ import { ProjectConfigFactory } from '$lib/base/ProjectLoading/ProjectConfigFact
 import ProjectListPanel from '$lib/components/ProjectListPanel/ProjectListPanel.svelte';
 
 import { content } from '../../src/config/content';
-import { config } from '../../src/config/config';
+import { config } from '../../src/config/settings';
 import { SortOrder } from '$lib/base/ProjectLoading/ProjectPresentation';
 
 describe('ProjectListPanel rendering', () => {

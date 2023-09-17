@@ -1,4 +1,4 @@
-import { config } from '../config/config';
+import { config } from '../config/settings';
 import ProjectPresentation, { SortOrder } from '../lib/base/ProjectLoading/ProjectPresentation';
 import type { PageServerLoad } from './$types';
 import { redirect } from '@sveltejs/kit';

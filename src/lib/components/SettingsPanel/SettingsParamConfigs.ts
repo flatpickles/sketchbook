@@ -12,7 +12,7 @@ import {
     StringParamConfigDefaults,
     type StringParamConfig
 } from '$lib/base/ConfigModels/ParamConfigs/StringParamConfig';
-import { userSettingsLabels } from '../../../config/config';
+import { userSettingsLabels } from '../../../config/settings';
 
 // ParamConfigs for each possible entry in the Settings panel
 // todo: add more settings
@@ -43,7 +43,7 @@ export const settingsParamConfigs: ParamConfig[] = [
         key: 'overlayPanels'
     } as BooleanParamConfig
 ].map((paramConfig) => {
-    // Add the label to each ParamConfig from config.ts
+    // Add the label to each ParamConfig from config/settings.ts
     paramConfig.name = userSettingsLabels[paramConfig.key];
     return paramConfig;
 });

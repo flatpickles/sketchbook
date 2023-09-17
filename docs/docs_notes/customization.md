@@ -12,7 +12,7 @@ todo: discuss text (and the like) that is presented in the app, and can be custo
 
 todo: discuss visual appearance
 
-## config.ts
+## settings.ts
 
 todo: discuss behavior defaults
 
