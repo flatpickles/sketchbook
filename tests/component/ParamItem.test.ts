@@ -2,7 +2,7 @@
 
 import { render, screen, cleanup, fireEvent, waitFor } from '@testing-library/svelte';
 import { describe, it, expect, afterEach, vi } from 'vitest';
-import ParamItem from '$lib/components/ParamItem/ParamItem.svelte';
+import ParamItem from '$lib/components/ProjectDetailPanel/ParamItem.svelte';
 import { ParamType } from '$lib/base/ConfigModels/ParamConfig';
 import {
     NumberParamStyle,

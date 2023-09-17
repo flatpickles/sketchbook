@@ -2,12 +2,12 @@
     import { onMount } from 'svelte';
     import { fade } from 'svelte/transition';
 
-    import ProjectViewer from '$lib/components/ProjectViewer.svelte';
-    import ProjectDetailPanel from '$lib/components/ProjectDetailPanel.svelte';
-    import ProjectListPanel from '$lib/components/ProjectListPanel.svelte';
-    import SettingsPanel from './Settings/SettingsPanel.svelte';
+    import ProjectViewer from '$lib/components/MainView/ProjectViewer.svelte';
+    import ProjectDetailPanel from '$lib/components/ProjectDetailPanel/ProjectDetailPanel.svelte';
+    import ProjectListPanel from '$lib/components/ProjectListPanel/ProjectListPanel.svelte';
+    import SettingsPanel from '../SettingsPanel/SettingsPanel.svelte';
 
-    import { content } from '../../config/content';
+    import { content } from '../../../config/content';
     import { settingsStore, stateStore } from '$lib/base/Util/AppState';
     import type { ProjectTuple } from '$lib/base/ProjectLoading/ProjectLoader';
     import type { ProjectConfig } from '$lib/base/ConfigModels/ProjectConfig';

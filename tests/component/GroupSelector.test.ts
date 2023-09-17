@@ -1,7 +1,7 @@
 import { render, fireEvent, screen, cleanup } from '@testing-library/svelte';
 import { describe, it, expect, afterEach } from 'vitest';
 import { type ProjectConfig, ProjectConfigDefaults } from '$lib/base/ConfigModels/ProjectConfig';
-import GroupSelector from '$lib/components/GroupSelector.svelte';
+import GroupSelector from '$lib/components/ProjectListPanel/GroupSelector.svelte';
 import { SortOrder } from '$lib/base/ProjectLoading/ProjectPresentation';
 
 function projectWithGroups(groups: string[], date: number): ProjectConfig {

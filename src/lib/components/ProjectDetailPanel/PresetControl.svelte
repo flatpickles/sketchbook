@@ -2,6 +2,7 @@
     import type { ProjectTuple } from '$lib/base/ProjectLoading/ProjectLoader';
 
     export let projectTuple: ProjectTuple;
+    console.log(projectTuple);
 </script>
 
 <div class="presets-wrapper">

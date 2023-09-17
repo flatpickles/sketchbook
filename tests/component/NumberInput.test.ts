@@ -1,6 +1,6 @@
 import { render, fireEvent, screen, cleanup, waitFor } from '@testing-library/svelte';
 import { vi, describe, it, expect, afterEach } from 'vitest';
-import NumberInput from '$lib/components/ParamItem/NumberInput.svelte';
+import NumberInput from '$lib/components/Inputs/NumberInput.svelte';
 
 describe('NumberInput', () => {
     afterEach(cleanup);

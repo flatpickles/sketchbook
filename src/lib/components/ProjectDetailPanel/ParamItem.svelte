@@ -2,20 +2,20 @@
     import { createEventDispatcher } from 'svelte';
     import type { ParamConfig } from '$lib/base/ConfigModels/ParamConfig';
     import { ParamGuards, type ParamValueType } from '$lib/base/ConfigModels/ParamTypes';
-    import BooleanInput from './BooleanInput.svelte';
-    import FunctionInput from './FunctionInput.svelte';
-    import NumberInput from './NumberInput.svelte';
-    import StringInput from './StringInput.svelte';
+    import BooleanInput from '../Inputs/BooleanInput.svelte';
+    import FunctionInput from '../Inputs/FunctionInput.svelte';
+    import NumberInput from '../Inputs/NumberInput.svelte';
+    import StringInput from '../Inputs/StringInput.svelte';
 
-    import { NumberParamStyle } from '$lib/base/ConfigModels/NumberParamConfig';
+    import { NumberParamStyle } from '$lib/base/ConfigModels/ParamConfigs/NumberParamConfig';
     import {
         NumericArrayParamStyle,
         isNumericArray
-    } from '$lib/base/ConfigModels/NumericArrayParamConfig';
-    import { StringParamStyle } from '$lib/base/ConfigModels/StringParamConfig';
-    import ColorInput from './ColorInput.svelte';
-    import OptionInput from './OptionInput.svelte';
-    import FileInput from './FileInput.svelte';
+    } from '$lib/base/ConfigModels/ParamConfigs/NumericArrayParamConfig';
+    import { StringParamStyle } from '$lib/base/ConfigModels/ParamConfigs/StringParamConfig';
+    import ColorInput from '../Inputs/ColorInput.svelte';
+    import OptionInput from '../Inputs/OptionInput.svelte';
+    import FileInput from '../Inputs/FileInput.svelte';
 
     export let config: ParamConfig;
     export let value: ParamValueType<typeof config>;

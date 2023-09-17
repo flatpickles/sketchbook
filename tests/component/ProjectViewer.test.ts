@@ -1,4 +1,4 @@
-import ProjectViewer from '$lib/components/ProjectViewer.svelte';
+import ProjectViewer from '$lib/components/MainView/ProjectViewer.svelte';
 import Project, { CanvasType } from '$lib/base/Project/Project';
 
 import { render, cleanup, waitFor } from '@testing-library/svelte';

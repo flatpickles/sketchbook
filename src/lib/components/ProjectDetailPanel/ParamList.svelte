@@ -6,7 +6,7 @@
     import { ParamGuards, type ParamValueType } from '$lib/base/ConfigModels/ParamTypes';
     import UserFileLoader from '$lib/base/Util/FileParamLoader';
 
-    import ParamItem from './ParamItem/ParamItem.svelte';
+    import ParamItem from './ParamItem.svelte';
     import ParamValueProvider from '$lib/base/ProjectLoading/ParamValueProvider';
 
     export let projectTuple: ProjectTuple;

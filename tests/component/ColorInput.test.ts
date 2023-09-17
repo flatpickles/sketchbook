@@ -1,6 +1,6 @@
 import { render, fireEvent, screen, cleanup, waitFor } from '@testing-library/svelte';
 import { vi, describe, it, expect, afterEach } from 'vitest';
-import ColorInput from '$lib/components/ParamItem/ColorInput.svelte';
+import ColorInput from '$lib/components/Inputs/ColorInput.svelte';
 
 describe('ColorInput', () => {
     afterEach(cleanup);

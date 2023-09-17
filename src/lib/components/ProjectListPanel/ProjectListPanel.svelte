@@ -1,14 +1,14 @@
 <script lang="ts">
     import { createEventDispatcher } from 'svelte';
 
-    import { content } from '../../config/content';
+    import { content } from '../../../config/content';
     import { settingsStore } from '$lib/base/Util/AppState';
 
     import type { ProjectConfig } from '$lib/base/ConfigModels/ProjectConfig';
     import GroupSelector from './GroupSelector.svelte';
-    import Panel from './Panel.svelte';
-    import PanelFooter from './PanelFooter.svelte';
-    import PanelHeader from './PanelHeader.svelte';
+    import Panel from '../Panels/Panel.svelte';
+    import PanelFooter from '../Panels/PanelFooter.svelte';
+    import PanelHeader from '../Panels/PanelHeader.svelte';
     import ProjectList from './ProjectList.svelte';
 
     export let projects: Record<string, ProjectConfig>;
