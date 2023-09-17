@@ -73,7 +73,8 @@
         display: flex;
         flex-direction: row;
         gap: $group-selector-item-spacing;
-        padding: calc($panel-content-inset / 2) $panel-content-inset;
+        padding: 0 $panel-content-inset;
+        margin: calc($panel-content-inset / 2) 0;
 
         // Fade out edges
         mask-image: linear-gradient(
