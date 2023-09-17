@@ -3,14 +3,14 @@ import { writable } from 'svelte/store';
 import type { AnyParamValueType } from '../ParamConfig/ParamTypes';
 
 /**
- * Custom Svelte store that enables persistence of only specified entries in local storage.
- * These values will be reset to their initial values when these initial values change, so default
- * value updates will be reflected on next load.
+ * Custom Svelte store that enables persistence of only specified entries in either localStorage
+ * or cookies. These values will be reset to their initial values when these initial values change,
+ * so default value updates will be reflected on next load during development.
  *
- * @param storeKey The key to use for this store in local storage
+ * @param storeKey The key to use for this store (will be prefixed to all keys)
  * @param initialValues The initial values for this store
  * @param persistKeys The keys to persist (if not specified, all keys will be persisted)
- * @param useCookies Whether to use cookies instead of local storage
+ * @param useCookies Whether to use cookies instead of local storage (e.g. if needed in requests)
  */
 export function createPersistedStore<T>(
     storeKey: string,
@@ -51,7 +51,7 @@ export function createPersistedStore<T>(
                 continue;
             }
 
-            // Otherwise, use the value in local storage
+            // Otherwise, use the stored value
             const value = getItem(key, useCookies) || initialValue;
             initialState[key] = JSON.parse(value);
         }

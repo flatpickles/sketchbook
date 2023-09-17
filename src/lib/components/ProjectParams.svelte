@@ -69,11 +69,13 @@
 
     // Get the properly typed initial value for a given param
     function initialValueForParam<T extends ParamConfig>(paramConfig: T): ParamValueType<T> {
-        return ParamValueProvider.getValue(
-            paramConfig,
-            projectTuple.config.title,
-            projectTuple.project
-        );
+        const objectValue = Object.getOwnPropertyDescriptor(
+            projectTuple.project,
+            paramConfig.key
+        )?.value;
+
+        // If it's an array, we need to copy it so that we don't mutate the original
+        return Array.isArray(objectValue) ? [...objectValue] : objectValue;
     }
 </script>
 

@@ -4,33 +4,56 @@ import type { ParamValueType } from '../ParamConfig/ParamTypes';
 import type Project from '../Project/Project';
 
 export default class ParamValueProvider {
+    /**
+     * Get the value for a given param config, using the project object as a source of truth. To
+     * ease the development experience, this will track changed values in the original object state
+     * and use those as the new value if they change, i.e. changed project file values will override
+     * stored values (when initialLoad is true). This is similar to the behavior in PersistedStore.
+     */
     public static getValue<T extends ParamConfig>(
         paramConfig: T,
         projectKey: string,
-        project: Project
+        project: Project,
+        initialLoad = false
     ): ParamValueType<T> {
-        let returnValue: ParamValueType<T>;
+        // Get the current value from the project object
+        const objectValue = Object.getOwnPropertyDescriptor(project, paramConfig.key)?.value;
 
-        // Use local storage value, or project property value as a backup
+        // If this is a function, just use the object value
+        if (typeof objectValue === 'function') {
+            return objectValue;
+        }
+
+        // Get stored values, and track the previous object value
+        const storedValueKey = ParamValueProvider.#localStorageKey(projectKey, paramConfig.key);
+        const previousValueKey = `lastInitialValue_${storedValueKey}`;
         const storedValue =
             browser &&
             localStorage.getItem(ParamValueProvider.#localStorageKey(projectKey, paramConfig.key));
-        if (storedValue) {
-            returnValue = JSON.parse(storedValue);
+        const previousObjectValue = browser && localStorage.getItem(previousValueKey);
+
+        // If object value has changed (during initialLoad), use this as the new value, and return.
+        // If not, and there's a stored value, use the stored value. If there's no stored value,
+        // use the object value.
+        if (
+            initialLoad &&
+            previousObjectValue &&
+            JSON.stringify(objectValue) !== previousObjectValue
+        ) {
+            ParamValueProvider.setValue(paramConfig, projectKey, objectValue);
+            localStorage.setItem(previousValueKey, JSON.stringify(objectValue));
+            return objectValue;
+        } else if (storedValue) {
+            return JSON.parse(storedValue);
         } else {
-            const descriptor = Object.getOwnPropertyDescriptor(project, paramConfig.key);
-            returnValue = descriptor?.value;
+            return objectValue;
         }
-
-        // Validate that the value exists
-        if (returnValue === undefined) {
-            throw new Error(`ParamValueProvider: value for ${paramConfig.key} is undefined`);
-        }
-
-        // If it's an array, we need to copy it so that we don't mutate the original
-        return (Array.isArray(returnValue) ? [...returnValue] : returnValue) as ParamValueType<T>;
     }
 
+    /**
+     * Set the value for a given param config. This does not set the value on the project object;
+     * it only stores the value in local storage.
+     */
     public static setValue<T extends ParamConfig>(
         paramConfig: T,
         projectKey: string,

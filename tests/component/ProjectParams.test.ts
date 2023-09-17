@@ -119,7 +119,7 @@ function renderParams(
 
     const updateHandler = vi.fn();
     component.$on('paramupdated', updateHandler);
-    expect(ParamValueProvider.getValue).toHaveBeenCalledTimes(6);
+    expect(ParamValueProvider.getValue).toHaveBeenCalledTimes(0);
     expect(ParamValueProvider.setValue).toHaveBeenCalledTimes(0);
     expect(updateHandler).toHaveBeenCalledTimes(0);
     return { project, updateHandler };

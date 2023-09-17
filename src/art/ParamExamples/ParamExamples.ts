@@ -53,7 +53,7 @@ export default class AllParams extends Project {
 
     // Numeric arrays
     numericArrayDefault = [0.1, 0.9];
-    numericArraySliderOnly = [4, 1, 3];
+    numericArraySliderOnly = [1, 1, 3];
     numericArrayFieldOnly = [0.3, 0.8];
     numericArrayCompactSlider = [0.1, 0.9, 0.8, 0.4];
     numericArrayCompactField = [0.2, 0.7];
