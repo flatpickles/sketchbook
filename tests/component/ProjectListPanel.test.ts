@@ -1,11 +1,11 @@
 import { render, fireEvent, screen, cleanup } from '@testing-library/svelte';
 import { vi, describe, it, expect, afterEach, beforeAll } from 'vitest';
-import { ProjectConfigFactory } from '$lib/base/ProjectConfig/ProjectConfigFactory';
+import { ProjectConfigFactory } from '$lib/base/ProjectLoading/ProjectConfigFactory';
 import ProjectListPanel from '$lib/components/ProjectListPanel.svelte';
 
 import { content } from '../../src/config/content';
 import { config } from '../../src/config/config';
-import { SortOrder } from '$lib/base/FileLoading/ProjectPresentation';
+import { SortOrder } from '$lib/base/ProjectLoading/ProjectPresentation';
 
 describe('ProjectListPanel rendering', () => {
     afterEach(cleanup);

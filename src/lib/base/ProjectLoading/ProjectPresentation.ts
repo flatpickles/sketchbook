@@ -1,4 +1,4 @@
-import type { ProjectConfig } from '../ProjectConfig/ProjectConfig';
+import type { ProjectConfig } from '../ConfigModels/ProjectConfig';
 
 export enum SortOrder {
     Alphabetical = 'alphabetical',

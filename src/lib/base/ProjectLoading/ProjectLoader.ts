@@ -2,12 +2,12 @@ import {
     importProjectClassFiles,
     importProjectConfigFiles,
     importProjectTextFiles
-} from './FileProviders';
+} from './ImportProviders';
 import Project from '../Project/Project';
-import { type ProjectConfig, ProjectConfigDefaults } from '../ProjectConfig/ProjectConfig';
-import type { ParamConfig } from '../ParamConfig/ParamConfig';
-import { ProjectConfigFactory } from '../ProjectConfig/ProjectConfigFactory';
-import ParamValueProvider from '../Util/ParamValueProvider';
+import { type ProjectConfig, ProjectConfigDefaults } from '../ConfigModels/ProjectConfig';
+import type { ParamConfig } from '../ConfigModels/ParamConfig';
+import { ProjectConfigFactory } from './ProjectConfigFactory';
+import ParamValueProvider from './ParamValueProvider';
 import { browser } from '$app/environment';
 import FragShaderProject from '../Project/FragShaderProject';
 
@@ -71,7 +71,7 @@ export default class ProjectLoader {
     }
 
     /**
-     * Fully load the project corresponding to a particular project key.
+     * Fully load the project (Project subclass instance) corresponding to a particular project key.
      * @param key - the project key.
      * @returns a ProjectTuple object containing the project, its properties, and its params.
      */

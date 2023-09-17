@@ -3,15 +3,21 @@
 import { render, screen, cleanup, fireEvent, waitFor } from '@testing-library/svelte';
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import ParamItem from '$lib/components/ParamItem/ParamItem.svelte';
-import { ParamType } from '$lib/base/ParamConfig/ParamConfig';
-import { NumberParamStyle, type NumberParamConfig } from '$lib/base/ParamConfig/NumberParamConfig';
-import type { BooleanParamConfig } from '$lib/base/ParamConfig/BooleanParamConfig';
-import type { FunctionParamConfig } from '$lib/base/ParamConfig/FunctionParamConfig';
-import { StringParamStyle, type StringParamConfig } from '$lib/base/ParamConfig/StringParamConfig';
+import { ParamType } from '$lib/base/ConfigModels/ParamConfig';
+import {
+    NumberParamStyle,
+    type NumberParamConfig
+} from '$lib/base/ConfigModels/ParamConfigs/NumberParamConfig';
+import type { BooleanParamConfig } from '$lib/base/ConfigModels/ParamConfigs/BooleanParamConfig';
+import type { FunctionParamConfig } from '$lib/base/ConfigModels/ParamConfigs/FunctionParamConfig';
+import {
+    StringParamStyle,
+    type StringParamConfig
+} from '$lib/base/ConfigModels/ParamConfigs/StringParamConfig';
 import {
     NumericArrayParamStyle,
     type NumericArrayParamConfig
-} from '$lib/base/ParamConfig/NumericArrayParamConfig';
+} from '$lib/base/ConfigModels/ParamConfigs/NumericArrayParamConfig';
 
 describe('ParamItem', () => {
     afterEach(cleanup);

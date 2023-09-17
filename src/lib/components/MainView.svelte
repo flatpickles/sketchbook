@@ -9,8 +9,8 @@
 
     import { content } from '../../config/content';
     import { settingsStore, stateStore } from '$lib/base/Util/AppState';
-    import type { ProjectTuple } from '$lib/base/FileLoading/ProjectLoader';
-    import type { ProjectConfig } from '$lib/base/ProjectConfig/ProjectConfig';
+    import type { ProjectTuple } from '$lib/base/ProjectLoading/ProjectLoader';
+    import type { ProjectConfig } from '$lib/base/ConfigModels/ProjectConfig';
     import {
         PanelState,
         toggledPanelState,

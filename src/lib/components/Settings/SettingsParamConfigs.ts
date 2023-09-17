@@ -1,17 +1,17 @@
-import type { ParamConfig } from '$lib/base/ParamConfig/ParamConfig';
+import type { ParamConfig } from '$lib/base/ConfigModels/ParamConfig';
 import {
     BooleanParamConfigDefaults,
     type BooleanParamConfig
-} from '$lib/base/ParamConfig/BooleanParamConfig';
+} from '$lib/base/ConfigModels/ParamConfigs/BooleanParamConfig';
 import {
     NumericArrayParamConfigDefaults,
     type NumericArrayParamConfig,
     NumericArrayParamStyle
-} from '$lib/base/ParamConfig/NumericArrayParamConfig';
+} from '$lib/base/ConfigModels/ParamConfigs/NumericArrayParamConfig';
 import {
     StringParamConfigDefaults,
     type StringParamConfig
-} from '$lib/base/ParamConfig/StringParamConfig';
+} from '$lib/base/ConfigModels/ParamConfigs/StringParamConfig';
 import { userSettingsLabels } from '../../../config/config';
 
 // ParamConfigs for each possible entry in the Settings panel

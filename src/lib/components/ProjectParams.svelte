@@ -1,13 +1,13 @@
 <script lang="ts">
     import { createEventDispatcher } from 'svelte';
 
-    import type { ProjectTuple } from '$lib/base/FileLoading/ProjectLoader';
-    import { type ParamConfig, getParamSections } from '$lib/base/ParamConfig/ParamConfig';
-    import { ParamGuards, type ParamValueType } from '$lib/base/ParamConfig/ParamTypes';
+    import type { ProjectTuple } from '$lib/base/ProjectLoading/ProjectLoader';
+    import { type ParamConfig, getParamSections } from '$lib/base/ConfigModels/ParamConfig';
+    import { ParamGuards, type ParamValueType } from '$lib/base/ConfigModels/ParamTypes';
     import UserFileLoader from '$lib/base/Util/FileParamLoader';
 
     import ParamItem from './ParamItem/ParamItem.svelte';
-    import ParamValueProvider from '$lib/base/Util/ParamValueProvider';
+    import ParamValueProvider from '$lib/base/ProjectLoading/ParamValueProvider';
 
     export let projectTuple: ProjectTuple;
     $: [noSectionParams, paramSections] = getParamSections(projectTuple.params);

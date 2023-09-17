@@ -1,22 +1,34 @@
-import type { ParamConfig } from './ParamConfig';
-import { type NumberParamConfig, NumberParamConfigDefaults } from './NumberParamConfig';
-import { type BooleanParamConfig, BooleanParamConfigDefaults } from './BooleanParamConfig';
-import { FunctionParamConfigDefaults, type FunctionParamConfig } from './FunctionParamConfig';
-import { StringParamConfigDefaults, type StringParamConfig } from './StringParamConfig';
+import type { ParamConfig } from '../ConfigModels/ParamConfig';
+import {
+    type NumberParamConfig,
+    NumberParamConfigDefaults
+} from '../ConfigModels/ParamConfigs/NumberParamConfig';
+import {
+    type BooleanParamConfig,
+    BooleanParamConfigDefaults
+} from '../ConfigModels/ParamConfigs/BooleanParamConfig';
+import {
+    FunctionParamConfigDefaults,
+    type FunctionParamConfig
+} from '../ConfigModels/ParamConfigs/FunctionParamConfig';
+import {
+    StringParamConfigDefaults,
+    type StringParamConfig
+} from '../ConfigModels/ParamConfigs/StringParamConfig';
 import {
     NumericArrayParamConfigDefaults,
     type NumericArrayParamConfig,
     isNumericArrayParamConfig,
     isNumericArray,
     NumericArrayParamStyle
-} from './NumericArrayParamConfig';
-import { ProjectConfigDefaults } from '../ProjectConfig/ProjectConfig';
+} from '../ConfigModels/ParamConfigs/NumericArrayParamConfig';
+import { ProjectConfigDefaults } from '../ConfigModels/ProjectConfig';
 import {
     FileParamConfigDefaults,
     type FileParamConfig,
     isFileParamConfig,
     FileReaderMode
-} from './FileParamConfig';
+} from '../ConfigModels/ParamConfigs/FileParamConfig';
 
 export class ParamConfigFactory {
     /**

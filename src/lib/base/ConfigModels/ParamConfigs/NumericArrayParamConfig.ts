@@ -1,4 +1,4 @@
-import { type ParamConfig, ParamConfigDefaults, ParamType } from './ParamConfig';
+import { type ParamConfig, ParamConfigDefaults, ParamType } from '../ParamConfig';
 import { NumberParamConfigDefaults } from './NumberParamConfig';
 
 export enum NumericArrayParamStyle {

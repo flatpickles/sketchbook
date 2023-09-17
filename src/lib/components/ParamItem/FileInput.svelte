@@ -1,6 +1,6 @@
 <script lang="ts">
     import { createEventDispatcher } from 'svelte';
-    import { FileParamConfigDefaults } from '$lib/base/ParamConfig/FileParamConfig';
+    import { FileParamConfigDefaults } from '$lib/base/ConfigModels/FileParamConfig';
 
     export let name: string;
     export let key: string;

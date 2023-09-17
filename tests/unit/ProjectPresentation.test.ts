@@ -1,5 +1,5 @@
-import ProjectPresentation, { SortOrder } from '$lib/base/FileLoading/ProjectPresentation';
-import { ProjectConfigDefaults, type ProjectConfig } from '$lib/base/ProjectConfig/ProjectConfig';
+import ProjectPresentation, { SortOrder } from '$lib/base/ProjectLoading/ProjectPresentation';
+import { ProjectConfigDefaults, type ProjectConfig } from '$lib/base/ConfigModels/ProjectConfig';
 import { describe, expect, it } from 'vitest';
 
 const projects: Record<string, ProjectConfig> = {

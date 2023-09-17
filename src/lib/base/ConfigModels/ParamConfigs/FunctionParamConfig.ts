@@ -1,4 +1,4 @@
-import { type ParamConfig, ParamType, ParamConfigDefaults } from './ParamConfig';
+import { type ParamConfig, ParamType, ParamConfigDefaults } from '../ParamConfig';
 
 export interface FunctionParamConfig extends ParamConfig {
     buttonText: string;

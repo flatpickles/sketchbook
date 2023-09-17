@@ -1,7 +1,7 @@
 import { render, fireEvent, screen, cleanup, waitFor, within } from '@testing-library/svelte';
 import { vi, describe, it, expect, afterEach } from 'vitest';
 import MainView from '$lib/components/MainView.svelte';
-import { ProjectConfigDefaults } from '$lib/base/ProjectConfig/ProjectConfig';
+import { ProjectConfigDefaults } from '$lib/base/ConfigModels/ProjectConfig';
 import Project from '$lib/base/Project/Project';
 import { settingsStore, stateStore } from '$lib/base/Util/AppState';
 import { get } from 'svelte/store';
