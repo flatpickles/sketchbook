@@ -252,8 +252,8 @@ describe('loading specific projects, in browser mode (re: stored values)', async
     it('loads a project with no config file', async () => {
         // Mock stored values
         const mockParamValueFn = vi.fn((key: string) => {
-            if (key === 'NoConfig - testNumber') return '32';
-            if (key === 'NoConfig - testNumericArray') return '[4, 5, 6]';
+            if (key === 'NoConfig_testNumber') return '32';
+            if (key === 'NoConfig_testNumericArray') return '[4, 5, 6]';
             return null;
         });
         vi.spyOn(Storage.prototype, 'getItem').mockImplementation(mockParamValueFn);
@@ -283,8 +283,8 @@ describe('loading specific projects, in browser mode (re: stored values)', async
     it('loads a project with a config file', async () => {
         // Mock stored values
         const mockParamValueFn = vi.fn((key: string) => {
-            if (key === 'Config and Support - testNumber') return '32';
-            if (key === 'Config and Support - testString') return '"hello world"';
+            if (key === 'Config and Support_testNumber') return '32';
+            if (key === 'Config and Support_testString') return '"hello world"';
             return null;
         });
         vi.spyOn(Storage.prototype, 'getItem').mockImplementation(mockParamValueFn);
