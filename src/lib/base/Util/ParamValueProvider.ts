@@ -69,6 +69,6 @@ export default class ParamValueProvider {
     }
 
     static #localStorageKey(projectKey: string, paramKey: string): string {
-        return `${projectKey} - ${paramKey}`;
+        return `${projectKey}_${paramKey}`;
     }
 }
