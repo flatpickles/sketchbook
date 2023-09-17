@@ -2,7 +2,7 @@
     import ParamItem from '../ProjectDetailPanel/ParamItem.svelte';
     import { get } from 'svelte/store';
     import { settingsStore } from '$lib/base/Util/AppState';
-    import { userSettingsLabels } from '../../../config/config';
+    import { userSettingsLabels } from '../../../config/settings';
 
     import {
         type ParamValueType,

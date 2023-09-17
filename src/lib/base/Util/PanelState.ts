@@ -1,6 +1,6 @@
 import type { MouseState } from './MouseState';
 
-// Possible states for the project list and detail panels (set defaults in config/config.ts)
+// Possible states for the project list and detail panels (set defaults in config/settings.ts)
 export enum PanelState {
     Visible = 'visible', // shown, can toggle to hidden
     Hidden = 'hidden', // not shown, can toggle to visible
