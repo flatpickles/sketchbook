@@ -44,6 +44,9 @@ Param config & project config options (JSON fields) - maybe in a different file?
 
 -   time (in projects)
 -   canvas size // resizing the canvas
+    -   max at 100%
+    -   need to set style size to change the way it's presented (but that's cool)
+    -   internal canvas size will sync to style size, and will apply pixelRatio
 -   mouse position & clicks
 -   instance variables (#ivar)
 

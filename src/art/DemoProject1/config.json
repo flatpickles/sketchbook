@@ -5,6 +5,8 @@
     "groups": ["Print Media", "Test Category"],
     "experimental": false,
     "paramsApplyDuringInput": true,
+    "canvasSize": [2000, 1000],
+    "pixelRatio": 4,
 
     "params": {
         "testNumber": {
