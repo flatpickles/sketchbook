@@ -2,7 +2,7 @@
     import ParamItem from '../ProjectDetailPanel/ParamItem.svelte';
     import { get } from 'svelte/store';
     import { settingsStore } from '$lib/base/Util/AppState';
-    import { userSettingsLabels } from '../../../config/settings';
+    import { userSettingsLabels } from '$config/settings';
 
     import {
         type ParamValueType,
@@ -12,7 +12,7 @@
     import type { ParamConfig } from '$lib/base/ConfigModels/ParamConfig';
     import { settingsParamConfigs } from './SettingsParamConfigs';
     import FunctionInput from '../Inputs/FunctionInput.svelte';
-    import { content } from '../../../config/content';
+    import { content } from '$config/content';
 
     // Settings value configs are backed by values in the AppStateStore object
     const settingsValueConfigs = Object.keys(userSettingsLabels).map((key) => {

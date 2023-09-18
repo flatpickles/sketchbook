@@ -2,7 +2,7 @@
     import SettingsContent from './SettingsContent.svelte';
     import PanelHeader from '../Panels/PanelHeader.svelte';
     import Panel from '../Panels/Panel.svelte';
-    import { content } from '../../../config/content';
+    import { content } from '$config/content';
 </script>
 
 <Panel>

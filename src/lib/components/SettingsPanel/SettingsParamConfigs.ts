@@ -12,7 +12,7 @@ import {
     StringParamConfigDefaults,
     type StringParamConfig
 } from '$lib/base/ConfigModels/ParamConfigs/StringParamConfig';
-import { userSettingsLabels } from '../../../config/settings';
+import { userSettingsLabels } from '$config/settings';
 
 // ParamConfigs for each possible entry in the Settings panel
 // todo: add more settings
