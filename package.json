@@ -1,6 +1,6 @@
 {
     "name": "sketchbook2",
-    "version": "0.0.18",
+    "version": "0.0.21",
     "private": true,
     "scripts": {
         "dev": "vite dev",
@@ -26,6 +26,8 @@
         "eslint": "^8.28.0",
         "eslint-config-prettier": "^8.5.0",
         "eslint-plugin-svelte": "^2.26.0",
+        "glsl-noise": "^0.0.0",
+        "glslify": "^7.1.1",
         "p5": "^1.7.0",
         "postcss": "^8.4.24",
         "postcss-load-config": "^4.0.1",
