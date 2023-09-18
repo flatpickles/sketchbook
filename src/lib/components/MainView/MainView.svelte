@@ -7,7 +7,7 @@
     import ProjectListPanel from '$lib/components/ProjectListPanel/ProjectListPanel.svelte';
     import SettingsPanel from '../SettingsPanel/SettingsPanel.svelte';
 
-    import { content } from '../../../config/content';
+    import { content } from '$config/content';
     import { settingsStore, stateStore } from '$lib/base/Util/AppState';
     import type { ProjectTuple } from '$lib/base/ProjectLoading/ProjectLoader';
     import type { ProjectConfig } from '$lib/base/ConfigModels/ProjectConfig';

@@ -1,7 +1,7 @@
 <script lang="ts">
     import { createEventDispatcher } from 'svelte';
 
-    import { content } from '../../../config/content';
+    import { content } from '$config/content';
     import { settingsStore } from '$lib/base/Util/AppState';
 
     import type { ProjectConfig } from '$lib/base/ConfigModels/ProjectConfig';

@@ -1,4 +1,4 @@
-import { config, userSettingsLabels } from '../../../config/settings';
+import { config, userSettingsLabels } from '$config/settings';
 import { createPersistedStore } from './PersistedStore';
 
 // The settingsStore is backed by values in config. Only values specified in userSettingsLabels

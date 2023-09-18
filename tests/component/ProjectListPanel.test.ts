@@ -3,8 +3,8 @@ import { vi, describe, it, expect, afterEach, beforeAll } from 'vitest';
 import { ProjectConfigFactory } from '$lib/base/ProjectLoading/ProjectConfigFactory';
 import ProjectListPanel from '$lib/components/ProjectListPanel/ProjectListPanel.svelte';
 
-import { content } from '../../src/config/content';
-import { config } from '../../src/config/settings';
+import { content } from '$config/content';
+import { config } from '$config/settings';
 import { SortOrder } from '$lib/base/ProjectLoading/ProjectPresentation';
 
 describe('ProjectListPanel rendering', () => {
