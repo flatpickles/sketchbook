@@ -97,7 +97,7 @@
                 : undefined;
 
         // Initialize the new project
-        if (shouldResize) setCanvasSize(false);
+        setCanvasSize(true);
         newProject.init();
 
         // Update component & DOM state
@@ -107,7 +107,7 @@
     }
 
     // Called to reset the canvas size to match the container
-    function setCanvasSize(callProjectResize = true) {
+    function setCanvasSize(initializingProject = false) {
         // Update the canvas state
         if (!containerElement)
             throw new Error("Cannot set canvas size when the container doesn't exist");
@@ -117,8 +117,15 @@
         canvasElementWebGL.width = containerElement.clientWidth * pixelRatio;
         canvasElementWebGL.height = containerElement.clientHeight * pixelRatio;
 
-        // Call the project's resize method when appropriate
-        if (!callProjectResize) return;
+        // If initializing the project, reset the shared canvas styles (in case set by last project)
+        // and don't call the project's resize method
+        if (initializingProject) {
+            canvasElement2D.removeAttribute('style');
+            canvasElementWebGL.removeAttribute('style');
+            return;
+        }
+
+        // Call the project's resize method (if not initializing)
         const containerSize: [number, number] = [
             containerElement.clientWidth,
             containerElement.clientHeight
@@ -158,14 +165,26 @@
 </div>
 
 <style lang="scss">
+    :global(canvas) {
+        background-color: $canvas-bg-color;
+        box-shadow: $canvas-shadow;
+    }
+
     #container {
         width: 100%;
         height: 100%;
+        background-color: $container-bg-color;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
     .shared-canvas {
         width: 100%;
         height: 100%;
+        max-width: 100%;
+        max-height: 100%;
 
         &.hidden {
             display: none;

@@ -4,6 +4,7 @@ import TestImage from './test-image.png';
 export default class DemoProject extends Project {
     testBoolean = true;
     size = 0.2;
+    dimensions = [0.5, 0.5];
 
     #bundledImage: HTMLImageElement;
 
@@ -20,11 +21,12 @@ export default class DemoProject extends Project {
 
     update() {
         if (!this.canvas) throw new Error('Canvas not set');
+        this.canvas.style.width = `${this.dimensions[0] * 100}%`;
+        this.canvas.style.height = `${this.dimensions[1] * 100}%`;
         const ctx = this.canvas.getContext('2d');
         if (!ctx) throw new Error('Could not get 2D context');
         ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         ctx.fillStyle = '#00FF00';
-        // console.log(this.canvas.width, this.canvas.height);
         if (this.#bundledImage && this.testBoolean)
             ctx.drawImage(this.#bundledImage, 0, 0, this.canvas.width, this.canvas.height);
         ctx.fillRect(200, 200, this.size * this.canvas.width, this.size * this.canvas.height);
