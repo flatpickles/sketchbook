@@ -182,6 +182,8 @@
         <ProjectViewer
             project={selectedProjectTuple.project}
             containerResizing={!$settingsStore.overlayPanels && panelResizing}
+            canvasSizeConfig={selectedProjectTuple.config.canvasSize}
+            pixelRatioConfig={selectedProjectTuple.config.pixelRatio}
             bind:this={viewer}
         />
     </div>

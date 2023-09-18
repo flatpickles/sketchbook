@@ -6,6 +6,8 @@
 
     export let project: Project;
     export let containerResizing = false;
+    export let canvasSizeConfig: [number, number] | undefined;
+    export let pixelRatioConfig: number | undefined;
 
     let previousProject: Project | undefined;
     let canvasElement2D: HTMLCanvasElement;
@@ -108,16 +110,25 @@
 
     // Called to reset the canvas size to match the container
     function setCanvasSize(initializingProject = false) {
+        const pixelRatio = pixelRatioConfig ?? window.devicePixelRatio;
+
         // If initializing the project, reset the shared canvas styles (in case set by last project)
         if (initializingProject) {
             canvasElement2D.removeAttribute('style');
             canvasElementWebGL.removeAttribute('style');
+
+            // If the project configures a canvas size, set it
+            if (canvasSizeConfig) {
+                canvasElement2D.style.width = `${canvasSizeConfig[0] / pixelRatio}px`;
+                canvasElement2D.style.height = `${canvasSizeConfig[1] / pixelRatio}px`;
+                canvasElementWebGL.style.width = `${canvasSizeConfig[0] / pixelRatio}px`;
+                canvasElementWebGL.style.height = `${canvasSizeConfig[1] / pixelRatio}px`;
+            }
         }
 
         // Update the internal canvas sizes to match their style sizing
         if (!containerElement)
             throw new Error("Cannot set canvas size when the container doesn't exist");
-        const pixelRatio = window.devicePixelRatio;
         canvasElement2D.width = canvasElement2D.offsetWidth * pixelRatio;
         canvasElement2D.height = canvasElement2D.offsetHeight * pixelRatio;
         canvasElementWebGL.width = canvasElementWebGL.offsetWidth * pixelRatio;

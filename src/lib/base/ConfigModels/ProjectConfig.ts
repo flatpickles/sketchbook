@@ -7,6 +7,8 @@ export interface ProjectConfig {
     presetsAvailable: boolean;
     experimental: boolean;
     paramsApplyDuringInput: boolean;
+    canvasSize?: [number, number];
+    pixelRatio?: number;
 }
 
 export const ProjectConfigDefaults: ProjectConfig = {
@@ -17,5 +19,7 @@ export const ProjectConfigDefaults: ProjectConfig = {
     groups: [],
     presetsAvailable: false,
     experimental: false,
-    paramsApplyDuringInput: true
+    paramsApplyDuringInput: true,
+    canvasSize: undefined,
+    pixelRatio: undefined
 };

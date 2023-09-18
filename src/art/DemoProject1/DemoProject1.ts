@@ -34,7 +34,7 @@ export default class DemoProject extends Project {
 
     stringOptions = 'Second';
 
-    arrayColor = [255, 21, 0];
+    arrayColor = [45, 200, 100];
 
     #xPos = 300;
     update({ frame }: { frame: number; time: number }) {
@@ -43,11 +43,11 @@ export default class DemoProject extends Project {
         if (!ctx) throw new Error('Could not get 2D context');
         ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
+        ctx.fillStyle = `rgb(${this.arrayColor[0]}, ${this.arrayColor[1]}, ${this.arrayColor[2]})`;
+        ctx.fillRect(0, 0, 2000, 400);
+
         ctx.fillStyle = this.testColor;
         this.#xPos = frame % this.canvas.width;
         ctx.fillRect(this.#xPos, 300, 550, 700);
-
-        ctx.fillStyle = `rgb(${this.arrayColor[0]}, ${this.arrayColor[1]}, ${this.arrayColor[2]})`;
-        ctx.fillRect(400, 400, 550, 700);
     }
 }
