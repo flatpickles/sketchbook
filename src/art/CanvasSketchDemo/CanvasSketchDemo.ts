@@ -64,8 +64,9 @@ export default class CanvasSketchDemo extends Project {
 
     async init() {
         this.#sketchManager = await canvasSketch(this.#sketchFn, {
+            dimensions: [1000, 1500],
             canvas: this.canvas,
-            resizeCanvas: false,
+            resizeCanvas: true,
             animate: true,
             hotkeys: false // todo; can we still enable save hotkey without enabling play toggling with space
         });

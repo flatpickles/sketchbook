@@ -43,7 +43,7 @@ Param config & project config options (JSON fields) - maybe in a different file?
 # Common necessities:
 
 -   time (in projects)
--   canvas size
+-   canvas size // resizing the canvas
 -   mouse position & clicks
 -   instance variables (#ivar)
 

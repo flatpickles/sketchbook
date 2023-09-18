@@ -9,8 +9,8 @@
         width: 100%;
         height: 100%;
         overflow: hidden;
+        background-color: $app-bg-color;
         box-sizing: content-box; // unset non-standard box-sizing: border-box (ress)
-        background-color: black; // for header on mobile safari, and behind transparent canvases
     }
 
     :global(body) {
