@@ -21,6 +21,6 @@ The final high-level intentions worth mentioning here are **simplicity** and **c
 
 If you're ready to try out Sketchbook, continue on to the [Quick Start](quick-start.md) page and follow the instructions to get set up! You can also continue learning about how projects and parameters are modeled within Sketchbook on the [Core Concepts](core-concepts.md) page, and explore the other documentation pages linked from the sidebar on the left.
 
-Though every attempt has been made to deliver a stable and polished platform for your creative work, Sketchbook is under active development. If you encounter any bugs, have trouble incorporating tools and techniques you wish to use, or find this documentation lacking in any way, _please_ [file a GitHub issue](https://github.com/flatpickles/sketchbook/issues/new)! PRs are also welcome for any improvements or added functionality, and you can find more notes on contributing to Sketchbook's development [here](contributing.md).
+Though every attempt has been made to deliver a stable and polished platform for your creative work, Sketchbook is under active development. If you encounter any bugs, have trouble incorporating tools and techniques you wish to use, or find this documentation lacking in any way, please [file a GitHub issue](https://github.com/flatpickles/sketchbook/issues/new)! PRs are also welcome for any improvements or added functionality, and you can find more notes on contributing to Sketchbook's development [here](contributing.md).
 
 Onward!
