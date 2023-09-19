@@ -21,6 +21,12 @@ export default class DemoProject extends Project {
 
     update() {
         if (!this.canvas) throw new Error('Canvas not set');
+
+        this.canvas.style.width = `${this.dimensions[0] * 100}%`;
+        this.canvas.width = this.canvas.clientWidth * 2;
+        this.canvas.style.height = `${this.dimensions[1] * 100}%`;
+        this.canvas.height = this.canvas.clientHeight * 2;
+
         const ctx = this.canvas.getContext('2d');
         if (!ctx) throw new Error('Could not get 2D context');
         ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -28,9 +34,5 @@ export default class DemoProject extends Project {
         if (this.#bundledImage && this.testBoolean)
             ctx.drawImage(this.#bundledImage, 0, 0, this.canvas.width, this.canvas.height);
         ctx.fillRect(200, 200, this.size * this.canvas.width, this.size * this.canvas.height);
-        this.canvas.style.width = `${this.dimensions[0] * 100}%`;
-        this.canvas.style.height = `${this.dimensions[1] * 100}%`;
-        // todo: setting style width here doesn't work as expected;
-        // adjust dimensions param, then adjust canvas size - rect jumps around
     }
 }

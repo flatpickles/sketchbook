@@ -34,6 +34,8 @@ Setting any of these properties directly after a project is initialized is unsup
 
 ### resized
 
+Note: dimensions are element sizes – canvas sizing is styled size in the DOM, not internal drawing size
+
 ### destroy
 
 # config.json
@@ -44,9 +46,9 @@ Param config & project config options (JSON fields) - maybe in a different file?
 
 -   time (in projects)
 -   canvas size // resizing the canvas
-    -   max at 100%
-    -   need to set style size to change the way it's presented (but that's cool)
+    -   max at 100%, relevant for both project config & direct size settings
     -   internal canvas size will sync to style size, and will apply pixelRatio
+    -   if you set style size to change the way it's presented, also set internal size!
 -   mouse position & clicks
 -   instance variables (#ivar)
 
