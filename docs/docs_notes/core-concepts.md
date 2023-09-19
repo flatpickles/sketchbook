@@ -34,7 +34,7 @@ Setting any of these properties directly after a project is initialized is unsup
 
 ### resized
 
-Note: dimensions are element sizes – canvas sizing is styled size in the DOM, not internal drawing size
+Note: dimensions are element sizes – canvas sizing is styled size in the DOM, not internal drawing size (NOT what's currently implemented, but should it be?)
 
 ### destroy
 

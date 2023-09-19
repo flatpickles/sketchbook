@@ -6,8 +6,8 @@
 
     export let project: Project;
     export let containerResizing = false;
-    export let canvasSizeConfig: [number, number] | undefined;
-    export let pixelRatioConfig: number | undefined;
+    export let canvasSizeConfig: [number, number] | undefined = undefined;
+    export let pixelRatioConfig: number | undefined = undefined;
 
     let previousProject: Project | undefined;
     let canvasElement2D: HTMLCanvasElement;

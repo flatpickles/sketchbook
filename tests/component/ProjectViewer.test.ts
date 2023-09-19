@@ -123,6 +123,47 @@ describe('CanvasViewer', () => {
         expect(lastFrame).toBeGreaterThan(nextFrame);
         expect(lastTime).toBeGreaterThan(nextTime);
     });
+
+    it('sets canvas sizes appropriately when not configured', async () => {
+        const proj = new Project();
+
+        const { getAllByTestId } = render(ProjectViewer, {
+            project: proj
+        });
+
+        const canvases = getAllByTestId('shared-canvas') as HTMLCanvasElement[];
+
+        // These aren't what we actually expect in production; need to write E2E tests to validate
+        // proper canvas sizing behavior: https://github.com/flatpickles/sketchbook/issues/102
+        expect(canvases[0].style.width).toBe('');
+        expect(canvases[0].width).toBe(0);
+        expect(canvases[0].style.height).toBe('');
+        expect(canvases[0].height).toBe(0);
+        expect(canvases[1].style.width).toBe('');
+        expect(canvases[1].width).toBe(0);
+        expect(canvases[1].style.height).toBe('');
+        expect(canvases[1].height).toBe(0);
+    });
+
+    it('sets the canvas sizes appropriately when configured', async () => {
+        const proj = new Project();
+
+        const { getAllByTestId } = render(ProjectViewer, {
+            project: proj,
+            canvasSizeConfig: [1000, 800],
+            pixelRatioConfig: 4
+        });
+
+        const canvases = getAllByTestId('shared-canvas') as HTMLCanvasElement[];
+        expect(canvases[0].style.width).toBe('250px');
+        expect(canvases[0].width).toBe(1000);
+        expect(canvases[0].style.height).toBe('200px');
+        expect(canvases[0].height).toBe(800);
+        expect(canvases[1].style.width).toBe('250px');
+        expect(canvases[1].width).toBe(1000);
+        expect(canvases[1].style.height).toBe('200px');
+        expect(canvases[1].height).toBe(800);
+    });
 });
 
 describe('Project update calls from CanvasViewer', () => {
