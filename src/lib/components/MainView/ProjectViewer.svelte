@@ -74,10 +74,6 @@
             throw new Error("Cannot update a project when the container doesn't exist");
         }
 
-        // When loading a first project or changing the canvas type, resize the canvas
-        const shouldResize =
-            !previousProject || previousProject.canvasType !== newProject.canvasType;
-
         // Track the previous project so we can destroy it
         previousProject?.destroy();
         previousProject = newProject;
@@ -108,7 +104,7 @@
         startTime = Date.now();
     }
 
-    // Called to reset the canvas size to match the container
+    // Called to reset the canvas size to the container size, or to a configured size
     function setCanvasSize(initializingProject = false) {
         const pixelRatio = pixelRatioConfig ?? window.devicePixelRatio;
 
@@ -129,10 +125,23 @@
         // Update the internal canvas sizes to match their style sizing
         if (!containerElement)
             throw new Error("Cannot set canvas size when the container doesn't exist");
-        canvasElement2D.width = canvasElement2D.offsetWidth * pixelRatio;
-        canvasElement2D.height = canvasElement2D.offsetHeight * pixelRatio;
-        canvasElementWebGL.width = canvasElementWebGL.offsetWidth * pixelRatio;
-        canvasElementWebGL.height = canvasElementWebGL.offsetHeight * pixelRatio;
+        const initialCanvasSize: [number, number] = [
+            // these values are used if client sizes return 0, e.g. if display: none
+            canvasSizeConfig ? canvasSizeConfig[0] : pixelRatio * containerElement.clientWidth,
+            canvasSizeConfig ? canvasSizeConfig[1] : pixelRatio * containerElement.clientHeight
+        ];
+        canvasElement2D.width = canvasElement2D.clientWidth
+            ? pixelRatio * canvasElement2D.clientWidth
+            : initialCanvasSize[0];
+        canvasElement2D.height = canvasElement2D.clientHeight
+            ? pixelRatio * canvasElement2D.clientHeight
+            : initialCanvasSize[1];
+        canvasElementWebGL.width = canvasElementWebGL.clientWidth
+            ? pixelRatio * canvasElementWebGL.clientWidth
+            : initialCanvasSize[0];
+        canvasElementWebGL.height = canvasElementWebGL.clientHeight
+            ? pixelRatio * canvasElementWebGL.clientHeight
+            : initialCanvasSize[1];
 
         // Call the project's resize method (if not initializing)
         if (initializingProject) return;
