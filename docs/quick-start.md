@@ -30,7 +30,7 @@ _Sketchbook is a SvelteKit project, but you won't really notice. You don't need 
 
 ### Create Your First Project
 
-Within `src/art`, create a new TypeScript file within a directory of the same name, e.g. `src/art/MyProject/MyProject.ts` (we'll use TypeScript below). Check your browser: "MyProject" now appears in the project list!
+Within `src/art`, create a new TypeScript or JavaScript file within a directory of the same name, e.g. `src/art/MyProject/MyProject.ts` (we'll use TypeScript below). Check your browser: "MyProject" now appears in the project list!
 
 Before selecting your new project in the panel, export a default class that extends the base [`Project`](https://github.com/flatpickles/sketchbook/blob/main/src/lib/base/Project/Project.ts) class:
 
@@ -43,7 +43,7 @@ _You'll see errors if you try to view MyProject without exporting a default clas
 
 ### Get Pixels on the Screen
 
-After selecting "MyProject" in the project list panel, you won't see anything beyond a white screen. Let's change that! Define an `update` method within your new class, and have it draw a simple rectangle on screen:
+After selecting "MyProject" in the project list panel, you won't see anything beyond a white screen. Let's change that! Define an `update` method within your new class, and have it draw a simple rectangle:
 
 ```ts
 export default class MyProject extends Project {
@@ -61,11 +61,11 @@ export default class MyProject extends Project {
 }
 ```
 
-_Sketchbook automatically makes an HTML canvas object available to `Project` instances via `this.canvas`, and that's what you will use for drawing. `update` is a lifecycle method that's called on each animation frame._
+_Sketchbook automatically makes an HTML canvas object available to `Project` instances via the `canvas` property, and that's what you will use for drawing. `update` is a lifecycle method that's called on each animation frame._
 
 ### Create Your First Parameter
 
-If you save and check your browser, MyProject now features a black rectangle in the middle of the canvas. Let's make the size customizable! To define a Sketchbook parameter, all you need to do is define a new instance variable for your class. Update `MyProject` so it looks like this:
+If you save and check your browser, MyProject now features a black rectangle in the middle of the canvas. Let's make the size customizable! To define Sketchbook parameters, all you need to do is define instance variables for your project class. Update `MyProject` so it looks like this:
 
 ```ts
 export default class Test extends Project {
@@ -94,7 +94,7 @@ _You can define many different types of parameters, including numbers, booleans,
 
 ### Configure Your Project
 
-Now that you have a parameterized code sketch set up, let's look at some basic configuration options! You can define a `config.json` alongside `MyProject.ts`, and these configuration options will impact the behavior and presentation of your project. Add this code within a `src/art/MyProject/config.json`:
+Now that you have a parameterized code sketch set up, let's look at some basic configuration options! You can define a `config.json` alongside `MyProject.ts` to impact the behavior and presentation of your project. Add this code within a `src/art/MyProject/config.json`:
 
 ```json
 {
