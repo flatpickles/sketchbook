@@ -4,9 +4,9 @@ const subtitle = `Demo Content`;
 const description = `Sketchbook is a dev environment and customizable portfolio for creative coding projects. It is a work in progress!`;
 
 // Project list footer content (use empty string to omit)
-const footer = `Copyright © 2023 <a href='http://flatpickles.com'>Matt Nichols</a>`;
+const footer = `Drive slow, code fast.`;
 const leftButtonIcon = `fa-brands fa-github`;
-const leftButtonLink = `https://github.com/flatpickles/sketchbook2`;
+const leftButtonLink = `https://github.com/flatpickles/sketchbook`;
 
 // Show panel buttons
 const projectListIcon = `fa-solid fa-bars`;

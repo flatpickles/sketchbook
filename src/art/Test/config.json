@@ -1,0 +1,14 @@
+{
+    "title": "My First Project",
+    "date": "2023-09-19",
+    "description": "This is my first Sketchbook project, isn't it grand?",
+    "params": {
+        "rectSize": {
+            "name": "Rect Size"
+        },
+        "rectColor": {
+            "name": "Rect Color",
+            "style": "color"
+        }
+    }
+}
