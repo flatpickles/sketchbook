@@ -106,6 +106,11 @@
 
     // Called to reset the canvas size to the container size, or to a configured size
     function setCanvasSize(initializingProject = false) {
+        if (!containerElement) {
+            console.trace(); // todo: remove this (after debugging sporadic calls)
+            throw new Error("Cannot set canvas size when the container doesn't exist");
+        }
+
         const pixelRatio = pixelRatioConfig ?? window.devicePixelRatio;
 
         // If initializing the project, reset the shared canvas styles (in case set by last project)
@@ -123,8 +128,6 @@
         }
 
         // Update the internal canvas sizes to match their style sizing
-        if (!containerElement)
-            throw new Error("Cannot set canvas size when the container doesn't exist");
         const initialCanvasSize: [number, number] = [
             // these values are used if client sizes return 0, e.g. if display: none
             canvasSizeConfig ? canvasSizeConfig[0] : pixelRatio * containerElement.clientWidth,
