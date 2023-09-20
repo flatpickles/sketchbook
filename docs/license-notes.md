@@ -14,4 +14,4 @@ For licensing inquiries or permissions, please contact [Your Contact Information
 
 ```
 
-Note that the MIT License also permits closed-source use, so the above may only apply if your code is publicly available, e.g. a public Sketchbook fork on your GitHub account.
+Note that the MIT License also permits closed-source use, so the above may only apply if your code is publicly available, e.g. in a public repository on your GitHub account.
