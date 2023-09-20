@@ -32,11 +32,11 @@
     let uiActiveTimeout: ReturnType<typeof setTimeout>;
 
     // Left panel reactive state
-    $: leftPanelAvailable = $stateStore.projectListState !== PanelState.Unavailable;
+    $: leftPanelAvailable = $settingsStore.projectListPanelState !== PanelState.Unavailable;
     $: leftPanelShown =
         leftPanelAvailable &&
-        panelShown($stateStore.projectListState, currentMouseState, MouseState.LeftTrigger);
-    $: leftPanelHeaderIcon = headerIconForPanelState($stateStore.projectListState);
+        panelShown($settingsStore.projectListPanelState, currentMouseState, MouseState.LeftTrigger);
+    $: leftPanelHeaderIcon = headerIconForPanelState($settingsStore.projectListPanelState);
 
     // Right panel reactive state
     $: projectHasDetail =
@@ -44,11 +44,15 @@
         selectedProjectTuple.config.description !== undefined ||
         selectedProjectTuple.params.length > 0; // todo: incorporate presets, once implemented
     $: rightPanelAvailable =
-        projectHasDetail && $stateStore.projectDetailState !== PanelState.Unavailable;
+        projectHasDetail && $settingsStore.projectDetailPanelState !== PanelState.Unavailable;
     $: rightPanelShown =
         rightPanelAvailable &&
-        panelShown($stateStore.projectDetailState, currentMouseState, MouseState.RightTrigger);
-    $: rightPanelHeaderIcon = headerIconForPanelState($stateStore.projectDetailState);
+        panelShown(
+            $settingsStore.projectDetailPanelState,
+            currentMouseState,
+            MouseState.RightTrigger
+        );
+    $: rightPanelHeaderIcon = headerIconForPanelState($settingsStore.projectDetailPanelState);
 
     /* Event bindings */
 
@@ -85,12 +89,14 @@
 
     function toggleLeftPanel(showClicked = false) {
         // Toggle from current state
-        $stateStore.projectListState = toggledPanelState($stateStore.projectListState);
+        $settingsStore.projectListPanelState = toggledPanelState(
+            $settingsStore.projectListPanelState
+        );
 
         // If showClicked with PanelState.MouseUnpinnable, it's likely mouse movement isn't working
         // on this device; PanelState.MousePinned falls back to click-based toggling
-        if (showClicked && $stateStore.projectListState === PanelState.MouseUnpinnable) {
-            $stateStore.projectListState = PanelState.MousePinned;
+        if (showClicked && $settingsStore.projectListPanelState === PanelState.MouseUnpinnable) {
+            $settingsStore.projectListPanelState = PanelState.MousePinned;
         }
 
         // Clear the mouse state
@@ -99,12 +105,14 @@
 
     function toggleRightPanel(showClicked = false) {
         // Toggle from current state
-        $stateStore.projectDetailState = toggledPanelState($stateStore.projectDetailState);
+        $settingsStore.projectDetailPanelState = toggledPanelState(
+            $settingsStore.projectDetailPanelState
+        );
 
         // If showClicked with PanelState.MouseUnpinnable, it's likely mouse movement isn't working
         // on this device; PanelState.MousePinned falls back to click-based toggling
-        if (showClicked && $stateStore.projectDetailState === PanelState.MouseUnpinnable) {
-            $stateStore.projectDetailState = PanelState.MousePinned;
+        if (showClicked && $settingsStore.projectDetailPanelState === PanelState.MouseUnpinnable) {
+            $settingsStore.projectDetailPanelState = PanelState.MousePinned;
         }
 
         // Clear the mouse state
@@ -212,7 +220,7 @@
 </div>
 
 <div class="show-buttons" data-testid="show-buttons" class:hidden={!uiActive}>
-    {#if leftPanelAvailable && $stateStore.projectListState !== PanelState.Static}
+    {#if leftPanelAvailable && $settingsStore.projectListPanelState !== PanelState.Static}
         <div
             class="left-show"
             data-testid="left-show"
@@ -224,7 +232,10 @@
         </div>
     {/if}
 
-    {#if rightPanelAvailable && $stateStore.projectDetailState !== PanelState.Static}
+    <!-- Push buttons left/right even when they're not both available: -->
+    <div class="spacer" />
+
+    {#if rightPanelAvailable && $settingsStore.projectDetailPanelState !== PanelState.Static}
         <div
             class="right-show"
             data-testid="right-show"

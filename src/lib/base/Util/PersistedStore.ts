@@ -15,8 +15,8 @@ import type { AnyParamValueType } from '../ConfigModels/ParamTypes';
 export function createPersistedStore<T>(
     storeKey: string,
     initialValues: T,
-    persistKeys?: string[],
-    useCookies = false
+    useCookies = false,
+    persistKeys?: string[]
 ) {
     let initialState = initialValues as Record<string, AnyParamValueType>;
     const keysToPersist: string[] = persistKeys || Object.keys(initialState);

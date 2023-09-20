@@ -41,7 +41,30 @@ export const settingsParamConfigs: ParamConfig[] = [
     {
         ...BooleanParamConfigDefaults,
         key: 'overlayPanels'
-    } as BooleanParamConfig
+    } as BooleanParamConfig,
+    {
+        ...StringParamConfigDefaults,
+        key: 'projectListPanelState',
+        options: {
+            'Visible': 'visible',
+            'Hover (Pinned)': 'mouse-pinned',
+            'Hover (Pinnable)': 'mouse-pinnable',
+            'Hover (Unpinnable)': 'mouse-unpinnable',
+            'Fixed': 'static'
+        }
+    } as StringParamConfig,
+    {
+        ...StringParamConfigDefaults,
+        key: 'projectDetailPanelState',
+        options: {
+            'Visible': 'visible',
+            'Hover (Pinned)': 'mouse-pinned',
+            'Hover (Pinnable)': 'mouse-pinnable',
+            'Hover (Unpinnable)': 'mouse-unpinnable',
+            'Fixed': 'static',
+            'Unavailable': 'unavailable'
+        }
+    } as StringParamConfig
 ].map((paramConfig) => {
     // Add the label to each ParamConfig from config/settings.ts
     paramConfig.name = userSettingsLabels[paramConfig.key];

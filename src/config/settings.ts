@@ -16,9 +16,10 @@ const showExperiments = dev;
 // If true, the project list and detail panels will float over project content.
 const overlayPanels = true;
 
-// The default state of the project list and detail panels.
-const defaultProjectListState = PanelState.Visible;
-const defaultProjectDetailState = PanelState.Visible;
+// The default states of the project list and detail panels; these are starting values, which will
+// be updated as the user interacts with the UI (and/or settings panel), and are then persisted.
+const projectListPanelState = PanelState.Visible;
+const projectDetailPanelState = PanelState.Visible;
 
 // When using mouse-triggering options for the project list and detail panels above, this is the
 // width of the trigger areas on the left & right, in pixels.
@@ -36,17 +37,19 @@ const groupSortOrder = SortOrder.Alphabetical;
 // in the settings panel will be persisted in local storage, and the values set above will be used
 // as defaults.
 export const userSettingsLabels: Record<string, string> = {
-    showExperiments: 'Experiments',
+    showExperiments: 'Show Experiments',
     projectSortOrder: 'Project Sorting',
-    overlayPanels: 'Overlay Panels'
+    overlayPanels: 'Overlay Panels',
+    projectListPanelState: 'Left Panel Visibility',
+    projectDetailPanelState: 'Right Panel Visibility'
 };
 
 // Export all settings for use elsewhere in the app.
 export const config = {
     showExperiments,
     overlayPanels,
-    defaultProjectListState,
-    defaultProjectDetailState,
+    projectListPanelState,
+    projectDetailPanelState,
     panelMouseTriggerWidth,
     hidePanelButtonsTimeout,
     projectSortOrder,

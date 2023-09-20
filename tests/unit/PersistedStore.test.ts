@@ -12,7 +12,7 @@ const config = {
     defaultProjectListState: PanelState.Visible,
     defaultProjectDetailState: PanelState.Visible
 };
-const settingsStore = createPersistedStore('settings', config, [
+const settingsStore = createPersistedStore('settings', config, false, [
     'showExperiments',
     'projectSortOrder'
 ]);
