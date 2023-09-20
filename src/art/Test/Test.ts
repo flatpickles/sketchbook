@@ -1,8 +1,9 @@
 import Project from '$lib/base/Project/Project';
 
 export default class Test extends Project {
-    rectSize = 0.5;
+    rectSize = 0.2;
     rectColor = '#34b00c';
+    arr = [0.1, 0.5, 0.2];
 
     update() {
         const ctx = this.canvas?.getContext('2d');
