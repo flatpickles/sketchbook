@@ -31,6 +31,7 @@ export default class ParamValueProvider {
             browser &&
             localStorage.getItem(ParamValueProvider.#localStorageKey(projectKey, paramConfig.key));
         const previousObjectValue = browser && localStorage.getItem(previousValueKey);
+        browser && localStorage.setItem(previousValueKey, JSON.stringify(objectValue));
 
         // If object value has changed (during initialLoad), use this as the new value, and return.
         // If not, and there's a stored value, use the stored value. If there's no stored value,
@@ -41,7 +42,6 @@ export default class ParamValueProvider {
             JSON.stringify(objectValue) !== previousObjectValue
         ) {
             ParamValueProvider.setValue(paramConfig, projectKey, objectValue);
-            localStorage.setItem(previousValueKey, JSON.stringify(objectValue));
             return objectValue;
         } else if (storedValue) {
             return JSON.parse(storedValue);
