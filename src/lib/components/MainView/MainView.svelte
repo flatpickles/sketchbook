@@ -125,11 +125,11 @@
         // Trigger with movement into trigger zone, untrigger with movement out of interaction zone
         const leftThresholds = {
             in: $settingsStore.panelMouseTriggerWidth,
-            out: panelMaxWidth
+            out: panelMaxWidth + $settingsStore.panelMouseTriggerWidth
         };
         const rightThresholds = {
             in: window.innerWidth - $settingsStore.panelMouseTriggerWidth,
-            out: window.innerWidth - panelMaxWidth
+            out: window.innerWidth - panelMaxWidth - $settingsStore.panelMouseTriggerWidth
         };
 
         // Update the mouse state
