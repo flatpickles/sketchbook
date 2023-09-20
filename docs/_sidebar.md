@@ -6,6 +6,7 @@
 -   Using Sketchbook
 
     -   [Core Concepts](core-concepts.md)
+    -   [Common Necessities](necessities.md)
     -   [Project Configuration](project-config.md)
     -   [Parameter Configuration](param-config.md)
     -   [Project Subtypes](project-subtypes.md)

@@ -103,10 +103,10 @@ Now that you have a parameterized code sketch set up, let's look at some basic c
     "description": "This is my first Sketchbook project, isn't it grand?",
     "params": {
         "rectSize": {
-            "name": "Rectangle Size"
+            "name": "Rect Size"
         },
         "rectColor": {
-            "name": "Rectangle Color",
+            "name": "Rect Color",
             "style": "color"
         }
     }

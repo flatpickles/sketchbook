@@ -1,7 +1,9 @@
 import Project from '$lib/base/Project/Project';
 
+import { helperNumber } from '../util/Helper';
+
 export default class DemoProject extends Project {
-    testNumber = 42;
+    testNumber = helperNumber;
     testBoolean = true;
     testFn = () => {
         alert('Hello world!');
