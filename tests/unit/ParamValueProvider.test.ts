@@ -105,7 +105,7 @@ describe('ParamValueProvider', () => {
         expect(localStorage.getItem).toHaveBeenCalledWith(
             'lastInitialValue_testProjectKey_testParamKey'
         );
-        expect(localStorage.setItem).not.toHaveBeenCalled();
+        expect(localStorage.setItem).toHaveBeenCalledOnce(); // just with lastInitialValue
         expect(project.testParamKey).toBe(42);
     });
 
