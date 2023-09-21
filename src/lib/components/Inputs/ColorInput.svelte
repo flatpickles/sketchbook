@@ -3,6 +3,7 @@
     import ColorConversions from '$lib/base/Util/ColorConversions';
     import { createEventDispatcher } from 'svelte';
 
+    export let id: string;
     export let name: string;
     export let value: string | number[];
     export let disabled = false;
@@ -75,7 +76,8 @@
 <div class="color-input-wrapper">
     <input
         type="text"
-        id={name}
+        id={`${id}-field`}
+        aria-label={`${name} Field`}
         class="color-field"
         autocomplete="off"
         {disabled}
@@ -86,7 +88,8 @@
     />
     <input
         type="color"
-        id={name}
+        id={`${id}-picker`}
+        aria-label={`${name} Color Picker`}
         class="color-selector"
         {disabled}
         value={colorPickerValue}

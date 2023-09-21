@@ -37,7 +37,7 @@ describe('FileInput', () => {
         // Check with multiple false
         const { rerender } = render(FileInput, {
             name: 'testFileInput',
-            key: 'testFileInput',
+            id: 'testFileInput',
             multiple: false,
             accept: 'image/*'
         });
@@ -52,7 +52,7 @@ describe('FileInput', () => {
         // Check with multiple true
         rerender({
             name: 'testFileInput',
-            key: 'testFileInput',
+            id: 'testFileInput',
             multiple: true,
             accept: 'image/*'
         });
@@ -69,7 +69,7 @@ describe('FileInput', () => {
         // Check with no specific type
         const { rerender } = render(FileInput, {
             name: 'testFileInput',
-            key: 'testFileInput',
+            id: 'testFileInput',
             multiple: false,
             accept: '*'
         });
@@ -79,7 +79,7 @@ describe('FileInput', () => {
         // Check with image type
         rerender({
             name: 'testFileInput',
-            key: 'testFileInput',
+            id: 'testFileInput',
             multiple: false,
             accept: 'image/*'
         });
@@ -89,7 +89,7 @@ describe('FileInput', () => {
         // Check with video type
         rerender({
             name: 'testFileInput',
-            key: 'testFileInput',
+            id: 'testFileInput',
             multiple: false,
             accept: 'video/*'
         });
@@ -99,7 +99,7 @@ describe('FileInput', () => {
         // Check with audio type
         rerender({
             name: 'testFileInput',
-            key: 'testFileInput',
+            id: 'testFileInput',
             multiple: false,
             accept: 'audio/*'
         });
@@ -109,7 +109,7 @@ describe('FileInput', () => {
         // Check with mixed type
         rerender({
             name: 'testFileInput',
-            key: 'testFileInput',
+            id: 'testFileInput',
             multiple: false,
             accept: 'video/*, image/*'
         });
@@ -120,7 +120,7 @@ describe('FileInput', () => {
     it('updates state properly with file input (none, one, multiple selected)', async () => {
         const { component } = render(FileInput, {
             name: 'testFileInput',
-            key: 'testFileInput',
+            id: 'testFileInput',
             multiple: true,
             accept: 'image/*'
         });

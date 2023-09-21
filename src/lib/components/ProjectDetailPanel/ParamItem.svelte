@@ -80,6 +80,7 @@
     {#if ParamGuards.isNumberParamConfig(config) && typeof value === 'number'}
         {#if config.options != undefined}
             <OptionInput
+                id={config.key}
                 name={config.name}
                 options={optionsObject(config.options)}
                 {disabled}
@@ -88,6 +89,7 @@
             />
         {:else}
             <NumberInput
+                id={config.key}
                 name={config.name}
                 min={config.min}
                 max={config.max}
@@ -104,6 +106,7 @@
         {/if}
     {:else if ParamGuards.isBooleanParamConfig(config) && typeof value === 'boolean'}
         <BooleanInput
+            id={config.key}
             name={config.name}
             {disabled}
             bind:value
@@ -112,6 +115,7 @@
     {:else if ParamGuards.isStringParamConfig(config) && typeof value === 'string'}
         {#if config.options != undefined}
             <OptionInput
+                id={config.key}
                 name={config.name}
                 options={optionsObject(config.options)}
                 {disabled}
@@ -120,6 +124,7 @@
             />
         {:else if config.style === StringParamStyle.Color}
             <ColorInput
+                id={config.key}
                 name={config.name}
                 {disabled}
                 bind:value
@@ -128,6 +133,7 @@
             />
         {:else}
             <StringInput
+                id={config.key}
                 name={config.name}
                 multiline={config.style === StringParamStyle.MultiLine}
                 {disabled}
@@ -139,6 +145,7 @@
     {:else if ParamGuards.isNumericArrayParamConfig(config) && isNumericArray(value)}
         {#if config.options != undefined}
             <OptionInput
+                id={config.key}
                 name={config.name}
                 options={optionsObject(config.options)}
                 {disabled}
@@ -147,6 +154,7 @@
             />
         {:else if config.style === NumericArrayParamStyle.Color || config.style === NumericArrayParamStyle.UnitColor}
             <ColorInput
+                id={config.key}
                 name={config.name}
                 {disabled}
                 unitColorArrays={config.style === NumericArrayParamStyle.UnitColor}
@@ -164,6 +172,7 @@
             >
                 {#each value as valueMember, index}
                     <NumberInput
+                        id={`${config.key}-${index + 1}`}
                         name={`${config.name} Element ${index + 1}`}
                         min={config.min}
                         max={config.max}
@@ -188,14 +197,16 @@
         {/if}
     {:else if ParamGuards.isFunctionParamConfig(config)}
         <FunctionInput
+            id={config.key}
+            name={config.name}
             buttonText={config.buttonText}
             {disabled}
             on:click={paramUpdated.bind(null, true)}
         />
     {:else if ParamGuards.isFileParamConfig(config)}
         <FileInput
+            id={config.key}
             name={config.name}
-            key={config.key}
             multiple={config.multiple}
             accept={config.accept}
             {disabled}

@@ -1,6 +1,7 @@
 <script lang="ts" generics="T extends (string | number | number[])">
     import { createEventDispatcher } from 'svelte';
 
+    export let id: string;
     export let name: string;
     export let value: T;
     export let options: Record<string, T>;
@@ -14,7 +15,7 @@
     }
 </script>
 
-<select id={name} {disabled} on:change={valueUpdated} data-testid="option-param-input">
+<select {id} aria-label={name} {disabled} on:change={valueUpdated} data-testid="option-param-input">
     {#each Object.entries(options) as [optionLabel, optionValue]}
         <option
             value={optionLabel}

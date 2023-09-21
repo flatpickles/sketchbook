@@ -1,6 +1,7 @@
 <script lang="ts">
     import { createEventDispatcher } from 'svelte';
 
+    export let id: string;
     export let name: string;
     export let min: number;
     export let max: number;
@@ -34,7 +35,8 @@
     {#if showSlider}
         <input
             type="range"
-            id={name}
+            id={`${id}-slider`}
+            aria-label={`${name} Slider`}
             {min}
             {max}
             {step}
@@ -48,7 +50,8 @@
     {#if showField}
         <input
             type="number"
-            id={name}
+            id={`${id}-field`}
+            aria-label={`${name} Field`}
             {min}
             {max}
             {step}
