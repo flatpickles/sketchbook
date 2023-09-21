@@ -64,7 +64,7 @@ export default class AllParams extends Project {
         if (!this.canvas || !this.container) throw new Error('stuff not initialized');
         const ctx = this.canvas.getContext('2d');
         if (!ctx) throw new Error('Context not initialized');
-        ctx.fillStyle = 'red';
+        ctx.fillStyle = this.stringColor;
         ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
     }
 }

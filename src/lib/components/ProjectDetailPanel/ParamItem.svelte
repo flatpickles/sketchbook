@@ -67,7 +67,7 @@
         class:odd={!even}
         title={config.hoverText}
     >
-        <label class="param-label" data-testid="param-label" for={config.name}>{config.name}</label>
+        <span class="param-label" data-testid="param-label">{config.name}</span>
     </div>
 {/if}
 <div
@@ -162,9 +162,9 @@
                     NumericArrayParamStyle.CompactSlider
                 ].includes(config.style)}
             >
-                {#each value as valueMember}
+                {#each value as valueMember, index}
                     <NumberInput
-                        name={config.name}
+                        name={`${config.name} Element ${index + 1}`}
                         min={config.min}
                         max={config.max}
                         step={config.step}

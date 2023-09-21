@@ -7,11 +7,11 @@ _Screenshot from a Sketchbook deployment, available live [here](todo)_.
 
 ### How It Works
 
-After forking the [Sketchbook repository](https://github.com/flatpickles), you can build your own projects within it as subclasses of a generic `Project` class. The Sketchbook webapp provides a managed HTML canvas to these project implementations, and will call a set of lifecycle functions, but otherwise leaves the rendering up to you. You can draw to the canvas directly, use P5, make shader art, or whatever else you like to do.
+After forking the [Sketchbook repository](https://github.com/flatpickles), you can build your own projects within it, as subclasses of a generic `Project` class. The Sketchbook webapp provides a managed HTML canvas to these project implementations, and will call a set of lifecycle functions, but otherwise leaves the rendering up to you. You can draw to the canvas directly, use P5, make shader art, or whatever else you like to do.
 
 In addition to giving you a friendly way to organize and view canvas projects, Sketchbook also automatically displays UI inputs for any instance variables declared on `Project` subclasses. A wide variety of parameter types and styles are supported, and Sketchbook also provides a "preset" interface for switching between pre-defined collections of parameter values. Sketchbook's parameterization system is easy to understand and use, but nonetheless facilitates the design of highly configurable projects. _[Note: presets are still [on the roadmap](https://github.com/flatpickles/sketchbook/issues/21).]_
 
-Sketchbook is a webapp at its heart, and when you want to publish your projects, you can simply deploy this webapp on a hosting provider of your choice. No frontend work is required outside of your canvas drawing code, but your audience will be able to view and interact with your projects via the same interface you've been using during during development.
+Sketchbook is a webapp at its heart, and when you want to publish your projects, you can simply deploy the app on a hosting provider of your choice. No frontend work is required outside of your canvas drawing code, but your audience will be able to view and interact with your projects via the same interface you've been using during during development. If you'd rather publish your projects in isolation, your code is portable: Sketchbook's unopinionated nature makes it easy to move your work into other contexts.
 
 ### Diving In
 
