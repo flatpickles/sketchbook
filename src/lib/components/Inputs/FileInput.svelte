@@ -25,6 +25,7 @@
     let displayedFileName: string = noFilesText;
     let nativeFileInput: HTMLInputElement;
     $: nativeInputID = key + '-file-input';
+    $: textInputID = key + '-file-name-field';
 
     const dispatch = createEventDispatcher();
     function fileInputEvent() {
@@ -65,6 +66,7 @@
     />
     <input
         type="text"
+        id={textInputID}
         class="file-name-field"
         readonly
         {disabled}
