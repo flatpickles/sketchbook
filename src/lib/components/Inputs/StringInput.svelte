@@ -1,4 +1,5 @@
 <script lang="ts">
+    export let id: string;
     export let name: string;
     export let value: string;
     export let multiline = true;
@@ -7,7 +8,8 @@
 
 {#if multiline}
     <textarea
-        id={name}
+        {id}
+        aria-label={name}
         autocomplete="off"
         rows="2"
         {disabled}
@@ -19,7 +21,8 @@
 {:else}
     <input
         type="text"
-        id={name}
+        {id}
+        aria-label={name}
         {disabled}
         autocomplete="off"
         bind:value

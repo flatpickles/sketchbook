@@ -1,11 +1,21 @@
 <script lang="ts">
     import { FunctionParamConfigDefaults } from '$lib/base/ConfigModels/ParamConfigs/FunctionParamConfig';
 
+    export let id: string;
+    export let name: string;
     export let buttonText: string = FunctionParamConfigDefaults.buttonText;
     export let disabled = false;
 </script>
 
-<input type="button" value={buttonText} {disabled} on:click data-testid="function-param-input" />
+<input
+    type="button"
+    {id}
+    aria-label={name}
+    value={buttonText}
+    {disabled}
+    on:click
+    data-testid="function-param-input"
+/>
 
 <style lang="scss">
     input[type='button'] {

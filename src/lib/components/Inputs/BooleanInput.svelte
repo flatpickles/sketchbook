@@ -1,4 +1,5 @@
 <script lang="ts">
+    export let id: string;
     export let name: string;
     export let value: boolean;
     export let disabled = false;
@@ -17,7 +18,8 @@
 >
     <input
         type="checkbox"
-        id={name}
+        {id}
+        aria-label={name}
         {disabled}
         bind:this={inputElement}
         bind:checked={value}

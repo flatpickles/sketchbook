@@ -2,8 +2,8 @@
     import { createEventDispatcher } from 'svelte';
     import { FileParamConfigDefaults } from '$lib/base/ConfigModels/ParamConfigs/FileParamConfig';
 
+    export let id: string;
     export let name: string;
-    export let key: string;
     export let multiple = FileParamConfigDefaults.multiple;
     export let accept = FileParamConfigDefaults.accept;
     export let selectedFiles: FileList | undefined = undefined;
@@ -24,8 +24,8 @@
 
     let displayedFileName: string = noFilesText;
     let nativeFileInput: HTMLInputElement;
-    $: nativeInputID = key + '-file-input';
-    $: textInputID = key + '-file-name-field';
+    $: nativeInputID = id + '-file-input';
+    $: textInputID = id + '-file-name-field';
 
     const dispatch = createEventDispatcher();
     function fileInputEvent() {
@@ -51,10 +51,11 @@
     }
 </script>
 
-<div class="file-input-wrapper" id={name} data-testid="file-param-input">
+<div class="file-input-wrapper" data-testid="file-param-input">
     <input
         type="file"
         id={nativeInputID}
+        aria-label={`${name} File Input`}
         class="native-file-input"
         {multiple}
         {accept}
@@ -67,6 +68,7 @@
     <input
         type="text"
         id={textInputID}
+        aria-label={`${name} File Name Field`}
         class="file-name-field"
         readonly
         {disabled}
@@ -76,6 +78,7 @@
     />
     <label
         class="file-button"
+        aria-label={`${name} File Input Button`}
         class:disabled
         for={nativeInputID}
         data-testid="file-selector-button"
