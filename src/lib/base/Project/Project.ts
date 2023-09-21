@@ -1,7 +1,7 @@
 /**
  * A base class for all projects in src/art. You can subclass this directly to create Sketchbook
- * projects that use the HTML canvas element directly, or you can subclass one of the more
- * specialized project types in this directory. See the docs for more info.
+ * projects that use the HTML canvas element directly, or you can subclass one of the specialized
+ * project types in this directory. See the docs for more info.
  */
 
 /* eslint-disable @typescript-eslint/no-empty-function */
@@ -25,7 +25,8 @@ export default class Project {
     /**
      * The canvasType used by this project; similarly typed canvases will be reused as new projects
      * are loaded. The canvasType selected should match the type of context you expect to use with
-     * this.canvas.getContext(), or CanvasType.None if you don't need a canvas.
+     * this.canvas.getContext(), or CanvasType.None if you don't need a canvas. This should be set
+     * in the project's constructor, and should not be changed during the project's lifecycle.
      */
     canvasType = CanvasType.Context2D;
 
@@ -53,8 +54,8 @@ export default class Project {
     /**
      * resized is called when the container div and/or active canvas is resized. The detail object
      * contains the following:
-     * - containerSize: the new size of the container div, in pixels
-     * - canvasSize: the new size of the canvas, in pixels (only available if using a canvas)
+     * - containerSize: the new size of the container div element, in pixels
+     * - canvasSize: the new size of the canvas element, in pixels (if using a canvas)
      */
     public resized(detail: { containerSize: [number, number]; canvasSize?: [number, number] }) {}
 
