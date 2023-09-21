@@ -1,7 +1,7 @@
 -   Start Here
 
     -   [Overview](/)
-    -   [Quick Start](quick-start.md)
+    -   [Quick Start Guide](quick-start.md)
 
 -   Using Sketchbook
 
