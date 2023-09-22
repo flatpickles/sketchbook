@@ -1,6 +1,6 @@
 # Quick Start Guide
 
-Welcome to the Quick Start Guide for Sketchbook. This is a guide to getting an instance of Sketchbook up and running on your local machine, creating your first project, and exploring some basic configuration options. Let's go!
+Welcome to the Quick Start Guide for Sketchbook. This guide will walk you through getting an instance of Sketchbook up and running locally, creating your first project, and exploring some basic configuration options.
 
 ### Fork the Repo
 
@@ -23,6 +23,8 @@ Sketchbook includes a few demo projects for your reference. Feel free to use or 
 _Sketchbook's global configuration files are located in `src/config`, not in `src/art`. For now, let's just focus on creating our first project!_
 
 ### Run Sketchbook Locally
+
+[todo: npm install?]
 
 You can **run the dev server** with `npm run dev`. Sketchbook is now running on your local machine (perhaps at [http://localhost:5173](http://localhost:5173)), and the app will hot-reload any time you save a file. Make sure you have a browser window open with your local Sketchbook running before you proceed.
 

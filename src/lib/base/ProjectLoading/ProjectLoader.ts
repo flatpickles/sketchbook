@@ -140,7 +140,7 @@ export default class ProjectLoader {
         // Set project properties to stored values
         if (browser) {
             for (const param of params) {
-                const storedValue = ParamValueProvider.getValue(param, props.title, project, true);
+                const storedValue = ParamValueProvider.getValue(param, key, project, true);
                 if (typeof storedValue === 'function') continue;
                 Object.defineProperty(project, param.key, {
                     value: storedValue,

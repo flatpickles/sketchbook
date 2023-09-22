@@ -9,6 +9,8 @@ export default class DemoProject extends Project {
         alert('Hello world!');
     };
     testColor = '#FF0000';
+
+    #img: HTMLImageElement | null = null;
     testLoad = async (result: string) => {
         // functions with >=1 parameter: Object.getOwnPropertyDescriptor(fn, "length").value
         // parameter can be an array buffer or a string, or an array of same (if multiple files are selected)
@@ -16,13 +18,13 @@ export default class DemoProject extends Project {
         // after first parameter, could use next params for other file metadata, e.g. name, size, type, date
         // https://developer.mozilla.org/en-US/docs/Web/API/FileReader/result
         console.log(result);
-        const img = new Image();
-        img.onload = () => {
+        this.#img = new Image();
+        this.#img.onload = () => {
             const ctx = this.canvas?.getContext('2d');
             if (!ctx) throw new Error('Could not get 2D context');
-            ctx.drawImage(img, 0, 0);
+            ctx.drawImage(this.#img!, 0, 0);
         };
-        img.src = result;
+        this.#img.src = result;
         return;
     };
     testLoadImage = async (result: HTMLImageElement) => {
@@ -51,5 +53,9 @@ export default class DemoProject extends Project {
         ctx.fillStyle = this.testColor;
         this.#xPos = frame % this.canvas.width;
         ctx.fillRect(this.#xPos, 300, 550, 700);
+
+        if (this.#img) {
+            ctx.drawImage(this.#img, 0, 0);
+        }
     }
 }

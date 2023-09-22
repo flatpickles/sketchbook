@@ -9,6 +9,9 @@
         "rectColor": {
             "name": "Rect Color",
             "style": "color"
+        },
+        "noLiveUpdates": {
+            "applyDuringInput": false
         }
     }
 }

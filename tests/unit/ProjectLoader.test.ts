@@ -283,8 +283,8 @@ describe('loading specific projects, in browser mode (re: stored values)', async
     it('loads a project with a config file', async () => {
         // Mock stored values
         const mockParamValueFn = vi.fn((key: string) => {
-            if (key === 'Config and Support_testNumber') return '32';
-            if (key === 'Config and Support_testString') return '"hello world"';
+            if (key === 'ConfigAndSupport_testNumber') return '32';
+            if (key === 'ConfigAndSupport_testString') return '"hello world"';
             return null;
         });
         vi.spyOn(Storage.prototype, 'getItem').mockImplementation(mockParamValueFn);
