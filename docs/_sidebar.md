@@ -1,6 +1,6 @@
 -   Start Here
 
-    -   [Overview](/)
+    -   [Sketchbook Overview](/)
     -   [Quick Start Guide](quick-start.md)
 
 -   Using Sketchbook

@@ -1,21 +1,91 @@
 <script lang="ts">
-    import { createEventDispatcher } from 'svelte';
+    import { createEventDispatcher, onMount } from 'svelte';
 
     import type { ProjectTuple } from '$lib/base/ProjectLoading/ProjectLoader';
     import { type ParamConfig, getParamSections } from '$lib/base/ConfigModels/ParamConfig';
-    import { ParamGuards, type ParamValueType } from '$lib/base/ConfigModels/ParamTypes';
+    import {
+        ParamGuards,
+        type ParamValueType,
+        type AnyParamValueType
+    } from '$lib/base/ConfigModels/ParamTypes';
     import UserFileLoader from '$lib/base/Util/FileParamLoader';
 
     import ParamItem from './ParamItem.svelte';
     import ParamValueProvider from '$lib/base/ProjectLoading/ParamValueProvider';
 
     export let projectTuple: ProjectTuple;
+
     $: [noSectionParams, paramSections] = getParamSections(projectTuple.params);
+    const incompleteUpdateKeys = new Set<string>();
     const dispatch = createEventDispatcher();
+
+    // Derive initial display values from the project's current values when switched. Employ some
+    // Svelte trickery so this is only reactive to projectTuple reassignments, and not property
+    // changes within it.
+    let displayedValues = getDisplayedValues(projectTuple);
+    $: projectSwitched(projectTuple);
+    function projectSwitched(newTuple: ProjectTuple) {
+        displayedValues = getDisplayedValues(newTuple);
+    }
+    function getDisplayedValues(currentTuple: ProjectTuple) {
+        return Object.fromEntries(
+            currentTuple.params.map((param) => {
+                return [param.key, initialValueForParam(param)];
+            })
+        ) as { [key: string]: any };
+    }
+
+    // On each animation frame, check if any param values have diverged from their displayed values,
+    // e.g. if they have been updated within a project. Keep both the UI and stored state in sync.
+    displaySyncLoop();
+    function displaySyncLoop() {
+        const currentValues = projectTuple.project as { [key: string]: any };
+        for (const param of projectTuple.params) {
+            // If the param is currently being updated, displayedValue is allowed to diverge
+            if (incompleteUpdateKeys.has(param.key)) continue;
+
+            // If the param is a function, we can't check for divergence
+            const currentValue = currentValues[param.key];
+            if (typeof currentValue === 'function') {
+                continue;
+            }
+
+            // Check for divergence; arrays must be checked element-wise and copied
+            let updatedValue: AnyParamValueType | undefined;
+            if (Array.isArray(currentValue)) {
+                const arrayEquality = currentValue.every(
+                    (v: number, i: number) => v === displayedValues[param.key][i]
+                );
+                if (!arrayEquality) {
+                    updatedValue = [...currentValue];
+                }
+            } else if (currentValue !== displayedValues[param.key]) {
+                updatedValue = currentValue;
+            }
+
+            // If the value has diverged, update displayedValues and the ParamValueProvider
+            if (updatedValue !== undefined) {
+                displayedValues[param.key] = updatedValue;
+                ParamValueProvider.setValue(param, projectTuple.key, displayedValues[param.key]);
+            }
+        }
+
+        // Continue checking for divergence on each animation frame
+        requestAnimationFrame(displaySyncLoop);
+    }
 
     // Apply the updated param (or call the associated function)
     async function paramUpdated(event: CustomEvent) {
         const updatedConfig: ParamConfig = event.detail.config;
+        const updateComplete: boolean = event.detail.complete;
+
+        // If the param update isn't complete and applyDuringInput isn't set, allow the UI value
+        // to diverge from the project's value, and don't trigger an update.
+        if (!updatedConfig.applyDuringInput && !updateComplete) {
+            incompleteUpdateKeys.add(updatedConfig.key);
+            return;
+        }
+        incompleteUpdateKeys.delete(updatedConfig.key);
 
         // Update the project's value for this key, or call the named function
         if (ParamGuards.isFunctionParamConfig(updatedConfig)) {
@@ -57,7 +127,7 @@
                 enumerable: true,
                 configurable: true
             });
-            ParamValueProvider.setValue(updatedConfig, projectTuple.config.title, value);
+            ParamValueProvider.setValue(updatedConfig, projectTuple.key, value);
         }
 
         // Dispatch updated event - project.update() is called in ProjectViewer
@@ -87,7 +157,7 @@
                 <!-- Even/odd is one-indexed -->
                 <ParamItem
                     config={param}
-                    value={initialValueForParam(param)}
+                    bind:value={displayedValues[param.key]}
                     even={paramIdx % 2 == 1}
                     on:update={paramUpdated}
                 />
@@ -108,7 +178,7 @@
                     <!-- Even/odd is one-indexed -->
                     <ParamItem
                         config={param}
-                        value={initialValueForParam(param)}
+                        bind:value={displayedValues[param.key]}
                         even={paramIdx % 2 == 1}
                         on:update={paramUpdated}
                     />

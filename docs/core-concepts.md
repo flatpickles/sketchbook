@@ -1,6 +1,6 @@
 # Core Concepts
 
-So far, you've learned about Sketchbook's intentions on the [Overview](README.md) page, and experimented with a basic project implementation on the [Quick Start](quick-start.md) page. Read on to learn more about Sketchbook's fundamentals!
+So far, you've learned about Sketchbook's intentions on the [Overview](README.md) page, and experimented with a basic project implementation on the [Quick Start](quick-start.md) page. Read on to learn more about Sketchbook's fundamentals.
 
 ### `src/art` File Structure
 
@@ -21,7 +21,7 @@ src/art/
 │  ├─ PrintProject.ts
 ```
 
-Within `src/art`, Sketchbook will automatically look for JS or TS files that share a name with their containing directory. These files must export a default class that descends from the `Project` base class (discussed below). `config.json` files are included alongside project files, and apply to the project file in the same directory.
+Within `src/art`, Sketchbook will automatically look for JS or TS files that share a name with their containing directory. These files must export a default class that descends from the `Project` base class. `config.json` files can optionally be included alongside project files, and apply to the project file in the same directory.
 
 As long as you're organizing and defining your project classes as expected, you can put anything else within `src/art`! Your additions could include asset files, helper code, or your own utility subclasses of `Project` (extendible by projects in your library).
 

@@ -23,14 +23,11 @@
     export let disabled = false;
 
     const dispatch = createEventDispatcher();
-    function paramUpdated(complete: boolean) {
-        // If the param update isn't complete and applyDuringInput isn't set, we shan't proceed
-        if (!config.applyDuringInput && !complete) return;
-
-        // Dispatch the update event
+    function inputUpdated(complete: boolean) {
         dispatch('update', {
             config: config,
-            value: value
+            value: value,
+            complete: complete
         });
     }
 
@@ -85,7 +82,7 @@
                 options={optionsObject(config.options)}
                 {disabled}
                 bind:value
-                on:change={paramUpdated.bind(null, true)}
+                on:change={inputUpdated.bind(null, true)}
             />
         {:else}
             <NumberInput
@@ -100,8 +97,8 @@
                 )}
                 {disabled}
                 bind:value
-                on:input={paramUpdated.bind(null, false)}
-                on:change={paramUpdated.bind(null, true)}
+                on:input={inputUpdated.bind(null, false)}
+                on:change={inputUpdated.bind(null, true)}
             />
         {/if}
     {:else if ParamGuards.isBooleanParamConfig(config) && typeof value === 'boolean'}
@@ -110,7 +107,7 @@
             name={config.name}
             {disabled}
             bind:value
-            on:change={paramUpdated.bind(null, true)}
+            on:change={inputUpdated.bind(null, true)}
         />
     {:else if ParamGuards.isStringParamConfig(config) && typeof value === 'string'}
         {#if config.options != undefined}
@@ -120,7 +117,7 @@
                 options={optionsObject(config.options)}
                 {disabled}
                 bind:value
-                on:change={paramUpdated.bind(null, true)}
+                on:change={inputUpdated.bind(null, true)}
             />
         {:else if config.style === StringParamStyle.Color}
             <ColorInput
@@ -128,8 +125,8 @@
                 name={config.name}
                 {disabled}
                 bind:value
-                on:input={paramUpdated.bind(null, false)}
-                on:change={paramUpdated.bind(null, true)}
+                on:input={inputUpdated.bind(null, false)}
+                on:change={inputUpdated.bind(null, true)}
             />
         {:else}
             <StringInput
@@ -138,8 +135,8 @@
                 multiline={config.style === StringParamStyle.MultiLine}
                 {disabled}
                 bind:value
-                on:input={paramUpdated.bind(null, false)}
-                on:change={paramUpdated.bind(null, true)}
+                on:input={inputUpdated.bind(null, false)}
+                on:change={inputUpdated.bind(null, true)}
             />
         {/if}
     {:else if ParamGuards.isNumericArrayParamConfig(config) && isNumericArray(value)}
@@ -150,7 +147,7 @@
                 options={optionsObject(config.options)}
                 {disabled}
                 bind:value
-                on:change={paramUpdated.bind(null, true)}
+                on:change={inputUpdated.bind(null, true)}
             />
         {:else if config.style === NumericArrayParamStyle.Color || config.style === NumericArrayParamStyle.UnitColor}
             <ColorInput
@@ -159,8 +156,8 @@
                 {disabled}
                 unitColorArrays={config.style === NumericArrayParamStyle.UnitColor}
                 bind:value
-                on:input={paramUpdated.bind(null, false)}
-                on:change={paramUpdated.bind(null, true)}
+                on:input={inputUpdated.bind(null, false)}
+                on:change={inputUpdated.bind(null, true)}
             />
         {:else}
             <div
@@ -189,8 +186,8 @@
                         ].includes(config.style)}
                         {disabled}
                         bind:value={valueMember}
-                        on:input={paramUpdated.bind(null, false)}
-                        on:change={paramUpdated.bind(null, true)}
+                        on:input={inputUpdated.bind(null, false)}
+                        on:change={inputUpdated.bind(null, true)}
                     />
                 {/each}
             </div>
@@ -201,7 +198,7 @@
             name={config.name}
             buttonText={config.buttonText}
             {disabled}
-            on:click={paramUpdated.bind(null, true)}
+            on:click={inputUpdated.bind(null, true)}
         />
     {:else if ParamGuards.isFileParamConfig(config)}
         <FileInput
