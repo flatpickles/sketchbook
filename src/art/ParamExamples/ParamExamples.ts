@@ -67,6 +67,12 @@ export default class AllParams extends Project {
         ctx.fillStyle = this.stringColor;
         ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
     }
+
+    public paramChanged(detail: { paramKey: string }): void {
+        if (detail.paramKey === 'numberSliderOnly') {
+            this.numberFieldOnly = this.numberSliderOnly;
+        }
+    }
 }
 
 /* todo...

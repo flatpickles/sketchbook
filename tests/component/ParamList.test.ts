@@ -101,11 +101,13 @@ function paramsWithApplyDuringInput(
 
 function renderParams(
     applyDuringInput = true,
-    sectionOption: SectionOption = SectionOption.NoSections
+    sectionOption: SectionOption = SectionOption.NoSections,
+    twoWaySync = true
 ): TestProject {
     const project = new TestProject();
     const testProjectConfig = ProjectConfigFactory.propsFrom({
-        applyDuringInput: applyDuringInput
+        applyDuringInput: applyDuringInput,
+        twoWaySync: twoWaySync
     });
     const testTuple: ProjectTuple = {
         key: 'testProject',
@@ -594,8 +596,10 @@ describe('file param input', () => {
 });
 
 describe('ParamList display sync w/ project property values', () => {
-    it('syncs values in the project with param display', async () => {
-        const project = renderParams(false);
+    afterEach(cleanupParams);
+
+    it('syncs values in the project with param display (twoWaySync)', async () => {
+        const project = renderParams(false, SectionOption.NoSections, true);
 
         const numberInput = screen.getAllByTestId('number-param-slider')[0] as HTMLInputElement;
         expect(numberInput.value).toBe('42');
@@ -636,5 +640,52 @@ describe('ParamList display sync w/ project property values', () => {
         expect(project.testNumericArray).toEqual([4, 5, 6]);
 
         expect(ParamValueProvider.setValue).toHaveBeenCalledTimes(4);
+    });
+
+    it("doesn't sync values with !twoWaySync", async () => {
+        const project = renderParams(false, SectionOption.NoSections, false);
+
+        const numberInput = screen.getAllByTestId('number-param-slider')[0] as HTMLInputElement;
+        expect(numberInput.value).toBe('42');
+        expect(project.testNumber).toBe(42);
+        project.testNumber = 43;
+        await new Promise((r) => setTimeout(r, 100)); // Make sure displaySyncLoop has time to run
+        expect(numberInput.value).toBe('42');
+        expect(project.testNumber).toBe(43);
+
+        const booleanInput = screen.getByTestId('boolean-param-input') as HTMLInputElement;
+        expect(booleanInput.checked).toBe(true);
+        expect(project.testBoolean).toBe(true);
+        project.testBoolean = false;
+        await new Promise((r) => setTimeout(r, 100)); // Make sure displaySyncLoop has time to run
+        expect(booleanInput.checked).toBe(true);
+        expect(project.testBoolean).toBe(false);
+
+        const stringInput = screen.getByTestId('string-param-input-singleline') as HTMLInputElement;
+        expect(stringInput.value).toBe('hello');
+        expect(project.testString).toBe('hello');
+        project.testString = 'goodbye';
+        await new Promise((r) => setTimeout(r, 100)); // Make sure displaySyncLoop has time to run
+        () => expect(stringInput.value).toBe('hello');
+        expect(project.testString).toBe('goodbye');
+
+        const numericArrayInput = screen.getAllByTestId(
+            'number-param-slider'
+        ) as HTMLInputElement[];
+        numericArrayInput.shift(); // first is the non-array numeric input
+        expect(numericArrayInput.length).toBe(3);
+        expect(numericArrayInput[0].value).toBe('1');
+        expect(numericArrayInput[1].value).toBe('2');
+        expect(numericArrayInput[2].value).toBe('3');
+        expect(project.testNumericArray).toEqual([1, 2, 3]);
+        project.testNumericArray = [4, 5, 6];
+        await new Promise((r) => setTimeout(r, 100)); // Make sure displaySyncLoop has time to run
+        expect(numericArrayInput[0].value).toBe('1');
+        expect(numericArrayInput[1].value).toBe('2');
+        expect(numericArrayInput[2].value).toBe('3');
+
+        expect(project.testNumericArray).toEqual([4, 5, 6]);
+
+        expect(ParamValueProvider.setValue).toHaveBeenCalledTimes(0);
     });
 });

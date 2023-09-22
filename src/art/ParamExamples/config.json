@@ -1,6 +1,7 @@
 {
     "title": "Param Examples",
     "description": "Examples of possible parameter types and styles.",
+    "twoWaySync": false,
     "params": {
         "numberDefault": {
             "name": "Default Number",

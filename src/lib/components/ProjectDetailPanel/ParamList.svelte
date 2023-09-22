@@ -20,10 +20,6 @@
     // Svelte trickery so this is only reactive to projectTuple reassignments, and not property
     // changes within it.
     let displayedValues = getDisplayedValues(projectTuple);
-    $: projectSwitched(projectTuple);
-    function projectSwitched(newTuple: ProjectTuple) {
-        displayedValues = getDisplayedValues(newTuple);
-    }
     function getDisplayedValues(currentTuple: ProjectTuple) {
         return Object.fromEntries(
             currentTuple.params.map((param) => {
@@ -31,10 +27,15 @@
             })
         ) as { [key: string]: any };
     }
+    $: projectSwitched(projectTuple);
+    function projectSwitched(newTuple: ProjectTuple) {
+        displayedValues = getDisplayedValues(newTuple);
+    }
 
     // On each animation frame, check if any param values have diverged from their displayed values,
     // e.g. if they have been updated within a project. Keep both the UI and stored state in sync.
-    displaySyncLoop();
+    $: displaySyncLoopEnabled = projectTuple.config.twoWaySync;
+    $: if (displaySyncLoopEnabled) displaySyncLoop();
     function displaySyncLoop() {
         const currentValues = projectTuple.project as { [key: string]: any };
         for (const param of projectTuple.params) {
@@ -68,7 +69,7 @@
         }
 
         // Continue checking for divergence on each animation frame
-        requestAnimationFrame(displaySyncLoop);
+        if (displaySyncLoopEnabled) requestAnimationFrame(displaySyncLoop);
     }
 
     // Apply the updated param (or call the associated function)
