@@ -1,6 +1,6 @@
 import { render, fireEvent, screen, cleanup, waitFor } from '@testing-library/svelte';
 import { vi, describe, it, expect, afterEach } from 'vitest';
-import ProjectParams from '$lib/components/ProjectDetailPanel/ParamList.svelte';
+import ParamList from '$lib/components/ProjectDetailPanel/ParamList.svelte';
 import Project from '$lib/base/Project/Project';
 import type { ProjectTuple } from '$lib/base/ProjectLoading/ProjectLoader';
 import { ParamType } from '$lib/base/ConfigModels/ParamConfig';
@@ -113,7 +113,7 @@ function renderParams(
         config: testProjectConfig,
         params: paramsWithApplyDuringInput(applyDuringInput, sectionOption)
     };
-    render(ProjectParams, {
+    render(ParamList, {
         projectTuple: testTuple
     });
 
@@ -128,7 +128,7 @@ function cleanupParams() {
     vi.clearAllMocks();
 }
 
-describe('ProjectParams list', () => {
+describe('ParamList list', () => {
     afterEach(cleanupParams);
 
     it('renders param items as even/odd correctly (no sections)', async () => {
@@ -240,7 +240,7 @@ describe('ProjectParams list', () => {
     });
 });
 
-describe('ProjectParams sections', () => {
+describe('ParamList sections', () => {
     afterEach(cleanupParams);
 
     it('renders param sections properly (some params in sections)', async () => {
@@ -337,6 +337,8 @@ describe('number param input', () => {
         fireEvent.input(numberInput, { target: { value: '43' } });
         expect(project.paramChanged).toHaveBeenCalledTimes(0);
         expect(numberInput.value).toBe('43');
+        await new Promise((r) => setTimeout(r, 100)); // Make sure displaySyncLoop has time to run
+        expect(numberInput.value).toBe('43');
         expect(project.testNumber).toBe(42);
         fireEvent.change(numberInput, { target: { value: '44' } });
         expect(project.paramChanged).toHaveBeenCalledTimes(1);
@@ -414,6 +416,8 @@ describe('string param input', () => {
         fireEvent.input(stringInput, { target: { value: 'goodbye' } });
         expect(project.paramChanged).toHaveBeenCalledTimes(0);
         expect(stringInput.value).toBe('goodbye');
+        await new Promise((r) => setTimeout(r, 100)); // Make sure displaySyncLoop has time to run
+        expect(stringInput.value).toBe('goodbye');
         expect(project.testString).toBe('hello');
         fireEvent.change(stringInput);
         expect(project.paramChanged).toHaveBeenCalledTimes(1);
@@ -479,6 +483,8 @@ describe('numeric array param input', () => {
         expect(project.testNumericArray).toEqual([1, 2, 3]);
         fireEvent.input(numericArrayInput[0], { target: { value: '4' } });
         expect(project.paramChanged).toHaveBeenCalledTimes(0);
+        expect(numericArrayInput[0].value).toBe('4');
+        await new Promise((r) => setTimeout(r, 100)); // Make sure displaySyncLoop has time to run
         expect(numericArrayInput[0].value).toBe('4');
         expect(project.testNumericArray).toEqual([1, 2, 3]);
         fireEvent.change(numericArrayInput[1], { target: { value: '5' } });
@@ -584,5 +590,51 @@ describe('file param input', () => {
                 paramKey: 'testFile'
             })
         );
+    });
+});
+
+describe('ParamList display sync w/ project property values', () => {
+    it('syncs values in the project with param display', async () => {
+        const project = renderParams(false);
+
+        const numberInput = screen.getAllByTestId('number-param-slider')[0] as HTMLInputElement;
+        expect(numberInput.value).toBe('42');
+        expect(project.testNumber).toBe(42);
+        project.testNumber = 43;
+        await waitFor(() => expect(numberInput.value).toBe('43'));
+        expect(project.testNumber).toBe(43);
+
+        const booleanInput = screen.getByTestId('boolean-param-input') as HTMLInputElement;
+        expect(booleanInput.checked).toBe(true);
+        expect(project.testBoolean).toBe(true);
+        project.testBoolean = false;
+        await waitFor(() => expect(booleanInput.checked).toBe(false));
+        expect(project.testBoolean).toBe(false);
+
+        const stringInput = screen.getByTestId('string-param-input-singleline') as HTMLInputElement;
+        expect(stringInput.value).toBe('hello');
+        expect(project.testString).toBe('hello');
+        project.testString = 'goodbye';
+        await waitFor(() => expect(stringInput.value).toBe('goodbye'));
+        expect(project.testString).toBe('goodbye');
+
+        const numericArrayInput = screen.getAllByTestId(
+            'number-param-slider'
+        ) as HTMLInputElement[];
+        numericArrayInput.shift(); // first is the non-array numeric input
+        expect(numericArrayInput.length).toBe(3);
+        expect(numericArrayInput[0].value).toBe('1');
+        expect(numericArrayInput[1].value).toBe('2');
+        expect(numericArrayInput[2].value).toBe('3');
+        expect(project.testNumericArray).toEqual([1, 2, 3]);
+        project.testNumericArray = [4, 5, 6];
+        await waitFor(() => {
+            expect(numericArrayInput[0].value).toBe('4');
+            expect(numericArrayInput[1].value).toBe('5');
+            expect(numericArrayInput[2].value).toBe('6');
+        });
+        expect(project.testNumericArray).toEqual([4, 5, 6]);
+
+        expect(ParamValueProvider.setValue).toHaveBeenCalledTimes(4);
     });
 });
