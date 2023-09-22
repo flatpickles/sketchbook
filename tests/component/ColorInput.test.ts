@@ -12,6 +12,7 @@ describe('ColorInput', () => {
 
         // Render the component
         const { component } = render(ColorInput, {
+            id: 'color-param',
             name: 'Color',
             value: '#ff0000'
         });
@@ -56,6 +57,7 @@ describe('ColorInput', () => {
 
         // Render the component
         const { component } = render(ColorInput, {
+            id: 'color-param',
             name: 'Color',
             value: [255, 0, 0],
             unitColorArrays: false
@@ -101,6 +103,7 @@ describe('ColorInput', () => {
 
         // Render the component
         const { component } = render(ColorInput, {
+            id: 'color-param',
             name: 'Color',
             value: [1, 0, 0],
             unitColorArrays: true

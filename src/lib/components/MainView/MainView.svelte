@@ -212,7 +212,6 @@
                     projectTuple={selectedProjectTuple}
                     headerButtonIcon={rightPanelHeaderIcon}
                     on:headeraction={toggleRightPanel.bind(null, false)}
-                    on:paramupdated={viewer.paramUpdated}
                 />
             </div>
         </div>

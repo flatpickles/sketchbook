@@ -30,7 +30,7 @@
             <PresetControl {projectTuple} />
         {/if}
         {#if projectTuple.params && Object.values(projectTuple.params).length > 0}
-            <ProjectParams {projectTuple} on:paramupdated />
+            <ProjectParams {projectTuple} />
         {/if}
     </div>
 </Panel>

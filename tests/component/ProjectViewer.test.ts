@@ -236,36 +236,6 @@ describe('Project resize calls from CanvasViewer', () => {
     });
 });
 
-describe('Project paramChanged calls from CanvasViewer', () => {
-    afterEach(cleanup);
-
-    it('calls paramChanged with expected parameters', async () => {
-        const project = new Project();
-        vi.spyOn(project, 'paramChanged');
-
-        // First update call should have no paramKeys, and frame 0
-        const { component } = render(ProjectViewer, {
-            project: project
-        });
-        expect(project.paramChanged).toHaveBeenCalledTimes(0);
-
-        // After paramUpdated, paramKeys should reflect the updated param, and frame count should
-        // increment to 1
-        component.paramUpdated({
-            detail: {
-                updatedProject: project,
-                paramKey: 'testKey'
-            }
-        } as CustomEvent);
-        await waitFor(() => expect(project.paramChanged).toHaveBeenCalledTimes(1));
-        expect(project.paramChanged).toHaveBeenLastCalledWith(
-            expect.objectContaining({
-                paramKey: 'testKey'
-            })
-        );
-    });
-});
-
 describe('CanvasViewer w/ P5', () => {
     afterEach(cleanup);
 

@@ -12,6 +12,7 @@ describe('NumberInput', () => {
 
         // Render the component
         const { component } = render(NumberInput, {
+            id: 'number-param',
             name: 'Number',
             min: 0,
             max: 10,
@@ -71,6 +72,7 @@ describe('NumberInput', () => {
 
         // Render the component
         const { component } = render(NumberInput, {
+            id: 'number-param',
             name: 'Number',
             min: 0,
             max: 10,
@@ -121,6 +123,7 @@ describe('NumberInput', () => {
 
         // Render the component
         const { component } = render(NumberInput, {
+            id: 'number-param',
             name: 'Number',
             min: 0,
             max: 10,
