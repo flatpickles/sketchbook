@@ -9,6 +9,7 @@ describe('BooleanInput', () => {
         const changeHandler = vi.fn();
 
         const { component } = render(BooleanInput, {
+            id: 'boolean-param',
             name: 'Boolean',
             value: true
         });

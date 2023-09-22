@@ -18,14 +18,6 @@
     let frameCount = 0;
     let startTime = Date.now();
 
-    // Called externally when the project's params are updated
-    export function paramUpdated(event: CustomEvent) {
-        const { updatedProject, paramKey } = event.detail;
-        if (updatedProject != project)
-            throw new Error('Updated project does not match current project');
-        project.paramChanged({ paramKey });
-    }
-
     // Update the project, component, and DOM state each frame
     const updateLoop = () => {
         if (containerElement) {

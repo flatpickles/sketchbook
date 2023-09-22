@@ -1,6 +1,4 @@
 <script lang="ts">
-    import { createEventDispatcher, onMount } from 'svelte';
-
     import type { ProjectTuple } from '$lib/base/ProjectLoading/ProjectLoader';
     import { type ParamConfig, getParamSections } from '$lib/base/ConfigModels/ParamConfig';
     import {
@@ -17,7 +15,6 @@
 
     $: [noSectionParams, paramSections] = getParamSections(projectTuple.params);
     const incompleteUpdateKeys = new Set<string>();
-    const dispatch = createEventDispatcher();
 
     // Derive initial display values from the project's current values when switched. Employ some
     // Svelte trickery so this is only reactive to projectTuple reassignments, and not property
@@ -130,11 +127,8 @@
             ParamValueProvider.setValue(updatedConfig, projectTuple.key, value);
         }
 
-        // Dispatch updated event - project.update() is called in ProjectViewer
-        dispatch('paramupdated', {
-            updatedProject: projectTuple.project,
-            paramKey: updatedConfig.key
-        });
+        // Invoke the paramChanged method for the current project
+        projectTuple.project.paramChanged({ paramKey: updatedConfig.key });
     }
 
     // Get the properly typed initial value for a given param

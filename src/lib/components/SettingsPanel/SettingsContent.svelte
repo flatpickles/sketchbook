@@ -63,7 +63,12 @@
         {/each}
     </div>
     <div class="reset-wrapper">
-        <FunctionInput buttonText={content.resetButtonLabel} on:click={resetSketchbook} />
+        <FunctionInput
+            id="reset-sketchbook"
+            name={content.resetButtonLabel}
+            buttonText={content.resetButtonLabel}
+            on:click={resetSketchbook}
+        />
     </div>
 </div>
 
