@@ -1,6 +1,6 @@
 @mixin link-style {
     text-decoration: none;
-    color: $link-color;
+    color: $panel-highlight-color;
 
     &:hover {
         text-decoration: underline;

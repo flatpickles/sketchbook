@@ -1,7 +1,7 @@
 // Project list header content
 const title = 'Sketchbook';
 const subtitle = `Demo Content`;
-const description = `Sketchbook is a dev environment and customizable portfolio for creative coding projects. It is a work in progress!`;
+const description = `Sketchbook is a dev environment and <a href="http://flatpickles.com">customizable portfolio</a> for creative coding projects. It is a work in progress!`;
 
 // Project list footer content (use empty string to omit)
 const footer = `Drive slow, code fast.`;
