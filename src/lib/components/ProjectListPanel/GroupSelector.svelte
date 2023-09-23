@@ -74,7 +74,7 @@
         flex-direction: row;
         gap: $group-spacing;
         padding: 0 $panel-content-inset;
-        margin: calc($panel-content-inset / 2) 0;
+        margin: calc($panel-section-spacing / 2) 0;
 
         // Fade out edges
         @if ($group-list-scroll-fade) {

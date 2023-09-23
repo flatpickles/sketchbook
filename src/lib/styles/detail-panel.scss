@@ -1,4 +1,6 @@
-// Preset controls
+// Preset controls (WIP)
+$preset-control-item-spacing: 0.25rem;
+$preset-control-item-padding: 0.25rem 0.75rem;
 @mixin preset-control-item {
     // Group selector item layout
     padding: $preset-control-item-padding;

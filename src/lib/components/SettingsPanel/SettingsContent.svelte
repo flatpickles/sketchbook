@@ -83,13 +83,15 @@
         row-gap: $panel-section-spacing;
 
         // Fade out edges
-        mask-image: linear-gradient(
-            to bottom,
-            rgba(0, 0, 0, 0),
-            rgba(0, 0, 0, 1) calc($panel-section-spacing / 2),
-            rgba(0, 0, 0, 1) calc(100% - $panel-section-spacing / 2),
-            rgba(0, 0, 0, 0)
-        );
+        @if ($param-list-scroll-fade) {
+            mask-image: linear-gradient(
+                to bottom,
+                rgba(0, 0, 0, 0),
+                rgba(0, 0, 0, 1) calc($panel-section-spacing / 2),
+                rgba(0, 0, 0, 1) calc(100% - $panel-section-spacing / 2),
+                rgba(0, 0, 0, 0)
+            );
+        }
 
         // Scroll with no scrollbar
         overflow-y: scroll;
@@ -106,7 +108,7 @@
         width: 100%;
         display: grid;
         grid-template-columns: 1fr 1fr;
-        row-gap: $parameter-item-spacing-vertical;
+        row-gap: $param-spacing;
         align-items: center;
     }
 

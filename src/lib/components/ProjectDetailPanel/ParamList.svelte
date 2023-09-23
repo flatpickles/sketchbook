@@ -189,13 +189,15 @@
         padding: calc($panel-section-spacing / 2) 0;
 
         // Fade out edges
-        mask-image: linear-gradient(
-            to bottom,
-            rgba(0, 0, 0, 0),
-            rgba(0, 0, 0, 1) calc($panel-section-spacing / 2),
-            rgba(0, 0, 0, 1) calc(100% - $panel-section-spacing / 2),
-            rgba(0, 0, 0, 0)
-        );
+        @if ($param-list-scroll-fade) {
+            mask-image: linear-gradient(
+                to bottom,
+                rgba(0, 0, 0, 0),
+                rgba(0, 0, 0, 1) calc($panel-section-spacing / 2),
+                rgba(0, 0, 0, 1) calc(100% - $panel-section-spacing / 2),
+                rgba(0, 0, 0, 0)
+            );
+        }
 
         // Scroll with no scrollbar
         overflow-y: scroll;
@@ -224,7 +226,7 @@
         flex-direction: row;
         align-items: center;
         justify-content: space-between;
-        gap: $parameter-item-spacing-horizontal;
+        gap: $param-inner-spacing;
     }
 
     .params-section-header-line {
@@ -235,8 +237,8 @@
 
     .params-grid {
         display: grid;
-        grid-template-columns: fit-content($parameter-label-max-width) 1fr;
-        row-gap: $parameter-item-spacing-vertical;
+        grid-template-columns: fit-content($param-label-max-width) 1fr;
+        row-gap: $param-spacing;
         align-items: center;
     }
 </style>
