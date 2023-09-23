@@ -3,9 +3,20 @@ $panel-shadow-size: 0.5rem;
 $panel-shadow-color: rgba(0, 0, 0, 0.3);
 
 // Derived variables
+$panel-border-color: rgba($panel-fg-color, $panel-border-opacity);
 $panel-border: $panel-border-size solid $panel-border-color;
 $panel-shadow: 0 calc($panel-shadow-size / 2) $panel-shadow-size $panel-shadow-color;
+
+$panel-button-border-color: rgba($panel-fg-color, $panel-button-border-opacity);
+
 $panel-section-spacing: $panel-content-inset;
+
+$panel-button-inset-zero: (
+    $panel-button-inset == 0 or
+    $panel-button-inset == 0px or
+    $panel-button-inset == 0rem or
+    $panel-button-inset == 0em
+); // (scss comparators aren't unit-agnostic)
 
 // Panel headers
 @mixin title-text {
@@ -16,7 +27,7 @@ $panel-section-spacing: $panel-content-inset;
 @mixin subtitle-text {
     font-size: $medium-text-size;
     font-weight: normal;
-    color: rgba($panel-fg-color, 0.6);
+    color: rgba($panel-fg-color, $subtitle-opacity);
 }
 @mixin description-text {
     font-size: $medium-text-size;
@@ -27,7 +38,7 @@ $panel-section-spacing: $panel-content-inset;
 @mixin footer-text {
     font-size: $xs-text-size;
     font-weight: normal;
-    color: rgba($panel-fg-color, 0.6);
+    color: rgba($panel-fg-color, $footer-opacity);
 }
 @mixin footer-link-style {
     color: inherit;
@@ -38,19 +49,17 @@ $panel-section-spacing: $panel-content-inset;
 }
 
 // Panel buttons
-$panel-button-border-size: 1px;
 @mixin panel-button {
-    font-size: $small-text-size;
-    color: rgba($panel-fg-color, 0.6);
-    width: 1.5rem;
-    height: 1.5rem;
-    background-color: rgba($panel-fg-color, 0.05);
-    border: $panel-button-border-size solid $panel-border-color;
-    &:hover {
-        background-color: rgba($panel-fg-color, 0.075);
-    }
-    &:active {
-        background-color: rgba($panel-fg-color, 0.1);
+    margin: $panel-button-inset;
+    font-size: $panel-button-icon-size;
+    color: rgba($panel-fg-color, $panel-button-fg-opacity);
+    width: $panel-button-size;
+    height: $panel-button-size;
+    background-color: rgba($panel-fg-color, $panel-button-bg-opacity);
+    border-radius: $panel-button-border-radius;
+    border: $panel-button-border-size solid $panel-button-border-color;
+    &:active, &:hover {
+        background-color: rgba($panel-fg-color, $panel-button-bg-hover-opacity);
     }
 }
 @mixin panel-show-button {
@@ -59,11 +68,11 @@ $panel-button-border-size: 1px;
     height: 1.5rem;
     color: rgba($panel-fg-color, 0.7);
     background-color: rgba($panel-bg-color, 0.5);
-    margin: calc($panel-edge-inset / 2);
+    margin: calc($overlay-panel-edge-inset / 2);
     border-radius: calc($panel-border-radius / 2);
     opacity: 0.7;
 
-    &:hover {
+    &:active, &:hover {
         background-color: rgba($panel-bg-color, 0.7);
     }
 }

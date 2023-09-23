@@ -71,17 +71,33 @@
     .left-button {
         @include panel-button;
         flex-shrink: 0;
-        margin: calc($panel-section-spacing / 2) calc($panel-section-spacing / 2) 0 0;
-        border-style: solid solid none none;
-        border-radius: 0 $panel-border-radius 0 0;
     }
 
     .right-button {
         @include panel-button;
         flex-shrink: 0;
-        margin: calc($panel-section-spacing / 2) 0 0 calc($panel-section-spacing / 2);
-        border-style: solid none none solid;
-        border-radius: $panel-border-radius 0 0 0;
+    }
+
+    @if ($panel-button-inset-zero) {
+        // No configured inset, configure borders & margins accordingly
+
+        .left-button {
+            border-style: solid solid none none;
+            border-top-left-radius: 0;
+            border-bottom-right-radius: 0;
+            border-bottom-left-radius: 0;
+            margin-top: calc($panel-section-spacing / 2);
+            margin-right: calc($panel-section-spacing / 2);
+        }
+
+        .right-button {
+            border-style: solid none none solid;
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+            border-bottom-left-radius: 0;
+            margin-top: calc($panel-section-spacing / 2);
+            margin-left: calc($panel-section-spacing / 2);
+        }
     }
 
     .hidden {

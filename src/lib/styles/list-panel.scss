@@ -1,5 +1,5 @@
 // Group selector
-$group-select-border-color: $panel-border-color;
+$group-select-border-color: #000; // todo - same props as corner buttons?
 @mixin group-selector-item {
     // Group selector item layout
     padding: $group-selector-item-padding;
@@ -59,7 +59,7 @@ $group-select-border-color: $panel-border-color;
     // Selected behavior
     &.selected {
         background-color: rgba($panel-fg-color, 0.075);
-        box-shadow: 0 0.1rem 0.1rem rgba($panel-fg-color, 0.25);
+        box-shadow: 0 0.1rem 0rem rgba($panel-fg-color, 0.25);
         font-weight: bold;
     }
 

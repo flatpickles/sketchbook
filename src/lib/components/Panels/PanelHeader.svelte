@@ -53,9 +53,18 @@
     .header-button {
         @include panel-button;
         flex-shrink: 0;
-        margin: 0 0 calc($panel-header-section-spacing / 2) calc($panel-header-section-spacing / 2);
-        border-style: none none solid solid;
-        border-radius: 0 0 0 $panel-border-radius;
+    }
+
+    @if ($panel-button-inset-zero) {
+        // No configured inset, configure borders & margins accordingly
+        .header-button {
+            border-style: none none solid solid;
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+            margin-bottom: calc($panel-header-section-spacing / 2);
+            margin-left: calc($panel-header-section-spacing / 2);
+        }
     }
 
     h1 {
