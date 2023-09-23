@@ -1,16 +1,16 @@
 // Group selector
-$group-select-border-color: rgba($panel-fg-color, $group-border-opacity);
+$group-border-color: rgba($panel-fg-color, $group-border-opacity);
 @mixin group-selector-item {
     color: rgba($panel-fg-color, $group-unselected-text-opacity);
 
     // Group selector item layout
-    padding: $group-selector-item-padding;
-    border: $group-border-size solid $group-select-border-color;
+    padding: $group-padding;
+    border: $group-border-size solid $group-border-color;
     border-radius: $group-border-radius;
     font-size: $small-text-size;
     font-weight: $group-unselected-text-weight;
     
-    // Group color base is last defined color
+    // Default group color is the last defined color in the $group-colors list
     $last-color-index: length($group-colors);
     background: rgba(nth($group-colors, $last-color-index), $group-unselected-bg-opacity);
     margin-bottom: calc($group-selected-shadow-size);
@@ -21,7 +21,7 @@ $group-select-border-color: rgba($panel-fg-color, $group-border-opacity);
         font-weight: $group-selected-text-weight;
     }
 
-    // Use defined colors (array) to set background colors
+    // Use defined colors (array) to set background colors (overriding default set above)
     @for $i from 1 through length($group-colors) {
         &.group-#{$i} {
             background-color: rgba(nth($group-colors, $i), $group-unselected-bg-opacity);
@@ -33,16 +33,38 @@ $group-select-border-color: rgba($panel-fg-color, $group-border-opacity);
 }
 
 // Project list items
+$project-border-color: rgba($panel-fg-color, $project-border-opacity);
+$project-spacing-zero: (
+    $project-spacing == 0 or
+    $project-spacing == 0px or
+    $project-spacing == 0rem or
+    $project-spacing == 0em
+); // (scss comparators aren't unit-agnostic)
 @mixin project-list-item {
     @include ellipsis;
+    font-size: $medium-text-size;
     font-weight: $project-unselected-text-weight;
     color: rgba($panel-fg-color, $project-unselected-text-opacity);
+    border: $project-border-size solid $project-border-color;
+    border-radius: $project-border-radius;
 
-    // Project list item layout
-    font-size: $medium-text-size;
+    // Set margin & padding and update border depending on full-width setting
     margin: 0 calc($panel-content-inset / 2);
-    padding: $project-list-item-padding calc($panel-content-inset / 2);
-    border-radius: 0.5rem;
+    padding: $project-padding calc($panel-content-inset / 2);
+    @if ($project-full-width) {
+        margin: 0;
+        padding: $project-padding $panel-content-inset;
+        border-left-width: 0;
+        border-right-width: 0;
+        border-radius: 0;
+
+        // Don't double up top/bottom border if spacing is zero
+        @if ($project-spacing-zero) {
+            &:not(:first-child) {
+                border-top-width: 0;
+            }
+        }
+    }
 
     // Even & odd backgrounds
     &:nth-child(even) {
@@ -61,14 +83,17 @@ $group-select-border-color: rgba($panel-fg-color, $group-border-opacity);
     &.selected {
         color: rgba($panel-fg-color, $project-selected-text-opacity);
         background-color: rgba($panel-highlight-color, $project-selected-bg-opacity);
-        box-shadow: 0 $project-selected-shadow-size 0 rgba($panel-fg-color, $project-selected-shadow-opacity);
         font-weight: $project-selected-text-weight;
+        box-shadow: 0 $project-selected-shadow-size 0 rgba($panel-fg-color, $project-selected-shadow-opacity);
     }
 
     // Experimental icon
     .experimental {
         font-size: $xs-text-size;
         color: rgba($panel-fg-color, $project-experiment-icon-opacity);
-        padding-right: calc($panel-content-inset / 2);
+        @if (not $project-full-width) {
+            // A little extra space
+            padding-right: calc($panel-content-inset / 2);
+        }
     }
 }

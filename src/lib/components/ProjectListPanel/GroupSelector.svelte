@@ -72,18 +72,20 @@
 
         display: flex;
         flex-direction: row;
-        gap: $group-selector-item-spacing;
+        gap: $group-spacing;
         padding: 0 $panel-content-inset;
         margin: calc($panel-content-inset / 2) 0;
 
         // Fade out edges
-        mask-image: linear-gradient(
-            to right,
-            rgba(0, 0, 0, 0),
-            rgba(0, 0, 0, 1) $panel-content-inset,
-            rgba(0, 0, 0, 1) calc(100% - $panel-content-inset),
-            rgba(0, 0, 0, 0)
-        );
+        @if ($group-list-scroll-fade) {
+            mask-image: linear-gradient(
+                to right,
+                rgba(0, 0, 0, 0),
+                rgba(0, 0, 0, 1) $panel-content-inset,
+                rgba(0, 0, 0, 1) calc(100% - $panel-content-inset),
+                rgba(0, 0, 0, 0)
+            );
+        }
 
         // Scroll with no scrollbar
         overflow-y: scroll;
