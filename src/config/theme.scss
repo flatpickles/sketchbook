@@ -3,11 +3,13 @@
 /*
 
 Styling to-do:
-- enable/disable fades for list content
-- spacing / layout
-- clean up this file, move whatever we don't need at a high level into sub-files
+- Panel show/hide buttons
 - do we like the field input styles?
-- can we isolate and define any magic numbers?
+- can we isolate and define any other magic numbers?
+- non-overlaid panel shadow?
+- avoid imports in this file
+- optional divider lines between panel sections?
+- what values can we abstract in here (i.e. set to other variables in this file)?
 */
 
 // Typography
@@ -34,8 +36,8 @@ $panel-content-inset: 0.75rem;
 $panel-border-opacity: 0.5;
 $panel-border-radius: 0.5rem;
 $panel-border-size: 1px;
-$panel-animation-duration-quick: 0.3s;
-$panel-animation-duration-slow: 0.7s;
+$panel-animation-quick: 0.3s;
+$panel-animation-slow: 0.7s;
 
 // Panel buttons
 $panel-button-inset: 0.25rem;
@@ -59,6 +61,9 @@ $overlay-panel-border-enabled: true;
 // todo
 
 // Group selection list items
+$group-colors: $panel-highlight-color;
+$group-spacing: 0.25rem;
+$group-padding: 0.25rem 0.75rem;
 $group-border-radius: 1rem;
 $group-border-size: 0;
 $group-border-opacity: 0.3;
@@ -70,8 +75,15 @@ $group-selected-shadow-opacity: 0.4;
 $group-unselected-bg-opacity: 0.1;
 $group-unselected-text-opacity: 0.75;
 $group-unselected-text-weight: bold;
+$group-list-scroll-fade: true;
 
 // Project selection list items
+$project-spacing: 0.25rem;
+$project-padding: 0.75rem;
+$project-full-width: false;
+$project-border-radius: 0.5rem;
+$project-border-size: 0;
+$project-border-opacity: 0.3;
 $project-selected-bg-opacity: 0.3;
 $project-selected-text-opacity: 1.0;
 $project-selected-text-weight: bold;
@@ -83,21 +95,13 @@ $project-unselected-bg-opacity-even: 0.0;
 $project-unselected-text-opacity: 1.0;
 $project-unselected-text-weight: normal;
 $project-experiment-icon-opacity: 0.5;
+$project-list-scroll-fade: true;
 
-
-
+// todo (for both params list & settings)...
+$param-list-scroll-fade: true;
 
 // Panel headers
 $panel-header-section-spacing: 0.5rem;
-
-// Group selector
-$group-colors: $panel-highlight-color;
-$group-selector-item-spacing: 0.25rem;
-$group-selector-item-padding: 0.25rem 0.75rem;
-
-// Project list
-$project-list-item-spacing: 0.25rem;
-$project-list-item-padding: 0.75rem;
 
 // Preset control
 $preset-control-item-spacing: 0.25rem;

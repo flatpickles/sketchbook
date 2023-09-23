@@ -56,13 +56,15 @@
         padding: calc($panel-section-spacing / 2) 0;
 
         // Fade out edges
-        mask-image: linear-gradient(
-            to bottom,
-            rgba(0, 0, 0, 0),
-            rgba(0, 0, 0, 1) calc($panel-section-spacing / 2),
-            rgba(0, 0, 0, 1) calc(100% - $panel-section-spacing/2),
-            rgba(0, 0, 0, 0)
-        );
+        @if ($project-list-scroll-fade) {
+            mask-image: linear-gradient(
+                to bottom,
+                rgba(0, 0, 0, 0),
+                rgba(0, 0, 0, 1) calc($panel-section-spacing / 2),
+                rgba(0, 0, 0, 1) calc(100% - $panel-section-spacing/2),
+                rgba(0, 0, 0, 0)
+            );
+        }
 
         // Scroll with no scrollbar
         overflow-y: scroll;
@@ -72,7 +74,7 @@
         // Internal layout
         display: flex;
         flex-direction: column;
-        gap: $project-list-item-spacing;
+        gap: $project-spacing;
     }
 
     // Webkit hide scrollbar

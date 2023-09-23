@@ -304,10 +304,10 @@
 
         // Transition opacity when mouse isn't moving
         opacity: 1;
-        transition: opacity $panel-animation-duration-quick ease-in-out;
+        transition: opacity $panel-animation-quick ease-in-out;
         &.hidden {
             opacity: 0;
-            transition-duration: $panel-animation-duration-slow;
+            transition-duration: $panel-animation-slow;
         }
     }
 
@@ -320,14 +320,14 @@
         align-items: center;
 
         // Transition opacity
-        transition: opacity $panel-animation-duration-slow ease-in-out;
-        transition-delay: $panel-animation-duration-quick;
+        transition: opacity $panel-animation-slow ease-in-out;
+        transition-delay: $panel-animation-quick;
         &.hidden {
             opacity: 0;
             transition-delay: 0s;
 
             // Fade out even more quickly while panel slides over
-            transition-duration: calc($panel-animation-duration-quick / 2);
+            transition-duration: calc($panel-animation-quick / 2);
         }
     }
 
@@ -360,7 +360,7 @@
         }
 
         // Transition width
-        transition: width $panel-animation-duration-quick ease-in-out;
+        transition: width $panel-animation-quick ease-in-out;
         &.closed {
             width: 0;
         }
@@ -396,7 +396,7 @@
 
         // Transition left for left and right panels
         left: 0;
-        transition: left $panel-animation-duration-quick ease-in-out;
+        transition: left $panel-animation-quick ease-in-out;
         $extraWidth: math.max($overlay-panel-edge-inset, $panel-shadow-size);
         &.leftClosed {
             // Align to the right side of a zero-width panel
