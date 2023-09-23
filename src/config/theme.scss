@@ -3,7 +3,6 @@
 /*
 
 Styling to-do:
-- Panel show/hide buttons
 - do we like the field input styles?
 - can we isolate and define any other magic numbers?
 - non-overlaid panel shadow?
@@ -39,6 +38,13 @@ $panel-border-size: 1px;
 $panel-animation-quick: 0.3s;
 $panel-animation-slow: 0.7s;
 
+// Overlaid panels (enabled/disabled in settings.ts)
+$overlay-panel-edge-inset: 0.5rem;
+$overlay-panel-bg-opacity: 0.75;
+$overlay-panel-bg-filter: blur(1rem);
+$overlay-panel-min-height: 0%;
+$overlay-panel-border-enabled: true;
+
 // Panel buttons
 $panel-button-inset: 0.25rem;
 $panel-button-size: 1.25rem;
@@ -48,19 +54,20 @@ $panel-button-border-size: $panel-border-size;
 $panel-button-border-opacity: 0.25;
 $panel-button-fg-opacity: 0.6;
 $panel-button-bg-opacity: 0.05;
+$panel-button-fg-opacity-hover: 0.65;
 $panel-button-bg-opacity-hover: 0.1;
 
-// Particulars for overlaid panels (enabled/disabled in settings.ts)
-$overlay-panel-edge-inset: 0.5rem;
-$overlay-panel-bg-opacity: 0.75;
-$overlay-panel-bg-filter: blur(1rem);
-$overlay-panel-min-height: 0%;
-$overlay-panel-border-enabled: true;
+// Panel show buttons
+$panel-show-button-inset: 0.25rem;
+$panel-show-button-size: 1.5rem;
+$panel-show-button-icon-size: $small-text-size;
+$panel-show-button-border-radius: 0.25rem;
+$panel-show-button-fg-opacity: 0.5;
+$panel-show-button-fg-opacity-hover: 0.7;
+$panel-show-button-bg-opacity: 0.5;
+$panel-show-button-bg-opacity-hover: 0.7;
 
-// Panel show/hide buttons
-// todo
-
-// Group selection list items
+// Group selection list
 $group-colors: $panel-highlight-color;
 $group-spacing: 0.25rem;
 $group-padding: 0.25rem 0.75rem;
@@ -77,7 +84,7 @@ $group-unselected-text-opacity: 0.75;
 $group-unselected-text-weight: bold;
 $group-list-scroll-fade: true;
 
-// Project selection list items
+// Project selection list
 $project-spacing: 0.25rem;
 $project-padding: 0.75rem;
 $project-full-width: false;

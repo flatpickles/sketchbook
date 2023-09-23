@@ -7,7 +7,6 @@ $panel-border-color: rgba($panel-fg-color, $panel-border-opacity);
 $panel-border: $panel-border-size solid $panel-border-color;
 $panel-shadow: 0 calc($panel-shadow-size / 2) $panel-shadow-size $panel-shadow-color;
 
-$panel-button-border-color: rgba($panel-fg-color, $panel-button-border-opacity);
 
 $panel-section-spacing: $panel-content-inset;
 
@@ -49,30 +48,33 @@ $panel-button-inset-zero: (
 }
 
 // Panel buttons
+$panel-button-border-color: rgba($panel-fg-color, $panel-button-border-opacity);
 @mixin panel-button {
+    width: $panel-button-size;
+    height: $panel-button-size;
     margin: $panel-button-inset;
     font-size: $panel-button-icon-size;
     color: rgba($panel-fg-color, $panel-button-fg-opacity);
-    width: $panel-button-size;
-    height: $panel-button-size;
     background-color: rgba($panel-fg-color, $panel-button-bg-opacity);
     border-radius: $panel-button-border-radius;
     border: $panel-button-border-size solid $panel-button-border-color;
     &:active, &:hover {
+        color: rgba($panel-fg-color, $panel-button-fg-opacity-hover);
         background-color: rgba($panel-fg-color, $panel-button-bg-opacity-hover);
     }
 }
-@mixin panel-show-button {
-    font-size: 0.9rem;
-    width: 1.5rem;
-    height: 1.5rem;
-    color: rgba($panel-fg-color, 0.7);
-    background-color: rgba($panel-bg-color, 0.5);
-    margin: calc($overlay-panel-edge-inset / 2);
-    border-radius: calc($panel-border-radius / 2);
-    opacity: 0.7;
 
+// Panel show buttons
+@mixin panel-show-button {
+    width: $panel-show-button-size;
+    height: $panel-show-button-size;
+    margin: $panel-show-button-inset;
+    font-size: $panel-show-button-icon-size;
+    color: rgba($panel-fg-color, $panel-show-button-fg-opacity);
+    background-color: rgba($panel-bg-color, $panel-show-button-bg-opacity);
+    border-radius: $panel-show-button-border-radius;
     &:active, &:hover {
-        background-color: rgba($panel-bg-color, 0.7);
+        color: rgba($panel-fg-color, $panel-show-button-fg-opacity-hover);
+        background-color: rgba($panel-bg-color, $panel-show-button-bg-opacity-hover);
     }
 }
