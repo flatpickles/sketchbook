@@ -27,7 +27,7 @@ $panel-button-inset-zero: (
 @mixin subtitle-text {
     font-size: $medium-text-size;
     font-weight: normal;
-    color: rgba($panel-fg-color, $subtitle-opacity);
+    color: rgba($panel-fg-color, $subtitle-text-opacity);
 }
 @mixin description-text {
     font-size: $medium-text-size;
@@ -38,7 +38,7 @@ $panel-button-inset-zero: (
 @mixin footer-text {
     font-size: $xs-text-size;
     font-weight: normal;
-    color: rgba($panel-fg-color, $footer-opacity);
+    color: rgba($panel-fg-color, $footer-text-opacity);
 }
 @mixin footer-link-style {
     color: inherit;
@@ -59,7 +59,7 @@ $panel-button-inset-zero: (
     border-radius: $panel-button-border-radius;
     border: $panel-button-border-size solid $panel-button-border-color;
     &:active, &:hover {
-        background-color: rgba($panel-fg-color, $panel-button-bg-hover-opacity);
+        background-color: rgba($panel-fg-color, $panel-button-bg-opacity-hover);
     }
 }
 @mixin panel-show-button {

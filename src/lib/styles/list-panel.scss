@@ -1,41 +1,42 @@
 // Group selector
-$group-select-border-color: #000; // todo - same props as corner buttons?
+$group-select-border-color: rgba($panel-fg-color, $group-border-opacity);
 @mixin group-selector-item {
+    color: rgba($panel-fg-color, $group-unselected-text-opacity);
+
     // Group selector item layout
     padding: $group-selector-item-padding;
-    border: 1px solid $group-select-border-color;
-    border-radius: 1rem;
+    border: $group-border-size solid $group-select-border-color;
+    border-radius: $group-border-radius;
     font-size: $small-text-size;
-    font-weight: bold;
+    font-weight: $group-unselected-text-weight;
     
     // Group color base is last defined color
     $last-color-index: length($group-colors);
-    background: rgba(nth($group-colors, $last-color-index), 0.05);
+    background: rgba(nth($group-colors, $last-color-index), $group-unselected-bg-opacity);
+    margin-bottom: calc($group-selected-shadow-size);
     &.selected {
-        background-color: rgba(nth($group-colors, $last-color-index), 0.5);
+        color: rgba($panel-fg-color, $group-selected-text-opacity);
+        background-color: rgba(nth($group-colors, $last-color-index), $group-selected-bg-opacity);
+        box-shadow: 0 $group-selected-shadow-size 0 rgba($panel-fg-color, $group-selected-shadow-opacity);
+        font-weight: $group-selected-text-weight;
     }
 
     // Use defined colors (array) to set background colors
     @for $i from 1 through length($group-colors) {
         &.group-#{$i} {
-            background: rgba(nth($group-colors, $i), 0.05);
+            background-color: rgba(nth($group-colors, $i), $group-unselected-bg-opacity);
             &.selected {
-                background-color: rgba(nth($group-colors, $i), 0.5);
+                background-color: rgba(nth($group-colors, $i), $group-selected-bg-opacity);
             }
         }
-    }
-
-    // More selected behavior
-    $group-selected-shadow-size: 0.07rem;
-    margin-bottom: calc($group-selected-shadow-size * 2);
-    &.selected {
-        box-shadow: 0 $group-selected-shadow-size $group-selected-shadow-size rgba($panel-fg-color, 0.3);
     }
 }
 
 // Project list items
 @mixin project-list-item {
     @include ellipsis;
+    font-weight: $project-unselected-text-weight;
+    color: rgba($panel-fg-color, $project-unselected-text-opacity);
 
     // Project list item layout
     font-size: $medium-text-size;
@@ -45,10 +46,10 @@ $group-select-border-color: #000; // todo - same props as corner buttons?
 
     // Even & odd backgrounds
     &:nth-child(even) {
-        background-color: rgba($panel-fg-color, 0);
+        background-color: rgba($panel-fg-color, $project-unselected-bg-opacity-even);
     }
     &:nth-child(odd) {
-        background-color: rgba($panel-fg-color, 0.025);
+        background-color: rgba($panel-fg-color, $project-unselected-bg-opacity-odd);
     }
 
     // Hover behavior
@@ -58,15 +59,16 @@ $group-select-border-color: #000; // todo - same props as corner buttons?
 
     // Selected behavior
     &.selected {
-        background-color: rgba($panel-fg-color, 0.075);
-        box-shadow: 0 0.1rem 0rem rgba($panel-fg-color, 0.25);
-        font-weight: bold;
+        color: rgba($panel-fg-color, $project-selected-text-opacity);
+        background-color: rgba($panel-highlight-color, $project-selected-bg-opacity);
+        box-shadow: 0 $project-selected-shadow-size 0 rgba($panel-fg-color, $project-selected-shadow-opacity);
+        font-weight: $project-selected-text-weight;
     }
 
     // Experimental icon
     .experimental {
         font-size: $xs-text-size;
-        color: rgba($panel-fg-color, 0.6);
+        color: rgba($panel-fg-color, $project-experiment-icon-opacity);
         padding-right: calc($panel-content-inset / 2);
     }
 }

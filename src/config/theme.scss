@@ -3,7 +3,8 @@
 /*
 
 Styling to-do:
-- centralize shadows - no blur
+- enable/disable fades for list content
+- spacing / layout
 - clean up this file, move whatever we don't need at a high level into sub-files
 - do we like the field input styles?
 - can we isolate and define any magic numbers?
@@ -16,8 +17,8 @@ $large-text-size: 1rem;
 $medium-text-size: 0.9rem;
 $small-text-size: 0.8rem;
 $xs-text-size: 0.7rem;
-$subtitle-opacity: 0.6;
-$footer-opacity: 0.4;
+$subtitle-text-opacity: 0.6;
+$footer-text-opacity: 0.4;
 
 // Todo
 $container-bg-color: #777; // canvas container color (partial-size canvases)
@@ -27,8 +28,7 @@ $canvas-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.5); // canvas shadow above container
 // Panels
 $panel-bg-color: #fff;
 $panel-fg-color: #000;
-$link-color: rgb(20, 109, 56);
-// highlight color? selections, links, etc
+$panel-highlight-color: #5b31cd;
 $panel-width: 16rem;
 $panel-content-inset: 0.75rem;
 $panel-border-opacity: 0.5;
@@ -39,16 +39,16 @@ $panel-animation-duration-slow: 0.7s;
 
 // Panel buttons
 $panel-button-inset: 0.25rem;
-$panel-button-size: 1.5rem;
+$panel-button-size: 1.25rem;
 $panel-button-icon-size: $small-text-size;
-$panel-button-border-radius: $panel-border-radius;
+$panel-button-border-radius: 0.25rem;
 $panel-button-border-size: $panel-border-size;
-$panel-button-border-opacity: 0.5;
+$panel-button-border-opacity: 0.25;
 $panel-button-fg-opacity: 0.6;
-$panel-button-bg-opacity: 0.1;
-$panel-button-bg-hover-opacity: 0.2;
+$panel-button-bg-opacity: 0.05;
+$panel-button-bg-opacity-hover: 0.1;
 
-// Specifics for overlaid panels (enabled/disabled in config/settings.ts)
+// Particulars for overlaid panels (enabled/disabled in settings.ts)
 $overlay-panel-edge-inset: 0.5rem;
 $overlay-panel-bg-opacity: 0.75;
 $overlay-panel-bg-filter: blur(1rem);
@@ -58,11 +58,40 @@ $overlay-panel-border-enabled: true;
 // Panel show/hide buttons
 // todo
 
+// Group selection list items
+$group-border-radius: 1rem;
+$group-border-size: 0;
+$group-border-opacity: 0.3;
+$group-selected-bg-opacity: 0.3;
+$group-selected-text-opacity: 1.0;
+$group-selected-text-weight: bold;
+$group-selected-shadow-size: 0.1rem;
+$group-selected-shadow-opacity: 0.4;
+$group-unselected-bg-opacity: 0.1;
+$group-unselected-text-opacity: 0.75;
+$group-unselected-text-weight: bold;
+
+// Project selection list items
+$project-selected-bg-opacity: 0.3;
+$project-selected-text-opacity: 1.0;
+$project-selected-text-weight: bold;
+$project-selected-shadow-size: 0.1rem;
+$project-selected-shadow-opacity: 0.4;
+$project-unselected-bg-opacity-hover: 0.05;
+$project-unselected-bg-opacity-odd: 0.025;
+$project-unselected-bg-opacity-even: 0.0;
+$project-unselected-text-opacity: 1.0;
+$project-unselected-text-weight: normal;
+$project-experiment-icon-opacity: 0.5;
+
+
+
+
 // Panel headers
 $panel-header-section-spacing: 0.5rem;
 
 // Group selector
-$group-colors: green;
+$group-colors: $panel-highlight-color;
 $group-selector-item-spacing: 0.25rem;
 $group-selector-item-padding: 0.25rem 0.75rem;
 
@@ -102,7 +131,7 @@ $checkbox-input-size: 0.9rem;
 
 // More specific styles are available in each of these files
 @import '$lib/styles/params.scss';
+@import '$lib/styles/panel-base.scss';
 @import '$lib/styles/detail-panel.scss';
 @import '$lib/styles/list-panel.scss';
-@import '$lib/styles/panel-base.scss';
 @import '$lib/styles/util.scss';
