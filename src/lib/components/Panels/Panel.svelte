@@ -15,16 +15,19 @@
         height: 100%;
         width: 100%;
         background-color: $panel-bg-color;
-        backdrop-filter: $panel-bg-filter;
-        -webkit-backdrop-filter: $panel-bg-filter;
+        color: $panel-fg-color;
 
         border: $panel-border;
         overflow: hidden;
 
         &.overlay {
+            border-width: $panel-overlay-border-size;
+            backdrop-filter: $panel-bg-filter;
+            -webkit-backdrop-filter: $panel-bg-filter;
+            background-color: rgba($panel-bg-color, $panel-bg-opacity);
+
             border-radius: $panel-border-radius;
             box-shadow: $panel-shadow;
-            border-width: $panel-overlay-border-size;
         }
 
         &.left-fill {

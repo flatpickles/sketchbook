@@ -1,0 +1,60 @@
+@use "sass:color";
+
+// Param sections
+@mixin param-section-header {
+    color: $parameter-section-header-color;
+    font-size: $xs-text-size;
+    text-transform: uppercase;
+    font-weight: bold;
+    padding:
+        0
+        $panel-content-inset
+        $parameter-item-padding-vertical
+        $panel-content-inset;
+}
+
+// Param items
+@mixin parameter-item {
+    font-size: $medium-text-size;
+    margin: 0 calc($panel-content-inset / 2);
+    padding: $parameter-item-padding-vertical calc($panel-content-inset / 2);
+
+    &.even {
+        background-color: rgba($panel-fg-color, 0);
+    }
+    &.odd {
+        background-color: rgba($panel-fg-color, 0.025);
+    }
+}
+@mixin parameter-input-disabled {
+    opacity: 50%;
+    pointer-events: none;
+}
+@mixin parameter-label {
+    font-size: $small-text-size;
+    font-weight: bold;
+}
+@mixin string-parameter-input {
+    $background-color: $param-field-bg-color;
+    color: $param-fg-color;
+    font-size: $xs-text-size;
+    line-height: $xs-text-size;
+    border: $field-input-border;
+    border-radius: $field-input-border-radius;
+    background-color: $background-color;
+    padding: 0.15rem 0.25rem;
+}
+@mixin function-parameter-input {
+    $background-color: $param-light-accent-color;
+    color: $param-fg-color;
+    font-size: $xs-text-size;
+    outline: $field-input-border;
+    border-radius: 1rem;
+    font-weight: bold;
+    background-color: $background-color;
+    padding: 0.1rem 0.75rem;
+
+    &:active {
+        background-color: color.scale($param-accent-color, $lightness: +40%);
+    }
+}

@@ -1,0 +1,72 @@
+// Group selector
+$group-select-border-color: $panel-border-color;
+@mixin group-selector-item {
+    // Group selector item layout
+    padding: $group-selector-item-padding;
+    border: 1px solid $group-select-border-color;
+    border-radius: 1rem;
+    font-size: $small-text-size;
+    font-weight: bold;
+    
+    // Group color base is last defined color
+    $last-color-index: length($group-colors);
+    background: rgba(nth($group-colors, $last-color-index), 0.05);
+    &.selected {
+        background-color: rgba(nth($group-colors, $last-color-index), 0.5);
+    }
+
+    // Use defined colors (array) to set background colors
+    @for $i from 1 through length($group-colors) {
+        &.group-#{$i} {
+            background: rgba(nth($group-colors, $i), 0.05);
+            &.selected {
+                background-color: rgba(nth($group-colors, $i), 0.5);
+            }
+        }
+    }
+
+    // More selected behavior
+    $group-selected-shadow-size: 0.07rem;
+    margin-bottom: calc($group-selected-shadow-size * 2);
+    &.selected {
+        box-shadow: 0 $group-selected-shadow-size $group-selected-shadow-size rgba($panel-fg-color, 0.3);
+    }
+}
+
+// Project list items
+@mixin project-list-item {
+    @include ellipsis;
+
+    // Project list item layout
+    font-size: $medium-text-size;
+    margin: 0 calc($panel-content-inset / 2);
+    padding: $project-list-item-padding calc($panel-content-inset / 2);
+    border-radius: 0.5rem;
+
+    // Even & odd backgrounds
+    &:nth-child(even) {
+        background-color: rgba($panel-fg-color, 0);
+    }
+    &:nth-child(odd) {
+        background-color: rgba($panel-fg-color, 0.025);
+    }
+
+    // Hover behavior
+    &:hover:not(.selected) {
+        background-color: rgba($panel-fg-color, 0.05);
+    }
+
+    // Selected behavior
+    &.selected {
+        background-color: rgba($panel-fg-color, 0.075);
+        box-shadow: 0 0.1rem 0.1rem rgba($panel-fg-color, 0.25);
+        font-weight: bold;
+    }
+
+    // Experimental icon
+    .experimental {
+        font-size: $xs-text-size;
+        color: rgba($panel-fg-color, 0.6);
+        padding-right: calc($panel-content-inset / 2);
+    }
+}
