@@ -39,7 +39,7 @@
 
         display: flex;
         flex-direction: column;
-        gap: $panel-header-section-spacing;
+        gap: $panel-header-spacing;
     }
 
     .header-top {
@@ -47,7 +47,7 @@
         flex-direction: row;
         justify-content: space-between;
         align-items: flex-start;
-        gap: $panel-header-section-spacing;
+        gap: $panel-header-spacing;
     }
 
     .header-button {
@@ -62,8 +62,8 @@
             border-top-left-radius: 0;
             border-top-right-radius: 0;
             border-bottom-right-radius: 0;
-            margin-bottom: calc($panel-header-section-spacing / 2);
-            margin-left: calc($panel-header-section-spacing / 2);
+            margin-bottom: calc($panel-header-spacing / 2);
+            margin-left: calc($panel-header-spacing / 2);
         }
     }
 
@@ -74,7 +74,7 @@
 
     h2 {
         @include subtitle-text;
-        margin: calc($panel-header-section-spacing / 4) $panel-content-inset 0 $panel-content-inset;
+        margin: calc($panel-header-spacing / 4) $panel-content-inset 0 $panel-content-inset;
     }
 
     p {

@@ -1,4 +1,21 @@
-@use "sass:color";
+// todo: clean these up, and expose more configuration options in theme.scss
+
+$parameter-section-gap: $param-spacing + $param-padding;
+$parameter-section-header-color: rgba($panel-fg-color, $param-section-header-opacity);
+$parameter-section-divider: 1px solid $parameter-section-header-color;
+
+$param-fg-color: $panel-fg-color;
+$param-field-bg-color: rgba(color.scale($panel-bg-color, $saturation: -90%), 0.9);
+$param-accent-color: rgba(color.scale($panel-fg-color, $saturation: -90%), 0.3);
+$param-light-accent-color: rgba(color.scale($panel-fg-color, $saturation: -90%), 0.1);
+
+$field-input-border: 1px solid $param-accent-color;
+$field-input-border-radius: 0.25rem;
+
+$param-input-item-min-width: 2rem;
+$param-input-item-partial-width: 4rem;
+
+$checkbox-input-size: 0.9rem;
 
 // Param sections
 @mixin param-section-header {
@@ -9,7 +26,7 @@
     padding:
         0
         $panel-content-inset
-        $parameter-item-padding-vertical
+        $param-padding
         $panel-content-inset;
 }
 
@@ -17,13 +34,13 @@
 @mixin parameter-item {
     font-size: $medium-text-size;
     margin: 0 calc($panel-content-inset / 2);
-    padding: $parameter-item-padding-vertical calc($panel-content-inset / 2);
+    padding: $param-padding calc($panel-content-inset / 2);
 
     &.even {
-        background-color: rgba($panel-fg-color, 0);
+        background-color: rgba($panel-fg-color, $param-bg-opacity-even);
     }
     &.odd {
-        background-color: rgba($panel-fg-color, 0.025);
+        background-color: rgba($panel-fg-color, $param-bg-opacity-odd);
     }
 }
 @mixin parameter-input-disabled {

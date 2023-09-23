@@ -221,9 +221,9 @@
         overflow: hidden;
 
         @include parameter-item;
-        padding-right: calc($parameter-item-spacing-horizontal / 2);
+        padding-right: calc($param-inner-spacing / 2);
         margin-right: 0;
-        border-radius: $border-radius 0 0 $border-radius;
+        border-radius: $param-border-radius 0 0 $param-border-radius;
     }
 
     .param-label {
@@ -249,16 +249,16 @@
 
         // When it's just in the right column...
         &:not(.full-width) {
-            padding-left: calc($parameter-item-spacing-horizontal / 2);
+            padding-left: calc($param-inner-spacing / 2);
             margin-left: 0;
-            border-radius: 0 $border-radius $border-radius 0;
+            border-radius: 0 $param-border-radius $param-border-radius 0;
         }
 
         // When it spans two columns...
         &.full-width {
             grid-column-start: 1;
             grid-column-end: span 2;
-            border-radius: $border-radius;
+            border-radius: $param-border-radius;
         }
     }
 
@@ -266,8 +266,8 @@
         width: 100%;
         display: grid;
         grid-template-columns: 1fr;
-        row-gap: $parameter-item-spacing-vertical;
-        column-gap: calc($parameter-item-spacing-horizontal / 2);
+        row-gap: $param-spacing;
+        column-gap: calc($param-inner-spacing / 2);
         align-items: center;
     }
 

@@ -1,16 +1,5 @@
 @use "sass:color";
 
-/*
-
-Styling to-do:
-- do we like the field input styles?
-- can we isolate and define any other magic numbers?
-- non-overlaid panel shadow?
-- avoid imports in this file
-- optional divider lines between panel sections?
-- what values can we abstract in here (i.e. set to other variables in this file)?
-*/
-
 // Typography
 $font-family: 'Arial', sans-serif;
 $title-text-size: 1.4rem;
@@ -21,22 +10,19 @@ $xs-text-size: 0.7rem;
 $subtitle-text-opacity: 0.6;
 $footer-text-opacity: 0.4;
 
-// Todo
-$container-bg-color: #777; // canvas container color (partial-size canvases)
-$canvas-bg-color: #fff; // canvas color behind transparent content
-$canvas-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.5); // canvas shadow above container
-
 // Panels
 $panel-bg-color: #fff;
 $panel-fg-color: #000;
 $panel-highlight-color: #5b31cd;
 $panel-width: 16rem;
-$panel-content-inset: 0.75rem;
 $panel-border-opacity: 0.5;
 $panel-border-radius: 0.5rem;
 $panel-border-size: 1px;
 $panel-animation-quick: 0.3s;
 $panel-animation-slow: 0.7s;
+$panel-content-inset: 0.75rem;
+$panel-section-spacing: 0.75rem;
+$panel-header-spacing: 0.5rem;
 
 // Overlaid panels (enabled/disabled in settings.ts)
 $overlay-panel-edge-inset: 0.5rem;
@@ -67,7 +53,7 @@ $panel-show-button-fg-opacity-hover: 0.7;
 $panel-show-button-bg-opacity: 0.5;
 $panel-show-button-bg-opacity-hover: 0.7;
 
-// Group selection list
+// Group list
 $group-colors: $panel-highlight-color;
 $group-spacing: 0.25rem;
 $group-padding: 0.25rem 0.75rem;
@@ -84,65 +70,40 @@ $group-unselected-text-opacity: 0.75;
 $group-unselected-text-weight: bold;
 $group-list-scroll-fade: true;
 
-// Project selection list
+// Project list
 $project-spacing: 0.25rem;
 $project-padding: 0.75rem;
 $project-full-width: false;
 $project-border-radius: 0.5rem;
 $project-border-size: 0;
 $project-border-opacity: 0.3;
-$project-selected-bg-opacity: 0.3;
 $project-selected-text-opacity: 1.0;
 $project-selected-text-weight: bold;
+$project-selected-bg-opacity: 0.3;
 $project-selected-shadow-size: 0.1rem;
 $project-selected-shadow-opacity: 0.4;
+$project-unselected-text-opacity: 1.0;
+$project-unselected-text-weight: normal;
 $project-unselected-bg-opacity-hover: 0.05;
 $project-unselected-bg-opacity-odd: 0.025;
 $project-unselected-bg-opacity-even: 0.0;
-$project-unselected-text-opacity: 1.0;
-$project-unselected-text-weight: normal;
 $project-experiment-icon-opacity: 0.5;
 $project-list-scroll-fade: true;
 
-// todo (for both params list & settings)...
+// Parameter list
+$param-spacing: 0.25rem;
+$param-padding: 0.5rem;
+$param-inner-spacing: 1rem;
+$param-label-max-width: 50%;
+$param-border-radius: 0.5rem;
+$param-bg-opacity-odd: 0.025;
+$param-bg-opacity-even: 0.0;
+$param-section-header-opacity: 0.7;
 $param-list-scroll-fade: true;
 
-// Panel headers
-$panel-header-section-spacing: 0.5rem;
-
-// Preset control
-$preset-control-item-spacing: 0.25rem;
-$preset-control-item-padding: 0.25rem 0.75rem;
-
-// Parameter general
-$parameter-item-spacing-vertical: 0.25rem;
-$parameter-item-spacing-horizontal: 0.75rem;
-$parameter-item-padding-vertical: 0.5rem;
-$parameter-label-max-width: 50%;
-$border-radius: 0.5rem; // move elsewhere // ok against panel corner?
-
-// Parameter sections
-$parameter-section-gap: calc($parameter-item-padding-vertical * 2);
-$parameter-section-header-color: rgba($panel-fg-color, 0.7);
-$parameter-section-divider: 1px solid $parameter-section-header-color;
-
-// Parameter items
-$param-fg-color: $panel-fg-color;
-$param-field-bg-color: rgba(color.scale($panel-bg-color, $saturation: -90%), 0.9);
-$param-accent-color: rgba(color.scale($panel-fg-color, $saturation: -90%), 0.3);
-$param-light-accent-color: rgba(color.scale($panel-fg-color, $saturation: -90%), 0.1);
-
-$field-input-border: 1px solid $param-accent-color;
-$field-input-border-radius: 0.25rem;
-
-$param-input-item-min-width: 2rem;
-$param-input-item-partial-width: 4rem;
-
-$checkbox-input-size: 0.9rem;
-
-// More specific styles are available in each of these files
-@import '$lib/styles/params.scss';
-@import '$lib/styles/panel-base.scss';
+// Derivative styles are defined in these files...
 @import '$lib/styles/detail-panel.scss';
+@import '$lib/styles/general.scss';
 @import '$lib/styles/list-panel.scss';
-@import '$lib/styles/util.scss';
+@import '$lib/styles/panel-base.scss';
+@import '$lib/styles/params.scss';

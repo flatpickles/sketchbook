@@ -73,7 +73,7 @@
         flex-direction: row;
         align-items: center;
         justify-content: center;
-        gap: calc($parameter-item-spacing-horizontal / 2);
+        gap: calc($param-inner-spacing / 2);
     }
 
     input[type='range'] {

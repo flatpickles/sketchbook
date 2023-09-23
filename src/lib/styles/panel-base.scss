@@ -1,4 +1,4 @@
-// More panel configuration options!
+// More panel configuration options
 $panel-shadow-size: 0.5rem;
 $panel-shadow-color: rgba(0, 0, 0, 0.3);
 
@@ -6,9 +6,6 @@ $panel-shadow-color: rgba(0, 0, 0, 0.3);
 $panel-border-color: rgba($panel-fg-color, $panel-border-opacity);
 $panel-border: $panel-border-size solid $panel-border-color;
 $panel-shadow: 0 calc($panel-shadow-size / 2) $panel-shadow-size $panel-shadow-color;
-
-
-$panel-section-spacing: $panel-content-inset;
 
 $panel-button-inset-zero: (
     $panel-button-inset == 0 or
