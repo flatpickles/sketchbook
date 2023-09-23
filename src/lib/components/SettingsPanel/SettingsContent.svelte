@@ -113,6 +113,6 @@
     .reset-wrapper {
         display: flex;
         justify-content: center;
-        margin: $panel-edge-inset;
+        margin: $overlay-panel-edge-inset;
     }
 </style>

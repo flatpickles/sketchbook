@@ -384,8 +384,8 @@
 
         // Setup differently if overlaid
         &.overlaid {
-            padding: $panel-edge-inset;
-            min-height: $panel-min-height;
+            padding: $overlay-panel-edge-inset;
+            min-height: $overlay-panel-min-height;
             &.left-panel {
                 padding-right: 0;
             }
@@ -397,7 +397,7 @@
         // Transition left for left and right panels
         left: 0;
         transition: left $panel-animation-duration-quick ease-in-out;
-        $extraWidth: math.max($panel-edge-inset, $panel-shadow-size);
+        $extraWidth: math.max($overlay-panel-edge-inset, $panel-shadow-size);
         &.leftClosed {
             // Align to the right side of a zero-width panel
             left: calc(-1 * $panel-width);
@@ -444,7 +444,7 @@
         height: 400px;
         max-width: 100%;
         max-height: 100%;
-        padding: $panel-edge-inset;
+        padding: $overlay-panel-edge-inset;
         box-sizing: border-box;
     }
 </style>

@@ -3,59 +3,60 @@
 /*
 
 Styling to-do:
-- shadows & item selection look awkward in dark mode
+- centralize shadows - no blur
 - clean up this file, move whatever we don't need at a high level into sub-files
 - do we like the field input styles?
 - can we isolate and define any magic numbers?
-- panel-border-size/overlay-border-size is confusing
 */
 
-// General style settings & variables
+// Typography
 $font-family: 'Arial', sans-serif;
-@mixin link-style {
-    text-decoration: none;
-    color: rgb(20, 109, 56);
+$title-text-size: 1.4rem;
+$large-text-size: 1rem;
+$medium-text-size: 0.9rem;
+$small-text-size: 0.8rem;
+$xs-text-size: 0.7rem;
+$subtitle-opacity: 0.6;
+$footer-opacity: 0.4;
 
-    &:hover {
-        text-decoration: underline;
-    }
-}
+// Todo
+$container-bg-color: #777; // canvas container color (partial-size canvases)
+$canvas-bg-color: #fff; // canvas color behind transparent content
+$canvas-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.5); // canvas shadow above container
 
-$text-size-multiplier: 1.0;
-
-$title-text-size: calc(1.4rem * $text-size-multiplier);
-$large-text-size: calc(1rem * $text-size-multiplier);
-$medium-text-size: calc(0.9rem * $text-size-multiplier);
-$small-text-size: calc(0.8rem * $text-size-multiplier);
-$xs-text-size: calc(0.7rem * $text-size-multiplier);
-
-$app-bg-color: #000; // for header on mobile safari
-$container-bg-color: #777; // color behind canvas, if canvas is not full screen
-$canvas-bg-color: #fff; // default canvas background color
-$canvas-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.5);
-
+// Panels
+$panel-bg-color: #fff;
+$panel-fg-color: #000;
+$link-color: rgb(20, 109, 56);
+// highlight color? selections, links, etc
+$panel-width: 16rem;
+$panel-content-inset: 0.75rem;
+$panel-border-opacity: 0.5;
+$panel-border-radius: 0.5rem;
+$panel-border-size: 1px;
 $panel-animation-duration-quick: 0.3s;
 $panel-animation-duration-slow: 0.7s;
 
-// Panels
-$panel-bg-color: rgb(18, 18, 7);
-$panel-fg-color: rgb(193, 242, 189);
-$panel-width: 16rem;
-$panel-border-radius: 0.5rem;
+// Panel buttons
+$panel-button-inset: 0.25rem;
+$panel-button-size: 1.5rem;
+$panel-button-icon-size: $small-text-size;
+$panel-button-border-radius: $panel-border-radius;
+$panel-button-border-size: $panel-border-size;
+$panel-button-border-opacity: 0.5;
+$panel-button-fg-opacity: 0.6;
+$panel-button-bg-opacity: 0.1;
+$panel-button-bg-hover-opacity: 0.2;
 
-// Panel details
-$panel-border-size: 1px;
-$panel-border-color: rgba($panel-fg-color, 0.25);
+// Specifics for overlaid panels (enabled/disabled in config/settings.ts)
+$overlay-panel-edge-inset: 0.5rem;
+$overlay-panel-bg-opacity: 0.75;
+$overlay-panel-bg-filter: blur(1rem);
+$overlay-panel-min-height: 0%;
+$overlay-panel-border-enabled: true;
 
-// Specifics for overlaid panels
-$panel-edge-inset: 0.5rem;
-$panel-bg-opacity: 0.75;
-$panel-bg-filter: blur(1rem);
-$panel-min-height: 0%; // overlaid panels are at least this tall
-$panel-overlay-border-size: 0px; // optional override for $panel-border-size
-
-// Panel content
-$panel-content-inset: 0.75rem;
+// Panel show/hide buttons
+// todo
 
 // Panel headers
 $panel-header-section-spacing: 0.5rem;
