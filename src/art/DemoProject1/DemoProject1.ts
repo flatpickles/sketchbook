@@ -35,9 +35,7 @@ export default class DemoProject extends Project {
     string = "I'm a string!";
     arrayOptions = [4, 5, 6];
     arrayOptions2 = [7, 8, 9];
-
     stringOptions = 'Second';
-
     arrayColor = [45, 200, 100];
 
     #xPos = 300;
