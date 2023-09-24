@@ -18,13 +18,15 @@ You'll know if you need to sync your fork with the upstream if you see an "X com
 
 <img src="media/gh-sync-needed.png" style="width: 500px" />
 
-### Syncing Without Conflicts
+### Syncing Without Conflicts (Merge)
 
-If your changes are contained only within your `src/art` directory, you should be able to sync your fork easily from the GitHub web UI. to the right of the message shown above is a "Sync fork" option, and this should pull in the latest changes from the upstream repository. After you do this, you can `git pull` in your local Sketchbook directory, and get right back to work.
+If your changes are contained only within your `src/art` directory, you should be able to sync your fork easily from the GitHub web UI. To the right of the message shown above is a "Sync fork" option, and this should pull in the latest changes from the upstream repository. After you do this, you can `git pull` in your local Sketchbook directory, and get right back to work.
 
-### Syncing With Conflicts
+It's worth noting that GitHub's auto-sync option creates a **merge commit** in your Sketchbook fork. This can be fine, though you may prefer a rebase sync (discussed below).
 
-If you've changed code files elsewhere within Sketchbook, or in some cases when you've changed values in `src/config`, you may need to resolve conflicts with upstream changes in the same files. If "Sync repo" presents the following dropdown, and you don't want to discard the conflicting commits, you'll need to resolve these conflicts locally.
+### Syncing With Conflicts (Merge)
+
+If you've changed code files within Sketchbook's app code, or in some cases when you've changed the files within `src/config`, you may need to resolve conflicts with upstream changes. If "Sync repo" presents the following dropdown, and you don't want to discard the conflicting commits, you'll need to resolve these conflicts locally.
 
 <img src="media/gh-conflicts.png" style="width: 300px" />
 
@@ -41,9 +43,26 @@ git fetch upstream
 git checkout main
 ```
 
-When resolving conflicts, you can use either a rebase or a merge. The differences between the two are out of scope for this document, but suffice it to say that either will work, and each offers its own benefits and drawbacks. To preserve the distinction between your commits and those in the upstream repo, we'll prefer a rebase workflow here.
+You can then follow a local merge workflow to resolve these conflicts, something like this:
 
 ```
+git merge upstream/main
+git mergetool
+[resolve conflicts as you see fit]
+git add .
+git commit -m "Merge branch 'flatpickles:main' into main"
+git push
+```
+
+GitHub's [documentation](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/syncing-a-fork) on fork syncing may also be a helpful reference. Please [file an issue](https://github.com/flatpickles/sketchbook/issues/new) if you're having trouble updating your Sketchbook!
+
+### Syncing with Rebase
+
+Despite some added complexity, there are many benefits to a rebase workflow. One of these benefits is cleanly preserving the distinction between your commits and those in the upstream repo, which helps with long-term maintainability in a codebase. Using a rebase workflow to sync your Sketchbook fork looks something like this:
+
+```
+git fetch upstream
+git checkout main
 git rebase upstream/main
 git mergetool
 [resolve conflicts as you see fit]
@@ -51,8 +70,6 @@ git add .
 git rebase --continue
 git push --force
 ```
-
-GitHub's [documentation](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/syncing-a-fork) on fork syncing may also be a helpful reference. Please [file an issue](https://github.com/flatpickles/sketchbook/issues/new) if you're having trouble updating your Sketchbook!
 
 ### For Private Sketchbooks
 
