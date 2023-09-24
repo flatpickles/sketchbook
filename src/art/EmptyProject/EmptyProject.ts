@@ -4,4 +4,5 @@ export default class EmptyProject extends Project {
     // empty = false;
     // button = 'Click me';
     // dob = 'bonk';
+    // not so empty now!!
 }
