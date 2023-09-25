@@ -12,7 +12,7 @@
     import ProjectList from './ProjectList.svelte';
 
     export let projects: Record<string, ProjectConfig>;
-    export let selectedProjectKey: string;
+    export let selectedProjectKey: string | undefined;
     export let headerButtonIcon: string | undefined;
 
     let selectedGroup: string | undefined;
