@@ -1,0 +1,96 @@
+@import '/src/config/theme.scss';
+
+@mixin panel-wrapper {
+    z-index: 2;
+
+    // Enable panel min-height despite absolute inheritance:
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    // Setup differently if overlaid
+    position: relative;
+    width: $panel-width;
+    box-sizing: border-box;
+    &.overlaid {
+        position: absolute;
+    }
+
+    // Transition width
+    transition: width $panel-animation-quick ease-in-out;
+    &.closed {
+        width: 0;
+    }
+}
+
+.panel {
+    position: relative;
+    min-height: 100%;
+    max-height: 100%;
+    width: $panel-width;
+
+    // Setup differently if overlaid
+    &.overlaid {
+        padding: $overlay-panel-edge-inset;
+        min-height: $overlay-panel-min-height;
+        &.left-panel {
+            padding-right: 0;
+        }
+        &.right-panel {
+            padding-left: 0;
+        }
+    }
+
+    // Transition left for left and right panels
+    left: 0;
+    transition: left $panel-animation-quick ease-in-out;
+    $extraWidth: math.max($overlay-panel-edge-inset, $panel-shadow-size);
+    &.leftClosed {
+        // Align to the right side of a zero-width panel
+        left: calc(-1 * $panel-width);
+        &.overlaid {
+            // Inset extra width to account for padding and/or shadow
+            left: calc(-1 * ($panel-width + $extraWidth));
+        }
+    }
+    &.rightClosed.overlaid {
+        // Inset extra width to account for padding and/or shadow
+        left: $extraWidth;
+    }
+}
+
+/* Show buttons */
+
+@mixin show-button-wrapper {
+    position: absolute;
+    top: 0;
+    z-index: 1;
+
+    // Transition opacity when mouse isn't moving
+    opacity: 1;
+    transition: opacity $panel-animation-quick ease-in-out;
+    &.hidden {
+        opacity: 0;
+        transition-duration: $panel-animation-slow;
+    }
+}
+
+.show-button {
+    @include panel-show-button;
+
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    // Transition opacity
+    transition: opacity $panel-animation-slow ease-in-out;
+    transition-delay: $panel-animation-quick;
+    &.hidden {
+        opacity: 0;
+        transition-delay: 0s;
+
+        // Fade out even more quickly while panel slides over
+        transition-duration: calc($panel-animation-quick / 2);
+    }
+}

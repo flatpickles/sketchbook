@@ -1,8 +1,16 @@
 <script lang="ts">
     import 'ress';
+    import type { LayoutData } from './$types';
+    import MainView from '$lib/components/MainView/MainView.svelte';
+    import { page } from '$app/stores';
+
+    export let data: LayoutData;
+    $: selectedProjectKey = $page.url.pathname.split('/')[1];
 </script>
 
-<slot />
+<MainView projectConfigs={data.projects} {selectedProjectKey}>
+    <slot />
+</MainView>
 
 <style lang="scss">
     :global(html) {

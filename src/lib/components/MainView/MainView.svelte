@@ -2,14 +2,11 @@
     import { onMount } from 'svelte';
     import { fade } from 'svelte/transition';
 
-    import ProjectViewer from '$lib/components/MainView/ProjectViewer.svelte';
-    import ProjectDetailPanel from '$lib/components/ProjectDetailPanel/ProjectDetailPanel.svelte';
     import ProjectListPanel from '$lib/components/ProjectListPanel/ProjectListPanel.svelte';
     import SettingsPanel from '../SettingsPanel/SettingsPanel.svelte';
 
     import { content } from '$config/content';
     import { settingsStore, stateStore } from '$lib/base/Util/AppState';
-    import type { ProjectTuple } from '$lib/base/ProjectLoading/ProjectLoader';
     import type { ProjectConfig } from '$lib/base/ConfigModels/ProjectConfig';
     import {
         PanelState,
@@ -20,41 +17,26 @@
     import { MouseState, mouseStateTransition } from '$lib/base/Util/MouseState';
 
     export let projectConfigs: Record<string, ProjectConfig>;
-    export let selectedProjectTuple: ProjectTuple;
+    export let selectedProjectKey: string;
 
+    // Maximum width of panels, for mouse interactivity (state maintained in stateStore)
     let panelMaxWidth: number;
-    let panelResizing = false;
-    let currentMouseState: MouseState = MouseState.NoTrigger;
-    let viewer: ProjectViewer;
 
-    // Track when the UI is active (to hide/show panel show buttons)
-    let uiActive = true;
+    // UI activity timeout; show panel buttons when active (state maintained in stateStore)
     let uiActiveTimeout: ReturnType<typeof setTimeout>;
 
     // Left panel reactive state
     $: leftPanelAvailable = $settingsStore.projectListPanelState !== PanelState.Unavailable;
     $: leftPanelShown =
         leftPanelAvailable &&
-        panelShown($settingsStore.projectListPanelState, currentMouseState, MouseState.LeftTrigger);
+        panelShown(
+            $settingsStore.projectListPanelState,
+            $stateStore.currentMouseState,
+            MouseState.LeftTrigger
+        );
     $: leftPanelHeaderIcon = headerIconForPanelState($settingsStore.projectListPanelState);
 
-    // Right panel reactive state
-    $: projectHasDetail =
-        selectedProjectTuple.config.date !== undefined ||
-        selectedProjectTuple.config.description !== undefined ||
-        selectedProjectTuple.params.length > 0; // todo: incorporate presets, once implemented
-    $: rightPanelAvailable =
-        projectHasDetail && $settingsStore.projectDetailPanelState !== PanelState.Unavailable;
-    $: rightPanelShown =
-        rightPanelAvailable &&
-        panelShown(
-            $settingsStore.projectDetailPanelState,
-            currentMouseState,
-            MouseState.RightTrigger
-        );
-    $: rightPanelHeaderIcon = headerIconForPanelState($settingsStore.projectDetailPanelState);
-
-    /* Event bindings */
+    /* Events -> app state (state maintained in settingsStore & stateStore) */
 
     onMount(() => {
         // Mouse movement
@@ -72,7 +54,7 @@
         };
         addEventListener('transitionstart', (event: TransitionEvent) => {
             if (eventIsResizingContainer(event)) {
-                panelResizing = true;
+                $stateStore.panelResizing = true;
                 uiActivated();
             }
         });
@@ -80,7 +62,7 @@
             if (eventIsResizingContainer(event)) {
                 setTimeout(() => {
                     // Set this on the next event loop (in case project has already updated)
-                    panelResizing = false;
+                    $stateStore.panelResizing = false;
                 }, 0);
                 uiActivated();
             }
@@ -100,23 +82,7 @@
         }
 
         // Clear the mouse state
-        currentMouseState = MouseState.ClearedLeft;
-    }
-
-    function toggleRightPanel(showClicked = false) {
-        // Toggle from current state
-        $settingsStore.projectDetailPanelState = toggledPanelState(
-            $settingsStore.projectDetailPanelState
-        );
-
-        // If showClicked with PanelState.MouseUnpinnable, it's likely mouse movement isn't working
-        // on this device; PanelState.MousePinned falls back to click-based toggling
-        if (showClicked && $settingsStore.projectDetailPanelState === PanelState.MouseUnpinnable) {
-            $settingsStore.projectDetailPanelState = PanelState.MousePinned;
-        }
-
-        // Clear the mouse state
-        currentMouseState = MouseState.ClearedRight;
+        $stateStore.currentMouseState = MouseState.ClearedLeft;
     }
 
     function mouseMoved(event: MouseEvent) {
@@ -133,8 +99,8 @@
         };
 
         // Update the mouse state
-        currentMouseState = mouseStateTransition(
-            currentMouseState,
+        $stateStore.currentMouseState = mouseStateTransition(
+            $stateStore.currentMouseState,
             event.clientX,
             leftThresholds,
             rightThresholds
@@ -144,7 +110,7 @@
     // Called when the mouse moves, or the UI is otherwise activated
     function uiActivated() {
         if (uiActiveTimeout) clearTimeout(uiActiveTimeout);
-        uiActive = true;
+        $stateStore.panelShowButtonsVisible = true;
 
         // Start a new timeout for deactivation
         const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
@@ -152,7 +118,7 @@
             $settingsStore.hidePanelButtonsTimeout != undefined && !isTouchDevice;
         if (enableDeactivation) {
             uiActiveTimeout = setTimeout(() => {
-                uiActive = false;
+                $stateStore.panelShowButtonsVisible = false;
             }, $settingsStore.hidePanelButtonsTimeout);
         }
     }
@@ -164,6 +130,24 @@
 
 <div class="main-wrapper" data-testid="main-wrapper">
     {#if leftPanelAvailable}
+        {#if $settingsStore.projectListPanelState !== PanelState.Static}
+            <div
+                class="left-show-wrapper"
+                data-testid="show-button-wrapper"
+                class:hidden={!$stateStore.panelShowButtonsVisible}
+            >
+                <div
+                    class="show-button"
+                    data-testid="left-show"
+                    class:hidden={leftPanelShown}
+                    on:click={toggleLeftPanel.bind(null, true)}
+                    on:keypress={toggleLeftPanel.bind(null, true)}
+                >
+                    <i class={content.projectListIcon} />
+                </div>
+            </div>
+        {/if}
+
         <div
             class="left-panel-wrapper"
             data-testid="left-panel-wrapper"
@@ -177,7 +161,7 @@
             >
                 <ProjectListPanel
                     projects={projectConfigs}
-                    selectedProjectKey={selectedProjectTuple.key}
+                    {selectedProjectKey}
                     headerButtonIcon={leftPanelHeaderIcon}
                     on:headeraction={toggleLeftPanel.bind(null, false)}
                     on:showsettings={toggleSettings}
@@ -186,65 +170,7 @@
         </div>
     {/if}
 
-    <div class="project-viewer">
-        <ProjectViewer
-            project={selectedProjectTuple.project}
-            containerResizing={!$settingsStore.overlayPanels && panelResizing}
-            canvasSizeConfig={selectedProjectTuple.config.canvasSize}
-            pixelRatioConfig={selectedProjectTuple.config.pixelRatio}
-            bind:this={viewer}
-        />
-    </div>
-
-    {#if rightPanelAvailable}
-        <div
-            class="right-panel-wrapper"
-            data-testid="right-panel-wrapper"
-            class:closed={!rightPanelShown}
-            class:overlaid={$settingsStore.overlayPanels}
-        >
-            <div
-                class="panel right-panel"
-                class:rightClosed={!rightPanelShown}
-                class:overlaid={$settingsStore.overlayPanels}
-            >
-                <ProjectDetailPanel
-                    projectTuple={selectedProjectTuple}
-                    headerButtonIcon={rightPanelHeaderIcon}
-                    on:headeraction={toggleRightPanel.bind(null, false)}
-                />
-            </div>
-        </div>
-    {/if}
-</div>
-
-<div class="show-buttons" data-testid="show-buttons" class:hidden={!uiActive}>
-    {#if leftPanelAvailable && $settingsStore.projectListPanelState !== PanelState.Static}
-        <div
-            class="left-show"
-            data-testid="left-show"
-            class:hidden={leftPanelShown}
-            on:click={toggleLeftPanel.bind(null, true)}
-            on:keypress={toggleLeftPanel.bind(null, true)}
-        >
-            <i class={content.projectListIcon} />
-        </div>
-    {/if}
-
-    <!-- Push buttons left/right even when they're not both available: -->
-    <div class="spacer" />
-
-    {#if rightPanelAvailable && $settingsStore.projectDetailPanelState !== PanelState.Static}
-        <div
-            class="right-show"
-            data-testid="right-show"
-            class:hidden={rightPanelShown}
-            on:click={toggleRightPanel.bind(null, true)}
-            on:keypress={toggleRightPanel.bind(null, true)}
-        >
-            <i class={content.projectDetailIcon} />
-        </div>
-    {/if}
+    <slot />
 </div>
 
 {#if $stateStore.settingsPresented}
@@ -268,6 +194,7 @@
 
 <style lang="scss">
     @use 'sass:math';
+    @import './main-layout.scss';
 
     .main-wrapper {
         display: flex;
@@ -280,136 +207,16 @@
         overflow: hidden;
     }
 
-    .project-viewer {
-        flex-grow: 1;
+    /* Left panel */
 
-        overflow: hidden;
-        z-index: 0;
-    }
-
-    /* Show buttons */
-
-    .show-buttons {
-        position: absolute;
-        top: 0;
-        z-index: 1;
-
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-
-        // Transition opacity when mouse isn't moving
-        opacity: 1;
-        transition: opacity $panel-animation-quick ease-in-out;
-        &.hidden {
-            opacity: 0;
-            transition-duration: $panel-animation-slow;
-        }
-    }
-
-    @mixin show-button {
-        @include panel-show-button;
-
-        cursor: pointer;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        // Transition opacity
-        transition: opacity $panel-animation-slow ease-in-out;
-        transition-delay: $panel-animation-quick;
-        &.hidden {
-            opacity: 0;
-            transition-delay: 0s;
-
-            // Fade out even more quickly while panel slides over
-            transition-duration: calc($panel-animation-quick / 2);
-        }
-    }
-
-    .left-show {
-        @include show-button;
+    .left-show-wrapper {
+        @include show-button-wrapper;
         left: 0;
-    }
-
-    .right-show {
-        @include show-button;
-        right: 0;
-    }
-
-    /* Panels */
-
-    @mixin panel-wrapper {
-        z-index: 2;
-
-        // Enable panel min-height despite absolute inheritance:
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-
-        // Setup differently if overlaid
-        position: relative;
-        width: $panel-width;
-        box-sizing: border-box;
-        &.overlaid {
-            position: absolute;
-        }
-
-        // Transition width
-        transition: width $panel-animation-quick ease-in-out;
-        &.closed {
-            width: 0;
-        }
     }
 
     .left-panel-wrapper {
         @include panel-wrapper;
         left: 0;
-    }
-
-    .right-panel-wrapper {
-        @include panel-wrapper;
-        right: 0;
-    }
-
-    .panel {
-        position: relative;
-        min-height: 100%;
-        max-height: 100%;
-        width: $panel-width;
-
-        // Setup differently if overlaid
-        &.overlaid {
-            padding: $overlay-panel-edge-inset;
-            min-height: $overlay-panel-min-height;
-            &.left-panel {
-                padding-right: 0;
-            }
-            &.right-panel {
-                padding-left: 0;
-            }
-        }
-
-        // Transition left for left and right panels
-        left: 0;
-        transition: left $panel-animation-quick ease-in-out;
-        $extraWidth: math.max($overlay-panel-edge-inset, $panel-shadow-size);
-        &.leftClosed {
-            // Align to the right side of a zero-width panel
-            left: calc(-1 * $panel-width);
-            &.overlaid {
-                // Inset extra width to account for padding and/or shadow
-                left: calc(-1 * ($panel-width + $extraWidth));
-            }
-        }
-        &.rightClosed.overlaid {
-            // Inset extra width to account for padding and/or shadow
-            left: $extraWidth;
-        }
     }
 
     .panel-dummy {
