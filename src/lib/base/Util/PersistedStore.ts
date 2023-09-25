@@ -37,9 +37,6 @@ export function createPersistedStore<T>(
     const resetState = () => {
         initialState = initialValues as Record<string, AnyParamValueType>;
         for (const key of keysToPersist) {
-            // Check to make sure this key exists in the initial state
-            if (initialState[key] === undefined)
-                throw new Error(`Key ${key} not found in initial state`);
             // Derive the keys for the initial value and the last initial value
             const lastInitialValueKey = `lastInitialValue_${key}`;
             // Use the new value from initialValues if it's been changed

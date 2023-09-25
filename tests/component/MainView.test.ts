@@ -1,46 +1,25 @@
 import { render, fireEvent, screen, cleanup, waitFor, within } from '@testing-library/svelte';
 import { vi, describe, it, expect, afterEach } from 'vitest';
-import MainView from '$lib/components/MainView/MainView.svelte';
+import MainViewWithContent from '../../src/lib/components/MainView/MainViewWithContent.svelte';
 import { ProjectConfigDefaults } from '$lib/base/ConfigModels/ProjectConfig';
-import Project from '$lib/base/Project/Project';
 import { settingsStore, stateStore } from '$lib/base/Util/AppState';
 import { get } from 'svelte/store';
 import { PanelState } from '$lib/base/Util/PanelState';
 import userEvent from '@testing-library/user-event';
 
-const configs = {
-    untitled: {
-        ...ProjectConfigDefaults,
-        description: 'When a description is present, we render the project detail panel.'
-    }
-};
-const projectTuple = {
-    key: 'Untitled',
-    project: new Project(),
-    config: configs.untitled,
-    params: []
-};
-
 describe('MainView layout', () => {
     afterEach(cleanup);
 
     it('renders main wrapper', async () => {
-        render(MainView, {
-            projectConfigs: configs,
-            selectedProjectTuple: projectTuple
-        });
+        render(MainViewWithContent);
 
         const wrapper = screen.getByTestId('main-wrapper');
         expect(wrapper).toBeDefined();
     });
 
     it("doesn't show detail panel when the project doesn't have details", async () => {
-        render(MainView, {
-            projectConfigs: { untitled: ProjectConfigDefaults },
-            selectedProjectTuple: {
-                ...projectTuple,
-                config: ProjectConfigDefaults
-            }
+        render(MainViewWithContent, {
+            hasDetails: false
         });
 
         const detailPanel = screen.queryByTestId('right-panel-wrapper');
@@ -55,24 +34,25 @@ describe('Panel button visibility', () => {
         // Set hidePanelButtonsTimeout
         settingsStore.set({
             ...get(settingsStore),
-            ...get(settingsStore),
-            hidePanelButtonsTimeout: 10
+            hidePanelButtonsTimeout: 10,
+            projectListPanelState: PanelState.Hidden,
+            projectDetailPanelState: PanelState.Hidden
         });
 
         // Render
-        const { getByTestId } = render(MainView, {
-            projectConfigs: configs,
-            selectedProjectTuple: projectTuple
-        });
+        const { getAllByTestId } = render(MainViewWithContent);
 
         // Find & validate show buttons wrapper
-        const showButtonsWrapper = getByTestId('show-buttons');
+        const showButtonsWrapper = getAllByTestId('show-button-wrapper');
         expect(showButtonsWrapper).toBeDefined();
-        expect(showButtonsWrapper.classList.contains('hidden')).toBe(false);
+        expect(showButtonsWrapper.length).toBe(2);
+        expect(showButtonsWrapper[0].classList.contains('hidden')).toBe(false);
+        expect(showButtonsWrapper[1].classList.contains('hidden')).toBe(false);
 
         // Wait then check again
         await new Promise((r) => setTimeout(r, 20));
-        expect(showButtonsWrapper.classList.contains('hidden')).toBe(true);
+        expect(showButtonsWrapper[0].classList.contains('hidden')).toBe(true);
+        expect(showButtonsWrapper[1].classList.contains('hidden')).toBe(true);
 
         // Move the mouse then check again
         const wrapper = screen.getByTestId('main-wrapper');
@@ -80,31 +60,33 @@ describe('Panel button visibility', () => {
             target: wrapper,
             coords: { clientX: 5, clientY: 5 }
         });
-        await waitFor(() => expect(showButtonsWrapper.classList.contains('hidden')).toBe(false));
+        await waitFor(() => expect(showButtonsWrapper[0].classList.contains('hidden')).toBe(false));
+        await waitFor(() => expect(showButtonsWrapper[1].classList.contains('hidden')).toBe(false));
     });
 
     it("doesn't hide if hidePanelButtonsTimeout is undefined", async () => {
         // Set hidePanelButtonsTimeout
         settingsStore.set({
             ...get(settingsStore),
-            ...get(settingsStore),
-            hidePanelButtonsTimeout: undefined
+            hidePanelButtonsTimeout: undefined,
+            projectListPanelState: PanelState.Hidden,
+            projectDetailPanelState: PanelState.Hidden
         });
 
         // Render
-        const { getByTestId } = render(MainView, {
-            projectConfigs: configs,
-            selectedProjectTuple: projectTuple
-        });
+        const { getAllByTestId } = render(MainViewWithContent);
 
         // Find & validate show buttons wrapper
-        const showButtonsWrapper = getByTestId('show-buttons');
+        const showButtonsWrapper = getAllByTestId('show-button-wrapper');
         expect(showButtonsWrapper).toBeDefined();
-        expect(showButtonsWrapper.classList.contains('hidden')).toBe(false);
+        expect(showButtonsWrapper.length).toBe(2);
+        expect(showButtonsWrapper[0].classList.contains('hidden')).toBe(false);
+        expect(showButtonsWrapper[1].classList.contains('hidden')).toBe(false);
 
         // Wait then check again
         await new Promise((r) => setTimeout(r, 100));
-        expect(showButtonsWrapper.classList.contains('hidden')).toBe(false);
+        expect(showButtonsWrapper[0].classList.contains('hidden')).toBe(false);
+        expect(showButtonsWrapper[1].classList.contains('hidden')).toBe(false);
     });
 
     it("doesn't hide if hidePanelButtonsTimeout is defined but we're on a touch client", async () => {
@@ -113,34 +95,32 @@ describe('Panel button visibility', () => {
         // Set hidePanelButtonsTimeout
         settingsStore.set({
             ...get(settingsStore),
-            ...get(settingsStore),
-            hidePanelButtonsTimeout: 10
+            hidePanelButtonsTimeout: 10,
+            projectListPanelState: PanelState.Hidden,
+            projectDetailPanelState: PanelState.Hidden
         });
 
         // Render
-        const { getByTestId } = render(MainView, {
-            projectConfigs: configs,
-            selectedProjectTuple: projectTuple
-        });
+        const { getAllByTestId } = render(MainViewWithContent);
 
         // Find & validate show buttons wrapper
-        const showButtonsWrapper = getByTestId('show-buttons');
+        const showButtonsWrapper = getAllByTestId('show-button-wrapper');
         expect(showButtonsWrapper).toBeDefined();
-        expect(showButtonsWrapper.classList.contains('hidden')).toBe(false);
+        expect(showButtonsWrapper.length).toBe(2);
+        expect(showButtonsWrapper[0].classList.contains('hidden')).toBe(false);
+        expect(showButtonsWrapper[1].classList.contains('hidden')).toBe(false);
 
         // Wait then check again
         await new Promise((r) => setTimeout(r, 20));
-        expect(showButtonsWrapper.classList.contains('hidden')).toBe(false);
+        expect(showButtonsWrapper[0].classList.contains('hidden')).toBe(false);
+        expect(showButtonsWrapper[1].classList.contains('hidden')).toBe(false);
     });
 });
 
 describe('Settings', () => {
     afterEach(cleanup);
     it('shows and hides the settings panel', async () => {
-        const { getByTestId } = render(MainView, {
-            projectConfigs: configs,
-            selectedProjectTuple: projectTuple
-        });
+        const { getByTestId } = render(MainViewWithContent);
 
         // No settings overlay to start
         expect(get(stateStore).settingsPresented).toBe(false);
@@ -173,10 +153,7 @@ describe('PanelState.Unavailable', () => {
             ...get(settingsStore),
             projectListPanelState: PanelState.Unavailable
         });
-        const { getByTestId } = render(MainView, {
-            projectConfigs: configs,
-            selectedProjectTuple: projectTuple
-        });
+        const { getByTestId } = render(MainViewWithContent);
 
         // Find & validate left panel wrapper and button absence
         expect(() => getByTestId('left-panel-wrapper')).toThrow();
@@ -189,10 +166,7 @@ describe('PanelState.Unavailable', () => {
             ...get(settingsStore),
             projectDetailPanelState: PanelState.Unavailable
         });
-        const { getByTestId } = render(MainView, {
-            projectConfigs: configs,
-            selectedProjectTuple: projectTuple
-        });
+        const { getByTestId } = render(MainViewWithContent);
 
         // Find & validate right panel wrapper and button absence
         expect(() => getByTestId('right-panel-wrapper')).toThrow();
@@ -209,10 +183,7 @@ describe('PanelState.Static', () => {
             ...get(settingsStore),
             projectListPanelState: PanelState.Static
         });
-        const { getByTestId } = render(MainView, {
-            projectConfigs: configs,
-            selectedProjectTuple: projectTuple
-        });
+        const { getByTestId } = render(MainViewWithContent);
 
         // Find & validate left panel wrapper
         const leftPanelWrapper = getByTestId('left-panel-wrapper');
@@ -232,10 +203,7 @@ describe('PanelState.Static', () => {
             ...get(settingsStore),
             projectDetailPanelState: PanelState.Static
         });
-        const { getByTestId } = render(MainView, {
-            projectConfigs: configs,
-            selectedProjectTuple: projectTuple
-        });
+        const { getByTestId } = render(MainViewWithContent);
 
         // Find & validate right panel wrapper
         const rightPanelWrapper = getByTestId('right-panel-wrapper');
@@ -260,10 +228,7 @@ describe('PanelState.Visible <-> PanelState.Hidden', () => {
             projectListPanelState: PanelState.Hidden,
             projectDetailPanelState: PanelState.Hidden
         });
-        const { getByTestId } = render(MainView, {
-            projectConfigs: configs,
-            selectedProjectTuple: projectTuple
-        });
+        const { getByTestId } = render(MainViewWithContent);
 
         // Find & validate left panel wrapper
         const leftPanelWrapper = getByTestId('left-panel-wrapper');
@@ -282,10 +247,7 @@ describe('PanelState.Visible <-> PanelState.Hidden', () => {
             ...get(settingsStore),
             projectListPanelState: PanelState.Visible
         });
-        const { getByTestId } = render(MainView, {
-            projectConfigs: configs,
-            selectedProjectTuple: projectTuple
-        });
+        const { getByTestId } = render(MainViewWithContent);
 
         // Find & validate left panel wrapper
         const leftPanelWrapper = getByTestId('left-panel-wrapper');
@@ -317,10 +279,7 @@ describe('PanelState.Visible <-> PanelState.Hidden', () => {
             ...get(settingsStore),
             projectDetailPanelState: PanelState.Visible
         });
-        const { getByTestId } = render(MainView, {
-            projectConfigs: configs,
-            selectedProjectTuple: projectTuple
-        });
+        const { getByTestId } = render(MainViewWithContent);
 
         // Find & validate left panel wrapper
         const rightPanelWrapper = getByTestId('right-panel-wrapper');
@@ -357,10 +316,7 @@ describe('Panels: PanelState.MousePinnable <-> PanelState.MousePinned', () => {
             projectListPanelState: PanelState.MousePinned,
             projectDetailPanelState: PanelState.MousePinned
         });
-        const { getByTestId } = render(MainView, {
-            projectConfigs: configs,
-            selectedProjectTuple: projectTuple
-        });
+        const { getByTestId } = render(MainViewWithContent);
 
         // Find & validate left panel wrapper
         const leftPanelWrapper = getByTestId('left-panel-wrapper');
@@ -379,10 +335,7 @@ describe('Panels: PanelState.MousePinnable <-> PanelState.MousePinned', () => {
             ...get(settingsStore),
             projectListPanelState: PanelState.MousePinnable
         });
-        const { getByTestId } = render(MainView, {
-            projectConfigs: configs,
-            selectedProjectTuple: projectTuple
-        });
+        const { getByTestId } = render(MainViewWithContent);
 
         // Find & validate left panel wrapper
         const leftPanelWrapper = getByTestId('left-panel-wrapper');
@@ -487,10 +440,7 @@ describe('Panels: PanelState.MousePinnable <-> PanelState.MousePinned', () => {
             ...get(settingsStore),
             projectDetailPanelState: PanelState.MousePinnable
         });
-        const { getByTestId } = render(MainView, {
-            projectConfigs: configs,
-            selectedProjectTuple: projectTuple
-        });
+        const { getByTestId } = render(MainViewWithContent);
 
         // Find & validate left panel wrapper
         const rightPanelWrapper = getByTestId('right-panel-wrapper');
@@ -594,12 +544,9 @@ describe('Panels: PanelState.MousePinnable <-> PanelState.MousePinned', () => {
         settingsStore.set({
             ...get(settingsStore),
             projectListPanelState: PanelState.MousePinnable,
-            projectDetailState: PanelState.MousePinnable
+            projectDetailPanelState: PanelState.MousePinnable
         });
-        const { getByTestId } = render(MainView, {
-            projectConfigs: configs,
-            selectedProjectTuple: projectTuple
-        });
+        const { getByTestId } = render(MainViewWithContent);
         const leftPanelWrapper = getByTestId('left-panel-wrapper');
         const rightPanelWrapper = getByTestId('right-panel-wrapper');
         expect(leftPanelWrapper.classList.contains('closed')).toBe(true);
@@ -630,10 +577,7 @@ describe('Panels: PanelState.MouseUnpinnable', () => {
             ...get(settingsStore),
             projectListPanelState: PanelState.MouseUnpinnable
         });
-        const { getByTestId } = render(MainView, {
-            projectConfigs: configs,
-            selectedProjectTuple: projectTuple
-        });
+        const { getByTestId } = render(MainViewWithContent);
 
         // Find & validate left panel wrapper
         const leftPanelWrapper = getByTestId('left-panel-wrapper');
@@ -685,10 +629,7 @@ describe('Panels: PanelState.MouseUnpinnable', () => {
             ...get(settingsStore),
             projectDetailPanelState: PanelState.MouseUnpinnable
         });
-        const { getByTestId } = render(MainView, {
-            projectConfigs: configs,
-            selectedProjectTuple: projectTuple
-        });
+        const { getByTestId } = render(MainViewWithContent);
 
         // Find & validate left panel wrapper
         const rightPanelWrapper = getByTestId('right-panel-wrapper');
@@ -739,12 +680,9 @@ describe('Panels: PanelState.MouseUnpinnable', () => {
         settingsStore.set({
             ...get(settingsStore),
             projectListPanelState: PanelState.MouseUnpinnable,
-            projectDetailState: PanelState.MouseUnpinnable
+            projectDetailPanelState: PanelState.MouseUnpinnable
         });
-        const { getByTestId } = render(MainView, {
-            projectConfigs: configs,
-            selectedProjectTuple: projectTuple
-        });
+        const { getByTestId } = render(MainViewWithContent);
         const leftPanelWrapper = getByTestId('left-panel-wrapper');
         const rightPanelWrapper = getByTestId('right-panel-wrapper');
         expect(leftPanelWrapper.classList.contains('closed')).toBe(true);
