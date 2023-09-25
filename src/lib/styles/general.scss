@@ -4,12 +4,7 @@ $canvas-bg-color: #fff; // canvas color behind transparent content
 $canvas-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.5); // canvas shadow above container
 
 @mixin link-style {
-    text-decoration: none;
     color: $panel-highlight-color;
-
-    &:hover {
-        text-decoration: underline;
-    }
 }
 
 // https://css-tricks.com/snippets/css/prevent-long-urls-from-breaking-out-of-container/

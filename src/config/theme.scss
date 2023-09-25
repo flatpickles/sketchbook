@@ -11,11 +11,11 @@ $subtitle-text-opacity: 0.6;
 $footer-text-opacity: 0.4;
 
 // Panels
-$panel-bg-color: #fff;
-$panel-fg-color: #000;
-$panel-highlight-color: #5b31cd;
+$panel-bg-color: #fffffe;
+$panel-fg-color: #000000;
+$panel-highlight-color: #1c795d;
 $panel-width: 16rem;
-$panel-border-opacity: 0.5;
+$panel-border-opacity: 0.25;
 $panel-border-radius: 0.5rem;
 $panel-border-size: 1px;
 $panel-animation-quick: 0.3s;
@@ -37,7 +37,7 @@ $panel-button-size: 1.25rem;
 $panel-button-icon-size: $small-text-size;
 $panel-button-border-radius: 0.25rem;
 $panel-button-border-size: $panel-border-size;
-$panel-button-border-opacity: 0.25;
+$panel-button-border-opacity: $panel-border-opacity;
 $panel-button-fg-opacity: 0.6;
 $panel-button-bg-opacity: 0.05;
 $panel-button-fg-opacity-hover: 0.65;
