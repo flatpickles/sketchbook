@@ -12,10 +12,9 @@ If it's helpful to guide your thinking about Sketchbook with a few questions, he
 
 **General**
 
--   How did you feel while setting up Sketchbook? Excited, frustrated, motivated, etc?
--   How do you feel while using Sketchbook? Productive, encumbered, creative, dissatisfied, etc?
 -   Did you expect Sketchbook to do anything that it doesn't do?
--   Do you like the fork, update, and publish workflow for using Sketchbook? Unconventional, but effective?
+-   Does Sketchbook facilitate a stable & comfortable workflow for you? Or is it getting in your way?
+-   Do you like the fork, update, and publish model for using Sketchbook? Unconventional, but effective?
 -   Would you be interested in using something like Sketchbook even if it weren't being built by a friend?
 -   Do you have any feature requests?
 
