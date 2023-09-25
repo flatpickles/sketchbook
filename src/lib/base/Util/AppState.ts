@@ -1,12 +1,18 @@
 import { config } from '$config/settings';
+import { MouseState } from './MouseState';
 import { createPersistedStore } from './PersistedStore';
 
-// The settingsStore is backed by values in config. Only values specified in userSettingsLabels
-// will be persisted as cookies, and will be reset to their initial values when these values change.
+import { writable } from 'svelte/store';
+
+// The settingsStore is backed by values in config. All values will be persisted as cookies, and
+// each will be reset to its backing value when that value changes (e.g. via edits in settings.ts)
 export const settingsStore = createPersistedStore('settings', config, true);
 
-// The stateStore is fully persisted, and maintains the state of the app
+// The stateStore is not persisted, and maintains the state of the app
 const stateDefaults = {
-    settingsPresented: false
+    settingsPresented: false,
+    currentMouseState: MouseState.NoTrigger,
+    panelResizing: false,
+    panelShowButtonsVisible: true
 };
-export const stateStore = createPersistedStore('state', stateDefaults);
+export const stateStore = writable(stateDefaults);
