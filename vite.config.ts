@@ -45,5 +45,8 @@ export default defineConfig({
         fs: {
             allow: ['src/art']
         }
+    },
+    optimizeDeps: {
+        include: ['js-cookie', 'regl', 'p5', 'canvas-sketch']
     }
 });

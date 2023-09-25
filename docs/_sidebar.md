@@ -10,7 +10,7 @@
     -   [Project Configuration](project-config.md)
     -   [Parameter Configuration](param-config.md)
     -   [Project Subtypes](project-subtypes.md)
-    -   [Deploying Sketchbook](deploying.md)
+    -   [Setup & Deployment](setup-deploy.md)
     -   [Updating Sketchbook](updating.md)
 
 -   Customizing Sketchbook
