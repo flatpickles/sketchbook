@@ -1,6 +1,7 @@
 -   Start Here
 
     -   [Sketchbook Overview](/)
+    -   [Notes for Beta Users](beta-testing.md)
     -   [Quick Start Guide](quick-start.md)
 
 -   Using Sketchbook
