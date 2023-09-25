@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { onMount } from 'svelte';
+    import { onDestroy, onMount } from 'svelte';
     import { fade } from 'svelte/transition';
 
     import ProjectListPanel from '$lib/components/ProjectListPanel/ProjectListPanel.svelte';
@@ -67,6 +67,15 @@
                 uiActivated();
             }
         });
+    });
+
+    onDestroy(() => {
+        // Reset state to reasonable defaults upon destroy
+        if (uiActiveTimeout) clearTimeout(uiActiveTimeout);
+        $stateStore.currentMouseState = MouseState.NoTrigger;
+        $stateStore.panelResizing = false;
+        $stateStore.panelShowButtonsVisible = true;
+        $stateStore.settingsPresented = false;
     });
 
     function toggleLeftPanel(showClicked = false) {

@@ -85,7 +85,7 @@
         >
             <div
                 class="show-button"
-                data-testid="left-show"
+                data-testid="right-show"
                 class:hidden={rightPanelShown}
                 on:click={toggleRightPanel.bind(null, true)}
                 on:keypress={toggleRightPanel.bind(null, true)}
