@@ -89,6 +89,8 @@ describe('ProjectListPanel rendering', () => {
         expect(listItems[1].textContent).toContain('Banana');
         expect(listItems[2].textContent).toContain('Carrot');
         expect(listItems[3].textContent).toContain('Dateless');
+
+        expect(() => screen.getByTestId('project-list-placeholder')).toThrow();
     });
 
     it('renders projects reverse chronologically', async () => {
@@ -123,6 +125,8 @@ describe('ProjectListPanel rendering', () => {
         expect(listItems[1].textContent).toContain('Carrot');
         expect(listItems[2].textContent).toContain('Apple');
         expect(listItems[3].textContent).toContain('Banana');
+
+        expect(() => screen.getByTestId('project-list-placeholder')).toThrow();
     });
 
     it('renders projects chronologically', async () => {
@@ -157,6 +161,8 @@ describe('ProjectListPanel rendering', () => {
         expect(listItems[1].textContent).toContain('Apple');
         expect(listItems[2].textContent).toContain('Carrot');
         expect(listItems[3].textContent).toContain('Dateless');
+
+        expect(() => screen.getByTestId('project-list-placeholder')).toThrow();
     });
 
     it('selects the proper project via selectedProjectKey', async () => {
@@ -182,6 +188,19 @@ describe('ProjectListPanel rendering', () => {
 
         const appleItem = screen.getByText('Apple');
         expect(appleItem?.classList.contains('selected')).toBe(true);
+
+        expect(() => screen.getByTestId('project-list-placeholder')).toThrow();
+    });
+
+    it('shows a placeholder if no projects are provided', async () => {
+        render(ProjectListPanel, {
+            projects: {},
+            selectedProjectKey: undefined,
+            headerButtonIcon: undefined
+        });
+
+        const placeholder = screen.getByTestId('project-list-placeholder');
+        expect(placeholder).toBeDefined();
     });
 });
 

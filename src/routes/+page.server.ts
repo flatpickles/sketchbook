@@ -23,10 +23,9 @@ export const load = (async ({ parent, cookies }) => {
         experimentsEnabled
     );
 
-    // If there are no projects, throw an error (for now)
-    if (presentationOrder.length === 0) throw new Error('No projects found');
-
-    // Redirect to the first project
-    const firstProject = presentationOrder[0];
-    throw redirect(307, `/${firstProject}`);
+    // If there are projects, redirect to the first one
+    if (presentationOrder.length !== 0) {
+        const firstProject = presentationOrder[0];
+        throw redirect(307, `/${firstProject}`);
+    }
 }) satisfies PageServerLoad;
