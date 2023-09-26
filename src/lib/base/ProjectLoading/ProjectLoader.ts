@@ -1,15 +1,15 @@
 import {
     importProjectClassFiles,
-    importProjectFilesRaw,
+    importProjectTextFiles,
     importProjectConfigFiles,
-    importProjectTextFiles
+    importRawProjectFiles
 } from './ImportProviders';
 import Project from '../Project/Project';
 import { type ProjectConfig, ProjectConfigDefaults } from '../ConfigModels/ProjectConfig';
 import type { ParamConfig } from '../ConfigModels/ParamConfig';
 import { ProjectConfigFactory } from './ProjectConfigFactory';
 import ParamValueProvider from './ParamValueProvider';
-import { browser } from '$app/environment';
+import { browser, dev } from '$app/environment';
 import FragShaderProject from '../Project/FragShaderProject';
 
 export interface ProjectTuple {
@@ -28,8 +28,8 @@ type ProjectModule = {
 type ImportResult = Record<string, () => Promise<unknown>>;
 type AllImports = {
     projectClassFiles: ImportResult;
-    projectFilesRaw: ImportResult;
     projectTextFiles: ImportResult;
+    projectFilesRaw: ImportResult;
     projectConfigFiles: ImportResult;
 };
 
@@ -42,8 +42,8 @@ export default class ProjectLoader {
         // Vite glob imports for project files
         const allImports: AllImports = {
             projectClassFiles: importProjectClassFiles(),
-            projectFilesRaw: importProjectFilesRaw(),
             projectTextFiles: importProjectTextFiles(),
+            projectFilesRaw: importRawProjectFiles(),
             projectConfigFiles: importProjectConfigFiles()
         };
 
@@ -54,8 +54,15 @@ export default class ProjectLoader {
             const projectKey = ProjectLoader.#keyFromConfigPath(path);
 
             // Deserialize the config file into a ProjectConfig object
-            const module = await allImports.projectConfigFiles[path]();
-            projectConfigurations[projectKey] = module as Record<string, unknown>;
+            const rawConfig = (await allImports.projectConfigFiles[path]()) as string;
+            try {
+                projectConfigurations[projectKey] = JSON.parse(rawConfig);
+            } catch (e) {
+                // Don't throw an error; we can still use inferred config data
+                if (dev && process.env.MODE !== 'test')
+                    console.error(`Error parsing config.json for ${projectKey}`);
+                continue;
+            }
         }
 
         // Collect projects from class files and assign config data if any
@@ -72,7 +79,10 @@ export default class ProjectLoader {
             if (projectKey && pathComponents.indexOf(projectKey) < 0) continue;
 
             // Check to make sure we can load this project
-            const projectValid = await ProjectLoader.#validateProject(allImports, path);
+            const projectValid = await ProjectLoader.#validateProject(
+                allImports.projectFilesRaw,
+                path
+            );
             if (!projectValid) continue;
 
             // Create a new config for this project if it doesn't already exist
@@ -98,8 +108,8 @@ export default class ProjectLoader {
         // Vite glob imports for project files
         const allImports: AllImports = {
             projectClassFiles: importProjectClassFiles(),
-            projectFilesRaw: importProjectFilesRaw(),
             projectTextFiles: importProjectTextFiles(),
+            projectFilesRaw: importRawProjectFiles(),
             projectConfigFiles: importProjectConfigFiles()
         };
 
@@ -120,15 +130,23 @@ export default class ProjectLoader {
         const configFilePath = Object.keys(projectConfigFiles).filter((path) => {
             return ProjectLoader.#keyFromConfigPath(path) === key;
         })[0];
-        const configModule = (
-            configFilePath ? await projectConfigFiles[configFilePath]() : undefined
-        ) as Record<string, unknown> | undefined;
+        let configJSON = undefined;
+        if (configFilePath) {
+            try {
+                const rawConfig = (await projectConfigFiles[configFilePath]()) as string;
+                configJSON = JSON.parse(rawConfig);
+            } catch (e) {
+                // Don't throw an error; we can still use inferred config data
+                if (dev && process.env.MODE !== 'test')
+                    console.error(`Error parsing config.json for ${key}`);
+            }
+        }
         const props = ProjectConfigFactory.propsFrom(
-            configModule as Record<string, unknown> | undefined
+            configJSON as Record<string, unknown> | undefined
         );
         const params = ProjectConfigFactory.paramsFrom(
             project,
-            configModule?.params as Record<string, Record<string, unknown>> | undefined,
+            configJSON?.params as Record<string, Record<string, unknown>> | undefined,
             props.paramsApplyDuringInput
         );
 
@@ -165,15 +183,15 @@ export default class ProjectLoader {
      * without actually importing the project class files or its dependencies, e.g. P5, which can't
      * be imported in a node context.
      */
-    static async #validateProject(fromImports: AllImports, filePath: string): Promise<boolean> {
-        const projectTextModule = fromImports.projectFilesRaw[filePath];
-        const projectText: string = (await projectTextModule()) as string;
+    static async #validateProject(rawImports: ImportResult, filePath: string): Promise<boolean> {
+        const rawProjectModule = rawImports[filePath];
+        const rawProject: string = (await rawProjectModule()) as string;
         // These checks are an extreme MVP; we could do more sophisticated validation here.
         // Proper validation is done in #loadProject, so at the very least we'll catch errors there.
         if (filePath.includes('.ts') || filePath.includes('.js')) {
-            return projectText.includes('export default class') && projectText.includes('extends');
+            return rawProject.includes('export default class') && rawProject.includes('extends');
         } else if (filePath.includes('.frag')) {
-            return projectText.includes('void main()');
+            return rawProject.includes('void main()');
         }
         return true;
     }
