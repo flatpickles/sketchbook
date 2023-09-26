@@ -59,7 +59,7 @@ export default class ProjectLoader {
                 projectConfigurations[projectKey] = JSON.parse(rawConfig);
             } catch (e) {
                 // Don't throw an error; we can still use inferred config data
-                if (dev && process.env.MODE !== 'test')
+                if (dev && import.meta.env.MODE !== 'test')
                     console.error(`Error parsing config.json for ${projectKey}`);
                 continue;
             }
@@ -137,7 +137,7 @@ export default class ProjectLoader {
                 configJSON = JSON.parse(rawConfig);
             } catch (e) {
                 // Don't throw an error; we can still use inferred config data
-                if (dev && process.env.MODE !== 'test')
+                if (dev && import.meta.env.MODE !== 'test')
                     console.error(`Error parsing config.json for ${key}`);
             }
         }
