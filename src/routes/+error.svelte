@@ -20,6 +20,8 @@
     }
 
     .error-display {
+        max-width: 50%;
+        min-width: 14rem;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -38,5 +40,6 @@
         padding: 1rem;
         border-top: 2px solid #000;
         font-size: $large-text-size;
+        text-align: center;
     }
 </style>
