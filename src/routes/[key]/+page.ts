@@ -6,7 +6,7 @@ export const load = (async ({ params }) => {
     const projectKey = params.key;
     const projectTuple = await ProjectLoader.loadProject(projectKey);
     if (!projectKey || !projectTuple) {
-        throw error(404, `No project named "${projectKey}" exists!`);
+        throw error(404, `No project exists with key "${projectKey}"`);
     }
     return {
         projectKey,
