@@ -1,0 +1,22 @@
+{
+    "title": "Shader Art",
+    "date": "2023-08-15",
+    "description": "This is a simple example of a fragment shader project, like what  you might find on Shadertoy.",
+    "params": {
+        "bgColor": {
+            "name": "Background",
+            "style": "unitColor"
+        },
+        "softBlob": {
+            "name": "Soften Blob"
+        },
+        "blobRed": {
+            "name": "Red",
+            "section": "Blob Colors"
+        },
+        "blobGreen": {
+            "name": "Green",
+            "section": "Blob Colors"
+        }
+    }
+}
