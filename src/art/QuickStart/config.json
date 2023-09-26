@@ -1,0 +1,14 @@
+{
+    "title": "Quick Start",
+    "date": "2023-09-19",
+    "description": "This is the final project from the <a href='http://skbk.cc/#/quick-start'>quick start guide</a>.",
+    "params": {
+        "rectSize": {
+            "name": "Rect Size"
+        },
+        "rectColor": {
+            "name": "Rect Color",
+            "style": "color"
+        }
+    }
+}
