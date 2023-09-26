@@ -13,8 +13,6 @@ If it's helpful to guide your thinking about Sketchbook with a few questions, he
 **General**
 
 -   Did you expect Sketchbook to do anything that it doesn't do?
--   Does Sketchbook facilitate a stable & comfortable workflow for you? Or is it getting in your way?
--   Do you like the fork, update, and publish model for using Sketchbook? Unconventional, but effective?
 -   Would you be interested in using something like Sketchbook even if it weren't being built by a friend?
 -   Do you have any feature requests?
 
@@ -26,5 +24,12 @@ If it's helpful to guide your thinking about Sketchbook with a few questions, he
 
 **Configuration**
 
--   Are there any aesthetic aspects of Sketchbook's UI that you want to change, but that aren't currently covered in `theme.scss`?
+-   Are there any aesthetic aspects of Sketchbook's UI that you want to change, but that aren't currently covered in `theme.scss`? (E.g. parameter styling)
 -   Do you want to be able to change project & param config defaults? In other words, do you want the defaults for the properties noted in the [Project](project-config.md) and [Parameter](param-config.md) Configuration pages to be something you set yourself in a config file?
+
+**Workflow**
+
+-   Does Sketchbook facilitate a stable & comfortable workflow for you? Or is it getting in your way?
+-   Do you like the fork, update, and publish model for using Sketchbook? Unconventional, but effective?
+-   Should the `main` branch have demo projects, so you have something to look at as soon as you create your fork? Currently demo projects exist on the `demo` branch to keep things clean & simple, but there's a tradeoff there.
+-   Do you need any other parameter types or styles?

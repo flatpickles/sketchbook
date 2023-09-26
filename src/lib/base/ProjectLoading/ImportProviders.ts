@@ -5,6 +5,11 @@ function importProjectClassFiles(): Record<string, () => Promise<unknown>> {
     return import.meta.glob('/src/art/*/*.(ts|js)');
 }
 
+function importProjectFilesRaw(): Record<string, () => Promise<unknown>> {
+    // Raw (text) versions of all potential project files
+    return import.meta.glob('/src/art/*/*.(ts|js|frag)', { as: 'raw' });
+}
+
 function importProjectTextFiles(): Record<string, () => Promise<unknown>> {
     // Text files may be .frag files
     return import.meta.glob('/src/art/*/*.frag', { as: 'raw' });
@@ -23,6 +28,7 @@ function importSketchbookConfigFile(): (() => Promise<unknown>) | undefined {
 
 export {
     importProjectClassFiles,
+    importProjectFilesRaw,
     importProjectTextFiles,
     importProjectConfigFiles,
     importSketchbookConfigFile

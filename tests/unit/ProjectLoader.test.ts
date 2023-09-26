@@ -17,9 +17,11 @@ vi.spyOn(ParamValueProvider, 'setValue');
 
 // Use TestProjects directory for loading tests
 const testProjects = import.meta.glob('/tests/unit/TestFiles/*/*.ts');
+const testRawFiles = import.meta.glob('/tests/unit/TestFiles/*/*.(ts|js|frag)', { as: 'raw' });
 const testConfigs = import.meta.glob('/tests/unit/TestFiles/*/config.json');
 const testTextFiles = import.meta.glob('/tests/unit/TestFiles/*/*.frag', { as: 'raw' });
 vi.spyOn(fileProviders, 'importProjectClassFiles').mockReturnValue(testProjects);
+vi.spyOn(fileProviders, 'importProjectFilesRaw').mockReturnValue(testRawFiles);
 vi.spyOn(fileProviders, 'importProjectConfigFiles').mockReturnValue(testConfigs);
 vi.spyOn(fileProviders, 'importProjectTextFiles').mockReturnValue(testTextFiles);
 
@@ -31,7 +33,7 @@ describe('loading available projects', async () => {
     const availableProjects = await ProjectLoader.loadAvailableProjects();
 
     it('has correct number of available projects', () => {
-        expect(Object.values(availableProjects).length).toBe(5);
+        expect(Object.values(availableProjects).length).toBe(3);
     });
 
     it('correctly configures a project without a config file', () => {
@@ -291,7 +293,6 @@ describe('loading specific projects, in browser mode (re: stored values)', async
 
         // Load project
         const projectTuple = await ProjectLoader.loadProject('ConfigAndSupport');
-        expect(projectTuple).toBeDefined();
 
         // Check project class instance
         const project = projectTuple!.project;

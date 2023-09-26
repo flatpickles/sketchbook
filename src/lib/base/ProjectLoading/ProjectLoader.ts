@@ -1,5 +1,6 @@
 import {
     importProjectClassFiles,
+    importProjectFilesRaw,
     importProjectConfigFiles,
     importProjectTextFiles
 } from './ImportProviders';
@@ -18,9 +19,18 @@ export interface ProjectTuple {
     params: ParamConfig[];
 }
 
+// Type to match the Project constructor
 type ProjectModule = {
-    // Matching the Project constructor...
     default: new () => Project;
+};
+
+// Types for all project file imports
+type ImportResult = Record<string, () => Promise<unknown>>;
+type AllImports = {
+    projectClassFiles: ImportResult;
+    projectFilesRaw: ImportResult;
+    projectTextFiles: ImportResult;
+    projectConfigFiles: ImportResult;
 };
 
 export default class ProjectLoader {
@@ -29,25 +39,30 @@ export default class ProjectLoader {
      * @returns A map of project keys to ProjectProperties objects.
      */
     public static async loadAvailableProjects(): Promise<Record<string, ProjectConfig>> {
-        // Load files
-        const projectClassFiles = importProjectClassFiles();
-        const projectTextFiles = importProjectTextFiles();
-        const projectConfigFiles = importProjectConfigFiles();
+        // Vite glob imports for project files
+        const allImports: AllImports = {
+            projectClassFiles: importProjectClassFiles(),
+            projectFilesRaw: importProjectFilesRaw(),
+            projectTextFiles: importProjectTextFiles(),
+            projectConfigFiles: importProjectConfigFiles()
+        };
 
         // Collect configuration data from config files, where available
         const projectConfigurations: Record<string, Record<string, unknown>> = {};
-        for (const path in projectConfigFiles) {
+        for (const path in allImports.projectConfigFiles) {
             // Find the project key from the directory name
             const projectKey = ProjectLoader.#keyFromConfigPath(path);
 
             // Deserialize the config file into a ProjectConfig object
-            const module = await projectConfigFiles[path]();
+            const module = await allImports.projectConfigFiles[path]();
             projectConfigurations[projectKey] = module as Record<string, unknown>;
         }
 
         // Collect projects from class files and assign config data if any
         const availableProjects: Record<string, ProjectConfig> = {};
-        const projectPaths = Object.keys(projectClassFiles).concat(Object.keys(projectTextFiles));
+        const projectPaths = Object.keys(allImports.projectClassFiles).concat(
+            Object.keys(allImports.projectTextFiles)
+        );
         for (const path of projectPaths) {
             // Find the project key from the file name
             const projectKey = ProjectLoader.#keyFromProjectPath(path);
@@ -55,6 +70,10 @@ export default class ProjectLoader {
             // Project files are named the same as their containing folder; skip other files
             const pathComponents = path.split('/');
             if (projectKey && pathComponents.indexOf(projectKey) < 0) continue;
+
+            // Check to make sure we can load this project
+            const projectValid = await ProjectLoader.#validateProject(allImports, path);
+            if (!projectValid) continue;
 
             // Create a new config for this project if it doesn't already exist
             availableProjects[projectKey] = ProjectConfigFactory.propsFrom(
@@ -76,45 +95,26 @@ export default class ProjectLoader {
      * @returns a ProjectTuple object containing the project, its properties, and its params.
      */
     public static async loadProject(key: string): Promise<ProjectTuple | null> {
+        // Vite glob imports for project files
+        const allImports: AllImports = {
+            projectClassFiles: importProjectClassFiles(),
+            projectFilesRaw: importProjectFilesRaw(),
+            projectTextFiles: importProjectTextFiles(),
+            projectConfigFiles: importProjectConfigFiles()
+        };
+
         // Load files and find the project file path
-        const projectClassFiles = importProjectClassFiles();
-        const projectTextFiles = importProjectTextFiles();
         const projectConfigFiles = importProjectConfigFiles();
-        const classFilePath = Object.keys(projectClassFiles).filter((path) => {
+        const classFilePath = Object.keys(allImports.projectClassFiles).filter((path) => {
             return ProjectLoader.#keyFromProjectPath(path) === key;
         })[0];
-        const textFilePath = Object.keys(projectTextFiles).filter((path) => {
+        const textFilePath = Object.keys(allImports.projectTextFiles).filter((path) => {
             return ProjectLoader.#keyFromProjectPath(path) === key;
         })[0];
 
         // Instantiate the proper project
-        let project: Project;
-        if (classFilePath) {
-            if (!classFilePath.includes('.ts') && !classFilePath.includes('.js')) {
-                // The project file must be a .ts or .js file
-                throw new Error(`Unsupported project class file type for path: ${classFilePath}`);
-            }
-            const module = (await projectClassFiles[classFilePath]()) as ProjectModule;
-            if (!module.default) {
-                // The project file must export a default class
-                throw new Error(`No default export for ${classFilePath}`);
-            }
-            project = new module.default();
-            if (!(project instanceof Project)) {
-                // The project must be a subclass of Project
-                throw new Error(
-                    `Project class file at path ${classFilePath} is not a subclass of Project`
-                );
-            }
-        } else if (textFilePath) {
-            if (!textFilePath.includes('.frag')) {
-                throw new Error(`Unsupported project text file type for path: ${textFilePath}`);
-            }
-            const fragShader: string = (await projectTextFiles[textFilePath]()) as string;
-            project = new FragShaderProject(fragShader);
-        } else {
-            return null;
-        }
+        if (!classFilePath && !textFilePath) return null;
+        const project = await ProjectLoader.#loadProject(allImports, classFilePath || textFilePath);
 
         // Create props & params with project and config file (if any)
         const configFilePath = Object.keys(projectConfigFiles).filter((path) => {
@@ -158,6 +158,47 @@ export default class ProjectLoader {
             config: props,
             params
         };
+    }
+
+    /**
+     * Validate a potential project import via its text representation, so we can do this in SSR
+     * without actually importing the project class files or its dependencies, e.g. P5, which can't
+     * be imported in a node context.
+     */
+    static async #validateProject(fromImports: AllImports, filePath: string): Promise<boolean> {
+        const projectTextModule = fromImports.projectFilesRaw[filePath];
+        const projectText: string = (await projectTextModule()) as string;
+        // These checks are an extreme MVP; we could do more sophisticated validation here.
+        // Proper validation is done in #loadProject, so at the very least we'll catch errors there.
+        if (filePath.includes('.ts') || filePath.includes('.js')) {
+            return projectText.includes('export default class') && projectText.includes('extends');
+        } else if (filePath.includes('.frag')) {
+            return projectText.includes('void main()');
+        }
+        return true;
+    }
+
+    static async #loadProject(fromImports: AllImports, filePath: string): Promise<Project> {
+        if (filePath.includes('.ts') || filePath.includes('.js')) {
+            const module = (await fromImports.projectClassFiles[filePath]()) as ProjectModule;
+            if (!module.default) {
+                // The project file must export a default class
+                throw new Error(`No default export for ${filePath}`);
+            }
+            const project = new module.default();
+            if (!(project instanceof Project)) {
+                // The project must be a subclass of Project
+                throw new Error(
+                    `Project class file at path ${filePath} is not a subclass of Project`
+                );
+            }
+            return project;
+        } else if (filePath.includes('.frag')) {
+            const fragShader: string = (await fromImports.projectTextFiles[filePath]()) as string;
+            return new FragShaderProject(fragShader);
+        } else {
+            throw new Error(`Unsupported project class file type for path: ${filePath}`);
+        }
     }
 
     static #keyFromProjectPath(path: string): string {
