@@ -6,6 +6,7 @@ import * as Environment from '$app/environment';
 import Project from '$lib/base/Project/Project';
 import ConfigAndSupport from './TestFiles/ConfigAndSupport/ConfigAndSupport';
 import NoConfig from './TestFiles/NoConfig/NoConfig';
+import EmptyConfig from './TestFiles/EmptyConfig/EmptyConfig';
 import ProjectLoader from '$lib/base/ProjectLoading/ProjectLoader';
 import { ProjectConfigDefaults } from '$lib/base/ConfigModels/ProjectConfig';
 import * as fileProviders from '$lib/base/ProjectLoading/ImportProviders';
@@ -18,11 +19,11 @@ vi.spyOn(ParamValueProvider, 'setValue');
 // Use TestProjects directory for loading tests
 const testProjects = import.meta.glob('/tests/unit/TestFiles/*/*.ts');
 const testRawFiles = import.meta.glob('/tests/unit/TestFiles/*/*.(ts|js|frag)', { as: 'raw' });
-const testConfigs = import.meta.glob('/tests/unit/TestFiles/*/config.json');
+const testConfigs = import.meta.glob('/tests/unit/TestFiles/*/config.json', { as: 'raw' });
 const testTextFiles = import.meta.glob('/tests/unit/TestFiles/*/*.frag', { as: 'raw' });
 vi.spyOn(fileProviders, 'importProjectClassFiles').mockReturnValue(testProjects);
-vi.spyOn(fileProviders, 'importProjectFilesRaw').mockReturnValue(testRawFiles);
 vi.spyOn(fileProviders, 'importProjectConfigFiles').mockReturnValue(testConfigs);
+vi.spyOn(fileProviders, 'importRawProjectFiles').mockReturnValue(testRawFiles);
 vi.spyOn(fileProviders, 'importProjectTextFiles').mockReturnValue(testTextFiles);
 
 describe('loading available projects', async () => {
@@ -33,7 +34,7 @@ describe('loading available projects', async () => {
     const availableProjects = await ProjectLoader.loadAvailableProjects();
 
     it('has correct number of available projects', () => {
-        expect(Object.values(availableProjects).length).toBe(3);
+        expect(Object.values(availableProjects).length).toBe(4);
     });
 
     it('correctly configures a project without a config file', () => {
@@ -175,6 +176,56 @@ describe('loading specific projects', async () => {
         expect(testStringParam.applyDuringInput).toEqual(false); // project default
         const testUnusedParam = paramsConfig.filter((param) => param.key === 'testUnusedParam')[0];
         expect(testUnusedParam).toBeUndefined();
+        expect(ParamValueProvider.getValue).toHaveBeenCalledTimes(0);
+    });
+
+    it('loads a project with an empty (broken) config file', async () => {
+        const projectTuple = await ProjectLoader.loadProject('EmptyConfig');
+        expect(projectTuple).toBeDefined();
+        expect(projectTuple?.key).toEqual('EmptyConfig');
+
+        // Check project class instance
+        const project = projectTuple!.project;
+        expect(project).toBeDefined();
+        expect(project).toBeInstanceOf(Project);
+        expect(project).toBeInstanceOf(EmptyConfig);
+
+        // Check project property values
+        const numberDescriptor = Object.getOwnPropertyDescriptor(project, 'testNumber');
+        expect(numberDescriptor?.value).toEqual(42);
+        const stringDescriptor = Object.getOwnPropertyDescriptor(project, 'testString');
+        expect(stringDescriptor?.value).toEqual('test string');
+
+        // Check project config
+        const projectProps = projectTuple!.config;
+        expect(projectProps).toBeDefined();
+        expect(projectProps?.title).toEqual('EmptyConfig');
+        expect(projectProps?.date).toEqual(ProjectConfigDefaults.date);
+        expect(projectProps?.description).toEqual(ProjectConfigDefaults.description);
+        expect(projectProps?.paramsApplyDuringInput).toEqual(
+            ProjectConfigDefaults.paramsApplyDuringInput
+        );
+        expect(projectProps?.groups).toEqual(ProjectConfigDefaults.groups);
+        expect(projectProps?.experimental).toEqual(ProjectConfigDefaults.experimental);
+
+        // Check params config
+        const paramsConfig = projectTuple!.params;
+        expect(paramsConfig).toBeDefined();
+        expect(Object.keys(paramsConfig!).length).toEqual(2);
+        const testNumberParam = paramsConfig.filter((param) => param.key === 'testNumber')[0];
+        expect(testNumberParam).toBeDefined();
+        expect(testNumberParam.type).toEqual(ParamType.Number);
+        expect(testNumberParam.name).toEqual('testNumber');
+        expect(testNumberParam.applyDuringInput).toEqual(true); // explicit definition
+        const testBooleanParam = paramsConfig.filter((param) => param.key === 'testBoolean')[0];
+        expect(testBooleanParam).toBeUndefined();
+        const testStringParam = paramsConfig.filter((param) => param.key === 'testString')[0];
+        expect(testStringParam).toBeDefined();
+        expect(testStringParam.type).toEqual(ParamType.String);
+        expect(testStringParam.name).toEqual('testString');
+        expect(testStringParam.applyDuringInput).toEqual(
+            ProjectConfigDefaults.paramsApplyDuringInput
+        );
         expect(ParamValueProvider.getValue).toHaveBeenCalledTimes(0);
     });
 
