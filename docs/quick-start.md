@@ -6,9 +6,9 @@ Welcome to the Quick Start Guide for Sketchbook. This guide will walk you throug
 
 Sketchbook is an open source project hosted on GitHub. Though you are welcome to clone it directly for local use, forking the repository will make it much easier for you to [update](updating.md) Sketchbook, and [publish](deploying.md) your projects whenever you are ready to do so.
 
-To **fork the main Sketchbook repository**, you can use [this direct link](https://github.com/flatpickles/sketchbook/fork). Select the owner (your GitHub account or organization), edit the name and description if you wish, and click the "Create fork" button. You now have a copy of Sketchbook in your GitHub account.
+To fork the main Sketchbook repository, you can use [this direct link](https://github.com/flatpickles/sketchbook/fork). Select the owner (your GitHub account or organization), edit the name and description if you wish, and click the "Create fork" button. You now have a copy of Sketchbook in your GitHub account.
 
-You must now **clone your Sketchbook fork** locally to use it. Navigate to your Sketchbook fork on GitHub, then click the "Code" dropdown, and choose whatever method you prefer to clone the repository.
+You must now clone your Sketchbook fork locally to use it. Navigate to your Sketchbook fork on GitHub, then click the "Code" dropdown, and choose whatever method you prefer to clone the repository.
 
 _Forks on GitHub are public repositories. If you'd like to create a private Sketchbook, you'll need to duplicate the repository into a private mirror instead of forking; GitHub provides relevant instructions [here](https://docs.github.com/en/repositories/creating-and-managing-repositories/duplicating-a-repository)._
 
@@ -18,37 +18,37 @@ Before proceeding, navigate into your local Sketchbook project: `cd sketchbook`
 
 All Sketchbook projects will be contained within the `src/art` subdirectory, so you can just open that directly, e.g. `code src/art` if you use the VSCode CLI.
 
-Sketchbook includes a few demo projects for your reference. Feel free to use or delete these as you see fit; they'll always be available [here](https://github.com/Longitude-Studio/sketchbook/tree/main/src/art).
+`src/art` in the `main` branch of Sketchbook includes only a simple readme file, which you can delete or edit as you see fit. If you're interested in a collection of example projects, see [`src/art`](https://github.com/flatpickles/sketchbook/tree/demo/src/art) in the `demo` branch!
 
 _Sketchbook's global configuration files are located in `src/config`, not in `src/art`. For now, let's just focus on creating our first project!_
 
 ### Run Sketchbook Locally
 
-[todo: npm install?]
+Before running your dev server, you'll need to install all of Sketchbook's dependencies with `npm install`.
 
-You can **run the dev server** with `npm run dev`. Sketchbook is now running on your local machine (perhaps at [http://localhost:5173](http://localhost:5173)), and the app will hot-reload any time you save a file. Make sure you have a browser window open with your local Sketchbook running before you proceed.
+You can now run the dev server with `npm run dev`. Sketchbook is now running on your local machine (perhaps at [http://localhost:5173](http://localhost:5173)), and the app will hot-reload any time you save a file. Make sure you have a browser window open with your local Sketchbook running before you proceed.
 
 _Sketchbook is a SvelteKit project, but you won't really notice. You don't need to know anything beyond the basics noted here, but if you're interested, check out the [development notes](dev-notes.md)._
 
 ### Create Your First Project
 
-Within `src/art`, create a new TypeScript or JavaScript file in a directory of the same name, e.g. `src/art/MyProject/MyProject.ts` (we'll use TypeScript below). Check your browser: "MyProject" now appears in the project list.
+Within `src/art`, create a new TypeScript or JavaScript file in a directory of the same name, e.g. `src/art/QuickStart/QuickStart.ts` (we'll use TypeScript below). Check your browser: "QuickStart" now appears in the project list.
 
 Before selecting your new project in the panel, export a default class that extends the base [`Project`](https://github.com/flatpickles/sketchbook/blob/main/src/lib/base/Project/Project.ts) class:
 
 ```ts
 import Project from '$lib/base/Project/Project';
-export default class MyProject extends Project {}
+export default class QuickStart extends Project {}
 ```
 
 _The main project file (i.e the file with the name that matches its project subdirectory) must always export a `Project` subclass as its default._
 
 ### Get Pixels on the Screen
 
-After selecting "MyProject" in the project list panel, you won't see anything beyond a white screen. Let's change that! Define an `update` method within your new class, and have it draw a simple rectangle:
+After selecting "QuickStart" in the project list panel, you won't see anything beyond a white screen. Let's change that! Define an `update` method within your new class, and have it draw a simple rectangle:
 
 ```ts
-export default class MyProject extends Project {
+export default class QuickStart extends Project {
     update() {
         const ctx = this.canvas?.getContext('2d');
         if (!this.canvas || !ctx) return;
@@ -63,13 +63,13 @@ export default class MyProject extends Project {
 }
 ```
 
-If you save and check your browser, MyProject now features a black rectangle in the middle of the canvas.
+If you save and check your browser, QuickStart now features a black rectangle in the middle of the canvas.
 
 _Sketchbook automatically makes an HTML canvas object available to `Project` instances via the `canvas` property, and that's what you will use for drawing. `update` is a lifecycle method that's called on each animation frame._
 
 ### Create Your First Parameter
 
-Let's make the size and color of the rectangle customizable! To define Sketchbook parameters, all you need to do is define instance variables for your project class. Update `MyProject` so it looks like this:
+Let's make the size and color of the rectangle customizable! To define Sketchbook parameters, all you need to do is define instance variables for your project class. Update `QuickStart` so it looks like this:
 
 ```ts
 export default class Test extends Project {
@@ -98,13 +98,13 @@ _You can define many different types of parameters, including numbers, booleans,
 
 ### Configure Your Project
 
-Now that you have a parameterized code sketch set up, let's look at some basic configuration options. You can define a `config.json` alongside `MyProject.ts` to impact the behavior and presentation of your project. Add this code within a `src/art/MyProject/config.json`:
+Now that you have a parameterized code sketch set up, let's look at some basic configuration options. You can define a `config.json` alongside `QuickStart.ts` to impact the behavior and presentation of your project. Add this code within a `src/art/QuickStart/config.json`:
 
 ```json
 {
-    "title": "My First Project",
+    "title": "Quick Start",
     "date": "2023-09-19",
-    "description": "This is my first Sketchbook project, isn't it grand?",
+    "description": "This is the final project from the quick start guide",
     "params": {
         "rectSize": {
             "name": "Rect Size"
@@ -119,7 +119,7 @@ Now that you have a parameterized code sketch set up, let's look at some basic c
 
 Here we're defining a title, date, and description for the project, and configuring a display name for each parameter input. We're also setting the "style" of `rectColor` to be a "color", so Sketchbook will show this parameter with a color picker input. Check your browser, and you'll see all of these changes reflected in the project details panel.
 
-<img src="media/myproject-details.png" style="width: 300px" />
+<img src="media/quickstart-details.png" style="width: 300px" />
 
 ### What's Next
 
