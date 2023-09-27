@@ -4,7 +4,7 @@ So far, you've learned about Sketchbook's intentions on the [Overview](README.md
 
 ### `src/art` File Structure
 
-`src/art` is where all of your projects will live. Each "project" in Sketchbook is a collection of files contained contained within a subdirectory of `src/art`. Your `src/art` directory might look like this:
+`src/art` is where all of your projects will live. Each "project" in Sketchbook is a collection of files contained within a subdirectory of `src/art`. Your `src/art` directory might look like this:
 
 ```fs
 src/art/
