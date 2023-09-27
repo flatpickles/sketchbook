@@ -45,12 +45,12 @@ export default class Project {
     /**
      * paramChanged is called when a parameter is changed in the UI.
      */
-    public paramChanged(detail: ParamChangedDetail) {}
+    public paramChanged(detail: ParamChangedDetail<typeof this.canvasType>) {}
 
     /**
      * resized is called when the container div and/or active canvas is resized.
      */
-    public resized(detail: ResizedDetail) {}
+    public resized(detail: ResizedDetail<typeof this.canvasType>) {}
 
     /**
      * destroy is called when the project is unloaded, i.e. when another project is selected.
@@ -75,16 +75,15 @@ export enum CanvasType {
 }
 
 /**
- * Detail object passed to project's Update method. Contains the following:
- * - frame: the current frame number (0 at project load, incremented by 1 for each update call).
- * - time: milliseconds passed since project load (i.e. since init was called).
+ * Detail object type for the parameters to each Project method. More specific types exist below,
+ * as intersections with this type. Each detail type is typed with a generic reference to the
+ * project's CanvasType, and generic-free versions for each 2D & WebGL are provided for ease of use.
+ * Detail contains the following:
  * - container: the container div element.
  * - canvas: the canvas element that the project will draw to, if using a canvas.
  * - context: the canvas context that the project will draw to, if using a canvas.
  */
-export type UpdateDetail<T extends CanvasType> = {
-    frame: number;
-    time: number;
+export type Detail<T extends CanvasType> = {
     container: HTMLDivElement;
     canvas: T extends CanvasType.None ? undefined : HTMLCanvasElement;
     context: T extends CanvasType.None
@@ -95,25 +94,41 @@ export type UpdateDetail<T extends CanvasType> = {
         ? WebGLRenderingContext
         : never;
 };
+export type Detail2D = UpdateDetail<CanvasType.Context2D>;
+export type DetailWebGL = UpdateDetail<CanvasType.WebGL>;
+
+/**
+ * Detail object type used with the project's Update method. Contains the following:
+ * - frame: the current frame number (0 at project load, incremented by 1 for each update call).
+ * - time: milliseconds passed since project load (i.e. since init was called).
+ */
+export type UpdateDetail<T extends CanvasType> = Detail<T> & {
+    frame: number;
+    time: number;
+};
 export type UpdateDetail2D = UpdateDetail<CanvasType.Context2D>;
 export type UpdateDetailWebGL = UpdateDetail<CanvasType.WebGL>;
 
 /**
- * Detail object passed to project's paramChanged method. Contains the following:
+ * Detail object type used with the project's paramChanged method. Contains the following:
  * - paramKey: the key of the parameter that was changed.
  */
-export type ParamChangedDetail = {
+export type ParamChangedDetail<T extends CanvasType> = Detail<T> & {
     paramKey: string;
 };
+export type ParamChangedDetail2D = UpdateDetail<CanvasType.Context2D>;
+export type ParamChangedDetailWebGL = UpdateDetail<CanvasType.WebGL>;
 
 /**
- * Detail object passed to project's resized method. Contains the following:
+ * Detail object type used with the project's resized method. Contains the following:
  * - containerSize: the new size of the container div element, in pixels.
  * - canvasSize: the new size of the canvas element, in pixels (if using a canvas).
  * Note that canvasSize is not likely to correspond to [this.canvas.width, this.canvas.height], as
  * the canvas drawing size is scaled by the current pixel ratio.
  */
-export type ResizedDetail = {
+export type ResizedDetail<T extends CanvasType> = Detail<T> & {
     containerSize: [number, number];
     canvasSize?: [number, number];
 };
+export type ResizedDetail2D = UpdateDetail<CanvasType.Context2D>;
+export type ResizedDetailWebGL = UpdateDetail<CanvasType.WebGL>;

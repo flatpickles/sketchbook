@@ -14,7 +14,7 @@
 
     export let projectTuple: ProjectTuple;
 
-    const dispatch = createEventDispatcher();
+    let wrapperDiv: HTMLDivElement;
     $: [noSectionParams, paramSections] = getParamSections(projectTuple.params);
     const incompleteUpdateKeys = new Set<string>();
 
@@ -130,8 +130,11 @@
             ParamValueProvider.setValue(updatedConfig, projectTuple.key, value);
         }
 
-        // Invoke the paramChanged method for the current project
-        projectTuple.project.paramChanged({ paramKey: updatedConfig.key });
+        // Dispatch an update event so ProjectViewer can call the paramUpdated lifecycle method.
+        // Svelte custom events cannot bubble, so use a native DOM event instead.
+        wrapperDiv.dispatchEvent(
+            new CustomEvent('param-updated', { detail: updatedConfig, bubbles: true })
+        );
     }
 
     // Get the properly typed initial value for a given param
@@ -146,7 +149,7 @@
     }
 </script>
 
-<div class="params-wrapper">
+<div class="params-wrapper" bind:this={wrapperDiv}>
     <!-- Put all params with no section at the top -->
     {#if noSectionParams.length > 0}
         <div class="params-grid" data-testid="no-section-params">
