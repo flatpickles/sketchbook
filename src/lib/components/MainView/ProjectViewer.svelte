@@ -28,7 +28,10 @@
             if (Object.getPrototypeOf(project).hasOwnProperty('update')) {
                 project.update({
                     frame: frameCount,
-                    time: Date.now() - startTime
+                    time: Date.now() - startTime,
+                    container: containerElement,
+                    canvas: getCurrentCanvas(),
+                    context: getCurrentContext()
                 });
                 frameCount += 1;
             }
@@ -36,6 +39,28 @@
         requestAnimationFrame(updateLoop);
     };
     updateLoop();
+
+    function getCurrentCanvas(): HTMLCanvasElement | undefined {
+        return project.canvasType === CanvasType.Context2D
+            ? canvasElement2D
+            : project.canvasType === CanvasType.WebGL
+            ? canvasElementWebGL
+            : undefined;
+    }
+
+    function getCurrentContext(): CanvasRenderingContext2D | WebGLRenderingContext | undefined {
+        if (project.canvasType === CanvasType.None) {
+            return undefined;
+        } else if (project.canvasType === CanvasType.Context2D) {
+            const context2D = canvasElement2D.getContext('2d');
+            if (!context2D) throw new Error('Failed to get 2D context');
+            return context2D;
+        } else if (project.canvasType === CanvasType.WebGL) {
+            const contextWebGL = canvasElementWebGL.getContext('webgl');
+            if (!contextWebGL) throw new Error('Failed to get WebGL context');
+            return contextWebGL;
+        }
+    }
 
     /* Svelte events & reactivity */
 
