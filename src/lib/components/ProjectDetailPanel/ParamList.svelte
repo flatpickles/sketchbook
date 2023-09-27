@@ -10,9 +10,11 @@
 
     import ParamItem from './ParamItem.svelte';
     import ParamValueProvider from '$lib/base/ProjectLoading/ParamValueProvider';
+    import { createEventDispatcher } from 'svelte';
 
     export let projectTuple: ProjectTuple;
 
+    const dispatch = createEventDispatcher();
     $: [noSectionParams, paramSections] = getParamSections(projectTuple.params);
     const incompleteUpdateKeys = new Set<string>();
 

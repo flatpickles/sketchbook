@@ -28,7 +28,7 @@ export default class Project {
      * this.canvas.getContext(), or CanvasType.None if you don't need a canvas. This should be set
      * in the project's constructor, and should not be changed during the project's lifecycle.
      */
-    canvasType = CanvasType.Context2D;
+    canvasType: CanvasType = CanvasType.Context2D;
 
     /**
      * init is called once when the project is first loaded, after this.canvas and this.container
@@ -40,7 +40,7 @@ export default class Project {
      * update is called continuously in a requestAnimationFrame loop. Override this with your custom
      * drawing code.
      */
-    public update(detail: UpdateDetail) {}
+    public update(detail: UpdateDetail<typeof this.canvasType>) {}
 
     /**
      * paramChanged is called when a parameter is changed in the UI.
@@ -78,14 +78,33 @@ export enum CanvasType {
  * Detail object passed to project's Update method. Contains the following:
  * - frame: the current frame number (0 at project load, incremented by 1 for each update call).
  * - time: milliseconds passed since project load (i.e. since init was called).
+ * - container: the container div element.
+ * - canvas: the canvas element that the project will draw to, if using a canvas.
+ * - context: the canvas context that the project will draw to, if using a canvas.
  */
-export type UpdateDetail = { frame: number; time: number };
+export type UpdateDetail<T extends CanvasType> = {
+    frame: number;
+    time: number;
+    container: HTMLDivElement;
+    canvas: T extends CanvasType.None ? undefined : HTMLCanvasElement;
+    context: T extends CanvasType.None
+        ? undefined
+        : T extends CanvasType.Context2D
+        ? CanvasRenderingContext2D
+        : T extends CanvasType.WebGL
+        ? WebGLRenderingContext
+        : never;
+};
+export type UpdateDetail2D = UpdateDetail<CanvasType.Context2D>;
+export type UpdateDetailWebGL = UpdateDetail<CanvasType.WebGL>;
 
 /**
  * Detail object passed to project's paramChanged method. Contains the following:
  * - paramKey: the key of the parameter that was changed.
  */
-export type ParamChangedDetail = { paramKey: string };
+export type ParamChangedDetail = {
+    paramKey: string;
+};
 
 /**
  * Detail object passed to project's resized method. Contains the following:
