@@ -1,6 +1,6 @@
 <script lang="ts">
     import type Project from '$lib/base/Project/Project';
-    import { CanvasType } from '$lib/base/Project/Project';
+    import { CanvasType, type Detail } from '$lib/base/Project/Project';
     import { settingsStore } from '$lib/base/Util/AppState';
     import { onMount } from 'svelte';
 
@@ -29,9 +29,7 @@
                 project.update({
                     frame: frameCount,
                     time: Date.now() - startTime,
-                    container: containerElement,
-                    canvas: getCurrentCanvas(),
-                    context: getCurrentContext()
+                    ...getCurrentDetail()
                 });
                 frameCount += 1;
             }
@@ -40,12 +38,28 @@
     };
     updateLoop();
 
-    function getCurrentCanvas(): HTMLCanvasElement | undefined {
-        return project.canvasType === CanvasType.Context2D
-            ? canvasElement2D
-            : project.canvasType === CanvasType.WebGL
-            ? canvasElementWebGL
-            : undefined;
+    function getCurrentDetail(): Detail<typeof project.canvasType> {
+        // Get the current canvas & context references, depending on canvas type
+        let currentCanvas = undefined;
+        let currentContext = undefined;
+        if (project.canvasType === CanvasType.Context2D) {
+            currentCanvas = canvasElement2D;
+            const context2D = canvasElement2D.getContext('2d');
+            if (!context2D) throw new Error('Failed to get 2D context');
+            currentContext = context2D;
+        } else if (project.canvasType === CanvasType.WebGL) {
+            currentCanvas = canvasElementWebGL;
+            const contextWebGL = canvasElementWebGL.getContext('webgl');
+            if (!contextWebGL) throw new Error('Failed to get WebGL context');
+            currentContext = contextWebGL;
+        }
+
+        // Return the detail object, for use with project lifecycle method calls
+        return {
+            container: containerElement,
+            canvas: currentCanvas,
+            context: currentContext
+        };
     }
 
     function getCurrentContext(): CanvasRenderingContext2D | WebGLRenderingContext | undefined {
@@ -67,6 +81,15 @@
     onMount(() => {
         // Update the canvas size whenever the window is resized
         window.addEventListener('resize', () => setCanvasSize());
+
+        // Call the paramChanged project lifecycle method whenever a param is updated
+        window.addEventListener('param-updated', (event) => {
+            const customEvent = event as CustomEvent;
+            project.paramChanged({
+                paramKey: customEvent.detail.key,
+                ...getCurrentDetail()
+            });
+        });
     });
 
     // Initialize and update the project when loading & changing projects
@@ -175,7 +198,7 @@
                 : project.canvasType == CanvasType.WebGL
                 ? [canvasElementWebGL.width, canvasElementWebGL.height]
                 : undefined;
-        project.resized({ containerSize, canvasSize });
+        project.resized({ containerSize, canvasSize, ...getCurrentDetail() });
     }
 
     // If a p5 canvas is present, position it within the parent container
