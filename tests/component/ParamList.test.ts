@@ -103,7 +103,7 @@ function renderParams(
     applyDuringInput = true,
     sectionOption: SectionOption = SectionOption.NoSections,
     twoWaySync = true
-): TestProject {
+): [TestProject, ReturnType<typeof vi.fn>] {
     const project = new TestProject();
     const testProjectConfig = ProjectConfigFactory.propsFrom({
         applyDuringInput: applyDuringInput,
@@ -119,9 +119,12 @@ function renderParams(
         projectTuple: testTuple
     });
 
+    const changedListener = vi.fn();
+    document.addEventListener('param-updated', changedListener);
+
     expect(ParamValueProvider.getValue).toHaveBeenCalledTimes(0);
     expect(ParamValueProvider.setValue).toHaveBeenCalledTimes(0);
-    return project;
+    return [project, changedListener];
 }
 
 function cleanupParams() {
@@ -305,54 +308,52 @@ describe('number param input', () => {
     afterEach(cleanupParams);
 
     it('updates a number param when the input changes (applyDuringInput)', async () => {
-        const project = renderParams(true);
+        const [project, changedListener] = renderParams(true);
         vi.spyOn(project, 'update');
         vi.spyOn(project, 'paramChanged');
         const numberInput = screen.getAllByTestId('number-param-slider')[0] as HTMLInputElement;
         expect(numberInput.value).toBe('42');
         expect(project.testNumber).toBe(42);
         fireEvent.input(numberInput, { target: { value: '43' } });
-        expect(project.paramChanged).toHaveBeenCalledTimes(1);
+        expect(changedListener).toHaveBeenCalledTimes(1);
         expect(numberInput.value).toBe('43');
         expect(project.testNumber).toBe(43);
         fireEvent.change(numberInput, { target: { value: '44' } });
-        expect(project.paramChanged).toHaveBeenCalledTimes(2);
+        expect(changedListener).toHaveBeenCalledTimes(2);
         expect(numberInput.value).toBe('44');
         expect(project.testNumber).toBe(44);
-        expect(project.paramChanged).toHaveBeenCalledTimes(2);
+        expect(changedListener).toHaveBeenCalledTimes(2);
 
-        // Validate paramupdated event
-        expect(project.paramChanged).toHaveBeenCalledWith(
-            expect.objectContaining({
-                paramKey: 'testNumber'
-            })
+        // Validate param-updated event
+        expect(changedListener.mock.calls[0][0].bubbles).toEqual(true);
+        expect(changedListener.mock.calls[0][0].detail).toEqual(
+            expect.objectContaining({ key: 'testNumber' })
         );
     });
 
     it('updates a number param when the input changes (!applyDuringInput)', async () => {
-        const project = renderParams(false);
+        const [project, changedListener] = renderParams(false);
         vi.spyOn(project, 'update');
         vi.spyOn(project, 'paramChanged');
         const numberInput = screen.getAllByTestId('number-param-slider')[0] as HTMLInputElement;
         expect(numberInput.value).toBe('42');
         expect(project.testNumber).toBe(42);
         fireEvent.input(numberInput, { target: { value: '43' } });
-        expect(project.paramChanged).toHaveBeenCalledTimes(0);
+        expect(changedListener).toHaveBeenCalledTimes(0);
         expect(numberInput.value).toBe('43');
         await new Promise((r) => setTimeout(r, 100)); // Make sure displaySyncLoop has time to run
         expect(numberInput.value).toBe('43');
         expect(project.testNumber).toBe(42);
         fireEvent.change(numberInput, { target: { value: '44' } });
-        expect(project.paramChanged).toHaveBeenCalledTimes(1);
+        expect(changedListener).toHaveBeenCalledTimes(1);
         expect(numberInput.value).toBe('44');
         expect(project.testNumber).toBe(44);
         expect(ParamValueProvider.setValue).toHaveBeenCalledTimes(1);
 
-        // Validate paramupdated event
-        expect(project.paramChanged).toHaveBeenCalledWith(
-            expect.objectContaining({
-                paramKey: 'testNumber'
-            })
+        // Validate param-updated event
+        expect(changedListener.mock.calls[0][0].bubbles).toEqual(true);
+        expect(changedListener.mock.calls[0][0].detail).toEqual(
+            expect.objectContaining({ key: 'testNumber' })
         );
     });
 });
@@ -361,23 +362,22 @@ describe('boolean param input', () => {
     afterEach(cleanupParams);
 
     it('updates a boolean param when the input changes', async () => {
-        const project = renderParams(true);
+        const [project, changedListener] = renderParams(true);
         vi.spyOn(project, 'update');
         vi.spyOn(project, 'paramChanged');
         const booleanInput = screen.getByTestId('boolean-param-input') as HTMLInputElement;
         expect(booleanInput.checked).toBe(true);
         expect(project.testBoolean).toBe(true);
         fireEvent.click(booleanInput);
-        expect(project.paramChanged).toHaveBeenCalledTimes(1);
+        expect(changedListener).toHaveBeenCalledTimes(1);
         expect(booleanInput.checked).toBe(false);
         expect(project.testBoolean).toBe(false);
         expect(ParamValueProvider.setValue).toHaveBeenCalledTimes(1);
 
-        // Validate paramupdated event
-        expect(project.paramChanged).toHaveBeenCalledWith(
-            expect.objectContaining({
-                paramKey: 'testBoolean'
-            })
+        // Validate param-updated event
+        expect(changedListener.mock.calls[0][0].bubbles).toEqual(true);
+        expect(changedListener.mock.calls[0][0].detail).toEqual(
+            expect.objectContaining({ key: 'testBoolean' })
         );
     });
 });
@@ -386,52 +386,50 @@ describe('string param input', () => {
     afterEach(cleanupParams);
 
     it('updates a string param when the input changes (applyDuringInput)', async () => {
-        const project = renderParams(true);
+        const [project, changedListener] = renderParams(true);
         vi.spyOn(project, 'update');
         vi.spyOn(project, 'paramChanged');
         const stringInput = screen.getByTestId('string-param-input-singleline') as HTMLInputElement;
         expect(stringInput.value).toBe('hello');
         expect(project.testString).toBe('hello');
         fireEvent.input(stringInput, { target: { value: 'goodbye' } });
-        expect(project.paramChanged).toHaveBeenCalledTimes(1);
+        expect(changedListener).toHaveBeenCalledTimes(1);
         expect(stringInput.value).toBe('goodbye');
         expect(project.testString).toBe('goodbye');
         fireEvent.change(stringInput);
-        expect(project.paramChanged).toHaveBeenCalledTimes(2);
+        expect(changedListener).toHaveBeenCalledTimes(2);
         expect(ParamValueProvider.setValue).toHaveBeenCalledTimes(2);
 
-        // Validate paramupdated event
-        expect(project.paramChanged).toHaveBeenCalledWith(
-            expect.objectContaining({
-                paramKey: 'testString'
-            })
+        // Validate param-updated event
+        expect(changedListener.mock.calls[0][0].bubbles).toEqual(true);
+        expect(changedListener.mock.calls[0][0].detail).toEqual(
+            expect.objectContaining({ key: 'testString' })
         );
     });
 
     it('updates a string param when the input changes (!applyDuringInput)', async () => {
-        const project = renderParams(false);
+        const [project, changedListener] = renderParams(false);
         vi.spyOn(project, 'update');
         vi.spyOn(project, 'paramChanged');
         const stringInput = screen.getByTestId('string-param-input-singleline') as HTMLInputElement;
         expect(stringInput.value).toBe('hello');
         expect(project.testString).toBe('hello');
         fireEvent.input(stringInput, { target: { value: 'goodbye' } });
-        expect(project.paramChanged).toHaveBeenCalledTimes(0);
+        expect(changedListener).toHaveBeenCalledTimes(0);
         expect(stringInput.value).toBe('goodbye');
         await new Promise((r) => setTimeout(r, 100)); // Make sure displaySyncLoop has time to run
         expect(stringInput.value).toBe('goodbye');
         expect(project.testString).toBe('hello');
         fireEvent.change(stringInput);
-        expect(project.paramChanged).toHaveBeenCalledTimes(1);
+        expect(changedListener).toHaveBeenCalledTimes(1);
         expect(stringInput.value).toBe('goodbye');
         expect(project.testString).toBe('goodbye');
         expect(ParamValueProvider.setValue).toHaveBeenCalledTimes(1);
 
-        // Validate paramupdated event
-        expect(project.paramChanged).toHaveBeenCalledWith(
-            expect.objectContaining({
-                paramKey: 'testString'
-            })
+        // Validate param-updated event
+        expect(changedListener.mock.calls[0][0].bubbles).toEqual(true);
+        expect(changedListener.mock.calls[0][0].detail).toEqual(
+            expect.objectContaining({ key: 'testString' })
         );
     });
 });
@@ -440,7 +438,7 @@ describe('numeric array param input', () => {
     afterEach(cleanupParams);
 
     it('updates a numeric array param when the input changes (applyDuringInput)', async () => {
-        const project = renderParams(true);
+        const [project, changedListener] = renderParams(true);
         vi.spyOn(project, 'update');
         vi.spyOn(project, 'paramChanged');
         const numericArrayInput = screen.getAllByTestId(
@@ -453,25 +451,24 @@ describe('numeric array param input', () => {
         expect(numericArrayInput[2].value).toBe('3');
         expect(project.testNumericArray).toEqual([1, 2, 3]);
         fireEvent.input(numericArrayInput[0], { target: { value: '4' } });
-        expect(project.paramChanged).toHaveBeenCalledTimes(1);
+        expect(changedListener).toHaveBeenCalledTimes(1);
         expect(numericArrayInput[0].value).toBe('4');
         expect(project.testNumericArray).toEqual([4, 2, 3]);
         fireEvent.change(numericArrayInput[1], { target: { value: '5' } });
-        expect(project.paramChanged).toHaveBeenCalledTimes(2);
+        expect(changedListener).toHaveBeenCalledTimes(2);
         expect(numericArrayInput[1].value).toBe('5');
         expect(project.testNumericArray).toEqual([4, 5, 3]);
         expect(ParamValueProvider.setValue).toHaveBeenCalledTimes(2);
 
-        // Validate paramupdated event
-        expect(project.paramChanged).toHaveBeenCalledWith(
-            expect.objectContaining({
-                paramKey: 'testNumericArray'
-            })
+        // Validate param-updated event
+        expect(changedListener.mock.calls[0][0].bubbles).toEqual(true);
+        expect(changedListener.mock.calls[0][0].detail).toEqual(
+            expect.objectContaining({ key: 'testNumericArray' })
         );
     });
 
     it('updates a numeric array param when the input changes (!applyDuringInput)', async () => {
-        const project = renderParams(false);
+        const [project, changedListener] = renderParams(false);
         vi.spyOn(project, 'update');
         vi.spyOn(project, 'paramChanged');
         const numericArrayInput = screen.getAllByTestId(
@@ -484,22 +481,21 @@ describe('numeric array param input', () => {
         expect(numericArrayInput[2].value).toBe('3');
         expect(project.testNumericArray).toEqual([1, 2, 3]);
         fireEvent.input(numericArrayInput[0], { target: { value: '4' } });
-        expect(project.paramChanged).toHaveBeenCalledTimes(0);
+        expect(changedListener).toHaveBeenCalledTimes(0);
         expect(numericArrayInput[0].value).toBe('4');
         await new Promise((r) => setTimeout(r, 100)); // Make sure displaySyncLoop has time to run
         expect(numericArrayInput[0].value).toBe('4');
         expect(project.testNumericArray).toEqual([1, 2, 3]);
         fireEvent.change(numericArrayInput[1], { target: { value: '5' } });
-        expect(project.paramChanged).toHaveBeenCalledTimes(1);
+        expect(changedListener).toHaveBeenCalledTimes(1);
         expect(numericArrayInput[1].value).toBe('5');
         expect(project.testNumericArray).toEqual([4, 5, 3]);
         expect(ParamValueProvider.setValue).toHaveBeenCalledTimes(1);
 
-        // Validate paramupdated event
-        expect(project.paramChanged).toHaveBeenCalledWith(
-            expect.objectContaining({
-                paramKey: 'testNumericArray'
-            })
+        // Validate param-updated event
+        expect(changedListener.mock.calls[0][0].bubbles).toEqual(true);
+        expect(changedListener.mock.calls[0][0].detail).toEqual(
+            expect.objectContaining({ key: 'testNumericArray' })
         );
     });
 });
@@ -508,7 +504,7 @@ describe('function param input', () => {
     afterEach(cleanupParams);
 
     it('calls a param-ized function when the button is clicked', async () => {
-        const project = renderParams(true);
+        const [project, changedListener] = renderParams(true);
         vi.spyOn(project, 'update');
         vi.spyOn(project, 'paramChanged');
         vi.spyOn(project, 'testFunction');
@@ -516,14 +512,13 @@ describe('function param input', () => {
         expect(project.testFunction).toHaveBeenCalledTimes(0);
         fireEvent.click(functionButton);
         await waitFor(() => expect(project.testFunction).toHaveBeenCalledTimes(1));
-        await waitFor(() => expect(project.paramChanged).toHaveBeenCalledTimes(1));
+        await waitFor(() => expect(changedListener).toHaveBeenCalledTimes(1));
         expect(ParamValueProvider.setValue).toHaveBeenCalledTimes(0);
 
-        // Validate paramupdated event
-        expect(project.paramChanged).toHaveBeenCalledWith(
-            expect.objectContaining({
-                paramKey: 'testFunction'
-            })
+        // Validate param-updated event
+        expect(changedListener.mock.calls[0][0].bubbles).toEqual(true);
+        expect(changedListener.mock.calls[0][0].detail).toEqual(
+            expect.objectContaining({ key: 'testFunction' })
         );
     });
 });
@@ -569,7 +564,7 @@ describe('file param input', () => {
     // Actual tests...
 
     it('attempts to load files when the input changes', async () => {
-        const project = renderParams(true);
+        const [project, changedListener] = renderParams(true);
         vi.spyOn(project, 'update');
         vi.spyOn(project, 'paramChanged');
         vi.spyOn(project, 'testFile');
@@ -583,14 +578,13 @@ describe('file param input', () => {
                 mockFiles.map((file) => file.fileObject)
             )
         );
-        await waitFor(() => expect(project.paramChanged).toHaveBeenCalledTimes(1));
+        await waitFor(() => expect(changedListener).toHaveBeenCalledTimes(1));
         expect(ParamValueProvider.setValue).toHaveBeenCalledTimes(0);
 
-        // Validate paramupdated event
-        expect(project.paramChanged).toHaveBeenCalledWith(
-            expect.objectContaining({
-                paramKey: 'testFile'
-            })
+        // Validate param-updated event
+        expect(changedListener.mock.calls[0][0].bubbles).toEqual(true);
+        expect(changedListener.mock.calls[0][0].detail).toEqual(
+            expect.objectContaining({ key: 'testFile' })
         );
     });
 });
@@ -599,7 +593,7 @@ describe('ParamList display sync w/ project property values', () => {
     afterEach(cleanupParams);
 
     it('syncs values in the project with param display (twoWaySync)', async () => {
-        const project = renderParams(false, SectionOption.NoSections, true);
+        const [project] = renderParams(false, SectionOption.NoSections, true);
 
         const numberInput = screen.getAllByTestId('number-param-slider')[0] as HTMLInputElement;
         expect(numberInput.value).toBe('42');
@@ -643,7 +637,7 @@ describe('ParamList display sync w/ project property values', () => {
     });
 
     it("doesn't sync values with !twoWaySync", async () => {
-        const project = renderParams(false, SectionOption.NoSections, false);
+        const [project] = renderParams(false, SectionOption.NoSections, false);
 
         const numberInput = screen.getAllByTestId('number-param-slider')[0] as HTMLInputElement;
         expect(numberInput.value).toBe('42');

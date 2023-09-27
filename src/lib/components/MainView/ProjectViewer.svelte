@@ -45,13 +45,11 @@
         if (project.canvasType === CanvasType.Context2D) {
             currentCanvas = canvasElement2D;
             const context2D = canvasElement2D.getContext('2d');
-            if (!context2D) throw new Error('Failed to get 2D context');
-            currentContext = context2D;
+            if (context2D) currentContext = context2D;
         } else if (project.canvasType === CanvasType.WebGL) {
             currentCanvas = canvasElementWebGL;
             const contextWebGL = canvasElementWebGL.getContext('webgl');
-            if (!contextWebGL) throw new Error('Failed to get WebGL context');
-            currentContext = contextWebGL;
+            if (contextWebGL) currentContext = contextWebGL;
         }
 
         // Return the detail object, for use with project lifecycle method calls
@@ -60,20 +58,6 @@
             canvas: currentCanvas,
             context: currentContext
         };
-    }
-
-    function getCurrentContext(): CanvasRenderingContext2D | WebGLRenderingContext | undefined {
-        if (project.canvasType === CanvasType.None) {
-            return undefined;
-        } else if (project.canvasType === CanvasType.Context2D) {
-            const context2D = canvasElement2D.getContext('2d');
-            if (!context2D) throw new Error('Failed to get 2D context');
-            return context2D;
-        } else if (project.canvasType === CanvasType.WebGL) {
-            const contextWebGL = canvasElementWebGL.getContext('webgl');
-            if (!contextWebGL) throw new Error('Failed to get WebGL context');
-            return contextWebGL;
-        }
     }
 
     /* Svelte events & reactivity */
