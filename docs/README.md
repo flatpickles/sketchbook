@@ -3,11 +3,11 @@
 Sketchbook is a forkable development environment for HTML canvas artwork & prototypes. Sketchbook is also a customizable webapp for publishing these projects. Read on for a conceptual overview, or jump right into the [Quick Start Guide](quick-start.md)!
 
 ![Sketchbook](media/full-layout.png)
-_Screenshot from a Sketchbook deployment, available live [here](todo)_.
+_Screenshot from a Sketchbook deployment, available live [here](https://demo.skbk.cc). [todo: update screenshot]_
 
 ### How It Works
 
-After forking the [Sketchbook repository](https://github.com/flatpickles), you can build your own projects within it, as subclasses of a generic `Project` class. The Sketchbook webapp provides a managed HTML canvas to these project implementations, and will call a set of lifecycle functions, but otherwise leaves the rendering up to you. You can draw to the canvas directly, use P5, make shader art, or whatever else you like to do.
+After forking the [Sketchbook repository](https://github.com/flatpickles), you can build your own projects within it, as subclasses of a generic `Project` class. The Sketchbook webapp provides a managed HTML canvas to these project implementations, and will call a set of lifecycle functions, but otherwise leaves rendering up to you. You can draw to the canvas directly, use P5, make shader art, or whatever else you like to do.
 
 In addition to giving you a friendly way to organize and view canvas projects, Sketchbook also automatically displays UI inputs for any instance variables declared on `Project` subclasses. A wide variety of parameter types and styles are supported, and Sketchbook also provides a "preset" interface for switching between pre-defined collections of parameter values. Sketchbook's parameterization system is easy to understand and use, but nonetheless facilitates the design of highly configurable projects. _[Note: presets are still [on the roadmap](https://github.com/flatpickles/sketchbook/issues/21).]_
 

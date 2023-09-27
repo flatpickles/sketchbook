@@ -24,17 +24,15 @@ _Sketchbook's global configuration files are located in `src/config`, not in `sr
 
 ### Run Sketchbook Locally
 
-Before running your dev server, you'll need to install all of Sketchbook's dependencies with `npm install`.
+Before running your dev server, you'll need to install all of Sketchbook's dependencies: `npm install`
 
-You can now run the dev server with `npm run dev`. Sketchbook is now running on your local machine (perhaps at [http://localhost:5173](http://localhost:5173)), and the app will hot-reload any time you save a file. Make sure you have a browser window open with your local Sketchbook running before you proceed.
+You can now run the dev server with `npm run dev`. Once Sketchbook is running on your local machine (perhaps at [http://localhost:5173](http://localhost:5173)), the app will hot-reload any time you save a file. Make sure you have Sketchbook open in your browser before you proceed.
 
-_Sketchbook is a SvelteKit project, but you won't really notice. You don't need to know anything beyond the basics noted here, but if you're interested, check out the [development notes](dev-notes.md)._
+_Sketchbook is a SvelteKit project. You don't need to know anything beyond the basics noted here, but if you're interested in app implementation details, check out the [development notes](dev-notes.md)._
 
 ### Create Your First Project
 
-Within `src/art`, create a new TypeScript or JavaScript file in a directory of the same name, e.g. `src/art/QuickStart/QuickStart.ts` (we'll use TypeScript below). Check your browser: "QuickStart" now appears in the project list.
-
-Before selecting your new project in the panel, export a default class that extends the base [`Project`](https://github.com/flatpickles/sketchbook/blob/main/src/lib/base/Project/Project.ts) class:
+Within `src/art`, create a new TypeScript or JavaScript file in a directory of the same name, e.g. `src/art/QuickStart/QuickStart.ts` (we'll use TypeScript below). For "QuickStart" to show up in the projects list, we need to export a default class in this file, extending the base [`Project`](https://github.com/flatpickles/sketchbook/blob/main/src/lib/base/Project/Project.ts) class:
 
 ```ts
 import Project from '$lib/base/Project/Project';
@@ -63,16 +61,16 @@ export default class QuickStart extends Project {
 }
 ```
 
-If you save and check your browser, QuickStart now features a black rectangle in the middle of the canvas.
+If you save and check your browser, your "QuickStart" project now features a black rectangle in the middle of the canvas.
 
-_Sketchbook automatically makes an HTML canvas object available to `Project` instances via the `canvas` property, and that's what you will use for drawing. `update` is a lifecycle method that's called on each animation frame._
+_Sketchbook automatically makes an HTML canvas object available to `Project` instances via the `canvas` property. `update` is a lifecycle method that's automatically called on each animation frame. If you want to avoid null-checking `this.canvas` and its context (as above), you can use the `canvas` and `context` references in the props object passed to `update`. [todo: example, here or elsewhere]_
 
 ### Create Your First Parameter
 
-Let's make the size and color of the rectangle customizable! To define Sketchbook parameters, all you need to do is define instance variables for your project class. Update `QuickStart` so it looks like this:
+Let's make the size and color of the rectangle customizable! To define Sketchbook parameters, all you need to do is define instance variables for your project class. Update your `QuickStart` class so it looks like this:
 
 ```ts
-export default class Test extends Project {
+export default class QuickStart extends Project {
     rectSize = 0.5;
     rectColor = '#34b00c';
 
@@ -94,7 +92,7 @@ export default class Test extends Project {
 
 We've added a couple things, most notably property definitions for `rectSize` and `rectColor`, each with a default value. If you check back in the browser, Sketchbook has automatically created inputs for each in the project details panel on the right, and we can use these properties within our `Project` subclass to access and use the most recent values set in the UI.
 
-_You can define many different types of parameters, including numbers, booleans, strings, and numeric arrays. Sketchbook also models file input and more via user-defined class properties._
+_You can define many different types of parameters, including numbers, booleans, strings, and numeric arrays. Sketchbook also offers file input and more via class property definitions._
 
 ### Configure Your Project
 
@@ -120,6 +118,8 @@ Now that you have a parameterized code sketch set up, let's look at some basic c
 Here we're defining a title, date, and description for the project, and configuring a display name for each parameter input. We're also setting the "style" of `rectColor` to be a "color", so Sketchbook will show this parameter with a color picker input. Check your browser, and you'll see all of these changes reflected in the project details panel.
 
 <img src="media/quickstart-details.png" style="width: 300px" />
+
+_[todo: update this screenshot]_
 
 ### What's Next
 

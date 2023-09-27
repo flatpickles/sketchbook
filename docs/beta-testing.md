@@ -21,6 +21,7 @@ If it's helpful to guide your thinking about Sketchbook with a few questions, he
 -   Am I describing what Sketchbook _**is**_ and _**does**_ well enough in the docs I have so far?
 -   Does anything feel too detailed, or not detailed enough?
 -   Does anything need documentation that isn't currently covered?
+-   Would you prefer TypeScript examples or JavaScript examples? Or both?
 
 **Configuration**
 
