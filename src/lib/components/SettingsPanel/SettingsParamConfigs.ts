@@ -4,10 +4,6 @@ import {
     type BooleanParamConfig
 } from '$lib/base/ConfigModels/ParamConfigs/BooleanParamConfig';
 import {
-    NumericArrayParamConfigDefaults,
-    type NumericArrayParamConfig
-} from '$lib/base/ConfigModels/ParamConfigs/NumericArrayParamConfig';
-import {
     StringParamConfigDefaults,
     type StringParamConfig
 } from '$lib/base/ConfigModels/ParamConfigs/StringParamConfig';

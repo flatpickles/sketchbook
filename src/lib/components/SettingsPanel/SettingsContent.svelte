@@ -116,5 +116,6 @@
         display: flex;
         justify-content: center;
         margin: $overlay-panel-edge-inset;
+        margin-bottom: $panel-section-spacing;
     }
 </style>
