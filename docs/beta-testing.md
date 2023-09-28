@@ -15,10 +15,12 @@ If it's helpful to guide your thinking about Sketchbook with a few questions, he
 -   Did you expect Sketchbook to do anything that it doesn't do?
 -   Would you be interested in using something like Sketchbook even if it weren't being built by a friend?
 -   Do you have any feature requests?
+-   Does naming make sense throughout Sketchbook? Renaming properties, methods, and concepts is easy, but now's the time!
 
 **Documentation**
 
 -   Am I describing what Sketchbook _**is**_ and _**does**_ well enough in the docs I have so far?
+-   How intuitive is the ordering & breakdown of concepts in the documentation as a whole? Any suggestions for reorganization?
 -   Does anything feel too detailed, or not detailed enough?
 -   Does anything need documentation that isn't currently covered?
 -   Would you prefer TypeScript examples or JavaScript examples? Or both?
