@@ -99,7 +99,7 @@
         }
 
         // Track the previous project so we can destroy it
-        previousProject?.destroy();
+        previousProject?.destroy(getCurrentDetail());
         previousProject = newProject;
 
         // Destroy previous non-shared contents of the canvas container
@@ -120,7 +120,7 @@
 
         // Initialize the new project
         setCanvasSize(true);
-        newProject.init();
+        newProject.init(getCurrentDetail());
 
         // Update component & DOM state
         fixP5Containment();

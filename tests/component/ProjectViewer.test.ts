@@ -54,11 +54,17 @@ describe('CanvasViewer', () => {
         const { getByTestId } = render(ProjectViewer, {
             project: proj
         });
-        expect(proj.init).toHaveBeenCalled();
-        await waitFor(() => expect(proj.update).toHaveBeenCalled());
-
         const canvas2D = getByTestId('shared-canvas-2D');
         const canvas3D = getByTestId('shared-canvas-WebGL');
+        const container = getByTestId('container');
+
+        expect(proj.init).toHaveBeenCalledWith({
+            canvas: canvas2D,
+            container: container,
+            context: undefined // undefined during testing, alas
+        });
+
+        await waitFor(() => expect(proj.update).toHaveBeenCalled());
         expect(canvas2D.classList.contains('hidden')).toBe(false);
         expect(canvas3D.classList.contains('hidden')).toBe(true);
     });
@@ -72,11 +78,17 @@ describe('CanvasViewer', () => {
         const { getByTestId } = render(ProjectViewer, {
             project: proj
         });
-        expect(proj.init).toHaveBeenCalled();
-        await waitFor(() => expect(proj.update).toHaveBeenCalled());
-
         const canvas2D = getByTestId('shared-canvas-2D');
         const canvas3D = getByTestId('shared-canvas-WebGL');
+        const container = getByTestId('container');
+
+        expect(proj.init).toHaveBeenCalledWith({
+            canvas: canvas3D,
+            container: container,
+            context: undefined // undefined during testing, alas
+        });
+
+        await waitFor(() => expect(proj.update).toHaveBeenCalled());
         expect(canvas2D.classList.contains('hidden')).toBe(true);
         expect(canvas3D.classList.contains('hidden')).toBe(false);
     });
@@ -95,12 +107,18 @@ describe('CanvasViewer', () => {
         const proj1 = new Project();
         vi.spyOn(proj1, 'destroy');
 
-        const { component } = render(ProjectViewer, {
+        const { component, getByTestId } = render(ProjectViewer, {
             project: proj1
         });
+        const canvas2D = getByTestId('shared-canvas-2D');
+        const container = getByTestId('container');
 
         component.project = new Project();
-        expect(proj1.destroy).toHaveBeenCalled();
+        expect(proj1.destroy).toHaveBeenCalledWith({
+            canvas: canvas2D,
+            container: container,
+            context: undefined // undefined during testing, alas
+        });
     });
 
     it('resets local state (for update) when loading a new project', async () => {

@@ -34,7 +34,7 @@ export default class Project {
      * init is called once when the project is first loaded, after this.canvas and this.container
      * become available. Override this with any custom initialization behavior.
      */
-    public init() {}
+    public init(detail: Detail<typeof this.canvasType>) {}
 
     /**
      * update is called continuously in a requestAnimationFrame loop. Override this with your custom
@@ -56,7 +56,7 @@ export default class Project {
      * destroy is called when the project is unloaded, i.e. when another project is selected.
      * Override this with any custom cleanup behavior.
      */
-    public destroy() {
+    public destroy(detail: Detail<typeof this.canvasType>) {
         // By default, clear the shared canvas when the project is unloaded.
         const context = this.canvas?.getContext('2d');
         if (context && this.canvas) {
