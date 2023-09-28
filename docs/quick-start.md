@@ -123,4 +123,6 @@ _[todo: update this screenshot]_
 
 ### What's Next
 
-You can learn much more about implementing `Project` subclasses on the [Core Concepts](core-concepts.md) page. Onward!
+Hopefully you're feeling comfortable with the basics after this Quick Start, and you're ready to start building your own projects in Sketchbook! Come back to the docs listed in the index whenever you're interested in developing your understanding, or seeking reference materials in any particular area.
+
+If you're feeling particularly motivated, the Sketchbook docs are suitable for reading in top-top-bottom order. Continue onward into [Creating Project Files](file-structure.md) to keep learning.
