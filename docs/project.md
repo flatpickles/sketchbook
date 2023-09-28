@@ -43,7 +43,33 @@ The `Project` class defines several lifecycle methods, which Sketchbook will cal
     -   Note that the `canvasSize` is the size of the canvas _element_; use `canvas.width` and `canvas.height` to access the actual canvas drawing size.
     -   Unless otherwise configured, you can rely on Sketchbook to manage the sizes of the container element and the canvas. You generally won't be setting these sizes directly in your projects, but you can override `resized` to respond to any size changes as you see fit.
 -   **`destroy`**`({ container, canvas, context })`
-    -   `destroy` is called when the project is unloaded, i.e. when another project is about to be loaded. Override this with any custom teardown behavior.
+    -   `destroy` is called when the project is unloaded, i.e. when another project is about to be loaded. Override this with any custom cleanup behavior.
     -   This is the only `Project` method with a default implementation: by default, the canvas is cleared before loading the next project. You can override this if you wish.
 
-Note that each lifecycle method invocation discussed above also has `container, canvas, context` ... _[todo: finish this]_
+Each lifecycle method invocation discussed above also has `container`, `canvas`, and `context` props passed within its `detail` object. These provide the same references available via `this.container`, `this.canvas`, and `this.canvas.getContext()`, with a more convenient interface. This is particularly helpful if you're using TypeScript: each prop will be defined and properly typed according to the project's `canvasType`.
+
+See the `Project` [class file](https://github.com/flatpickles/sketchbook/blob/main/src/lib/base/Project/Project.ts) to find the utility types used for these detail objects. A TypeScript project implementation that destructures and uses a detail object might look like this:
+
+```ts
+import Project, { type UpdateDetail2D } from '$lib/base/Project/Project';
+
+export default class ProjectExample extends Project {
+    update({ time, canvas, context }: UpdateDetail2D) {
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        const rectSize = Math.sin(time / 1000) / 2 + 0.5;
+        context.fillRect(0, 0, rectSize * canvas.width, rectSize * canvas.height);
+    }
+}
+```
+
+## Intermediate Subclasses
+
+`Project` is designed to be subclassed, both for direct project implementations (as discussed above), and for intermediate project types. The [`P5Project`](https://github.com/flatpickles/sketchbook/blob/main/src/lib/base/Project/P5Project.ts) class included with Sketchbook is an example of a `Project` subclass that is not a project implementation unto itself, but rather provides a generalized utility superclass for project implementations – Sketchbook projects that leverage P5, in this case.
+
+As you use Sketchbook, you may benefit from creating your own intermediate `Project` subclasses that implement behavior you'd like to share between multiple projects. Some examples of when you might want to create intermediate subclasses include:
+
+-   Abstracting boilerplate code (setup, teardown, etc) that is particular to the way you like to work.
+-   Integrating frameworks that you want to be able to use easily in the Sketchbook context.
+-   Creating "templates" with common [parameters](params-presets.md) for your custom project type.
+
+See [Project Subtypes](project-subtypes.md) for further discussion of the `Project` subclasses included with Sketchbook. If you build any of your own that would be useful for other Sketchbook users, consider [contributing](contributing.md) them back to the main repo!
