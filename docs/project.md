@@ -27,19 +27,23 @@ The `Project` class defines several instance properties, which you will use in y
 
 The `Project` class defines several lifecycle methods, which Sketchbook will call as your project runs. In your project implementations, you will override one or more of these methods to achieve your desired behavior. Each lifecycle method is invoked with a `detail` object, containing properties you may wish to use in your your subclass overrides.
 
--   `init` is called when a project is loaded.
-    -   Override this with any custom initialization behavior.
-    -   Prior to `init` (i.e. in the project constructor), `canvas` and `container` have yet to be defined. Within `init`, and elsewhere in the projects lifecycle, you can safely use these properties.
--   `update` is called continuously a frame update loop.
-    -   Override this with your custom drawing code. You do not need to call `requestAnimationFrame` directly for animated content; Sketchbook will call `update` repeatedly on each animation frame.
-    -   `update` invocations receive a `detail` object containing the current `frame`, and the `time` offset in milliseconds, both starting from 0 when the project is loaded.
-    -   If `update` isn't implemented in your project (e.g. for static content that is only drawn when parameters update), the frame loop will not be active.
--   `paramChanged` is called whenever a parameter input is changed by the user.
-    -   [todo]
--   `resized` is called when the `canvas` and/or `container` sizes change.
-    -   [todo]
--   `destroy` is called when the project is unloaded, i.e. when another project is about to be loaded.
+-   **`init`**`({ container, canvas, context })`
+    -   `init` is called when a project is loaded, immediately after instantiation. Override this with any custom initialization behavior.
+-   **`update`**`({ frame, time, container, canvas, context })`
+    -   `update` is called continuously in a frame update loop. Override this with your custom drawing code.
+    -   `update` invocations receive a `detail` object containing the current `frame`, and the `time` offset in milliseconds, each starting from 0 when the project is loaded.
+    -   You do not need to call `requestAnimationFrame` directly for animated content; Sketchbook will call `update` repeatedly on each animation frame.
+-   **`paramChanged`**`({ key, container, canvas, context })`
+    -   `paramChanged` is called when a parameter value is changed via the Sketchbook app UI. Override this to implement any custom behavior that should be invoked when a parameter changes.
+    -   `paramChanged` invocations receive a `detail` object containing the `key` of the parameter that was just changed.
+    -   See the [Parameters](params-presets.md) page for more info on using parameters in your projects.
+-   **`resized`**`({ containerSize, canvasSize, container, canvas, context })`
+    -   `resized` is called when the `canvas` and/or `container` sizes change, e.g. when the user resizes their browser window.
+    -   `resized` invocations receive a `detail` object containing the current `containerSize` and `canvasSize` in pixels. The latter will be undefined when using `CanvasType.None`.
+    -   Note that the `canvasSize` is the size of the canvas _element_; use `canvas.width` and `canvas.height` to access the actual canvas drawing size.
+    -   Unless otherwise configured, you can rely on Sketchbook to manage the sizes of the container element and the canvas. You generally won't be setting these sizes directly in your projects, but you can override `resized` to respond to any size changes as you see fit.
+-   **`destroy`**`({ container, canvas, context })`
+    -   `destroy` is called when the project is unloaded, i.e. when another project is about to be loaded. Override this with any custom teardown behavior.
     -   This is the only `Project` method with a default implementation: by default, the canvas is cleared before loading the next project. You can override this if you wish.
-    -   [todo?]
 
-## Implementing Parameters
+Note that each lifecycle method invocation discussed above also has `container, canvas, context` ... _[todo: finish this]_

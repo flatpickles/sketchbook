@@ -1,4 +1,6 @@
-# Sketchbook File Structure
+# Creating Project Files
+
+_[todo: preamble, etc]_
 
 `src/art` is where all of your projects will live. Each "project" in Sketchbook is a collection of files contained within a subdirectory of `src/art`. Your `src/art` directory might look like this:
 

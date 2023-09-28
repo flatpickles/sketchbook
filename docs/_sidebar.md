@@ -6,13 +6,13 @@
 
 -   Using Sketchbook
 
-    -   [Sketchbook File Structure](file-structure.md)
+    -   [Creating Project Files](file-structure.md)
     -   [The Project Class](project.md)
-    -   [Presets](presets.md)
+    -   [Parameters & Presets](params-presets.md)
     -   [Project Subtypes](project-subtypes.md)
     -   [Deploying Sketchbook](deploying.md)
     -   [Updating Sketchbook](updating.md)
-    -   [Common Necessities](necessities.md)
+    -   [Common Necessities (FAQ)](necessities.md)
 
 -   Configuration & Customization
 
