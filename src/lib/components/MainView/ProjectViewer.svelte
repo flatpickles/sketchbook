@@ -42,11 +42,11 @@
         // Get the current canvas & context references, depending on canvas type
         let currentCanvas = undefined;
         let currentContext = undefined;
-        if (project.canvasType === CanvasType.Context2D) {
+        if (canvasElement2D && project.canvasType === CanvasType.Context2D) {
             currentCanvas = canvasElement2D;
             const context2D = canvasElement2D.getContext('2d');
             if (context2D) currentContext = context2D;
-        } else if (project.canvasType === CanvasType.WebGL) {
+        } else if (canvasElementWebGL && project.canvasType === CanvasType.WebGL) {
             currentCanvas = canvasElementWebGL;
             const contextWebGL = canvasElementWebGL.getContext('webgl');
             if (contextWebGL) currentContext = contextWebGL;
@@ -198,13 +198,13 @@
 <div id="container" data-testid="container" bind:this={containerElement}>
     <canvas
         class="shared-canvas"
-        data-testid="shared-canvas"
+        data-testid="shared-canvas-2D"
         bind:this={canvasElement2D}
         class:hidden={project.canvasType !== CanvasType.Context2D}
     />
     <canvas
         class="shared-canvas"
-        data-testid="shared-canvas"
+        data-testid="shared-canvas-WebGL"
         bind:this={canvasElementWebGL}
         class:hidden={project.canvasType !== CanvasType.WebGL}
     />

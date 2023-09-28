@@ -6,6 +6,10 @@ import { get } from 'svelte/store';
 import { PanelState } from '$lib/base/Util/PanelState';
 import userEvent from '@testing-library/user-event';
 
+// Mocking for getContext is required for HTMLCanvasElement to work with Jest/Vitest
+// https://github.com/hustcc/jest-canvas-mock/issues/2
+global.HTMLCanvasElement.prototype.getContext = () => null;
+
 describe('MainView layout', () => {
     afterEach(cleanup);
 
