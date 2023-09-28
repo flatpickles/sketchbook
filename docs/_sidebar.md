@@ -6,16 +6,18 @@
 
 -   Using Sketchbook
 
-    -   [Core Concepts](core-concepts.md)
-    -   [Common Necessities](necessities.md)
-    -   [Project Configuration](project-config.md)
-    -   [Parameter Configuration](param-config.md)
+    -   [Sketchbook File Structure](file-structure.md)
+    -   [The Project Class](project.md)
+    -   [Presets](presets.md)
     -   [Project Subtypes](project-subtypes.md)
     -   [Deploying Sketchbook](deploying.md)
     -   [Updating Sketchbook](updating.md)
+    -   [Common Necessities](necessities.md)
 
--   Customizing Sketchbook
+-   Configuration & Customization
 
+    -   [Project Configuration](project-config.md)
+    -   [Parameter Configuration](param-config.md)
     -   [App Settings](settings.md)
     -   [Content & Copy](content.md)
     -   [Theme & Styling](theme.md)
