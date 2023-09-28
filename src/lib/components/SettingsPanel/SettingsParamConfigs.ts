@@ -5,43 +5,34 @@ import {
 } from '$lib/base/ConfigModels/ParamConfigs/BooleanParamConfig';
 import {
     NumericArrayParamConfigDefaults,
-    type NumericArrayParamConfig,
-    NumericArrayParamStyle
+    type NumericArrayParamConfig
 } from '$lib/base/ConfigModels/ParamConfigs/NumericArrayParamConfig';
 import {
     StringParamConfigDefaults,
     type StringParamConfig
 } from '$lib/base/ConfigModels/ParamConfigs/StringParamConfig';
 import { userSettingsLabels } from '$config/settings';
+import {
+    NumberParamConfigDefaults,
+    type NumberParamConfig,
+    NumberParamStyle
+} from '$lib/base/ConfigModels/ParamConfigs/NumberParamConfig';
 
 // ParamConfigs for each possible entry in the Settings panel
-// todo: add more settings
 export const settingsParamConfigs: ParamConfig[] = [
+    // showExperiments
     {
         ...BooleanParamConfigDefaults,
         key: 'showExperiments'
     } as BooleanParamConfig,
-    {
-        ...StringParamConfigDefaults,
-        key: 'projectSortOrder',
-        options: {
-            Alphabetical: 'alphabetical',
-            Chronological: 'chronological',
-            'Reverse Chron': 'reverse-chronological'
-        }
-    } as StringParamConfig,
-    {
-        ...NumericArrayParamConfigDefaults,
-        key: 'canvasSize',
-        style: NumericArrayParamStyle.CompactField,
-        step: 1,
-        min: 0,
-        max: 100000
-    } as NumericArrayParamConfig,
+
+    // overlayPanels
     {
         ...BooleanParamConfigDefaults,
         key: 'overlayPanels'
     } as BooleanParamConfig,
+
+    // projectListPanelState
     {
         ...StringParamConfigDefaults,
         key: 'projectListPanelState',
@@ -53,6 +44,8 @@ export const settingsParamConfigs: ParamConfig[] = [
             'Fixed': 'static'
         }
     } as StringParamConfig,
+
+    // projectDetailPanelState
     {
         ...StringParamConfigDefaults,
         key: 'projectDetailPanelState',
@@ -63,6 +56,48 @@ export const settingsParamConfigs: ParamConfig[] = [
             'Hover (Unpinnable)': 'mouse-unpinnable',
             'Fixed': 'static',
             'Unavailable': 'unavailable'
+        }
+    } as StringParamConfig,
+
+    // panelMouseTriggerWidth
+    {
+        ...NumberParamConfigDefaults,
+        key: 'panelMouseTriggerWidth',
+        style: NumberParamStyle.Field,
+        min: 0,
+        max: 100,
+        step: 1
+    } as NumberParamConfig,
+
+    // hidePanelButtonsTimeout
+    {
+        ...NumberParamConfigDefaults,
+        key: 'hidePanelButtonsTimeout',
+        style: NumberParamStyle.Field,
+        min: 0,
+        max: 10000,
+        step: 100
+    } as NumberParamConfig,
+
+    // projectSortOrder
+    {
+        ...StringParamConfigDefaults,
+        key: 'projectSortOrder',
+        options: {
+            Alphabetical: 'alphabetical',
+            Chronological: 'chronological',
+            'Reverse Chron': 'reverse-chronological'
+        }
+    } as StringParamConfig,
+
+    // groupSortOrder
+    {
+        ...StringParamConfigDefaults,
+        key: 'groupSortOrder',
+        options: {
+            Alphabetical: 'alphabetical',
+            Chronological: 'chronological',
+            'Reverse Chron': 'reverse-chronological'
         }
     } as StringParamConfig
 ].map((paramConfig) => {

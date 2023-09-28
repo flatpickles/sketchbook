@@ -37,11 +37,9 @@ const groupSortOrder = SortOrder.Alphabetical;
 // in the settings panel will be persisted in local storage, and the values set above will be used
 // as defaults.
 export const userSettingsLabels: Record<string, string> = {
-    showExperiments: 'Show Experiments',
     projectSortOrder: 'Project Sorting',
-    overlayPanels: 'Overlay Panels',
-    projectListPanelState: 'Left Panel Visibility',
-    projectDetailPanelState: 'Right Panel Visibility'
+    showExperiments: 'Show Experiments',
+    overlayPanels: 'Overlay Panels'
 };
 
 // Export all settings for use elsewhere in the app.

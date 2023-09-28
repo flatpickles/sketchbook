@@ -209,6 +209,8 @@
             {disabled}
             on:change={filesSelected}
         />
+    {:else}
+        <div class="unavailable-param">Unavailable</div>
     {/if}
 </div>
 
@@ -273,5 +275,11 @@
 
     .compact {
         grid-template-columns: 1fr 1fr;
+    }
+
+    .unavailable-param {
+        font-size: $small-text-size;
+        font-style: italic;
+        opacity: 0.5;
     }
 </style>

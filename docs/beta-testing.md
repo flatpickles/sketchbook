@@ -6,7 +6,7 @@ I'm currently working on hitting a [0.1 milestone](https://github.com/flatpickle
 
 <3 Matt
 
-## Questions
+### Questions
 
 If it's helpful to guide your thinking about Sketchbook with a few questions, here's some stuff I'm curious about. I'd love to talk with you about these in realtime once you've had a little time using Sketchbook, but any written notes are also extremely welcome!
 
