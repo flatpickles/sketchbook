@@ -34,29 +34,29 @@ export default class Project {
      * init is called once when the project is first loaded, after this.canvas and this.container
      * become available. Override this with any custom initialization behavior.
      */
-    public init(detail: Detail<typeof this.canvasType>) {}
+    init(detail: Detail<typeof this.canvasType>) {}
 
     /**
      * update is called continuously in a requestAnimationFrame loop. Override this with your custom
      * drawing code.
      */
-    public update(detail: UpdateDetail<typeof this.canvasType>) {}
+    update(detail: UpdateDetail<typeof this.canvasType>) {}
 
     /**
      * paramChanged is called when a parameter is changed in the UI.
      */
-    public paramChanged(detail: ParamChangedDetail<typeof this.canvasType>) {}
+    paramChanged(detail: ParamChangedDetail<typeof this.canvasType>) {}
 
     /**
      * resized is called when the container div and/or active canvas is resized.
      */
-    public resized(detail: ResizedDetail<typeof this.canvasType>) {}
+    resized(detail: ResizedDetail<typeof this.canvasType>) {}
 
     /**
      * destroy is called when the project is unloaded, i.e. when another project is selected.
      * Override this with any custom cleanup behavior.
      */
-    public destroy(detail: Detail<typeof this.canvasType>) {
+    destroy(detail: Detail<typeof this.canvasType>) {
         // By default, clear the shared canvas when the project is unloaded.
         const context = this.canvas?.getContext('2d');
         if (context && this.canvas) {
@@ -111,10 +111,10 @@ export type UpdateDetailWebGL = UpdateDetail<CanvasType.WebGL>;
 
 /**
  * Detail object type used with the project's paramChanged method. Contains the following:
- * - paramKey: the key of the parameter that was changed.
+ * - key: the key of the parameter that was changed.
  */
 export type ParamChangedDetail<T extends CanvasType> = Detail<T> & {
-    paramKey: string;
+    key: string;
 };
 export type ParamChangedDetail2D = UpdateDetail<CanvasType.Context2D>;
 export type ParamChangedDetailWebGL = UpdateDetail<CanvasType.WebGL>;

@@ -384,7 +384,7 @@ describe('Project paramChanged calls from CanvasViewer', () => {
             canvas: canvas2D,
             container: container,
             context: undefined, // undefined during testing, alas
-            paramKey: 'test'
+            key: 'test'
         });
     });
 });

@@ -5,7 +5,7 @@
  */
 
 import REGL from 'regl';
-import Project, { CanvasType } from './Project';
+import Project, { CanvasType, type DetailWebGL } from './Project';
 
 // Uniform names for non-params (i.e. uniforms not specific to a particular project)
 const timeUniformName = 'time';
@@ -121,8 +121,8 @@ export default class FragShaderProject extends Project {
         this.#regl.frame(drawFrame);
     }
 
-    destroy(): void {
-        super.destroy();
+    destroy(detail: DetailWebGL): void {
+        super.destroy(detail);
         this.#regl?.destroy();
     }
 }

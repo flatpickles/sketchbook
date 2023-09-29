@@ -21,13 +21,13 @@ export default class P5Project extends Project {
      * library functionality must be accessed through a p5 object; you may choose to use either
      * `this.p5` or the `p5` argument passed to each function, which are equivalent.
      */
-    public preload(p5: P5) {}
-    public setup(p5: P5) {
+    preload(p5: P5) {}
+    setup(p5: P5) {
         // By default, create a canvas that fills the container div.
         if (!this.container) throw new Error('P5 setup called before container was set');
         p5.createCanvas(this.container.clientWidth, this.container.clientHeight);
     }
-    public draw(p5: P5) {}
+    draw(p5: P5) {}
 
     /**
      * Project superclass overrides; you shouldn't need to change these.
@@ -42,7 +42,7 @@ export default class P5Project extends Project {
         this.p5 = new P5(processingFn);
         this.p5.draw(); // call immediately to avoid a flicker before the first animation frame
     }
-    public resized({ containerSize }: { containerSize: [number, number] }): void {
+    resized({ containerSize }: { containerSize: [number, number] }): void {
         this.p5?.resizeCanvas(containerSize[0], containerSize[1]);
     }
 }

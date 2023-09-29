@@ -70,7 +70,7 @@
         window.addEventListener('param-updated', (event) => {
             const customEvent = event as CustomEvent;
             project.paramChanged({
-                paramKey: customEvent.detail.key,
+                key: customEvent.detail.key,
                 ...getCurrentDetail()
             });
         });
