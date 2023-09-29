@@ -7,13 +7,24 @@ import P5Project from '$lib/base/Project/P5Project';
 
 import { settingsStore } from '$lib/base/Util/AppState';
 
-// P5 throws errors when running in unit tests, so we mock it out fully.
+//p5 throws errors when running in unit tests, so we mock it out fully.
 // This precludes more rigorous DOM testing, but it's better than nothing.
 import * as exportsP5 from 'p5';
 import { NumberParamConfigDefaults } from '$lib/base/ConfigModels/ParamConfigs/NumberParamConfig';
 const mockedP5: Mock = vi.spyOn(exportsP5, 'default');
+const mockP5Canvas = {
+    parent: vi.fn()
+};
+const mockP5Object = {
+    draw: vi.fn(),
+    createCanvas: () => {
+        return mockP5Canvas;
+    },
+    remove: vi.fn(),
+    mouseClicked: vi.fn()
+};
 mockedP5.mockImplementation(() => {
-    return { draw: vi.fn() };
+    return mockP5Object;
 });
 
 // Mocking for getContext is required for HTMLCanvasElement to work with Jest/Vitest
@@ -389,10 +400,10 @@ describe('Project paramChanged calls from CanvasViewer', () => {
     });
 });
 
-describe('CanvasViewer w/ P5', () => {
+describe('CanvasViewer w/ p5', () => {
     afterEach(cleanup);
 
-    it("doesn't use the shared canvas, instead instantiates P5", async () => {
+    it("doesn't use the shared canvas, instead instantiates p5", async () => {
         const proj = new P5Project();
 
         expect(mockedP5).toHaveBeenCalledTimes(0);
@@ -417,5 +428,21 @@ describe('CanvasViewer w/ P5', () => {
         });
         await new Promise((r) => setTimeout(r, 250)); // wait 0.25 seconds
         await waitFor(() => expect(proj.update).toHaveBeenCalledTimes(0));
+        expect(mockP5Object.draw).toHaveBeenCalled();
+    });
+
+    it('sets up and dismantles p5 instance mode properly', async () => {
+        const proj = new P5Project();
+
+        const { component, getByTestId } = render(ProjectViewer, {
+            project: proj
+        });
+        const container = getByTestId('container');
+        expect(mockP5Object.remove).toHaveBeenCalledTimes(0);
+        expect(mockP5Canvas.parent).toHaveBeenCalledWith(container);
+
+        const newProj = new Project();
+        component.project = newProj;
+        expect(mockP5Object.remove).toHaveBeenCalledTimes(1);
     });
 });

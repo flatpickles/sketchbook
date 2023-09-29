@@ -64,7 +64,7 @@ export default class ProjectExample extends Project {
 
 ## Intermediate Subclasses
 
-`Project` is designed to be subclassed, both for direct project implementations (as discussed above), and for intermediate project types. The [`P5Project`](https://github.com/flatpickles/sketchbook/blob/main/src/lib/base/Project/P5Project.ts) class included with Sketchbook is an example of a `Project` subclass that is not a project implementation unto itself, but rather provides a generalized utility superclass for project implementations – Sketchbook projects that leverage P5, in this case.
+`Project` is designed to be subclassed, both for direct project implementations (as discussed above), and for intermediate project types. The [`P5Project`](https://github.com/flatpickles/sketchbook/blob/main/src/lib/base/Project/P5Project.ts) class included with Sketchbook is an example of a `Project` subclass that is not a project implementation unto itself, but rather provides a generalized utility superclass for project implementations – Sketchbook projects that leverage p5.js, in this case.
 
 As you use Sketchbook, you may benefit from creating your own intermediate `Project` subclasses that implement behavior you'd like to share between multiple projects. Some examples of when you might want to create intermediate subclasses include:
 

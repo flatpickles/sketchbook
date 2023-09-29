@@ -122,8 +122,7 @@
         setCanvasSize(true);
         newProject.init(getCurrentDetail());
 
-        // Update component & DOM state
-        fixP5Containment();
+        // Update component state
         frameCount = 0;
         startTime = Date.now();
     }
@@ -183,15 +182,6 @@
                 ? [canvasElementWebGL.width, canvasElementWebGL.height]
                 : undefined;
         project.resized({ containerSize, canvasSize, ...getCurrentDetail() });
-    }
-
-    // If a p5 canvas is present, position it within the parent container
-    function fixP5Containment() {
-        const p5Canvas = document.querySelector('.p5Canvas');
-        if (p5Canvas) {
-            p5Canvas.remove();
-            containerElement.appendChild(p5Canvas);
-        }
     }
 </script>
 
