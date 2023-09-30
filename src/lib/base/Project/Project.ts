@@ -116,8 +116,8 @@ export type UpdateDetailWebGL = UpdateDetail<CanvasType.WebGL>;
 export type ParamChangedDetail<T extends CanvasType> = Detail<T> & {
     key: string;
 };
-export type ParamChangedDetail2D = UpdateDetail<CanvasType.Context2D>;
-export type ParamChangedDetailWebGL = UpdateDetail<CanvasType.WebGL>;
+export type ParamChangedDetail2D = ParamChangedDetail<CanvasType.Context2D>;
+export type ParamChangedDetailWebGL = ParamChangedDetail<CanvasType.WebGL>;
 
 /**
  * Detail object type used with the project's resized method. Contains the following:
@@ -130,5 +130,5 @@ export type ResizedDetail<T extends CanvasType> = Detail<T> & {
     containerSize: [number, number];
     canvasSize?: [number, number];
 };
-export type ResizedDetail2D = UpdateDetail<CanvasType.Context2D>;
-export type ResizedDetailWebGL = UpdateDetail<CanvasType.WebGL>;
+export type ResizedDetail2D = ResizedDetail<CanvasType.Context2D>;
+export type ResizedDetailWebGL = ResizedDetail<CanvasType.WebGL>;
