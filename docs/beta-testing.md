@@ -36,3 +36,9 @@ If it's helpful to guide your thinking about Sketchbook with a few questions, he
 -   Do you like the fork, update, and publish model for using Sketchbook? Unconventional, but effective?
 -   Should the `main` branch have demo projects, so you have something to look at as soon as you create your fork? Currently demo projects exist on the `demo` branch to keep things clean & simple, but there's a tradeoff there.
 -   Do you need any other parameter types or styles?
+-   Would you rather `time` params provided by Sketchbook arrive in seconds or milliseconds? (My intuition is milliseconds, but REGL uses seconds...)
+
+**Project Subtypes**
+
+-   For the existing P5 support, do you like the design? What else might you need?
+-   For the existing shader art support, same questions! (this is an [MVP](https://github.com/flatpickles/sketchbook/issues/146), but I'd like to build it out further)
