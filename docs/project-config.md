@@ -16,7 +16,7 @@ A config file (e.g. `src/art/ProjectExample/config.json`) might look like this:
 }
 ```
 
-The available project configuration properties are as follows:
+The available project configuration options are as follows:
 
 <!-- prettier-ignore -->
 | Property Key | Default | Description |

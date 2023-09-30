@@ -1,8 +1,8 @@
 import { type ParamConfig, ParamType, ParamConfigDefaults } from '../ParamConfig';
 
 export interface BooleanParamConfig extends ParamConfig {
-    enables?: string[];
-    disables?: string[]; // todo - implement?
+    enables?: string[]; // todo - implement
+    disables?: string[]; // todo - implement
 }
 
 export const BooleanParamConfigDefaults: BooleanParamConfig = {
