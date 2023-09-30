@@ -4,7 +4,7 @@ export interface ProjectConfig {
     description?: string;
     defaultPresetName?: string;
     groups: string[];
-    presetsAvailable: boolean;
+    presetsAvailable?: boolean;
     experimental: boolean;
     paramsApplyDuringInput: boolean;
     canvasSize?: [number, number];
