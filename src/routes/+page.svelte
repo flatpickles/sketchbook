@@ -1,3 +1,7 @@
+<script lang="ts">
+    import { content } from '$config/content';
+</script>
+
 <svelte:head>
-    <title>Sketchbook</title>
+    <title>{content.title}</title>
 </svelte:head>

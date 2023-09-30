@@ -257,7 +257,7 @@
 
     .settings-container {
         width: 400px;
-        height: 400px;
+        min-height: 400px;
         max-width: 100%;
         max-height: 100%;
         padding: $overlay-panel-edge-inset;
