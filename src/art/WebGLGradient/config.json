@@ -1,0 +1,23 @@
+{
+    "title": "WebGL Gradient",
+    "date": "2023-09-15",
+    "description": "A simple gradient system built with WebGL, using the <a href='https://github.com/regl-project/regl'>regl</a> library.",
+    "experimental": true,
+    "params": {
+        "blue": {
+            "name": "Blueness"
+        },
+        "green": {
+            "name": "Greenness"
+        },
+        "direction": {
+            "name": "Direction",
+            "options": {
+                "Left to Right": 0,
+                "Right to Left": 2,
+                "Top to Bottom": 1,
+                "Bottom to Top": 3
+            }
+        }
+    }
+}
