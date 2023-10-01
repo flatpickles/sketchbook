@@ -1,0 +1,27 @@
+{
+    "title": "P5 Demo",
+    "date": "2023-09-01",
+    "description": "A basic demo using the p5.js library within Sketchbook. Move your mouse to draw circles!",
+    "params": {
+        "circleBaseSize": {
+            "name": "Circle Base Size",
+            "min": 10,
+            "max": 100,
+            "step": 1
+        },
+        "circleSizeVariation": {
+            "name": "Circle Variation",
+            "min": 0,
+            "max": 100,
+            "step": 1
+        },
+        "bgColor": {
+            "name": "BG Color",
+            "style": "color"
+        },
+        "resetCanvas": {
+            "fullWidthInput": true,
+            "buttonText": "Reset Canvas"
+        }
+    }
+}
