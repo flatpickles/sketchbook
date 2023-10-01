@@ -9,10 +9,11 @@ import { PanelState } from '$lib/base/Util/PanelState';
 
 // The imported `dev` boolean will be true locally, but false in production. Use this for any
 // development-specific default settings below.
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { dev } from '$app/environment';
 
 // Experimental projects will only appear in the project list if this is set to true.
-const showExperiments = dev;
+const showExperiments = true;
 
 // If true, the project list and detail panels will float over project content.
 const overlayPanels = true;

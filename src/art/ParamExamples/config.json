@@ -2,6 +2,7 @@
     "title": "Param Examples",
     "date": "2023-07-30",
     "description": "Examples of possible parameter types and styles. See <a href='http://localhost:3000/#/param-config'>the docs</a> for more details.",
+    "experimental": true,
     "params": {
         "number1to5Int": {
             "name": "Integer Number With a Long Name",
