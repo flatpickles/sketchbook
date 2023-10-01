@@ -2,8 +2,6 @@
 
 Thank you for beta testing Sketchbook!! This page will be retired when I launch version 1.0, but in the meantime, here are a few notes for your consideration. Please feel free to [file GitHub issues](https://github.com/flatpickles/sketchbook/issues/new) about anything and everything, or contact me with any questions, bug reports, feature requests, etc!
 
-I'm currently working on hitting a [0.1 milestone](https://github.com/flatpickles/sketchbook/milestone/1) (targeted for 9/29/23), after which point I'll be _most_ ready for feedback, but Sketchbook should be ready to look at in the meantime if you can tolerate a WIP vibe.
-
 <3 Matt
 
 ### Questions

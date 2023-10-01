@@ -1,3 +1,9 @@
 # Development Notes
 
-SVG favicon from [here](https://openmoji.org/library/emoji-1F5BC/). Create your own! SVG dimensions don't matter, but PNG dimensions should match. Helpful notes [here](https://medium.com/swlh/are-you-using-svg-favicons-yet-a-guide-for-modern-browsers-836a6aace3df).
+_This document is a work in progress. Eventually it will contain notes on Sketchbook's technical design._
+
+-   Component containment
+-   Data modeling
+-   SSR (or lack thereof)
+-   Roadmap (maybe dedicated doc?)
+-   Fun / interesting challenges
