@@ -71,7 +71,8 @@ export default class Project {
 export enum CanvasType {
     Context2D = '2d',
     WebGL = 'webgl',
-    None = 'none'
+    None = 'none',
+    Unknown = 'unknown'
 }
 
 /**
@@ -83,15 +84,21 @@ export enum CanvasType {
  * - canvas: the canvas element that the project will draw to, if using a canvas.
  * - context: the canvas context that the project will draw to, if using a canvas.
  */
-export type Detail<T extends CanvasType> = {
+export type Detail<T extends CanvasType = CanvasType.Unknown> = {
     container: HTMLDivElement;
-    canvas: T extends CanvasType.None ? undefined : HTMLCanvasElement;
+    canvas: T extends CanvasType.None
+        ? undefined
+        : T extends CanvasType.Unknown
+        ? HTMLCanvasElement | undefined
+        : HTMLCanvasElement;
     context: T extends CanvasType.None
         ? undefined
         : T extends CanvasType.Context2D
         ? CanvasRenderingContext2D
         : T extends CanvasType.WebGL
         ? WebGLRenderingContext
+        : T extends CanvasType.Unknown
+        ? CanvasRenderingContext2D | WebGLRenderingContext | undefined
         : never;
 };
 export type Detail2D = UpdateDetail<CanvasType.Context2D>;
@@ -102,7 +109,7 @@ export type DetailWebGL = UpdateDetail<CanvasType.WebGL>;
  * - frame: the current frame number (0 at project load, incremented by 1 for each update call).
  * - time: milliseconds passed since project load (i.e. since init was called).
  */
-export type UpdateDetail<T extends CanvasType> = Detail<T> & {
+export type UpdateDetail<T extends CanvasType = CanvasType.Unknown> = Detail<T> & {
     frame: number;
     time: number;
 };
@@ -113,7 +120,7 @@ export type UpdateDetailWebGL = UpdateDetail<CanvasType.WebGL>;
  * Detail object type used with the project's paramChanged method. Contains the following:
  * - key: the key of the parameter that was changed.
  */
-export type ParamChangedDetail<T extends CanvasType> = Detail<T> & {
+export type ParamChangedDetail<T extends CanvasType = CanvasType.Unknown> = Detail<T> & {
     key: string;
 };
 export type ParamChangedDetail2D = ParamChangedDetail<CanvasType.Context2D>;
@@ -126,7 +133,7 @@ export type ParamChangedDetailWebGL = ParamChangedDetail<CanvasType.WebGL>;
  * Note that canvasSize is not likely to correspond to [this.canvas.width, this.canvas.height], as
  * the canvas drawing size is scaled by the current pixel ratio.
  */
-export type ResizedDetail<T extends CanvasType> = Detail<T> & {
+export type ResizedDetail<T extends CanvasType = CanvasType.Unknown> = Detail<T> & {
     containerSize: [number, number];
     canvasSize?: [number, number];
 };

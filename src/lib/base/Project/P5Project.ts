@@ -7,7 +7,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 
 import Project, { CanvasType, type Detail } from '$lib/base/Project/Project';
-import P5 from 'p5';
+import P5, { type RENDERER } from 'p5';
 
 export default class P5Project extends Project {
     /**
@@ -15,6 +15,12 @@ export default class P5Project extends Project {
      * when the project is loaded. It is only undefined if accessed in a project's constructor.
      */
     p5?: P5;
+
+    /**
+     * The renderer used by this project. This should overridden in P5Project subclasses, or set in
+     * their constructors, and should not be changed during a project's lifecycle.
+     */
+    p5Renderer: RENDERER = 'p2d';
 
     /**
      * p5.js functions. Override these with your p5.js code. P5 runs in "instance mode", so all
@@ -45,7 +51,7 @@ export default class P5Project extends Project {
      * Project superclass overrides; you shouldn't need to change these.
      */
     canvasType = CanvasType.None;
-    init({ container }: { container: HTMLDivElement }) {
+    init({ container }: Detail) {
         // Create a P5 instance that calls the P5Project methods defined above
         const processingFn = (p5: P5) => {
             p5.preload = this.preload.bind(this, p5);
@@ -65,14 +71,19 @@ export default class P5Project extends Project {
         this.p5 = new P5(processingFn);
 
         // Create a P5 canvas, filling the container div by default
-        const p5Canvas = this.p5.createCanvas(container.clientWidth, container.clientHeight);
+        const p5Canvas = this.p5.createCanvas(
+            container.clientWidth,
+            container.clientHeight,
+            this.p5Renderer
+        );
         p5Canvas.parent(container);
+        this.p5.setup(); // re-parenting the canvas seems to clear it, so call setup again
         requestAnimationFrame(this.p5.draw); // avoid a flicker before project load
     }
     resized({ containerSize }: { containerSize: [number, number] }): void {
         this.p5?.resizeCanvas(containerSize[0], containerSize[1]);
     }
-    destroy(detail: Detail<CanvasType>) {
+    destroy(detail: Detail) {
         super.destroy(detail);
         this.p5?.remove();
     }
