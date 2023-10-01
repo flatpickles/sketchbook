@@ -19,7 +19,7 @@ export default class ProjectExample extends Project {
     functionParam = () => {
         alert(this.stringParam);
     };
-    fileInputParam = (dataURL: string) => {
+    fileInputParam = (dataURL: string, metadata: File) => {
         console.log(dataURL);
     };
 }
@@ -29,7 +29,7 @@ If you create and save a project with the parameters defined above, Sketchbook w
 
 <img src="media/params-example.png" style="width: 300px" />
 
-As you can see, Sketchbook natively supports a variety of parameter types, including numbers, booleans, strings, numeric arrays, and functions. File input is also supported, via function parameters that are called with a [data URL](https://developer.mozilla.org/en-US/docs/Web/API/FileReader/readAsDataURL) when a local file is selected.
+As you can see, Sketchbook natively supports a variety of parameter types, including numbers, booleans, strings, numeric arrays, and functions. File input is also supported, via functions that are called with a [data URL](https://developer.mozilla.org/en-US/docs/Web/API/FileReader/readAsDataURL) and a [File](https://developer.mozilla.org/en-US/docs/Web/API/File) metadata object (unless otherwise configured).
 
 The default parameter values set in your project file will be used as the initial values in the UI, and when the UI inputs are updated, the corresponding property values will be updated for the current project instance. Parameter value updates will be stored between Sketchbook sessions, and your projects will reload with the same values that were previously configured in the UI. The default values will only be used again if Sketchbook is reset, or when you update the values in your project file.
 
