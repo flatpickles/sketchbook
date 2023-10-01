@@ -17,33 +17,57 @@ export default class P5Project extends Project {
     p5?: P5;
 
     /**
-     * p5.js lifecycle functions. Override these with your p5.js code. P5 runs in "instance mode",
-     * so all library functionality must be accessed through a p5 object; you may choose to use
-     * either `this.p5` or the `p5` argument passed to each function, which are equivalent.
+     * p5.js functions. Override these with your p5.js code. P5 runs in "instance mode", so all
+     * library functionality must be accessed through a p5 object; you may choose to use either
+     * `this.p5` or the `p5` argument passed to each function, which are equivalent.
      */
+
+    // Lifecycle methods
     preload(p5: P5) {}
     setup(p5: P5) {}
     draw(p5: P5) {}
+
+    // Mouse methods
+    mouseMoved(p5: P5) {}
+    mouseDragged(p5: P5) {}
     mousePressed(p5: P5) {}
+    mouseReleased(p5: P5) {}
+    mouseClicked(p5: P5) {}
+    doubleClicked(p5: P5) {}
+    mouseWheel(p5: P5) {}
+
+    // Keyboard methods
+    keyPressed(p5: P5) {}
+    keyReleased(p5: P5) {}
+    keyTyped(p5: P5) {}
 
     /**
      * Project superclass overrides; you shouldn't need to change these.
      */
     canvasType = CanvasType.None;
     init({ container }: { container: HTMLDivElement }) {
-        // Create a P5 instance that calls the lifecycle functions defined above
+        // Create a P5 instance that calls the P5Project methods defined above
         const processingFn = (p5: P5) => {
             p5.preload = this.preload.bind(this, p5);
             p5.setup = this.setup.bind(this, p5);
             p5.draw = this.draw.bind(this, p5);
+            p5.mouseMoved = this.mouseMoved.bind(this, p5);
+            p5.mouseDragged = this.mouseDragged.bind(this, p5);
             p5.mousePressed = this.mousePressed.bind(this, p5);
+            p5.mouseReleased = this.mouseReleased.bind(this, p5);
+            p5.mouseClicked = this.mouseClicked.bind(this, p5);
+            p5.doubleClicked = this.doubleClicked.bind(this, p5);
+            p5.mouseWheel = this.mouseWheel.bind(this, p5);
+            p5.keyPressed = this.keyPressed.bind(this, p5);
+            p5.keyReleased = this.keyReleased.bind(this, p5);
+            p5.keyTyped = this.keyTyped.bind(this, p5);
         };
         this.p5 = new P5(processingFn);
 
         // Create a P5 canvas, filling the container div by default
         const p5Canvas = this.p5.createCanvas(container.clientWidth, container.clientHeight);
         p5Canvas.parent(container);
-        requestAnimationFrame(this.p5.draw); // avoid a flicker before the first animation frame
+        requestAnimationFrame(this.p5.draw); // avoid a flicker before project load
     }
     resized({ containerSize }: { containerSize: [number, number] }): void {
         this.p5?.resizeCanvas(containerSize[0], containerSize[1]);
