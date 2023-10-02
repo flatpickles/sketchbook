@@ -56,17 +56,17 @@ $panel-show-button-bg-opacity-hover: 0.7;
 // Group list
 $group-colors: $panel-highlight-color;
 $group-spacing: 0.25rem;
-$group-padding: 0.25rem 0.75rem;
-$group-border-radius: 1rem;
+$group-padding: 0rem 0.5rem 0rem 0.25rem;
+$group-border-radius: 0rem;
 $group-border-size: 0;
-$group-border-opacity: 0.3;
-$group-selected-bg-opacity: 0.3;
+$group-border-opacity: 0;
+$group-selected-bg-opacity: 0.0;
 $group-selected-text-opacity: 1.0;
 $group-selected-text-weight: bold;
 $group-selected-shadow-size: 0rem;
 $group-selected-shadow-opacity: 0.4;
-$group-unselected-bg-opacity: 0.1;
-$group-unselected-text-opacity: 0.75;
+$group-unselected-bg-opacity: 0.0;
+$group-unselected-text-opacity: 0.5;
 $group-unselected-text-weight: bold;
 $group-list-scroll-fade: true;
 
