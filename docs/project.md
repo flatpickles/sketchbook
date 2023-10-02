@@ -2,7 +2,7 @@
 
 `Project` is the superclass of all Sketchbook projects. In your implementations, you will create subclasses that override a few inherited methods, and leverage a few inherited instance properties. For each project you build, Sketchbook will instantiate your `Project` subclass when it's loaded into the viewer, will call its lifecycle methods as it runs.
 
-In addition to the discussion here, you can see `Project` and its annotations [on GitHub](https://github.com/flatpickles/sketchbook/blob/main/src/lib/base/Project/Project.ts), or locally in your code editor.
+In addition to the discussion here, you can see `Project` and its annotations [on GitHub](https://github.com/flatpickles/sketchbook/blob/main/src/lib/base/Project/Project.ts), or locally in your code editor. You can also see several examples of `Project` subclasses in the [demo branch](https://github.com/flatpickles/sketchbook/tree/demo/src/art/), and running live in the Sketchbook [demo deployment](https://demo.skbk.cc/).
 
 ## `Project` Properties
 

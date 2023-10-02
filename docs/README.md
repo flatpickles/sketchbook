@@ -3,7 +3,7 @@
 Sketchbook is a forkable development environment for HTML canvas artwork & prototypes. Sketchbook is also a customizable webapp for publishing these projects. Read on for a conceptual overview, or jump right into the [Quick Start Guide](quick-start.md)!
 
 ![Sketchbook](media/full-layout.png)
-_Screenshot from a Sketchbook deployment, available live [here](https://demo.skbk.cc). [todo: update screenshot]_
+_Screenshot from the Sketchbook demo deployment, available live [here](https://demo.skbk.cc)._
 
 ### How It Works
 

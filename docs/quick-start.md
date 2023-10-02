@@ -102,7 +102,7 @@ Now that you have a parameterized code sketch set up, let's look at some basic c
 {
     "title": "Quick Start",
     "date": "2023-09-19",
-    "description": "This is the final project from the quick start guide",
+    "description": "This is the completed project from the quick start guide.",
     "params": {
         "rectSize": {
             "name": "Rect Size"
@@ -117,9 +117,7 @@ Now that you have a parameterized code sketch set up, let's look at some basic c
 
 Here we're defining a title, date, and description for the project, and configuring a display name for each parameter input. We're also setting the "style" of `rectColor` to be a "color", so Sketchbook will show this parameter with a color picker input. Check your browser, and you'll see all of these changes reflected in the project details panel.
 
-<img src="media/quickstart-details.png" style="width: 300px" />
-
-_[todo: update this screenshot]_
+<img src="media/quickstart.png" style="width: 300px" />
 
 ### What's Next
 

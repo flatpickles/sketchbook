@@ -6,4 +6,16 @@ There are too many options to discuss in detail within this document, but the st
 
 To get you started in a few different styling directions, you can try out any of the following theme options, all stored within `src/config/themes` in the Sketchbook [demo branch](https://github.com/flatpickles/sketchbook/tree/demo/src/config/themes).
 
-_[todo: create a few different theme options, and add links and screenshots in this doc.]_
+#### [`theme1.scss`](https://github.com/flatpickles/sketchbook/blob/demo/src/config/themes/theme1.scss)
+
+<img src="media/theme1.png" style="width: 300px" />
+
+#### [`theme2.scss`](https://github.com/flatpickles/sketchbook/blob/demo/src/config/themes/theme2.scss)
+
+<img src="media/theme2.png" style="width: 300px" />
+
+#### [`theme3.scss`](https://github.com/flatpickles/sketchbook/blob/demo/src/config/themes/theme3.scss)
+
+<img src="media/theme3.png" style="width: 300px" />
+
+_[todo: more theme examples, and perhaps more detailed discussion of Sketchbook styling options]_

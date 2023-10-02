@@ -24,7 +24,7 @@ A project `config.json` file that configures the example project discussed in th
 }
 ```
 
-As you can see, different parameter configuration options are available for each parameter type, though some options are available across types.
+As you can see, different parameter configuration options are available for each parameter type, though some options are available across types. To see examples of different parameter configuration options, check out the "Param Examples" demo project [on GitHub](https://github.com/flatpickles/sketchbook/tree/demo/src/art/ParamExamples), and on the Sketchbook [demo deployment](https://demo.skbk.cc/ParamExamples).
 
 ## All Parameters
 

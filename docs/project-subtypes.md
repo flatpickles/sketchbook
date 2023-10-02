@@ -24,7 +24,7 @@ export default class P5Demo extends P5Project {
 }
 ```
 
-You can check out the `P5Project` superclass [on GitHub](https://github.com/flatpickles/sketchbook/blob/main/src/lib/base/Project/P5Project.ts), or in your code editor.
+You can find the `P5Project` superclass [on GitHub](https://github.com/flatpickles/sketchbook/blob/main/src/lib/base/Project/P5Project.ts), or in your code editor. You can also check out the "P5 Demo" project [on GitHub](https://github.com/flatpickles/sketchbook/tree/demo/src/art/P5Demo), and on the Sketchbook [demo deployment](https://demo.skbk.cc/P5Demo).
 
 ## Shader Art
 
@@ -54,4 +54,4 @@ You can configure your fragment shader projects and parameters as you would for 
 
 Sketchbook also comes with built-in [glslify](https://github.com/glslify/glslify) support: any GLSL shader files you define will be automatically be compiled with glslify, using whichever glslify modules you've added via `npm install`. This applies for fragment shader projects as discussed above, and also for any GLSL files that you import in a custom GL project.
 
-To see how Sketchbook's fragment shader project support works under the hood, check out the `FragShaderProject` class [on GitHub](https://github.com/flatpickles/sketchbook/blob/main/src/lib/base/Project/FragShaderProject.ts), or in your code editor.
+To see how Sketchbook's fragment shader project support works under the hood, see the `FragShaderProject` class [on GitHub](https://github.com/flatpickles/sketchbook/blob/main/src/lib/base/Project/FragShaderProject.ts), or in your code editor. You can also check out the "Shader Art" demo project [on GitHub](https://github.com/flatpickles/sketchbook/tree/demo/src/art/ShaderArt), and on the Sketchbook [demo deployment](https://demo.skbk.cc/ShaderArt).

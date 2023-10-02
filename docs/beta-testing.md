@@ -13,11 +13,12 @@ If it's helpful to guide your thinking about Sketchbook with a few questions, he
 -   Did you expect Sketchbook to do anything that it doesn't do?
 -   Would you be interested in using something like Sketchbook even if it weren't being built by a friend?
 -   Do you have any feature requests?
--   Does naming make sense throughout Sketchbook? Renaming properties, methods, and concepts is easy, but now's the time!
+-   Does naming make sense throughout Sketchbook? Renaming properties, methods, and concepts is easy – but now's the time!
 
 **Documentation**
 
 -   Am I describing what Sketchbook _**is**_ and _**does**_ well enough in the docs I have so far?
+-   Was the "Quick Start Guide" effective? Any suggestions for a better first intro?
 -   How intuitive is the ordering & breakdown of concepts in the documentation as a whole? Any suggestions for reorganization?
 -   Does anything feel too detailed, or not detailed enough?
 -   Does anything need documentation that isn't currently covered?
@@ -25,14 +26,14 @@ If it's helpful to guide your thinking about Sketchbook with a few questions, he
 
 **Configuration**
 
--   Are there any aesthetic aspects of Sketchbook's UI that you want to change, but that aren't currently covered in `theme.scss`? (E.g. parameter styling)
+-   Are there any aesthetic aspects of Sketchbook's UI that you want to change, but that aren't currently covered in `theme.scss`? (Likely parameter styling; this is WIP as of v0.1)
 -   Do you want to be able to change project & param config defaults? In other words, do you want the defaults for the properties noted in the [Project](project-config.md) and [Parameter](param-config.md) Configuration pages to be something you set yourself in a config file?
 
 **Workflow**
 
 -   Does Sketchbook facilitate a stable & comfortable workflow for you? Or is it getting in your way?
 -   Do you like the fork, update, and publish model for using Sketchbook? Unconventional, but effective?
--   Should the `main` branch have demo projects, so you have something to look at as soon as you create your fork? Currently demo projects exist on the `demo` branch to keep things clean & simple, but there's a tradeoff there.
+-   Currently the `main` branch is a fully blank canvas, and all demo content is contained in the `demo` branch. How do you feel about that?
 -   Do you need any other parameter types or styles?
 -   Would you rather `time` params provided by Sketchbook arrive in seconds or milliseconds? (My intuition is milliseconds, but REGL uses seconds...)
 
