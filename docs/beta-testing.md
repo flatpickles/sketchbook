@@ -12,8 +12,14 @@ If it's helpful to guide your thinking about Sketchbook with a few questions, he
 
 -   Did you expect Sketchbook to do anything that it doesn't do?
 -   Would you be interested in using something like Sketchbook even if it weren't being built by a friend?
--   Do you have any feature requests?
 -   Does naming make sense throughout Sketchbook? Renaming properties, methods, and concepts is easy – but now's the time!
+
+**Feature Plans**
+
+-   Do you have any feature requests?
+-   **CLI Tool:** My intuition is that Sketchbook's current format – a web app that you build within – is mildly unappealing. I'm considering reworking Sketchbook as a `skbk` CLI tool to `run` & `deploy` your collection of projects directly, letting you create an equivalent to the current `src/art`, but without the surrounding app context. Would you prefer this?
+-   **Mobile Mode™**: Sketchbook doesn't yet work very well on narrow screens. My plan is to build a scaled down "Mobile Mode" with a much more limited UI. What do you need and not need in a mobile context? (e.g. I'm considering not allowing parameter changes at all, only preset changes)
+-   If there's anything else on [the roadmap](https://github.com/users/flatpickles/projects/2/views/1) that would be particularly valuable to you, let me know and I'll prioritize it!
 
 **Documentation**
 
@@ -32,7 +38,6 @@ If it's helpful to guide your thinking about Sketchbook with a few questions, he
 **Workflow**
 
 -   Does Sketchbook facilitate a stable & comfortable workflow for you? Or is it getting in your way?
--   Do you like the fork, update, and publish model for using Sketchbook? Unconventional, but effective?
 -   Currently the `main` branch is a fully blank canvas, and all demo content is contained in the `demo` branch. How do you feel about that?
 -   Do you need any other parameter types or styles?
 -   Would you rather `time` params provided by Sketchbook arrive in seconds or milliseconds? (My intuition is milliseconds, but REGL uses seconds...)
