@@ -79,7 +79,7 @@ import Project, {
 } from '$lib/base/Project/Project';
 
 export default class ResizableCanvas extends Project {
-    dimensions = [0.5, 0.5];
+    dimensions = [1000, 1000];
 
     init({ canvas }: Detail2D) {
         this.#resetDimensions(canvas);
@@ -101,11 +101,14 @@ export default class ResizableCanvas extends Project {
     }
 
     #resetDimensions(canvas: HTMLCanvasElement) {
+        const width = this.dimensions[0];
+        const height = this.dimensions[1];
         const pixelRatio = window.devicePixelRatio;
-        canvas.style.width = `${this.dimensions[0] * 100}%`;
-        canvas.width = canvas.clientWidth * pixelRatio;
-        canvas.style.height = `${this.dimensions[1] * 100}%`;
-        canvas.height = canvas.clientHeight * pixelRatio;
+
+        canvas.style.width = `${width}px`;
+        canvas.width = width * pixelRatio;
+        canvas.style.height = `${height}px`;
+        canvas.height = height * pixelRatio;
     }
 }
 ```
