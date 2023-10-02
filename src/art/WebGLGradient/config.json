@@ -2,6 +2,7 @@
     "title": "WebGL Gradient",
     "date": "2023-09-15",
     "description": "A simple gradient system built with WebGL, using the <a href='https://github.com/regl-project/regl'>regl</a> library.",
+    "groups": ["WebGL"],
     "experimental": true,
     "params": {
         "blue": {

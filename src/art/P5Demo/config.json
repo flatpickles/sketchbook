@@ -2,6 +2,7 @@
     "title": "P5 Demo",
     "date": "2023-09-01",
     "description": "A basic demo using the <a href='https://p5js.org/'>p5.js</a> library within Sketchbook. Move your mouse to draw circles!",
+    "groups": ["2D"],
     "params": {
         "circleBaseSize": {
             "name": "Circle Base Size",

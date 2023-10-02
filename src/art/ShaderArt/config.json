@@ -2,6 +2,7 @@
     "title": "Shader Art",
     "date": "2023-08-15",
     "description": "This is a simple example of a fragment shader project, like what  you might find on Shadertoy.",
+    "groups": ["WebGL"],
     "params": {
         "bgColor": {
             "name": "Background",

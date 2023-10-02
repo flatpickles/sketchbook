@@ -2,6 +2,7 @@
     "title": "Quick Start",
     "date": "2023-09-19",
     "description": "This is the final project from the <a href='http://skbk.cc/#/quick-start'>quick start guide</a>.",
+    "groups": ["2D"],
     "params": {
         "rectSize": {
             "name": "Rect Size"
