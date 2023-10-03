@@ -23,6 +23,18 @@ describe('AppStateStore', () => {
         settingsStore.reset();
     });
 
+    it('does not use cookies until values are changed', () => {
+        expect(document.cookie).toBe('');
+        const cookieStore = createPersistedStore('cookie', config, true);
+        expect(document.cookie).toBe('');
+        cookieStore.reset();
+        expect(document.cookie).toBe('');
+        expect(get(cookieStore).showExperiments).toBe(config.showExperiments);
+        expect(document.cookie).toBe('');
+        cookieStore.set({ showExperiments: true });
+        expect(document.cookie).toContain('cookie_showExperiments=true');
+    });
+
     it('stores and restores properly typed settings', () => {
         // Check default values
         expect(get(settingsStore).showExperiments).toBe(config.showExperiments);
