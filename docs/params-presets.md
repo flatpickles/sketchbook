@@ -35,7 +35,7 @@ The default parameter values set in your project file will be used as the initia
 
 Changing a value in the UI will cause the `paramUpdated` [lifecycle method](project.md?id=project-methods) to be called for your project instance, though you shouldn't often need to use this. Because Sketchbook also updates the parameter instance variables for your class, you can implement parameterized behavior declaratively, e.g. simply referencing the current values of your parameters in your `update` code.
 
-If you like, you can set the values of your parameterized instance variables directly within your project code, and the parameter UI will update accordingly. Whenever you wish to maintain state in instance variables _without_ seeing these variables in the parameter UI, use the hash prefix to define [private properties](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/Private_class_fields).
+If you like, you can set the values of your parameterized instance variables directly within your project code, and the parameter UI will update accordingly. Whenever you wish to maintain state in instance variables _without_ seeing these variables in the parameter UI, use the hash prefix to define [private properties](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/Private_class_fields), or add the name of your state variable to an `ignoreKeys` override in your `Project` subclass.
 
 Sketchbook provides reasonable default UI for each supported parameter type, but there are also many configuration options available for the behavior and appearance of your parameters. You can read more about configuring parameters on the [Parameter Configuration](param-config.md) page.
 

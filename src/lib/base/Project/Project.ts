@@ -31,6 +31,14 @@ export default class Project {
     canvasType: CanvasType = CanvasType.Context2D;
 
     /**
+     * An array of instance variable names that should be ignored when loading parameters. Beyond
+     * the default set of ignored keys, you can add any other keys that you don't want to be
+     * considered parameters. This should be set in the project's constructor, and should not be
+     * changed during the project's lifecycle.
+     */
+    ignoreKeys: string[] = [];
+
+    /**
      * init is called once when the project is first loaded, after this.canvas and this.container
      * become available. Override this with any custom initialization behavior.
      */

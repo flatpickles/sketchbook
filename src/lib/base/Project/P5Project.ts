@@ -51,6 +51,7 @@ export default class P5Project extends Project {
      * Project superclass overrides; you shouldn't need to change these.
      */
     canvasType = CanvasType.None;
+    ignoreKeys = ['p5', 'p5Renderer'];
     init({ container }: Detail) {
         // Create a P5 instance that calls the P5Project methods defined above
         const processingFn = (p5: P5) => {
