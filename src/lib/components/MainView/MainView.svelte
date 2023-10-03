@@ -135,6 +135,14 @@
     function toggleSettings() {
         $stateStore.settingsPresented = !$stateStore.settingsPresented;
     }
+
+    function settingsOverlayClicked(event: MouseEvent | KeyboardEvent) {
+        // Don't toggle settings if the click was on the settings panel itself
+        if (event.target instanceof HTMLElement && event.target.closest('.settings-container')) {
+            return;
+        }
+        $stateStore.settingsPresented = false;
+    }
 </script>
 
 <div class="main-wrapper" data-testid="main-wrapper">
@@ -187,6 +195,8 @@
         class="settings-overlay"
         data-testid="settings-overlay"
         transition:fade={{ duration: 300 }}
+        on:click={settingsOverlayClicked}
+        on:keypress={settingsOverlayClicked}
     >
         <div class="settings-container">
             <SettingsPanel on:headeraction={toggleSettings} />
@@ -243,12 +253,13 @@
     .settings-overlay {
         position: absolute;
         top: 0;
+        bottom: 0;
         left: 0;
-        width: 100%;
-        height: 100%;
+        right: 0;
         z-index: 3;
 
         display: flex;
+        flex-direction: column;
         justify-content: center;
         align-items: center;
 
@@ -257,7 +268,6 @@
 
     .settings-container {
         width: 400px;
-        min-height: 400px;
         max-width: 100%;
         max-height: 100%;
         padding: $overlay-panel-edge-inset;

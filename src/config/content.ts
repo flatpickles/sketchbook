@@ -16,6 +16,7 @@ const projectDetailIcon = `fa-solid fa-sliders`;
 const settingsTitle = 'Settings';
 const settingsDescription = ``;
 const resetButtonLabel = 'Reset Sketchbook';
+const cookiesWarning = `This site uses cookies to store settings. By changing values in the settings panel, you agree to the use of cookies.`;
 
 // Export all content for use elsewhere in the app
 export const content = {
@@ -29,5 +30,6 @@ export const content = {
     projectDetailIcon,
     settingsTitle,
     settingsDescription,
-    resetButtonLabel
+    resetButtonLabel,
+    cookiesWarning
 };
