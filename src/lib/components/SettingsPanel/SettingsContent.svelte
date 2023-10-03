@@ -62,13 +62,20 @@
             />
         {/each}
     </div>
-    <div class="reset-wrapper">
-        <FunctionInput
-            id="reset-sketchbook"
-            name={content.resetButtonLabel}
-            buttonText={content.resetButtonLabel}
-            on:click={resetSketchbook}
-        />
+    <div class="settings-footer">
+        <div class="reset-wrapper">
+            <FunctionInput
+                id="reset-sketchbook"
+                name={content.resetButtonLabel}
+                buttonText={content.resetButtonLabel}
+                on:click={resetSketchbook}
+            />
+        </div>
+        {#if content.cookiesWarning?.length}
+            <div class="cookies-warning">
+                <p>{content.cookiesWarning}</p>
+            </div>
+        {/if}
     </div>
 </div>
 
@@ -112,10 +119,21 @@
         align-items: center;
     }
 
-    .reset-wrapper {
+    .settings-footer {
+        flex-grow: 1;
         display: flex;
-        justify-content: center;
-        margin: $overlay-panel-edge-inset;
-        margin-bottom: $panel-section-spacing;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        gap: $panel-section-spacing;
+        margin: 0 $overlay-panel-edge-inset;
+        padding-bottom: calc($panel-section-spacing - $panel-section-spacing / 2);
+    }
+
+    .cookies-warning {
+        font-size: $small-text-size;
+        text-align: center;
+        opacity: 0.5;
+        padding: 0 $overlay-panel-edge-inset; // A lil extra looks nice
     }
 </style>
