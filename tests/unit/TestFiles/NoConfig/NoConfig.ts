@@ -9,4 +9,7 @@ export default class NoConfig extends Project {
         return this.#internalProperty;
     };
     testNumericArray = [1, 2, 3];
+
+    ignoreKeys = ['internalProperty2'];
+    internalProperty2 = 42;
 }

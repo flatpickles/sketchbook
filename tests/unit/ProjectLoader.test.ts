@@ -119,6 +119,8 @@ describe('loading specific projects', async () => {
         expect(testNumberParam.type).toEqual('number');
         const unlistedParam = paramsConfig.filter((param) => param.key === '#internalProperty')[0];
         expect(unlistedParam).toBeUndefined();
+        const unlistedParam2 = paramsConfig.filter((param) => param.key === 'internalProperty2')[0];
+        expect(unlistedParam2).toBeUndefined();
         const testFunctionParam = paramsConfig.filter((param) => param.key === 'testFunction')[0];
         expect(testFunctionParam).toBeDefined();
         expect(testFunctionParam.type).toEqual(ParamType.Function);

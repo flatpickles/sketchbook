@@ -3,8 +3,9 @@ import { ParamConfigFactory } from './ParamConfigFactory';
 import type Project from '../Project/Project';
 import { type ProjectConfig, ProjectConfigDefaults } from '../ConfigModels/ProjectConfig';
 
-// Property keys that should be ignored when creating a ProjectConfig object from a Project object
-const paramKeysToIgnore = ['canvas', 'container', 'canvasType', 'p5', 'p5Renderer'];
+// Property keys that should be ignored when creating a ProjectConfig object from a Project object,
+// in addition to any custom ignoreKeys set by the Project.
+const ignoreKeysBase = ['canvas', 'container', 'canvasType', 'ignoreKeys'];
 
 export class ProjectConfigFactory {
     /**
@@ -53,8 +54,9 @@ export class ProjectConfigFactory {
         const params: ParamConfig[] = [];
 
         // Get the list of params from the Project object
+        const ignoreKeys = ignoreKeysBase.concat(project.ignoreKeys);
         const paramKeys = Object.getOwnPropertyNames(project).filter(
-            (key) => paramKeysToIgnore.indexOf(key) < 0
+            (key) => ignoreKeys.indexOf(key) < 0
         );
 
         // Create ParamConfig objects for each param, using config data if available
