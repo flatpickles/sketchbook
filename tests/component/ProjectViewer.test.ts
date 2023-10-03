@@ -17,6 +17,7 @@ const mockP5Canvas = {
 };
 const mockP5Object = {
     draw: vi.fn(),
+    setup: vi.fn(),
     createCanvas: () => {
         return mockP5Canvas;
     },
