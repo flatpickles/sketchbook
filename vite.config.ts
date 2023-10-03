@@ -48,6 +48,6 @@ export default defineConfig({
     },
     optimizeDeps: {
         // force pre-bundling of these dependencies, to avoid page reloads when they're imported
-        include: ['regl', 'js-cookie', 'canvas-sketch', 'p5']
+        include: ['regl', 'js-cookie', 'p5']
     }
 });
