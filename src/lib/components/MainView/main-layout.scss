@@ -33,6 +33,7 @@
     &.overlaid {
         padding: $overlay-panel-edge-inset;
         min-height: $overlay-panel-min-height;
+        max-height: $overlay-panel-max-height;
         &.left-panel {
             padding-right: 0;
         }
