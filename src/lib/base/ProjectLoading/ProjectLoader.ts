@@ -11,6 +11,7 @@ import { ProjectConfigFactory } from './ProjectConfigFactory';
 import ParamValueProvider from './ParamValueProvider';
 import { browser, dev } from '$app/environment';
 import FragShaderProject from '../Project/FragShaderProject';
+import ParamInference, { InferenceMode } from './ParamInference';
 
 export interface ProjectTuple {
     key: string;
@@ -141,23 +142,51 @@ export default class ProjectLoader {
                     console.error(`Error parsing config.json for ${key}`);
             }
         }
-        const props = ProjectConfigFactory.propsFrom(
+        const projectConfig = ProjectConfigFactory.propsFrom(
             configJSON as Record<string, unknown> | undefined
         );
-        const params = ProjectConfigFactory.paramsFrom(
+        let paramConfigs = ProjectConfigFactory.paramsFrom(
             project,
             configJSON?.params as Record<string, Record<string, unknown>> | undefined,
-            props.paramsApplyDuringInput
+            projectConfig.paramsApplyDuringInput
         );
 
+        // Supplement parameter config with inferred values, if enabled
+        if (projectConfig.inferConfig) {
+            // Collect inferred parameter configs & values
+            const rawFileText = (await allImports.projectFilesRaw[
+                classFilePath || textFilePath
+            ]()) as string;
+            const inference = ParamInference.paramsWithInference(
+                paramConfigs,
+                rawFileText,
+                classFilePath != undefined ? InferenceMode.ProjectFile : InferenceMode.ShaderFile
+            );
+
+            // Assign inferred configs to the project param configs
+            paramConfigs = inference.configs;
+
+            // Assigned inferred param values to the project's corresponding instance variables
+            for (const paramKey of Object.keys(inference.values)) {
+                const value = inference.values[paramKey];
+                if (typeof value === 'function') continue;
+                Object.defineProperty(project, paramKey, {
+                    value,
+                    writable: true,
+                    enumerable: true,
+                    configurable: true
+                });
+            }
+        }
+
         // Assign the project title if unset
-        if (props.title === ProjectConfigDefaults.title) {
-            props.title = key;
+        if (projectConfig.title === ProjectConfigDefaults.title) {
+            projectConfig.title = key;
         }
 
         // Set project properties to stored values
         if (browser) {
-            for (const param of params) {
+            for (const param of paramConfigs) {
                 const storedValue = ParamValueProvider.getValue(param, key, project, true);
                 if (typeof storedValue === 'function') continue;
                 Object.defineProperty(project, param.key, {
@@ -173,8 +202,8 @@ export default class ProjectLoader {
         return {
             key,
             project,
-            config: props,
-            params
+            config: projectConfig,
+            params: paramConfigs
         };
     }
 
