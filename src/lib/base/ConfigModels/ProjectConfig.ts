@@ -10,6 +10,7 @@ export interface ProjectConfig {
     canvasSize?: [number, number];
     pixelRatio?: number;
     twoWaySync: boolean;
+    inferConfig?: boolean;
 }
 
 export const ProjectConfigDefaults: ProjectConfig = {
@@ -23,5 +24,6 @@ export const ProjectConfigDefaults: ProjectConfig = {
     paramsApplyDuringInput: true,
     canvasSize: undefined,
     pixelRatio: undefined,
-    twoWaySync: true
+    twoWaySync: true,
+    inferConfig: true
 };
