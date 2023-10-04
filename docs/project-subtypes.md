@@ -30,10 +30,11 @@ You can find the `P5Project` superclass [on GitHub](https://github.com/flatpickl
 
 Sketchbook offers direct support for fragment shader art, without requiring any GL boilerplate or setup code. You can create a `.frag` file within a `src/art` subdirectory of the same name, and Sketchbook will draw this fragment shader onto a rectangle upon each animation frame. You do not need to create a `Project` subclass directly – Sketchbook creates one for you internally.
 
-When configuring your fragment shaders, Sketchbook will define normalized (0.0-1.0) rendering coordinates as `varying vec2 uv`. Sketchbook also defines a few utility uniforms for your fragment shader, including:
+When configuring your fragment shaders, Sketchbook will define normalized (0.0-1.0) rendering coordinates as `varying vec2 uv`. Sketchbook also defines a few utility uniforms for your fragment shader:
 
 -   **`time`**: runtime since project instantiation, in seconds (`float`)
 -   **`renderSize`**: viewport size (width, height), in pixels (`vec2`)
+-   **`scaledTime`**: continuous time value, in scaled seconds (`float`). When this uniform is present, a `timeScale` parameter will automatically become available in the Sketchbook UI, and this parameter value will be used to scale ongoing time-based increments to the `scaledTime` uniform value. Use this to enable configurable _and_ continuous motion in your shader projects.
 
 You can create additional uniforms within your `.frag` file, which Sketchbook will recognize and display as adjustable parameters. Reasonable defaults are assigned, and your uniform values will be updated with any changes in the Sketchbook UI. `float`, `int`, `bool`, `vec2`, `vec3`, and `vec4` uniform parameters are supported.
 

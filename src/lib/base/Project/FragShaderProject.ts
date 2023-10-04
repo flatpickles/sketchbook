@@ -4,12 +4,15 @@
  * like src/art/MyShader/MyShader.frag. See the docs for more info.
  */
 
-import REGL from 'regl';
+import REGL, { type DefaultContext } from 'regl';
 import Project, { CanvasType, type DetailWebGL } from './Project';
 
 // Uniform names for non-params (i.e. uniforms not specific to a particular project)
-const timeUniformName = 'time';
-const renderSizeUniformName = 'renderSize';
+const uniformNames: Record<string, string> = {
+    time: 'time',
+    scaledTime: 'scaledTime',
+    renderSize: 'renderSize'
+};
 
 // Uniform typing stuff
 const supportedTypes = ['float', 'int', 'bool', 'vec2', 'vec3', 'vec4'] as const;
@@ -60,7 +63,7 @@ export default class FragShaderProject extends Project {
     constructor(fragShader: string) {
         super();
 
-        // Load the fragment shader
+        // Load the fragment shader and parse out the uniforms
         this.#fragShader = fragShader;
         const uniformLines = fragShader.split(';').filter((line) => line.includes('uniform'));
         uniformLines.forEach((line) => {
@@ -73,8 +76,14 @@ export default class FragShaderProject extends Project {
             const type = uniformLineComponents[uniformTypeIndex];
             const name = uniformLineComponents[uniformTypeIndex + 1];
 
-            // Ignore non-user-defined uniforms
-            if ([timeUniformName, renderSizeUniformName].includes(name)) return;
+            // Provide scaled time uniform if desired (in uniform order)
+            if (name === uniformNames.scaledTime) {
+                this.#provideScaledTime();
+                return;
+            }
+
+            // Ignore other non-user-defined uniforms
+            if (Object.keys(uniformNames).includes(name)) return;
 
             // Use name and type to parameterize this uniform
             if (isSupportedUniformType(type) && name.length > 0) {
@@ -107,8 +116,8 @@ export default class FragShaderProject extends Project {
             },
             uniforms: {
                 ...this.#uniformParams,
-                [timeUniformName]: ({ time }) => time,
-                [renderSizeUniformName]: ({ viewportWidth, viewportHeight }) => [
+                [uniformNames.time]: ({ time }: DefaultContext) => time,
+                [uniformNames.renderSize]: ({ viewportWidth, viewportHeight }: DefaultContext) => [
                     viewportWidth,
                     viewportHeight
                 ]
@@ -124,5 +133,38 @@ export default class FragShaderProject extends Project {
     destroy(detail: DetailWebGL): void {
         super.destroy(detail);
         this.#regl?.destroy();
+    }
+
+    /**
+     * Scaled time is continuous, but the per-frame time increment changes based on an automatically
+     * added timeScale parameter. This is useful for animations with a configurable motion rate that
+     * should be continuous as the time scale changes.
+     */
+    #provideScaledTime() {
+        // These variables are used to calculate the scaled time, and updated in a JS closure below
+        let lastFrameTime = Date.now();
+        let totalScaledTime = 0;
+
+        // Create the parameter property
+        const scaledTimeParamKey = 'timeScale';
+        Object.defineProperty(this, scaledTimeParamKey, {
+            value: 1.0,
+            writable: true,
+            enumerable: true,
+            configurable: true
+        });
+
+        // Add to the uniform params map
+        this.#uniformParams[uniformNames.scaledTime] = () => {
+            const scaleParamValue = Object.getOwnPropertyDescriptor(
+                this,
+                scaledTimeParamKey
+            )?.value;
+            const curTime = Date.now();
+            const elapsed = lastFrameTime - curTime;
+            lastFrameTime = curTime;
+            totalScaledTime += (elapsed * scaleParamValue) / 1000;
+            return totalScaledTime;
+        };
     }
 }

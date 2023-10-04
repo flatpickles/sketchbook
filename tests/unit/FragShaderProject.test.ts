@@ -29,4 +29,16 @@ describe('FragShaderProject', () => {
         expect(project.testVec3).toEqual([0, 0, 0]);
         expect(project.testVec4).toEqual([0, 0, 0, 0]);
     });
+
+    it('creates a timeScale parameter when scaledTime uniform is present', () => {
+        const project = new FragShaderProject(`
+            precision mediump float;
+            varying vec2 uv;
+            uniform float scaledTime;
+            void main() {
+                gl_FragColor = vec4(0, 0, 0, 1);
+            }`) as FragShaderWithParams;
+        expect(project).toBeDefined();
+        expect(project.timeScale).toBe(1);
+    });
 });
