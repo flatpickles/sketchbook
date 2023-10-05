@@ -166,10 +166,9 @@ export default class ProjectLoader {
             // Assign inferred configs to the project param configs
             paramConfigs = inference.configs;
 
-            // Assigned inferred param values to the project's corresponding instance variables
+            // Assign inferred param values to the project's corresponding instance variables
             for (const paramKey of Object.keys(inference.values)) {
                 const value = inference.values[paramKey];
-                if (typeof value === 'function') continue;
                 Object.defineProperty(project, paramKey, {
                     value,
                     writable: true,
@@ -184,7 +183,7 @@ export default class ProjectLoader {
             projectConfig.title = key;
         }
 
-        // Set project properties to stored values
+        // Set project properties to stored values (overriding inferred values above, if present)
         if (browser) {
             for (const param of paramConfigs) {
                 const storedValue = ParamValueProvider.getValue(param, key, project, true);
