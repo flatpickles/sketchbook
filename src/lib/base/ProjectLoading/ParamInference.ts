@@ -12,10 +12,10 @@ type Intentions = {
     name?: string;
     range?: [number, number];
     step?: number;
-    booleanValues?: boolean[];
-    numberValues?: number[];
-    numericArrayValues?: number[][];
-    potentialStyleStrings?: string[];
+    numberValues: number[];
+    booleanValues: boolean[];
+    numericArrayValues: number[][];
+    potentialStyleStrings: string[];
 };
 
 export type InferenceReturn = {
@@ -75,10 +75,10 @@ export default class ParamInference {
         // Fill out a config and value with inferred values, if available
         const newConfig = { ...initialConfig };
         let value: AnyParamValueType | undefined;
-        const intentions = comment ? this.intentionsFrom(comment) : {};
+        const intentions = comment ? this.intentionsFrom(comment) : undefined;
 
         // Assign name token
-        if (intentions.name && newConfig.name === newConfig.key) {
+        if (intentions?.name && newConfig.name === newConfig.key) {
             newConfig.name = intentions.name;
         }
 
@@ -87,12 +87,12 @@ export default class ParamInference {
             ParamGuards.isNumberParamConfig(newConfig) ||
             ParamGuards.isNumericArrayParamConfig(newConfig)
         ) {
-            if (intentions.range) {
+            if (intentions?.range) {
                 const [min, max] = intentions.range;
                 if (newConfig.min === NumberParamConfigDefaults.min) newConfig.min = min;
                 if (newConfig.max === NumberParamConfigDefaults.max) newConfig.max = max;
             }
-            if (intentions.step && newConfig.step === NumberParamConfigDefaults.step)
+            if (intentions?.step && newConfig.step === NumberParamConfigDefaults.step)
                 newConfig.step = intentions.step;
         }
 
@@ -100,24 +100,24 @@ export default class ParamInference {
         if (mode === InferenceMode.ShaderFile) {
             // Assign number value tokens
             if (ParamGuards.isNumberParamConfig(newConfig)) {
-                if (intentions.numberValues?.length) value = Number(intentions.numberValues[0]);
+                if (intentions?.numberValues?.length) value = Number(intentions.numberValues[0]);
             }
 
             // Assign boolean value tokens
             if (ParamGuards.isBooleanParamConfig(newConfig)) {
-                if (intentions.booleanValues?.length) value = intentions.booleanValues[0];
+                if (intentions?.booleanValues?.length) value = intentions.booleanValues[0];
             }
 
             // Assign numeric array value tokens
             if (ParamGuards.isNumericArrayParamConfig(newConfig)) {
-                if (intentions.numericArrayValues?.length) {
+                if (intentions?.numericArrayValues?.length) {
                     value = intentions.numericArrayValues[0];
                 }
             }
         }
 
         // todo: infer styles from stringTokens and the parameter key
-        console.log(intentions.potentialStyleStrings);
+        console.log(intentions?.potentialStyleStrings);
 
         return {
             config: newConfig,
@@ -126,29 +126,38 @@ export default class ParamInference {
     }
 
     static intentionsFrom(parseString: string): Intentions {
+        // Split on commas, not inside whitespace, ignoring commas inside square brackets
+        const stringTokens = parseString.split(/\s*,\s*(?![^[]*])/);
+
         // Collect tokens that match intention patterns
-        const nameTokens = parseString.match(/"([^"]*)"/); // "Name"
-        const rangeTokens = parseString.match(/(-?\d*\.{0,1}\d+)\s*to\s*(-?\d*\.{0,1}\d+)/);
-        const stepTokens = parseString.match(/(step\s*\d*\.{0,1}\d+)|(\d*\.{0,1}\d+\s*step)/);
-        const booleanTokens = parseString.match(/true|false/);
-        const numberTokens = parseString.match(/(-?\d*\.{0,1}\d+)(?![^[]*])/);
-        const numericArrayTokens = parseString.match(
-            /\[(\s*-?\d*\.{0,1}\d+\s*,\s*)+(\s*-?\d*\.{0,1}\d+\s*)\]/
+        const nameTokens = stringTokens.filter((token) => token.match(/^"([^"]*)"$/));
+        const rangeTokens = stringTokens.filter((token) =>
+            token.match(/^(-?\d*\.{0,1}\d+)\s*to\s*(-?\d*\.{0,1}\d+)$/)
         );
-        const potentialStyleTokens = parseString.match(/^[a-zA-Z]+/); // myString
+        const stepTokens = stringTokens.filter((token) =>
+            token.match(/(^step\s*\d*\.{0,1}\d+$)|(^\d*\.{0,1}\d+\s*step$)/)
+        );
+        const numberTokens = stringTokens.filter((token) =>
+            token.match(/^(-?\d*\.{0,1}\d+)(?![^[]*])$/)
+        );
+        const booleanTokens = stringTokens.filter((token) => token.match(/^(true|false)$/));
+        const numericArrayTokens = stringTokens.filter((token) =>
+            token.match(/^\[(\s*-?\d*\.{0,1}\d+\s*,\s*)+(\s*-?\d*\.{0,1}\d+\s*)\]$/)
+        );
+        const potentialStyleTokens = stringTokens.filter(
+            (token) => token.match(/^[a-zA-Z]+$/) && !token.match(/true|false/)
+        );
 
         // Return an object with adapted tokens, if any
         const rangeMinMax = rangeTokens?.length ? rangeTokens[0].split(/\s*to\s*/) : undefined;
         return {
             name: nameTokens?.length ? nameTokens[0].replace(/"/g, '').trim() : undefined,
             range: rangeMinMax ? [Number(rangeMinMax[0]), Number(rangeMinMax[1])] : undefined,
-            step: stepTokens?.length
-                ? Number(stepTokens[0].replace(/step/g, '').trim())
-                : undefined,
+            step: stepTokens?.length ? Number(stepTokens[0].replace(/\s*step\s*/, '')) : undefined,
             booleanValues: booleanTokens?.length
                 ? booleanTokens.map((bool) => bool === 'true')
-                : undefined,
-            numberValues: numberTokens?.length ? numberTokens.map((num) => Number(num)) : undefined,
+                : [],
+            numberValues: numberTokens?.length ? numberTokens.map((num) => Number(num)) : [],
             numericArrayValues: numericArrayTokens?.length
                 ? numericArrayTokens.map((arrayString) =>
                       arrayString
@@ -156,8 +165,8 @@ export default class ParamInference {
                           .split(/\s*,\s*/)
                           .map((x) => Number(x))
                   )
-                : undefined,
-            potentialStyleStrings: potentialStyleTokens?.length ? potentialStyleTokens : undefined
+                : [],
+            potentialStyleStrings: potentialStyleTokens?.length ? potentialStyleTokens : []
         };
     }
 }
