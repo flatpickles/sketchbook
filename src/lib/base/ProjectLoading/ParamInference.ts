@@ -8,6 +8,16 @@ type Inference = {
     value?: AnyParamValueType;
 };
 
+type Intentions = {
+    name?: string;
+    range?: [number, number];
+    step?: number;
+    booleanValues?: boolean[];
+    numberValues?: number[];
+    numericArrayValues?: number[][];
+    potentialStyleStrings?: string[];
+};
+
 export type InferenceReturn = {
     configs: ParamConfig[];
     values: Record<string, unknown>;
@@ -47,7 +57,7 @@ export default class ParamInference {
         for (const config of initialConfigs) {
             const definitionLine = definitionLines[config.key];
             const comment = definitionLine.match(/\/\/\s*(.*)/);
-            const inference = this.#getInference(config, mode, comment ? comment[1] : '');
+            const inference = this.supplementConfig(config, mode, comment ? comment[1] : '');
             supplementedConfigs.push(inference.config);
             if (inference.value !== undefined) valueMap[config.key] = inference.value;
         }
@@ -57,30 +67,19 @@ export default class ParamInference {
         };
     }
 
-    static #getInference(
+    static supplementConfig(
         initialConfig: ParamConfig,
         mode: InferenceMode,
         comment?: string
     ): Inference {
-        // Collect tokens that match a variety of patterns
-        const commentTokens = comment ? comment.split(/,(?![^[]*])/) : []; // split by commas, not within brackets
-        const nameToken = commentTokens.find((token) => token.match(/"([^"]*)"/)); // "Name"
-        const rangeToken = commentTokens.find((token) => token.match(/(\d+)\s*to\s*(\d+)/)); // -1 to 3
-        const stepToken = commentTokens.find((token) => token.match(/(step\s*\d+)|(\d+\s*step)/)); // step 0.5
-        const booleanToken = commentTokens.find((token) => token.match(/true|false/)); // true
-        const numberToken = commentTokens.find((token) => token.match(/^-?\d+(\.\d+)?$/)); // 3, 0.5, -18
-        const numericArrayToken = commentTokens.find((token) =>
-            token.match(/\[((-?\d+(?:\.\d+)?(?:\s*,\s*-?\d+(?:\.\d+)?)*)?)\]/)
-        ); // [1, 2.0, -3]
-        const stringTokens = commentTokens.filter((token) => token.match(/^[a-zA-Z0-9_]+$/)); // myString
-
         // Fill out a config and value with inferred values, if available
         const newConfig = { ...initialConfig };
         let value: AnyParamValueType | undefined;
+        const intentions = comment ? this.intentionsFrom(comment) : {};
 
         // Assign name token
-        if (nameToken && newConfig.name === newConfig.key) {
-            newConfig.name = nameToken.replace(/"/g, '');
+        if (intentions.name && newConfig.name === newConfig.key) {
+            newConfig.name = intentions.name;
         }
 
         // Assign range and step tokens for numeric param types
@@ -88,45 +87,77 @@ export default class ParamInference {
             ParamGuards.isNumberParamConfig(newConfig) ||
             ParamGuards.isNumericArrayParamConfig(newConfig)
         ) {
-            if (rangeToken) {
-                const [min, max] = rangeToken.split(/\s*to\s*/);
-                if (newConfig.min === NumberParamConfigDefaults.min) newConfig.min = Number(min);
-                if (newConfig.max === NumberParamConfigDefaults.max) newConfig.max = Number(max);
+            if (intentions.range) {
+                const [min, max] = intentions.range;
+                if (newConfig.min === NumberParamConfigDefaults.min) newConfig.min = min;
+                if (newConfig.max === NumberParamConfigDefaults.max) newConfig.max = max;
             }
-            if (stepToken) {
-                const stepValue = Number(stepToken.replace(/step/g, '').trim());
-                if (newConfig.step === NumberParamConfigDefaults.step) newConfig.step = stepValue;
-            }
+            if (intentions.step && newConfig.step === NumberParamConfigDefaults.step)
+                newConfig.step = intentions.step;
         }
 
         // If we're parsing a shader, assign value tokens for supported param types
         if (mode === InferenceMode.ShaderFile) {
             // Assign number value tokens
             if (ParamGuards.isNumberParamConfig(newConfig)) {
-                if (numberToken) value = Number(numberToken);
+                if (intentions.numberValues?.length) value = Number(intentions.numberValues[0]);
             }
 
             // Assign boolean value tokens
             if (ParamGuards.isBooleanParamConfig(newConfig)) {
-                if (booleanToken) value = booleanToken === 'true';
+                if (intentions.booleanValues?.length) value = intentions.booleanValues[0];
             }
 
             // Assign numeric array value tokens
             if (ParamGuards.isNumericArrayParamConfig(newConfig)) {
-                if (numericArrayToken) {
-                    const arrayString = numericArrayToken.replace(/\[|\]/g, '');
-                    const arrayValues = arrayString.split(/\s*,\s*/).map((x) => Number(x));
-                    value = arrayValues;
+                if (intentions.numericArrayValues?.length) {
+                    value = intentions.numericArrayValues[0];
                 }
             }
         }
 
         // todo: infer styles from stringTokens and the parameter key
-        console.log(stringTokens);
+        console.log(intentions.potentialStyleStrings);
 
         return {
             config: newConfig,
             value: value
+        };
+    }
+
+    static intentionsFrom(parseString: string): Intentions {
+        // Collect tokens that match intention patterns
+        const nameTokens = parseString.match(/"([^"]*)"/); // "Name"
+        const rangeTokens = parseString.match(/(-?\d*\.{0,1}\d+)\s*to\s*(-?\d*\.{0,1}\d+)/);
+        const stepTokens = parseString.match(/(step\s*\d*\.{0,1}\d+)|(\d*\.{0,1}\d+\s*step)/);
+        const booleanTokens = parseString.match(/true|false/);
+        const numberTokens = parseString.match(/(-?\d*\.{0,1}\d+)(?![^[]*])/);
+        const numericArrayTokens = parseString.match(
+            /\[(\s*-?\d*\.{0,1}\d+\s*,\s*)+(\s*-?\d*\.{0,1}\d+\s*)\]/
+        );
+        const potentialStyleTokens = parseString.match(/^[a-zA-Z]+/); // myString
+
+        // Return an object with adapted tokens, if any
+        const rangeMinMax = rangeTokens?.length ? rangeTokens[0].split(/\s*to\s*/) : undefined;
+        return {
+            name: nameTokens?.length ? nameTokens[0].replace(/"/g, '').trim() : undefined,
+            range: rangeMinMax ? [Number(rangeMinMax[0]), Number(rangeMinMax[1])] : undefined,
+            step: stepTokens?.length
+                ? Number(stepTokens[0].replace(/step/g, '').trim())
+                : undefined,
+            booleanValues: booleanTokens?.length
+                ? booleanTokens.map((bool) => bool === 'true')
+                : undefined,
+            numberValues: numberTokens?.length ? numberTokens.map((num) => Number(num)) : undefined,
+            numericArrayValues: numericArrayTokens?.length
+                ? numericArrayTokens.map((arrayString) =>
+                      arrayString
+                          .replace(/\[|\]/g, '')
+                          .split(/\s*,\s*/)
+                          .map((x) => Number(x))
+                  )
+                : undefined,
+            potentialStyleStrings: potentialStyleTokens?.length ? potentialStyleTokens : undefined
         };
     }
 }
