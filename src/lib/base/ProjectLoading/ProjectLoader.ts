@@ -12,6 +12,7 @@ import ParamValueProvider from './ParamValueProvider';
 import { browser, dev } from '$app/environment';
 import FragShaderProject from '../Project/FragShaderProject';
 import ParamInference, { InferenceMode } from './ParamInference';
+import { isNumericArray } from '../ConfigModels/ParamConfigs/NumericArrayParamConfig';
 
 export interface ProjectTuple {
     key: string;
@@ -159,8 +160,8 @@ export default class ProjectLoader {
             ]()) as string;
             const inference = ParamInference.paramsWithInference(
                 paramConfigs,
-                rawFileText,
-                classFilePath != undefined ? InferenceMode.ProjectFile : InferenceMode.ShaderFile
+                classFilePath != undefined ? InferenceMode.ProjectFile : InferenceMode.ShaderFile,
+                rawFileText
             );
 
             // Assign inferred configs to the project param configs
@@ -169,6 +170,16 @@ export default class ProjectLoader {
             // Assign inferred param values to the project's corresponding instance variables
             for (const paramKey of Object.keys(inference.values)) {
                 const value = inference.values[paramKey];
+                const currentValue = Object.getOwnPropertyDescriptor(project, paramKey)?.value;
+                // Assert that new value is the proper size, if it's an array
+                if (isNumericArray(value) && isNumericArray(currentValue)) {
+                    if (value.length === currentValue.length) {
+                        throw new Error(
+                            `Inferred value for ${paramKey} has incorrect length: ${value.length}`
+                        );
+                    }
+                }
+                // Define the property on the project (may be reset from ParamValueProvider below)
                 Object.defineProperty(project, paramKey, {
                     value,
                     writable: true,

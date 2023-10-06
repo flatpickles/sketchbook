@@ -1,11 +1,21 @@
-import type { ParamConfig } from '../ConfigModels/ParamConfig';
+import { ParamConfigDefaults, type ParamConfig } from '../ConfigModels/ParamConfig';
 import { NumberParamConfigDefaults } from '../ConfigModels/ParamConfigs/NumberParamConfig';
 import type { AnyParamValueType } from '../ConfigModels/ParamTypes';
 import { ParamGuards } from '../ConfigModels/ParamTypes';
 
+export enum InferenceMode {
+    ProjectFile,
+    ShaderFile
+}
+
 type Inference = {
     config: ParamConfig;
     value?: AnyParamValueType;
+};
+
+export type Inferences = {
+    configs: ParamConfig[];
+    values: Record<string, unknown>;
 };
 
 type Intentions = {
@@ -18,22 +28,18 @@ type Intentions = {
     potentialStyleStrings: string[];
 };
 
-export type InferenceReturn = {
-    configs: ParamConfig[];
-    values: Record<string, unknown>;
-};
-
-export enum InferenceMode {
-    ProjectFile,
-    ShaderFile
-}
-
+/**
+ * ParamInference provides methods for "inferring" parameter configurations and values from comments
+ * in project files (either ts/js or .frag shaders), evaluated in context with what we already know
+ * about a given parameter (from its type) . This enables creators to quickly configure the basics
+ * in a project with simple commented syntax, without needing to set up detailed configs.
+ */
 export default class ParamInference {
     static paramsWithInference(
         initialConfigs: ParamConfig[],
-        rawFileText: string,
-        mode: InferenceMode
-    ): InferenceReturn {
+        mode: InferenceMode,
+        rawFileText: string
+    ): Inferences {
         // Find param definition lines in raw file text
         const lines = rawFileText.split('\n');
         const definitionLines: Record<string, string> = {};
@@ -57,9 +63,13 @@ export default class ParamInference {
         for (const config of initialConfigs) {
             const definitionLine = definitionLines[config.key];
             const comment = definitionLine.match(/\/\/\s*(.*)/);
-            const inference = this.supplementConfig(config, mode, comment ? comment[1] : '');
-            supplementedConfigs.push(inference.config);
-            if (inference.value !== undefined) valueMap[config.key] = inference.value;
+            if (comment) {
+                const inference = this.paramWithInference(config, mode, comment[1]);
+                supplementedConfigs.push(inference.config);
+                if (inference.value !== undefined) valueMap[config.key] = inference.value;
+            } else {
+                supplementedConfigs.push(config);
+            }
         }
         return {
             configs: supplementedConfigs,
@@ -67,18 +77,21 @@ export default class ParamInference {
         };
     }
 
-    static supplementConfig(
+    static paramWithInference(
         initialConfig: ParamConfig,
         mode: InferenceMode,
-        comment?: string
+        comment: string
     ): Inference {
         // Fill out a config and value with inferred values, if available
         const newConfig = { ...initialConfig };
         let value: AnyParamValueType | undefined;
-        const intentions = comment ? this.intentionsFrom(comment) : undefined;
+        const intentions = this.intentionsFrom(comment);
 
         // Assign name token
-        if (intentions?.name && newConfig.name === newConfig.key) {
+        if (
+            intentions?.name &&
+            (newConfig.name === newConfig.key || newConfig.name === ParamConfigDefaults.name)
+        ) {
             newConfig.name = intentions.name;
         }
 
@@ -127,7 +140,7 @@ export default class ParamInference {
 
     static intentionsFrom(parseString: string): Intentions {
         // Split on commas, not inside whitespace, ignoring commas inside square brackets
-        const stringTokens = parseString.split(/\s*,\s*(?![^[]*])/);
+        const stringTokens = parseString.trim().split(/\s*,\s*(?![^[]*])/);
 
         // Collect tokens that match intention patterns
         const nameTokens = stringTokens.filter((token) => token.match(/^"([^"]*)"$/));
