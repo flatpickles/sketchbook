@@ -1,5 +1,281 @@
 import { describe, it, expect } from 'vitest';
-import ParamInference from '$lib/base/ProjectLoading/ParamInference';
+import ParamInference, { InferenceMode } from '$lib/base/ProjectLoading/ParamInference';
+import {
+    NumberParamConfigDefaults,
+    type NumberParamConfig
+} from '$lib/base/ConfigModels/ParamConfigs/NumberParamConfig';
+import {
+    NumericArrayParamConfigDefaults,
+    type NumericArrayParamConfig
+} from '$lib/base/ConfigModels/ParamConfigs/NumericArrayParamConfig';
+import {
+    BooleanParamConfigDefaults,
+    type BooleanParamConfig
+} from '$lib/base/ConfigModels/ParamConfigs/BooleanParamConfig';
+import { StringParamConfigDefaults } from '$lib/base/ConfigModels/ParamConfigs/StringParamConfig';
+import { FunctionParamConfigDefaults } from '$lib/base/ConfigModels/ParamConfigs/FunctionParamConfig';
+
+describe('ParamInference.paramsWithInference', () => {
+    it('supplements parameters appropriately, provided for a ts/js project file', () => {
+        const rawFileText = `
+        import Project from '$lib/base/Project/Project';
+
+        export default class InferenceTest extends Project {
+            rectSize = 0.5; // 0.25 to 0.75, 0.3, step 0.05, "Rect Size"
+            showRect = true; // "Show Rect", false
+            rectColor = '#34b00c'; // "Rect Color", 0 to 1, step 0.05
+            size = [0.5, 0.5]; // "Dimensions", -1 to 1.0, step 0.25
+            somethingFn = () => { // "Something Fun"
+                alert('sup');
+            }; // "Something Evil"
+        }        
+        `;
+        const configs = [
+            {
+                ...NumberParamConfigDefaults,
+                key: 'rectSize'
+            },
+            {
+                ...BooleanParamConfigDefaults,
+                key: 'showRect'
+            },
+            {
+                ...StringParamConfigDefaults,
+                key: 'rectColor'
+            },
+            {
+                ...NumericArrayParamConfigDefaults,
+                key: 'size'
+            },
+            {
+                ...FunctionParamConfigDefaults,
+                key: 'somethingFn'
+            }
+        ];
+        const inferences = ParamInference.paramsWithInference(
+            configs,
+            InferenceMode.ProjectFile,
+            rawFileText
+        );
+
+        // Check values
+        expect(Object.values(inferences.values).length).toEqual(0);
+
+        // Check number config
+        const rectSizeConfig = inferences.configs.filter(
+            (config) => config.key === 'rectSize'
+        ) as NumberParamConfig[];
+        expect(rectSizeConfig.length).toEqual(1);
+        expect(rectSizeConfig[0].name).toEqual('Rect Size');
+        expect(rectSizeConfig[0].min).toEqual(0.25);
+        expect(rectSizeConfig[0].max).toEqual(0.75);
+        expect(rectSizeConfig[0].step).toEqual(0.05);
+
+        // Check bool config
+        const showRectConfig = inferences.configs.filter(
+            (config) => config.key === 'showRect'
+        ) as BooleanParamConfig[];
+        expect(showRectConfig.length).toEqual(1);
+        expect(showRectConfig[0].name).toEqual('Show Rect');
+
+        // Check string config
+        const rectColorConfig = inferences.configs.filter(
+            (config) => config.key === 'rectColor'
+        ) as BooleanParamConfig[];
+        expect(rectColorConfig.length).toEqual(1);
+        expect(rectColorConfig[0].name).toEqual('Rect Color');
+
+        // Check numeric array config
+        const sizeConfig = inferences.configs.filter(
+            (config) => config.key === 'size'
+        ) as NumberParamConfig[];
+        expect(sizeConfig.length).toEqual(1);
+        expect(sizeConfig[0].name).toEqual('Dimensions');
+        expect(sizeConfig[0].min).toEqual(-1);
+        expect(sizeConfig[0].max).toEqual(1);
+        expect(sizeConfig[0].step).toEqual(0.25);
+
+        // Check function config
+        const somethingFnConfig = inferences.configs.filter(
+            (config) => config.key === 'somethingFn'
+        ) as BooleanParamConfig[];
+        expect(somethingFnConfig.length).toEqual(1);
+        expect(somethingFnConfig[0].name).toEqual('Something Fun');
+    });
+
+    it('supplements parameters & provides values appropriately, provided a shader file', () => {
+        const rawFileText = `
+        precision mediump float;
+        varying vec2 uv;
+        uniform float time;
+        uniform float numberParam; // [16, 23], 14, -1 to 20, "Numbah", step 1
+        uniform bool booleanParam; // 1, true, "Boolean Something", false
+        uniform vec2 arrayParam1; // -100.5 to 10, step 0.5, [-20, 5], "Pair"
+        uniform vec3 arrayParam2; // "BG Color", [-0.3, 1, 0.1], -1.0 to .5, step 0.2
+        
+        void main() {}     
+        `;
+        const configs = [
+            {
+                ...NumberParamConfigDefaults,
+                key: 'numberParam'
+            },
+            {
+                ...BooleanParamConfigDefaults,
+                key: 'booleanParam'
+            },
+            {
+                ...NumericArrayParamConfigDefaults,
+                key: 'arrayParam1'
+            },
+            {
+                ...NumericArrayParamConfigDefaults,
+                key: 'arrayParam2'
+            }
+        ];
+        const inferences = ParamInference.paramsWithInference(
+            configs,
+            InferenceMode.ShaderFile,
+            rawFileText
+        );
+
+        // Check values
+        expect(Object.values(inferences.values).length).toEqual(4);
+        expect(inferences.values['numberParam']).toEqual(14);
+        expect(inferences.values['booleanParam']).toEqual(true);
+        expect(inferences.values['arrayParam1']).toEqual([-20, 5]);
+        expect(inferences.values['arrayParam2']).toEqual([-0.3, 1, 0.1]);
+
+        // Check number config
+        const numberConfig = inferences.configs.filter(
+            (config) => config.key === 'numberParam'
+        ) as NumberParamConfig[];
+        expect(numberConfig.length).toEqual(1);
+        expect(numberConfig[0].name).toEqual('Numbah');
+        expect(numberConfig[0].min).toEqual(-1);
+        expect(numberConfig[0].max).toEqual(20);
+        expect(numberConfig[0].step).toEqual(1);
+
+        // Check bool config
+        const booleanConfig = inferences.configs.filter(
+            (config) => config.key === 'booleanParam'
+        ) as BooleanParamConfig[];
+        expect(booleanConfig.length).toEqual(1);
+        expect(booleanConfig[0].name).toEqual('Boolean Something');
+
+        // Check numeric array #1 config
+        const arrayConfig1 = inferences.configs.filter(
+            (config) => config.key === 'arrayParam1'
+        ) as NumberParamConfig[];
+        expect(arrayConfig1.length).toEqual(1);
+        expect(arrayConfig1[0].name).toEqual('Pair');
+        expect(arrayConfig1[0].min).toEqual(-100.5);
+        expect(arrayConfig1[0].max).toEqual(10);
+        expect(arrayConfig1[0].step).toEqual(0.5);
+
+        // Check numeric array #1 config
+        const arrayConfig2 = inferences.configs.filter(
+            (config) => config.key === 'arrayParam2'
+        ) as NumberParamConfig[];
+        expect(arrayConfig2.length).toEqual(1);
+        expect(arrayConfig2[0].name).toEqual('BG Color');
+        expect(arrayConfig2[0].min).toEqual(-1);
+        expect(arrayConfig2[0].max).toEqual(0.5);
+        expect(arrayConfig2[0].step).toEqual(0.2);
+    });
+});
+
+describe('ParamInference.paramWithInference', () => {
+    it("doesn't do anything with no comment", () => {
+        const inference1 = ParamInference.paramWithInference(
+            NumberParamConfigDefaults,
+            InferenceMode.ProjectFile,
+            ''
+        );
+        expect(inference1.config).toEqual(NumberParamConfigDefaults);
+        expect(inference1.value).toBeUndefined();
+
+        const inference2 = ParamInference.paramWithInference(
+            NumericArrayParamConfigDefaults,
+            InferenceMode.ShaderFile,
+            ''
+        );
+        expect(inference2.config).toEqual(NumericArrayParamConfigDefaults);
+        expect(inference2.value).toBeUndefined();
+    });
+
+    it('assigns names', () => {
+        const inference1 = ParamInference.paramWithInference(
+            NumberParamConfigDefaults,
+            InferenceMode.ProjectFile,
+            '"foo"'
+        );
+        expect(inference1.config.name).toEqual('foo');
+        expect(inference1.value).toBeUndefined();
+
+        const inference2 = ParamInference.paramWithInference(
+            NumericArrayParamConfigDefaults,
+            InferenceMode.ShaderFile,
+            ' "banana Apple", 45, step 0.1'
+        );
+        expect(inference2.config.name).toEqual('banana Apple');
+        expect(inference2.value).toBeUndefined();
+    });
+
+    it('assigns range and step', () => {
+        const inference1 = ParamInference.paramWithInference(
+            NumberParamConfigDefaults,
+            InferenceMode.ProjectFile,
+            '"foo", step 0.5, -14 to 32.6'
+        );
+        expect(inference1.config.name).toEqual('foo');
+        expect((inference1.config as NumberParamConfig).min).toEqual(-14);
+        expect((inference1.config as NumberParamConfig).max).toEqual(32.6);
+        expect((inference1.config as NumberParamConfig).step).toEqual(0.5);
+        expect(inference1.value).toBeUndefined();
+
+        const inference2 = ParamInference.paramWithInference(
+            NumericArrayParamConfigDefaults,
+            InferenceMode.ShaderFile,
+            'step 0.3, -.3 to 400, "banana Apple", 45, step 0.1'
+        );
+        expect(inference2.config.name).toEqual('banana Apple');
+        expect((inference2.config as NumericArrayParamConfig).min).toEqual(-0.3);
+        expect((inference2.config as NumericArrayParamConfig).max).toEqual(400);
+        expect((inference2.config as NumericArrayParamConfig).step).toEqual(0.3);
+        expect(inference2.value).toBeUndefined();
+    });
+
+    it('delivers values as expected', () => {
+        const inference1 = ParamInference.paramWithInference(
+            NumberParamConfigDefaults,
+            InferenceMode.ProjectFile,
+            '23, origin, true, [74, .1, -3], -4'
+        );
+        expect(inference1.value).toBeUndefined();
+
+        const inference2 = ParamInference.paramWithInference(
+            NumberParamConfigDefaults,
+            InferenceMode.ShaderFile,
+            '23, origin, true, [74, .1, -3], -4'
+        );
+        expect(inference2.value).toBe(23);
+
+        const inference3 = ParamInference.paramWithInference(
+            BooleanParamConfigDefaults,
+            InferenceMode.ShaderFile,
+            '23, origin, true, [74, .1, -3], -4'
+        );
+        expect(inference3.value).toBe(true);
+
+        const inference4 = ParamInference.paramWithInference(
+            NumericArrayParamConfigDefaults,
+            InferenceMode.ShaderFile,
+            '23, origin, true, [74, .1, -3], -4'
+        );
+        expect(inference4.value).toEqual([74, 0.1, -3]);
+    });
+});
 
 describe('ParamInference.intentionsFrom', () => {
     it('returns empty object with no matches', () => {
