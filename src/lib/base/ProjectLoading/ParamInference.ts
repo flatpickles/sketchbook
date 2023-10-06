@@ -29,16 +29,18 @@ type Intentions = {
 };
 
 /**
- * ParamInference provides methods for "inferring" parameter configurations and values from comments
- * in project files (either ts/js or .frag shaders), evaluated in context with what we already know
- * about a given parameter (from its type) . This enables creators to quickly configure the basics
- * in a project with simple commented syntax, without needing to set up detailed configs.
+ * ParamInference provides methods for "inferring" parameter configurations and values from inline
+ * comments in project files (either ts/js or .frag shaders), evaluated in context with what we
+ * already know about a given parameter (its type, and its key, if enabled) . This enables creators
+ * to quickly configure the basics in a project with simple commented syntax, without needing to set
+ * up detailed configs.
  */
 export default class ParamInference {
     static paramsWithInference(
         initialConfigs: ParamConfig[],
         mode: InferenceMode,
-        rawFileText: string
+        rawFileText: string,
+        inferStyleFromKeys = false
     ): Inferences {
         // Find param definition lines in raw file text
         const lines = rawFileText.split('\n');
@@ -64,7 +66,12 @@ export default class ParamInference {
             const definitionLine = definitionLines[config.key];
             const comment = definitionLine.match(/\/\/\s*(.*)/);
             if (comment) {
-                const inference = this.paramWithInference(config, mode, comment[1]);
+                const inference = this.paramWithInference(
+                    config,
+                    mode,
+                    comment[1],
+                    inferStyleFromKeys
+                );
                 supplementedConfigs.push(inference.config);
                 if (inference.value !== undefined) valueMap[config.key] = inference.value;
             } else {
@@ -80,7 +87,8 @@ export default class ParamInference {
     static paramWithInference(
         initialConfig: ParamConfig,
         mode: InferenceMode,
-        comment: string
+        comment: string,
+        inferStyleFromKeys = false
     ): Inference {
         // Fill out a config and value with inferred values, if available
         const newConfig = { ...initialConfig };
@@ -130,7 +138,7 @@ export default class ParamInference {
         }
 
         // todo: infer styles from stringTokens and the parameter key
-        console.log(intentions?.potentialStyleStrings);
+        console.log(intentions?.potentialStyleStrings, inferStyleFromKeys);
 
         return {
             config: newConfig,
