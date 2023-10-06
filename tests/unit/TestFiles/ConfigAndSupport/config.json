@@ -5,6 +5,8 @@
     "paramsApplyDuringInput": false,
     "groups": ["Test"],
     "experimental": true,
+    "inlineConfig": false,
+    "inferStyle": false,
 
     "params": {
         "testNumber": {

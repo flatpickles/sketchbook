@@ -13,6 +13,10 @@ import * as fileProviders from '$lib/base/ProjectLoading/ImportProviders';
 import { ParamType } from '$lib/base/ConfigModels/ParamConfig';
 import ParamValueProvider from '$lib/base/ProjectLoading/ParamValueProvider';
 import FragShaderProject from '$lib/base/Project/FragShaderProject';
+import {
+    NumberParamConfigDefaults,
+    type NumberParamConfig
+} from '$lib/base/ConfigModels/ParamConfigs/NumberParamConfig';
 vi.spyOn(ParamValueProvider, 'getValue');
 vi.spyOn(ParamValueProvider, 'setValue');
 
@@ -34,7 +38,7 @@ describe('loading available projects', async () => {
     const availableProjects = await ProjectLoader.loadAvailableProjects();
 
     it('has correct number of available projects', () => {
-        expect(Object.values(availableProjects).length).toBe(4);
+        expect(Object.values(availableProjects).length).toBe(6);
     });
 
     it('correctly configures a project without a config file', () => {
@@ -361,5 +365,74 @@ describe('loading specific projects, in browser mode (re: stored values)', async
 
         // Check ParamValueProvider calls
         expect(ParamValueProvider.getValue).toHaveBeenCalledTimes(2);
+    });
+});
+
+describe('loading projects w/ inline / inferred config', async () => {
+    afterEach(() => {
+        vi.clearAllMocks();
+    });
+
+    it("doesn't use inference when disabled", async () => {
+        const projectTuple = await ProjectLoader.loadProject('ConfigAndSupport');
+
+        // Check params config
+        const paramsConfig = projectTuple!.params;
+        expect(paramsConfig).toBeDefined();
+
+        // Check number config
+        const testNumberParam = paramsConfig.filter(
+            (param) => param.key === 'testNumber'
+        )[0] as NumberParamConfig;
+        expect(testNumberParam).toBeDefined();
+        expect(testNumberParam.type).toEqual(ParamType.Number);
+        expect(testNumberParam.min).toEqual(NumberParamConfigDefaults.min);
+        expect(testNumberParam.max).toEqual(NumberParamConfigDefaults.max);
+        expect(testNumberParam.step).toEqual(NumberParamConfigDefaults.step);
+        expect(testNumberParam.style).not.toEqual('field');
+        expect(testNumberParam.name).not.toEqual('Number Name');
+
+        // Check string config
+        const testStringParam = paramsConfig.filter((param) => param.key === 'testString')[0];
+        expect(testStringParam).toBeDefined();
+        expect(testStringParam.name).not.toEqual('String Name');
+    });
+
+    it('infers config in ts file when enabled', async () => {
+        const projectTuple = await ProjectLoader.loadProject('TSWithInference');
+
+        // Check params config
+        const paramsConfig = projectTuple!.params;
+        expect(paramsConfig).toBeDefined();
+
+        // todo: FAILING: doesn't use config.json as ultimate source of truth
+
+        // Check number config #1
+        const testNumberParam1 = paramsConfig.filter(
+            (param) => param.key === 'testNumber1'
+        )[0] as NumberParamConfig;
+        expect(testNumberParam1).toBeDefined();
+        expect(testNumberParam1.type).toEqual(ParamType.Number);
+        expect(testNumberParam1.min).toEqual(-100);
+        expect(testNumberParam1.max).toEqual(100);
+        expect(testNumberParam1.step).toEqual(1);
+        // expect(testNumberParam1.style).toEqual('field');
+        expect(testNumberParam1.name).toEqual('Number Name');
+
+        // Check number config #2
+        const testNumberParam2 = paramsConfig.filter(
+            (param) => param.key === 'testNumber1'
+        )[0] as NumberParamConfig;
+        expect(testNumberParam2).toBeDefined();
+        expect(testNumberParam2.type).toEqual(ParamType.Number);
+        expect(testNumberParam2.min).toEqual(30);
+        expect(testNumberParam2.max).toEqual(40);
+        expect(testNumberParam2.step).toEqual(0.5);
+        // expect(testNumberParam2.style).toEqual('slider');
+        expect(testNumberParam2.name).toEqual('Number 2');
+    });
+
+    it('infers config and values in shader file when enabled', async () => {
+        // todo
     });
 });

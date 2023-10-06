@@ -153,7 +153,7 @@ export default class ProjectLoader {
         );
 
         // Supplement parameter config with inferred values, if enabled
-        if (projectConfig.inferConfig) {
+        if (projectConfig.inlineConfig) {
             // Collect inferred parameter configs & values
             const rawFileText = (await allImports.projectFilesRaw[
                 classFilePath || textFilePath
@@ -161,7 +161,8 @@ export default class ProjectLoader {
             const inference = ParamInference.paramsWithInference(
                 paramConfigs,
                 classFilePath != undefined ? InferenceMode.ProjectFile : InferenceMode.ShaderFile,
-                rawFileText
+                rawFileText,
+                projectConfig.inferStyle
             );
 
             // Assign inferred configs to the project param configs
