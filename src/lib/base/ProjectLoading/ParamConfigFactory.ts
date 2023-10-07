@@ -1,4 +1,4 @@
-import type { ParamConfig } from '../ConfigModels/ParamConfig';
+import { ParamConfigDefaults, type ParamConfig } from '../ConfigModels/ParamConfig';
 import {
     type NumberParamConfig,
     NumberParamConfigDefaults
@@ -29,21 +29,25 @@ import {
     isFileParamConfig,
     FileReaderMode
 } from '../ConfigModels/ParamConfigs/FileParamConfig';
+import ParamInference, { InferenceMode } from './ParamInference';
 
 export class ParamConfigFactory {
     /**
      * Create a config object from a value and an optional config data object (via JSON).
      * @param value - the value to create a config for
      * @param key - the key for this parameter value
+     * @param annotation - optional commented annotation for this parameter value
      * @param data - optional config data to reference
      * @param applyDuringInputDefault - the default value for applyDuringInput
      * @returns a config object
      * @throws if the value type is unsupported
      * @throws if the config data contains unsupported fields
      */
-    public static configFrom(
+    public static paramConfigFrom(
         value: unknown,
         key: string,
+        inferenceMode: InferenceMode,
+        annotation?: string,
         data?: Record<string, unknown>,
         applyDuringInputDefault = ProjectConfigDefaults.paramsApplyDuringInput
     ): ParamConfig {
@@ -90,6 +94,14 @@ export class ParamConfigFactory {
         } else {
             throw new Error(`${typeof value} params are unsupported (${key})`);
         }
+
+        // Apply any intentions inferred within the annotation string (comment)
+        if (annotation) {
+            param = ParamInference.paramWithInference(param, inferenceMode, annotation);
+        }
+
+        // If the name is still the default, assign the key as the name
+        if (param.name === ParamConfigDefaults.name) param.name = key;
 
         // Assign applyDuringInputDefault value to this param, derived from the project config's
         // paramsApplyDuringInput value, and potentially overridden per-param in the assign below
@@ -155,7 +167,6 @@ export class ParamConfigFactory {
 
         // Return the generated param
         param.key = key;
-        param.name = (data?.name as string) ?? key;
         return param;
     }
 }

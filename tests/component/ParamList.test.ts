@@ -105,7 +105,7 @@ function renderParams(
     twoWaySync = true
 ): [TestProject, ReturnType<typeof vi.fn>] {
     const project = new TestProject();
-    const testProjectConfig = ProjectConfigFactory.propsFrom({
+    const testProjectConfig = ProjectConfigFactory.projectConfigFrom({
         applyDuringInput: applyDuringInput,
         twoWaySync: twoWaySync
     });

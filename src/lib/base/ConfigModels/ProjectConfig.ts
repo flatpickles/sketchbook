@@ -11,7 +11,6 @@ export interface ProjectConfig {
     pixelRatio?: number;
     twoWaySync: boolean;
     inlineConfig?: boolean;
-    inferStyle?: boolean;
 }
 
 export const ProjectConfigDefaults: ProjectConfig = {
@@ -26,6 +25,5 @@ export const ProjectConfigDefaults: ProjectConfig = {
     canvasSize: undefined,
     pixelRatio: undefined,
     twoWaySync: true,
-    inlineConfig: true,
-    inferStyle: true
+    inlineConfig: true
 };

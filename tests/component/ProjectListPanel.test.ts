@@ -61,19 +61,19 @@ describe('ProjectListPanel rendering', () => {
         vi.spyOn(config, 'projectSortOrder', 'get').mockReturnValue(SortOrder.Alphabetical);
 
         const projects = {
-            banana: ProjectConfigFactory.propsFrom({
+            banana: ProjectConfigFactory.projectConfigFrom({
                 title: 'Banana',
                 date: '2021-01-01'
             }),
-            apple: ProjectConfigFactory.propsFrom({
+            apple: ProjectConfigFactory.projectConfigFrom({
                 title: 'Apple',
                 date: '2021-01-03'
             }),
-            carrot: ProjectConfigFactory.propsFrom({
+            carrot: ProjectConfigFactory.projectConfigFrom({
                 title: 'Carrot',
                 date: '2021-01-02'
             }),
-            dateless: ProjectConfigFactory.propsFrom({
+            dateless: ProjectConfigFactory.projectConfigFrom({
                 title: 'Dateless'
             })
         };
@@ -97,19 +97,19 @@ describe('ProjectListPanel rendering', () => {
         vi.spyOn(config, 'projectSortOrder', 'get').mockReturnValue(SortOrder.ReverseChronological);
 
         const projects = {
-            banana: ProjectConfigFactory.propsFrom({
+            banana: ProjectConfigFactory.projectConfigFrom({
                 title: 'Banana',
                 date: '2021-01-01'
             }),
-            apple: ProjectConfigFactory.propsFrom({
+            apple: ProjectConfigFactory.projectConfigFrom({
                 title: 'Apple',
                 date: '2021-01-03'
             }),
-            carrot: ProjectConfigFactory.propsFrom({
+            carrot: ProjectConfigFactory.projectConfigFrom({
                 title: 'Carrot',
                 date: '2022-01-02'
             }),
-            dateless: ProjectConfigFactory.propsFrom({
+            dateless: ProjectConfigFactory.projectConfigFrom({
                 title: 'Dateless'
             })
         };
@@ -133,19 +133,19 @@ describe('ProjectListPanel rendering', () => {
         vi.spyOn(config, 'projectSortOrder', 'get').mockReturnValue(SortOrder.Chronological);
 
         const projects = {
-            banana: ProjectConfigFactory.propsFrom({
+            banana: ProjectConfigFactory.projectConfigFrom({
                 title: 'Banana',
                 date: '2021-01-01'
             }),
-            apple: ProjectConfigFactory.propsFrom({
+            apple: ProjectConfigFactory.projectConfigFrom({
                 title: 'Apple',
                 date: '2021-01-03'
             }),
-            carrot: ProjectConfigFactory.propsFrom({
+            carrot: ProjectConfigFactory.projectConfigFrom({
                 title: 'Carrot',
                 date: '2022-01-02'
             }),
-            dateless: ProjectConfigFactory.propsFrom({
+            dateless: ProjectConfigFactory.projectConfigFrom({
                 title: 'Dateless'
             })
         };
@@ -167,15 +167,15 @@ describe('ProjectListPanel rendering', () => {
 
     it('selects the proper project via selectedProjectKey', async () => {
         const projects = {
-            banana: ProjectConfigFactory.propsFrom({
+            banana: ProjectConfigFactory.projectConfigFrom({
                 title: 'Banana',
                 date: '2021-01-01'
             }),
-            apple: ProjectConfigFactory.propsFrom({
+            apple: ProjectConfigFactory.projectConfigFrom({
                 title: 'Apple',
                 date: '2021-01-03'
             }),
-            carrot: ProjectConfigFactory.propsFrom({
+            carrot: ProjectConfigFactory.projectConfigFrom({
                 title: 'Carrot',
                 date: '2022-01-02'
             })
@@ -209,17 +209,17 @@ describe('ProjectListPanel interaction', () => {
 
     beforeAll(() => {
         const projects = {
-            banana: ProjectConfigFactory.propsFrom({
+            banana: ProjectConfigFactory.projectConfigFrom({
                 title: 'Banana',
                 date: '2021-01-01',
                 groups: ['Fruit']
             }),
-            apple: ProjectConfigFactory.propsFrom({
+            apple: ProjectConfigFactory.projectConfigFrom({
                 title: 'Apple',
                 date: '2021-01-03',
                 groups: ['Fruit', 'Technology']
             }),
-            carrot: ProjectConfigFactory.propsFrom({
+            carrot: ProjectConfigFactory.projectConfigFrom({
                 title: 'Carrot',
                 date: '2022-01-02',
                 groups: ['Vegetable']
@@ -262,17 +262,17 @@ describe('ProjectListPanel interaction', () => {
         vi.spyOn(config, 'showExperiments', 'get').mockReturnValue(true);
 
         const projects = {
-            banana: ProjectConfigFactory.propsFrom({
+            banana: ProjectConfigFactory.projectConfigFrom({
                 title: 'Banana',
                 date: '2021-01-01',
                 experimental: false
             }),
-            apple: ProjectConfigFactory.propsFrom({
+            apple: ProjectConfigFactory.projectConfigFrom({
                 title: 'Apple',
                 date: '2021-01-03',
                 experimental: true
             }),
-            carrot: ProjectConfigFactory.propsFrom({
+            carrot: ProjectConfigFactory.projectConfigFrom({
                 title: 'Carrot',
                 date: '2022-01-02',
                 experimental: false
@@ -294,17 +294,17 @@ describe('ProjectListPanel interaction', () => {
         vi.spyOn(config, 'showExperiments', 'get').mockReturnValue(false);
 
         const projects = {
-            banana: ProjectConfigFactory.propsFrom({
+            banana: ProjectConfigFactory.projectConfigFrom({
                 title: 'Banana',
                 date: '2021-01-01',
                 experimental: false
             }),
-            apple: ProjectConfigFactory.propsFrom({
+            apple: ProjectConfigFactory.projectConfigFrom({
                 title: 'Apple',
                 date: '2021-01-03',
                 experimental: true
             }),
-            carrot: ProjectConfigFactory.propsFrom({
+            carrot: ProjectConfigFactory.projectConfigFrom({
                 title: 'Carrot',
                 date: '2022-01-02',
                 experimental: false

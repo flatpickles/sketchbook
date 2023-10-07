@@ -10,6 +10,7 @@ import {
     type NumericArrayParamConfig
 } from './ParamConfigs/NumericArrayParamConfig';
 import { isFileParamConfig, type FileParamConfig } from './ParamConfigs/FileParamConfig';
+import type { ParamConfig } from './ParamConfig';
 
 /*
     File loading result types vary depending on the parameter configuration's read mode
@@ -46,6 +47,20 @@ export type ParamValueType<T> = T extends NumberParamConfig
     : never;
 
 /*
+    Only some param config types can have a default value:
+*/
+function isConfigTypeWithDefault(
+    param: ParamConfig
+): param is NumberParamConfig | BooleanParamConfig | StringParamConfig | NumericArrayParamConfig {
+    return (
+        isNumberParamConfig(param) ||
+        isBooleanParamConfig(param) ||
+        isStringParamConfig(param) ||
+        isNumericArrayParamConfig(param)
+    );
+}
+
+/*
     Consolidate all parameter configuration types here for easy importing elsewhere.
 */
 export const ParamGuards = {
@@ -54,5 +69,6 @@ export const ParamGuards = {
     isFunctionParamConfig,
     isStringParamConfig,
     isNumericArrayParamConfig,
-    isFileParamConfig
+    isFileParamConfig,
+    isConfigTypeWithDefault
 };
