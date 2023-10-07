@@ -405,8 +405,6 @@ describe('loading projects w/ inline / inferred config', async () => {
         const paramsConfig = projectTuple!.params;
         expect(paramsConfig).toBeDefined();
 
-        // todo: FAILING: doesn't use config.json as ultimate source of truth
-
         // Check number config #1
         const testNumberParam1 = paramsConfig.filter(
             (param) => param.key === 'testNumber1'
@@ -421,7 +419,7 @@ describe('loading projects w/ inline / inferred config', async () => {
 
         // Check number config #2
         const testNumberParam2 = paramsConfig.filter(
-            (param) => param.key === 'testNumber1'
+            (param) => param.key === 'testNumber2'
         )[0] as NumberParamConfig;
         expect(testNumberParam2).toBeDefined();
         expect(testNumberParam2.type).toEqual(ParamType.Number);

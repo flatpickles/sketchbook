@@ -8,6 +8,7 @@ export enum StringParamStyle {
 
 export interface StringParamConfig extends ParamConfig {
     style: StringParamStyle;
+    default?: string;
     options?: string[] | Record<string, string>;
 }
 
@@ -15,6 +16,7 @@ export const StringParamConfigDefaults: StringParamConfig = {
     ...ParamConfigDefaults,
     type: ParamType.String,
     style: StringParamStyle.SingleLine,
+    default: undefined,
     options: undefined
 } as const;
 

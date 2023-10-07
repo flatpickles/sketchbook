@@ -7,10 +7,11 @@ import { ProjectConfigFactory } from '$lib/base/ProjectLoading/ProjectConfigFact
 import { describe, it, expect } from 'vitest';
 import ConfigAndSupport from './TestFiles/ConfigAndSupport/ConfigAndSupport';
 import NoConfig from './TestFiles/NoConfig/NoConfig';
+import { InferenceMode } from '$lib/base/ProjectLoading/ParamInference';
 
 describe('ProjectConfigFactory.propsFrom', () => {
     it('creates default props without provided config data', () => {
-        const props = ProjectConfigFactory.propsFrom(undefined);
+        const props = ProjectConfigFactory.projectConfigFrom(undefined);
         expect(props.title).toEqual(ProjectConfigDefaults.title);
         expect(props.date).toEqual(ProjectConfigDefaults.date);
         expect(props.description).toEqual(ProjectConfigDefaults.description);
@@ -30,7 +31,7 @@ describe('ProjectConfigFactory.propsFrom', () => {
             groups: ['Test'],
             experimental: true
         };
-        const props = ProjectConfigFactory.propsFrom(configData);
+        const props = ProjectConfigFactory.projectConfigFrom(configData);
         expect(props.title).toEqual(configData.title);
         expect(props.date).toEqual(new Date(configData.date));
         expect(props.description).toEqual(configData.description);
@@ -45,7 +46,7 @@ describe('ProjectConfigFactory.propsFrom', () => {
             title: 'Test title',
             date: '2023-07-06'
         };
-        const props = ProjectConfigFactory.propsFrom(configData);
+        const props = ProjectConfigFactory.projectConfigFrom(configData);
         expect(props.title).toEqual(configData.title);
         expect(props.date).toEqual(new Date(configData.date));
         expect(props.description).toEqual(ProjectConfigDefaults.description);
@@ -68,7 +69,12 @@ describe('ProjectConfigFactory.propsFrom', () => {
         };
 
         // Load parameters & check that they were loaded properly
-        const params = ProjectConfigFactory.paramsFrom(testProject, paramData);
+        const params = ProjectConfigFactory.paramConfigsFrom(
+            testProject,
+            '',
+            InferenceMode.ProjectFile,
+            paramData
+        );
         const testParam = params.filter((param) => param.key === 'testNumber')[0];
         expect(testParam).toBeDefined();
         expect(testParam.type).toEqual('number');
@@ -88,7 +94,11 @@ describe('ProjectConfigFactory.propsFrom', () => {
         const testProject = new ConfigAndSupport();
 
         // Load parameters & check default values
-        const params = ProjectConfigFactory.paramsFrom(testProject);
+        const params = ProjectConfigFactory.paramConfigsFrom(
+            testProject,
+            '',
+            InferenceMode.ProjectFile
+        );
         const testParam = params.filter((param) => param.key === 'testNumber')[0];
         expect(testParam).toBeDefined();
         expect(testParam.type).toEqual('number');
@@ -106,7 +116,13 @@ describe('ProjectConfigFactory.propsFrom', () => {
         const testProject = new NoConfig();
 
         // Load parameters & check default values
-        const params = ProjectConfigFactory.paramsFrom(testProject, undefined, false);
+        const params = ProjectConfigFactory.paramConfigsFrom(
+            testProject,
+            '',
+            InferenceMode.ProjectFile,
+            undefined,
+            false
+        );
         const testParam = params.filter((param) => param.key === 'testNumber')[0];
         expect(testParam).toBeDefined();
         const numberParam = testParam as NumberParamConfig;

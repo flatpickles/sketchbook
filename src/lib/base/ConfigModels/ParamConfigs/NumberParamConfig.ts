@@ -11,6 +11,7 @@ export interface NumberParamConfig extends ParamConfig {
     max: number;
     step: number;
     style: NumberParamStyle;
+    default?: number;
     options?: number[] | Record<string, number>;
 }
 
@@ -21,6 +22,7 @@ export const NumberParamConfigDefaults: NumberParamConfig = {
     max: 1,
     step: 0.01,
     style: NumberParamStyle.Combo,
+    default: undefined,
     options: undefined
 } as const;
 

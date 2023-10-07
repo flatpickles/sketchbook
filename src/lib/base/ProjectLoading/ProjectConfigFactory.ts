@@ -2,6 +2,7 @@ import type { ParamConfig } from '../ConfigModels/ParamConfig';
 import { ParamConfigFactory } from './ParamConfigFactory';
 import type Project from '../Project/Project';
 import { type ProjectConfig, ProjectConfigDefaults } from '../ConfigModels/ProjectConfig';
+import ParamInference, { InferenceMode } from './ParamInference';
 
 // Property keys that should be ignored when creating a ProjectConfig object from a Project object,
 // in addition to any custom ignoreKeys set by the Project.
@@ -14,7 +15,7 @@ export class ProjectConfigFactory {
      * @param data - object derived from imported JSON data, matching to ProjectProperties
      * @returns a ProjectProperties object
      */
-    public static propsFrom(data?: Record<string, unknown>): ProjectConfig {
+    public static projectConfigFrom(data?: Record<string, unknown>): ProjectConfig {
         // Create new properties config object and assign defaults
         const props = {} as ProjectConfig;
         Object.assign(props, ProjectConfigDefaults);
@@ -43,11 +44,15 @@ export class ProjectConfigFactory {
      * Create param config objects from the properties in a Project object, also referencing
      * config data, if provided.
      * @param project - the Project object to load params from
+     * @param rawFileText - the raw text of the ts/js or shader file
+     * @param inferenceMode - the mode to use for inferring param configs from comments
      * @param applyDuringInputDefault - the default value for applyDuringInput
      * @param data - optional config data to reference
      */
-    public static paramsFrom(
+    public static paramConfigsFrom(
         project: Project,
+        rawFileText: string,
+        inferenceMode: InferenceMode,
         data?: Record<string, Record<string, unknown>>,
         applyDuringInputDefault = ProjectConfigDefaults.paramsApplyDuringInput
     ): ParamConfig[] {
@@ -59,16 +64,26 @@ export class ProjectConfigFactory {
             (key) => ignoreKeys.indexOf(key) < 0
         );
 
-        // Create ParamConfig objects for each param, using config data if available
+        // Get commented annotations from the raw file text
+        const definitionLines = ParamInference.paramAnnotations(
+            paramKeys,
+            inferenceMode,
+            rawFileText
+        );
+
+        // Create ParamConfig objects for each param, using config data and comments if available
         for (const key of paramKeys) {
             // Derive a ParamConfig object
             const propertyDescriptor = Object.getOwnPropertyDescriptor(project, key);
             if (!propertyDescriptor || propertyDescriptor.value == undefined)
                 throw new Error('No param value available: ' + key);
             const configData = data ? data[key] : undefined;
-            const paramConfig = ParamConfigFactory.configFrom(
+            const annotation = definitionLines[key];
+            const paramConfig = ParamConfigFactory.paramConfigFrom(
                 propertyDescriptor.value,
                 key,
+                inferenceMode,
+                annotation,
                 configData,
                 applyDuringInputDefault
             );

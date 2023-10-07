@@ -1,22 +1,11 @@
-import { ParamConfigDefaults, type ParamConfig } from '../ConfigModels/ParamConfig';
-import { NumberParamConfigDefaults } from '../ConfigModels/ParamConfigs/NumberParamConfig';
-import type { AnyParamValueType } from '../ConfigModels/ParamTypes';
+import type { ParamConfig } from '../ConfigModels/ParamConfig';
 import { ParamGuards } from '../ConfigModels/ParamTypes';
 
 export enum InferenceMode {
     ProjectFile,
-    ShaderFile
+    ShaderFile,
+    None
 }
-
-type Inference = {
-    config: ParamConfig;
-    value?: AnyParamValueType;
-};
-
-export type Inferences = {
-    configs: ParamConfig[];
-    values: Record<string, unknown>;
-};
 
 type Intentions = {
     name?: string;
@@ -36,70 +25,48 @@ type Intentions = {
  * up detailed configs.
  */
 export default class ParamInference {
-    static paramsWithInference(
-        initialConfigs: ParamConfig[],
+    static paramAnnotations(
+        paramKeys: string[],
         mode: InferenceMode,
-        rawFileText: string,
-        inferStyleFromKeys = false
-    ): Inferences {
-        // Find param definition lines in raw file text
+        rawFileText: string
+    ): Record<string, string> {
+        if (mode === InferenceMode.None) return {};
+
         const lines = rawFileText.split('\n');
-        const definitionLines: Record<string, string> = {};
+        const annotations: Record<string, string> = {};
         for (const line of lines) {
-            for (const config of initialConfigs) {
+            for (const key of paramKeys) {
+                // Find definition lines that contain the key
                 const matcher =
                     mode === InferenceMode.ShaderFile
-                        ? `.*uniform.*${config.key}`
-                        : `(${config.key}\\s*[:=])|(this.${config.key}\\s*[:=])`;
+                        ? `.*uniform.*${key}`
+                        : `(${key}\\s*[:=])|(this.${key}\\s*[:=])`;
+
+                // If we find a match, extract the comment
                 if (line.match(new RegExp(matcher))) {
-                    definitionLines[config.key] = line;
+                    const comment = line.match(/\/\/\s*(.*)/);
+                    if (comment && comment.length > 1) annotations[key] = comment[1];
                     break;
                 }
             }
-            if (Object.keys(definitionLines).length === initialConfigs.length) break;
+            if (Object.keys(annotations).length === paramKeys.length) break;
         }
-
-        // Parse param definition lines for intentions expressed in adjacent comments
-        const supplementedConfigs: ParamConfig[] = [];
-        const valueMap: Record<string, unknown> = {};
-        for (const config of initialConfigs) {
-            const definitionLine = definitionLines[config.key];
-            const comment = definitionLine.match(/\/\/\s*(.*)/);
-            if (comment) {
-                const inference = this.paramWithInference(
-                    config,
-                    mode,
-                    comment[1],
-                    inferStyleFromKeys
-                );
-                supplementedConfigs.push(inference.config);
-                if (inference.value !== undefined) valueMap[config.key] = inference.value;
-            } else {
-                supplementedConfigs.push(config);
-            }
-        }
-        return {
-            configs: supplementedConfigs,
-            values: valueMap
-        };
+        return annotations;
     }
 
     static paramWithInference(
         initialConfig: ParamConfig,
         mode: InferenceMode,
-        comment: string,
-        inferStyleFromKeys = false
-    ): Inference {
+        comment: string
+    ): ParamConfig {
+        if (mode === InferenceMode.None) return initialConfig;
+
         // Fill out a config and value with inferred values, if available
         const newConfig = { ...initialConfig };
-        let value: AnyParamValueType | undefined;
         const intentions = this.intentionsFrom(comment);
 
         // Assign name token
-        if (
-            intentions?.name &&
-            (newConfig.name === newConfig.key || newConfig.name === ParamConfigDefaults.name)
-        ) {
+        if (intentions?.name) {
             newConfig.name = intentions.name;
         }
 
@@ -110,40 +77,37 @@ export default class ParamInference {
         ) {
             if (intentions?.range) {
                 const [min, max] = intentions.range;
-                if (newConfig.min === NumberParamConfigDefaults.min) newConfig.min = min;
-                if (newConfig.max === NumberParamConfigDefaults.max) newConfig.max = max;
+                newConfig.min = min;
+                newConfig.max = max;
             }
-            if (intentions?.step && newConfig.step === NumberParamConfigDefaults.step)
-                newConfig.step = intentions.step;
+            if (intentions?.step) newConfig.step = intentions.step;
         }
 
-        // If we're parsing a shader, assign value tokens for supported param types
+        // If we're parsing a shader, assign default values in supported param types
         if (mode === InferenceMode.ShaderFile) {
             // Assign number value tokens
-            if (ParamGuards.isNumberParamConfig(newConfig)) {
-                if (intentions?.numberValues?.length) value = Number(intentions.numberValues[0]);
+            if (ParamGuards.isNumberParamConfig(newConfig) && intentions?.numberValues?.length) {
+                newConfig.default = Number(intentions.numberValues[0]);
             }
 
             // Assign boolean value tokens
-            if (ParamGuards.isBooleanParamConfig(newConfig)) {
-                if (intentions?.booleanValues?.length) value = intentions.booleanValues[0];
+            if (ParamGuards.isBooleanParamConfig(newConfig) && intentions?.booleanValues?.length) {
+                newConfig.default = intentions.booleanValues[0];
             }
 
             // Assign numeric array value tokens
-            if (ParamGuards.isNumericArrayParamConfig(newConfig)) {
-                if (intentions?.numericArrayValues?.length) {
-                    value = intentions.numericArrayValues[0];
-                }
+            if (
+                ParamGuards.isNumericArrayParamConfig(newConfig) &&
+                intentions?.numericArrayValues?.length
+            ) {
+                newConfig.default = intentions.numericArrayValues[0];
             }
         }
 
         // todo: infer styles from stringTokens and the parameter key
-        console.log(intentions?.potentialStyleStrings, inferStyleFromKeys);
+        console.log(intentions?.potentialStyleStrings);
 
-        return {
-            config: newConfig,
-            value: value
-        };
+        return newConfig;
     }
 
     static intentionsFrom(parseString: string): Intentions {

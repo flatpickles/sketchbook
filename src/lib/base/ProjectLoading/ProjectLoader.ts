@@ -11,8 +11,9 @@ import { ProjectConfigFactory } from './ProjectConfigFactory';
 import ParamValueProvider from './ParamValueProvider';
 import { browser, dev } from '$app/environment';
 import FragShaderProject from '../Project/FragShaderProject';
-import ParamInference, { InferenceMode } from './ParamInference';
+import { InferenceMode } from './ParamInference';
 import { isNumericArray } from '../ConfigModels/ParamConfigs/NumericArrayParamConfig';
+import { ParamGuards } from '../ConfigModels/ParamTypes';
 
 export interface ProjectTuple {
     key: string;
@@ -88,7 +89,7 @@ export default class ProjectLoader {
             if (!projectValid) continue;
 
             // Create a new config for this project if it doesn't already exist
-            availableProjects[projectKey] = ProjectConfigFactory.propsFrom(
+            availableProjects[projectKey] = ProjectConfigFactory.projectConfigFrom(
                 projectConfigurations[projectKey]
             );
 
@@ -128,7 +129,7 @@ export default class ProjectLoader {
         if (!classFilePath && !textFilePath) return null;
         const project = await ProjectLoader.#loadProject(allImports, classFilePath || textFilePath);
 
-        // Create props & params with project and config file (if any)
+        // Get configuration JSON from config file (if any)
         const configFilePath = Object.keys(projectConfigFiles).filter((path) => {
             return ProjectLoader.#keyFromConfigPath(path) === key;
         })[0];
@@ -143,56 +144,73 @@ export default class ProjectLoader {
                     console.error(`Error parsing config.json for ${key}`);
             }
         }
-        const projectConfig = ProjectConfigFactory.propsFrom(
+
+        // Collect project configs
+        const projectConfig = ProjectConfigFactory.projectConfigFrom(
             configJSON as Record<string, unknown> | undefined
         );
-        let paramConfigs = ProjectConfigFactory.paramsFrom(
+
+        // Collect param configs
+        const rawFileText = (await allImports.projectFilesRaw[
+            classFilePath || textFilePath
+        ]()) as string;
+        const inferenceMode = !projectConfig.inlineConfig
+            ? InferenceMode.None
+            : classFilePath != undefined
+            ? InferenceMode.ProjectFile
+            : InferenceMode.ShaderFile;
+        const paramConfigs = ProjectConfigFactory.paramConfigsFrom(
             project,
+            rawFileText,
+            inferenceMode,
             configJSON?.params as Record<string, Record<string, unknown>> | undefined,
             projectConfig.paramsApplyDuringInput
         );
 
-        // Supplement parameter config with inferred values, if enabled
-        if (projectConfig.inlineConfig) {
-            // Collect inferred parameter configs & values
-            const rawFileText = (await allImports.projectFilesRaw[
-                classFilePath || textFilePath
-            ]()) as string;
-            const inference = ParamInference.paramsWithInference(
-                paramConfigs,
-                classFilePath != undefined ? InferenceMode.ProjectFile : InferenceMode.ShaderFile,
-                rawFileText,
-                projectConfig.inferStyle
-            );
+        // Assign the project title if unset
+        if (projectConfig.title === ProjectConfigDefaults.title) {
+            projectConfig.title = key;
+        }
 
-            // Assign inferred configs to the project param configs
-            paramConfigs = inference.configs;
+        // Apply defaults for compatible configs (either explicit or inferred)
+        for (const paramConfig of paramConfigs) {
+            if (
+                ParamGuards.isConfigTypeWithDefault(paramConfig) &&
+                paramConfig.default !== undefined
+            ) {
+                // Defining these directly on the project object (instead of just using them when
+                // setting values below) allows ParamValueProvider to update provided value when the
+                // config values change, as it does when assigned values change in project files.
 
-            // Assign inferred param values to the project's corresponding instance variables
-            for (const paramKey of Object.keys(inference.values)) {
-                const value = inference.values[paramKey];
-                const currentValue = Object.getOwnPropertyDescriptor(project, paramKey)?.value;
+                // Check to make sure the value is legit
+                const value = paramConfig.default;
+                const currentValue = Object.getOwnPropertyDescriptor(
+                    project,
+                    paramConfig.key
+                )?.value;
+                // Assert that the values are the same type
+                if (typeof value !== typeof currentValue) {
+                    throw new Error(
+                        `Default value for ${paramConfig.key} has incorrect type: ${typeof value}`
+                    );
+                }
                 // Assert that new value is the proper size, if it's an array
                 if (isNumericArray(value) && isNumericArray(currentValue)) {
                     if (value.length === currentValue.length) {
                         throw new Error(
-                            `Inferred value for ${paramKey} has incorrect length: ${value.length}`
+                            `Default value for ${paramConfig.key} has incorrect length: ${value.length}`
                         );
                     }
                 }
-                // Define the property on the project (may be reset from ParamValueProvider below)
-                Object.defineProperty(project, paramKey, {
-                    value,
+
+                // Define the property on the project
+                Object.defineProperty(project, paramConfig.key, {
+                    value: paramConfig.default,
                     writable: true,
                     enumerable: true,
                     configurable: true
                 });
             }
-        }
-
-        // Assign the project title if unset
-        if (projectConfig.title === ProjectConfigDefaults.title) {
-            projectConfig.title = key;
         }
 
         // Set project properties to stored values (overriding inferred values above, if present)

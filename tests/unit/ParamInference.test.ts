@@ -12,8 +12,14 @@ import {
     BooleanParamConfigDefaults,
     type BooleanParamConfig
 } from '$lib/base/ConfigModels/ParamConfigs/BooleanParamConfig';
-import { StringParamConfigDefaults } from '$lib/base/ConfigModels/ParamConfigs/StringParamConfig';
-import { FunctionParamConfigDefaults } from '$lib/base/ConfigModels/ParamConfigs/FunctionParamConfig';
+
+describe('ParamInference.paramAnnotations', () => {
+    it('returns empty object with no matches', () => {
+        // todo
+    });
+});
+
+/* todo: move these (or equivalent) into factory tests
 
 describe('ParamInference.paramsWithInference', () => {
     it('supplements parameters appropriately, provided for a ts/js project file', () => {
@@ -185,23 +191,25 @@ describe('ParamInference.paramsWithInference', () => {
     });
 });
 
+*/
+
 describe('ParamInference.paramWithInference', () => {
     it("doesn't do anything with no comment", () => {
         const inference1 = ParamInference.paramWithInference(
             NumberParamConfigDefaults,
             InferenceMode.ProjectFile,
             ''
-        );
-        expect(inference1.config).toEqual(NumberParamConfigDefaults);
-        expect(inference1.value).toBeUndefined();
+        ) as NumberParamConfig;
+        expect(inference1).toEqual(NumberParamConfigDefaults);
+        expect(inference1.default).toBeUndefined();
 
         const inference2 = ParamInference.paramWithInference(
             NumericArrayParamConfigDefaults,
             InferenceMode.ShaderFile,
             ''
-        );
-        expect(inference2.config).toEqual(NumericArrayParamConfigDefaults);
-        expect(inference2.value).toBeUndefined();
+        ) as NumericArrayParamConfig;
+        expect(inference2).toEqual(NumericArrayParamConfigDefaults);
+        expect(inference2.default).toBeUndefined();
     });
 
     it('assigns names', () => {
@@ -209,17 +217,17 @@ describe('ParamInference.paramWithInference', () => {
             NumberParamConfigDefaults,
             InferenceMode.ProjectFile,
             '"foo"'
-        );
-        expect(inference1.config.name).toEqual('foo');
-        expect(inference1.value).toBeUndefined();
+        ) as NumberParamConfig;
+        expect(inference1.name).toEqual('foo');
+        expect(inference1.default).toBeUndefined();
 
         const inference2 = ParamInference.paramWithInference(
             NumericArrayParamConfigDefaults,
             InferenceMode.ShaderFile,
             ' "banana Apple", 45, step 0.1'
-        );
-        expect(inference2.config.name).toEqual('banana Apple');
-        expect(inference2.value).toBeUndefined();
+        ) as NumericArrayParamConfig;
+        expect(inference2.name).toEqual('banana Apple');
+        expect(inference2.default).toBeUndefined();
     });
 
     it('assigns range and step', () => {
@@ -227,53 +235,53 @@ describe('ParamInference.paramWithInference', () => {
             NumberParamConfigDefaults,
             InferenceMode.ProjectFile,
             '"foo", step 0.5, -14 to 32.6'
-        );
-        expect(inference1.config.name).toEqual('foo');
-        expect((inference1.config as NumberParamConfig).min).toEqual(-14);
-        expect((inference1.config as NumberParamConfig).max).toEqual(32.6);
-        expect((inference1.config as NumberParamConfig).step).toEqual(0.5);
-        expect(inference1.value).toBeUndefined();
+        ) as NumberParamConfig;
+        expect(inference1.name).toEqual('foo');
+        expect(inference1.min).toEqual(-14);
+        expect(inference1.max).toEqual(32.6);
+        expect(inference1.step).toEqual(0.5);
+        expect(inference1.default).toBeUndefined();
 
         const inference2 = ParamInference.paramWithInference(
             NumericArrayParamConfigDefaults,
             InferenceMode.ShaderFile,
             'step 0.3, -.3 to 400, "banana Apple", 45, step 0.1'
-        );
-        expect(inference2.config.name).toEqual('banana Apple');
-        expect((inference2.config as NumericArrayParamConfig).min).toEqual(-0.3);
-        expect((inference2.config as NumericArrayParamConfig).max).toEqual(400);
-        expect((inference2.config as NumericArrayParamConfig).step).toEqual(0.3);
-        expect(inference2.value).toBeUndefined();
+        ) as NumericArrayParamConfig;
+        expect(inference2.name).toEqual('banana Apple');
+        expect(inference2.min).toEqual(-0.3);
+        expect(inference2.max).toEqual(400);
+        expect(inference2.step).toEqual(0.3);
+        expect(inference2.default).toBeUndefined();
     });
 
-    it('delivers values as expected', () => {
+    it('assigns default values as expected', () => {
         const inference1 = ParamInference.paramWithInference(
             NumberParamConfigDefaults,
             InferenceMode.ProjectFile,
             '23, origin, true, [74, .1, -3], -4'
-        );
-        expect(inference1.value).toBeUndefined();
+        ) as NumberParamConfig;
+        expect(inference1.default).toBeUndefined();
 
         const inference2 = ParamInference.paramWithInference(
             NumberParamConfigDefaults,
             InferenceMode.ShaderFile,
             '23, origin, true, [74, .1, -3], -4'
-        );
-        expect(inference2.value).toBe(23);
+        ) as NumberParamConfig;
+        expect(inference2.default).toBe(23);
 
         const inference3 = ParamInference.paramWithInference(
             BooleanParamConfigDefaults,
             InferenceMode.ShaderFile,
             '23, origin, true, [74, .1, -3], -4'
-        );
-        expect(inference3.value).toBe(true);
+        ) as BooleanParamConfig;
+        expect(inference3.default).toBe(true);
 
         const inference4 = ParamInference.paramWithInference(
             NumericArrayParamConfigDefaults,
             InferenceMode.ShaderFile,
             '23, origin, true, [74, .1, -3], -4'
-        );
-        expect(inference4.value).toEqual([74, 0.1, -3]);
+        ) as NumericArrayParamConfig;
+        expect(inference4.default).toEqual([74, 0.1, -3]);
     });
 });
 
