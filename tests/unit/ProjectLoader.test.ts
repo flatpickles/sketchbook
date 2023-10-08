@@ -17,6 +17,8 @@ import {
     NumberParamConfigDefaults,
     type NumberParamConfig
 } from '$lib/base/ConfigModels/ParamConfigs/NumberParamConfig';
+import type { BooleanParamConfig } from '$lib/base/ConfigModels/ParamConfigs/BooleanParamConfig';
+import type { NumericArrayParamConfig } from '$lib/base/ConfigModels/ParamConfigs/NumericArrayParamConfig';
 vi.spyOn(ParamValueProvider, 'getValue');
 vi.spyOn(ParamValueProvider, 'setValue');
 
@@ -38,7 +40,7 @@ describe('loading available projects', async () => {
     const availableProjects = await ProjectLoader.loadAvailableProjects();
 
     it('has correct number of available projects', () => {
-        expect(Object.values(availableProjects).length).toBe(6);
+        expect(Object.values(availableProjects).length).toBe(8);
     });
 
     it('correctly configures a project without a config file', () => {
@@ -414,7 +416,8 @@ describe('loading projects w/ inline / inferred config', async () => {
         expect(testNumberParam1.min).toEqual(-100);
         expect(testNumberParam1.max).toEqual(100);
         expect(testNumberParam1.step).toEqual(1);
-        // expect(testNumberParam1.style).toEqual('field');
+        expect(testNumberParam1.default).toBeUndefined();
+        expect(testNumberParam1.style).toEqual(NumberParamConfigDefaults.style);
         expect(testNumberParam1.name).toEqual('Number Name');
 
         // Check number config #2
@@ -426,11 +429,127 @@ describe('loading projects w/ inline / inferred config', async () => {
         expect(testNumberParam2.min).toEqual(30);
         expect(testNumberParam2.max).toEqual(40);
         expect(testNumberParam2.step).toEqual(0.5);
-        // expect(testNumberParam2.style).toEqual('slider');
+        expect(testNumberParam2.default).toBeUndefined();
+        expect(testNumberParam2.style).toEqual('slider');
         expect(testNumberParam2.name).toEqual('Number 2');
     });
 
-    it('infers config and values in shader file when enabled', async () => {
-        // todo
+    it('infers config and values in shader file when enabled, and applies values & defaults', async () => {
+        const projectTuple = await ProjectLoader.loadProject('ShaderWithInference');
+
+        // Check params config
+        const paramsConfig = projectTuple!.params;
+        expect(paramsConfig).toBeDefined();
+
+        // Check number config #1
+        const testNumberParam1 = paramsConfig.filter(
+            (param) => param.key === 'testNumber1'
+        )[0] as NumberParamConfig;
+        expect(testNumberParam1).toBeDefined();
+        expect(testNumberParam1.type).toEqual(ParamType.Number);
+        expect(testNumberParam1.min).toEqual(-100);
+        expect(testNumberParam1.max).toEqual(100);
+        expect(testNumberParam1.step).toEqual(1);
+        expect(testNumberParam1.default).toEqual(42);
+        expect(testNumberParam1.style).toEqual(NumberParamConfigDefaults.style);
+        expect(testNumberParam1.name).toEqual('Number Name');
+        const actualValue = Object.getOwnPropertyDescriptor(
+            projectTuple!.project,
+            'testNumber1'
+        )!.value;
+        expect(actualValue).toEqual(42);
+
+        // Check number config #2
+        const testNumberParam2 = paramsConfig.filter(
+            (param) => param.key === 'testNumber2'
+        )[0] as NumberParamConfig;
+        expect(testNumberParam2).toBeDefined();
+        expect(testNumberParam2.type).toEqual(ParamType.Number);
+        expect(testNumberParam2.min).toEqual(30);
+        expect(testNumberParam2.max).toEqual(40);
+        expect(testNumberParam2.step).toEqual(0.01);
+        expect(testNumberParam2.default).toEqual(35);
+        expect(testNumberParam2.style).toEqual('slider');
+        expect(testNumberParam2.name).toEqual('Number Param');
+        const actualValue2 = Object.getOwnPropertyDescriptor(
+            projectTuple!.project,
+            'testNumber2'
+        )!.value;
+        expect(actualValue2).toEqual(35);
+
+        // Check boolean config
+        const testBooleanParam = paramsConfig.filter(
+            (param) => param.key === 'testBoolean'
+        )[0] as BooleanParamConfig;
+        expect(testBooleanParam).toBeDefined();
+        expect(testBooleanParam.type).toEqual(ParamType.Boolean);
+        expect(testBooleanParam.default).toEqual(true);
+        expect(testBooleanParam.name).toEqual('testBoolean');
+        const actualValue3 = Object.getOwnPropertyDescriptor(
+            projectTuple!.project,
+            'testBoolean'
+        )!.value;
+        expect(actualValue3).toEqual(true);
+
+        // Check numeric array config #1
+        const testNumericArrayParam1 = paramsConfig.filter(
+            (param) => param.key === 'array1'
+        )[0] as NumericArrayParamConfig;
+        expect(testNumericArrayParam1).toBeDefined();
+        expect(testNumericArrayParam1.type).toEqual(ParamType.NumericArray);
+        expect(testNumericArrayParam1.default).toEqual([0.1, 0.5, 0.9]);
+        expect(testNumericArrayParam1.name).toEqual('Array');
+        const actualValue4 = Object.getOwnPropertyDescriptor(
+            projectTuple!.project,
+            'array1'
+        )!.value;
+        expect(actualValue4).toEqual([0.1, 0.5, 0.9]);
+
+        // Check numeric array config #2
+        const testNumericArrayParam2 = paramsConfig.filter(
+            (param) => param.key === 'array2'
+        )[0] as NumericArrayParamConfig;
+        expect(testNumericArrayParam2).toBeDefined();
+        expect(testNumericArrayParam2.type).toEqual(ParamType.NumericArray);
+        expect(testNumericArrayParam2.default).toEqual([15, 25]);
+        expect(testNumericArrayParam2.name).toEqual('array2');
+        const actualValue5 = Object.getOwnPropertyDescriptor(
+            projectTuple!.project,
+            'array2'
+        )!.value;
+        expect(actualValue5).toEqual([15, 25]);
+    });
+});
+
+describe('default value loading from config', async () => {
+    it('applies defaults from config file (ts/js project)', async () => {
+        const projectTuple = await ProjectLoader.loadProject('TSWithInference');
+
+        // Check params config
+        const paramsConfig = projectTuple!.params;
+        expect(paramsConfig).toBeDefined();
+
+        // Check number config #3 (default application)
+        const testNumberParam3 = paramsConfig.filter(
+            (param) => param.key === 'testNumber3'
+        )[0] as NumberParamConfig;
+        expect(testNumberParam3.default).toEqual(21);
+        const actualValue = Object.getOwnPropertyDescriptor(
+            projectTuple!.project,
+            'testNumber3'
+        )!.value;
+        expect(actualValue).toEqual(21);
+    });
+
+    it('throws an error with the wrong default type', async () => {
+        expect(ProjectLoader.loadProject('BadDefaultType')).rejects.toThrow(
+            'Default value for testString has incorrect type: number'
+        );
+    });
+
+    it('throws an error with the wrong default length', async () => {
+        expect(ProjectLoader.loadProject('BadDefaultLength')).rejects.toThrow(
+            'Default value for testArray has incorrect length: 2'
+        );
     });
 });

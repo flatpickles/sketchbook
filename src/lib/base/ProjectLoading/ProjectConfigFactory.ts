@@ -65,11 +65,7 @@ export class ProjectConfigFactory {
         );
 
         // Get commented annotations from the raw file text
-        const definitionLines = ParamInference.paramAnnotations(
-            paramKeys,
-            inferenceMode,
-            rawFileText
-        );
+        const annotations = ParamInference.paramAnnotations(paramKeys, inferenceMode, rawFileText);
 
         // Create ParamConfig objects for each param, using config data and comments if available
         for (const key of paramKeys) {
@@ -78,7 +74,7 @@ export class ProjectConfigFactory {
             if (!propertyDescriptor || propertyDescriptor.value == undefined)
                 throw new Error('No param value available: ' + key);
             const configData = data ? data[key] : undefined;
-            const annotation = definitionLines[key];
+            const annotation = annotations[key];
             const paramConfig = ParamConfigFactory.paramConfigFrom(
                 propertyDescriptor.value,
                 key,

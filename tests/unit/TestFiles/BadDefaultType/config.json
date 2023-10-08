@@ -1,0 +1,8 @@
+{
+    "params": {
+        "testString": {
+            "name": "Test String",
+            "default": 42
+        }
+    }
+}
