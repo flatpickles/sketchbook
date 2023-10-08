@@ -1,0 +1,8 @@
+{
+    "params": {
+        "testArray": {
+            "name": "Test Array",
+            "default": [0.1, 0.2]
+        }
+    }
+}

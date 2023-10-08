@@ -16,6 +16,9 @@
             "step": 0.5,
             "applyDuringInput": true,
             "style": "slider"
+        },
+        "testNumber3": {
+            "default": 21
         }
     },
     "param_sections": []

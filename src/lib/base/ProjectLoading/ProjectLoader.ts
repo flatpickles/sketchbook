@@ -179,7 +179,7 @@ export default class ProjectLoader {
                 paramConfig.default !== undefined
             ) {
                 // Defining these directly on the project object (instead of just using them when
-                // setting values below) allows ParamValueProvider to update provided value when the
+                // setting values below) allows ParamValueProvider to update provided values when
                 // config values change, as it does when assigned values change in project files.
 
                 // Check to make sure the value is legit
@@ -196,7 +196,7 @@ export default class ProjectLoader {
                 }
                 // Assert that new value is the proper size, if it's an array
                 if (isNumericArray(value) && isNumericArray(currentValue)) {
-                    if (value.length === currentValue.length) {
+                    if (value.length !== currentValue.length) {
                         throw new Error(
                             `Default value for ${paramConfig.key} has incorrect length: ${value.length}`
                         );

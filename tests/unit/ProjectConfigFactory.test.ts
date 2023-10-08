@@ -9,7 +9,7 @@ import ConfigAndSupport from './TestFiles/ConfigAndSupport/ConfigAndSupport';
 import NoConfig from './TestFiles/NoConfig/NoConfig';
 import { InferenceMode } from '$lib/base/ProjectLoading/ParamInference';
 
-describe('ProjectConfigFactory.propsFrom', () => {
+describe('ProjectConfigFactory.projectConfigFrom', () => {
     it('creates default props without provided config data', () => {
         const props = ProjectConfigFactory.projectConfigFrom(undefined);
         expect(props.title).toEqual(ProjectConfigDefaults.title);
@@ -57,7 +57,7 @@ describe('ProjectConfigFactory.propsFrom', () => {
     });
 });
 
-describe('ProjectConfigFactory.propsFrom', () => {
+describe('ProjectConfigFactory.paramConfigsFrom', () => {
     it('loads params properly from a project object with param config data', () => {
         // Initialize with sparse config data
         const testProject = new ConfigAndSupport();
@@ -107,6 +107,69 @@ describe('ProjectConfigFactory.propsFrom', () => {
         expect(numberParam.min).toEqual(NumberParamConfigDefaults.min);
         expect(numberParam.max).toEqual(NumberParamConfigDefaults.max);
         expect(numberParam.step).toEqual(NumberParamConfigDefaults.step);
+        expect(numberParam.applyDuringInput).toEqual(NumberParamConfigDefaults.applyDuringInput);
+        expect(numberParam.style).toEqual(NumberParamConfigDefaults.style);
+    });
+
+    it('loads params properly from a project object with inference but no config data', () => {
+        // Initialize with no config data
+        const testProject = new ConfigAndSupport();
+
+        // Load parameters & check default values
+        const params = ProjectConfigFactory.paramConfigsFrom(
+            testProject,
+            `import Project from '$lib/base/Project/Project';
+
+            // inline config will be ignored, per inlineConfig in config.json
+            export default class ConfigAndSupport extends Project {
+                testNumber = 42; // -100 to 100, step 1, "Number Name", field
+                testString = 'test string'; // "String Name"
+                #internalProperty = 42;
+            }`,
+            InferenceMode.ProjectFile
+        );
+        const testParam = params.filter((param) => param.key === 'testNumber')[0];
+        expect(testParam).toBeDefined();
+        expect(testParam.type).toEqual('number');
+        const numberParam = testParam as NumberParamConfig;
+        expect(numberParam.name).toEqual('Number Name');
+        expect(numberParam.min).toEqual(-100);
+        expect(numberParam.max).toEqual(100);
+        expect(numberParam.step).toEqual(1);
+        expect(numberParam.applyDuringInput).toEqual(NumberParamConfigDefaults.applyDuringInput);
+        expect(numberParam.style).toEqual(NumberParamConfigDefaults.style);
+    });
+
+    it('loads params properly from a project object with inference and config data', () => {
+        // Initialize with no config data
+        const testProject = new ConfigAndSupport();
+
+        // Load parameters & check default values
+        const params = ProjectConfigFactory.paramConfigsFrom(
+            testProject,
+            `import Project from '$lib/base/Project/Project';
+
+            export default class ConfigAndSupport extends Project {
+                testNumber = 42; // -100 to 100, step 1, "Number Name", field
+                testString = 'test string'; // "String Name"
+                #internalProperty = 42;
+            }`,
+            InferenceMode.ProjectFile,
+            {
+                testNumber: {
+                    min: 1,
+                    max: 5
+                }
+            }
+        );
+        const testParam = params.filter((param) => param.key === 'testNumber')[0];
+        expect(testParam).toBeDefined();
+        expect(testParam.type).toEqual('number');
+        const numberParam = testParam as NumberParamConfig;
+        expect(numberParam.name).toEqual('Number Name');
+        expect(numberParam.min).toEqual(1);
+        expect(numberParam.max).toEqual(5);
+        expect(numberParam.step).toEqual(1);
         expect(numberParam.applyDuringInput).toEqual(NumberParamConfigDefaults.applyDuringInput);
         expect(numberParam.style).toEqual(NumberParamConfigDefaults.style);
     });

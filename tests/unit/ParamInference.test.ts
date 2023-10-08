@@ -15,183 +15,67 @@ import {
 
 describe('ParamInference.paramAnnotations', () => {
     it('returns empty object with no matches', () => {
-        // todo
+        const annotations1 = ParamInference.paramAnnotations([], InferenceMode.ShaderFile, '');
+        expect(Object.entries(annotations1).length).toBe(0);
     });
-});
 
-/* todo: move these (or equivalent) into factory tests
-
-describe('ParamInference.paramsWithInference', () => {
-    it('supplements parameters appropriately, provided for a ts/js project file', () => {
-        const rawFileText = `
-        import Project from '$lib/base/Project/Project';
-
-        export default class InferenceTest extends Project {
-            rectSize = 0.5; // 0.25 to 0.75, 0.3, step 0.05, "Rect Size"
-            showRect = true; // "Show Rect", false
-            rectColor = '#34b00c'; // "Rect Color", 0 to 1, step 0.05
-            size = [0.5, 0.5]; // "Dimensions", -1 to 1.0, step 0.25
-            somethingFn = () => { // "Something Fun"
-                alert('sup');
-            }; // "Something Evil"
-        }        
-        `;
-        const configs = [
-            {
-                ...NumberParamConfigDefaults,
-                key: 'rectSize'
-            },
-            {
-                ...BooleanParamConfigDefaults,
-                key: 'showRect'
-            },
-            {
-                ...StringParamConfigDefaults,
-                key: 'rectColor'
-            },
-            {
-                ...NumericArrayParamConfigDefaults,
-                key: 'size'
-            },
-            {
-                ...FunctionParamConfigDefaults,
-                key: 'somethingFn'
-            }
-        ];
-        const inferences = ParamInference.paramsWithInference(
-            configs,
+    it('returns annotations in ProjectMode', () => {
+        const annotations1 = ParamInference.paramAnnotations(
+            ['foo', 'baz'],
             InferenceMode.ProjectFile,
-            rawFileText
+            `
+            import Project from '$lib/base/Project/Project';
+
+            export default class InferenceTest extends Project {
+                foo = 0; //     "Foo"
+                bar = 0;   // "Bar"
+                baz = 0; //   "Baz" // "Baz2"
+            }        
+            `
         );
-
-        // Check values
-        expect(Object.values(inferences.values).length).toEqual(0);
-
-        // Check number config
-        const rectSizeConfig = inferences.configs.filter(
-            (config) => config.key === 'rectSize'
-        ) as NumberParamConfig[];
-        expect(rectSizeConfig.length).toEqual(1);
-        expect(rectSizeConfig[0].name).toEqual('Rect Size');
-        expect(rectSizeConfig[0].min).toEqual(0.25);
-        expect(rectSizeConfig[0].max).toEqual(0.75);
-        expect(rectSizeConfig[0].step).toEqual(0.05);
-
-        // Check bool config
-        const showRectConfig = inferences.configs.filter(
-            (config) => config.key === 'showRect'
-        ) as BooleanParamConfig[];
-        expect(showRectConfig.length).toEqual(1);
-        expect(showRectConfig[0].name).toEqual('Show Rect');
-
-        // Check string config
-        const rectColorConfig = inferences.configs.filter(
-            (config) => config.key === 'rectColor'
-        ) as BooleanParamConfig[];
-        expect(rectColorConfig.length).toEqual(1);
-        expect(rectColorConfig[0].name).toEqual('Rect Color');
-
-        // Check numeric array config
-        const sizeConfig = inferences.configs.filter(
-            (config) => config.key === 'size'
-        ) as NumberParamConfig[];
-        expect(sizeConfig.length).toEqual(1);
-        expect(sizeConfig[0].name).toEqual('Dimensions');
-        expect(sizeConfig[0].min).toEqual(-1);
-        expect(sizeConfig[0].max).toEqual(1);
-        expect(sizeConfig[0].step).toEqual(0.25);
-
-        // Check function config
-        const somethingFnConfig = inferences.configs.filter(
-            (config) => config.key === 'somethingFn'
-        ) as BooleanParamConfig[];
-        expect(somethingFnConfig.length).toEqual(1);
-        expect(somethingFnConfig[0].name).toEqual('Something Fun');
+        expect(Object.entries(annotations1).length).toBe(2);
+        expect(annotations1['foo']).toEqual('"Foo"');
+        expect(annotations1['baz']).toEqual('"Baz" // "Baz2"');
     });
 
-    it('supplements parameters & provides values appropriately, provided a shader file', () => {
-        const rawFileText = `
-        precision mediump float;
-        varying vec2 uv;
-        uniform float time;
-        uniform float numberParam; // [16, 23], 14, -1 to 20, "Numbah", step 1
-        uniform bool booleanParam; // 1, true, "Boolean Something", false
-        uniform vec2 arrayParam1; // -100.5 to 10, step 0.5, [-20, 5], "Pair"
-        uniform vec3 arrayParam2; // "BG Color", [-0.3, 1, 0.1], -1.0 to .5, step 0.2
-        
-        void main() {}     
-        `;
-        const configs = [
-            {
-                ...NumberParamConfigDefaults,
-                key: 'numberParam'
-            },
-            {
-                ...BooleanParamConfigDefaults,
-                key: 'booleanParam'
-            },
-            {
-                ...NumericArrayParamConfigDefaults,
-                key: 'arrayParam1'
-            },
-            {
-                ...NumericArrayParamConfigDefaults,
-                key: 'arrayParam2'
-            }
-        ];
-        const inferences = ParamInference.paramsWithInference(
-            configs,
+    it('returns annotations in ShaderMode', () => {
+        const annotations1 = ParamInference.paramAnnotations(
+            ['foo', 'baz'],
             InferenceMode.ShaderFile,
-            rawFileText
+            `
+            precision mediump float;
+            varying vec2 uv;
+            uniform float time;
+            uniform float foo;  //   "Foo"
+            uniform float bar; // "Bar"
+            uniform float baz;    //   "Baz" // "Baz2"
+            
+            void main() {}     
+            `
         );
+        expect(Object.entries(annotations1).length).toBe(2);
+        expect(annotations1['foo']).toEqual('"Foo"');
+        expect(annotations1['baz']).toEqual('"Baz" // "Baz2"');
+    });
 
-        // Check values
-        expect(Object.values(inferences.values).length).toEqual(4);
-        expect(inferences.values['numberParam']).toEqual(14);
-        expect(inferences.values['booleanParam']).toEqual(true);
-        expect(inferences.values['arrayParam1']).toEqual([-20, 5]);
-        expect(inferences.values['arrayParam2']).toEqual([-0.3, 1, 0.1]);
-
-        // Check number config
-        const numberConfig = inferences.configs.filter(
-            (config) => config.key === 'numberParam'
-        ) as NumberParamConfig[];
-        expect(numberConfig.length).toEqual(1);
-        expect(numberConfig[0].name).toEqual('Numbah');
-        expect(numberConfig[0].min).toEqual(-1);
-        expect(numberConfig[0].max).toEqual(20);
-        expect(numberConfig[0].step).toEqual(1);
-
-        // Check bool config
-        const booleanConfig = inferences.configs.filter(
-            (config) => config.key === 'booleanParam'
-        ) as BooleanParamConfig[];
-        expect(booleanConfig.length).toEqual(1);
-        expect(booleanConfig[0].name).toEqual('Boolean Something');
-
-        // Check numeric array #1 config
-        const arrayConfig1 = inferences.configs.filter(
-            (config) => config.key === 'arrayParam1'
-        ) as NumberParamConfig[];
-        expect(arrayConfig1.length).toEqual(1);
-        expect(arrayConfig1[0].name).toEqual('Pair');
-        expect(arrayConfig1[0].min).toEqual(-100.5);
-        expect(arrayConfig1[0].max).toEqual(10);
-        expect(arrayConfig1[0].step).toEqual(0.5);
-
-        // Check numeric array #1 config
-        const arrayConfig2 = inferences.configs.filter(
-            (config) => config.key === 'arrayParam2'
-        ) as NumberParamConfig[];
-        expect(arrayConfig2.length).toEqual(1);
-        expect(arrayConfig2[0].name).toEqual('BG Color');
-        expect(arrayConfig2[0].min).toEqual(-1);
-        expect(arrayConfig2[0].max).toEqual(0.5);
-        expect(arrayConfig2[0].step).toEqual(0.2);
+    it("doesn't return annotations in None mode", () => {
+        const annotations1 = ParamInference.paramAnnotations(
+            ['foo', 'baz'],
+            InferenceMode.None,
+            `
+            precision mediump float;
+            varying vec2 uv;
+            uniform float time;
+            uniform float foo;  //   "Foo"
+            uniform float bar; // "Bar"
+            uniform float baz;    //   "Baz" // "Baz2"
+            
+            void main() {}     
+            `
+        );
+        expect(Object.entries(annotations1).length).toBe(0);
     });
 });
-
-*/
 
 describe('ParamInference.paramWithInference', () => {
     it("doesn't do anything with no comment", () => {
@@ -323,7 +207,6 @@ describe('ParamInference.intentionsFrom', () => {
         expect(intentions2.numberValues.length).toBe(0);
         expect(intentions2.booleanValues.length).toBe(0);
         expect(intentions2.numericArrayValues.length).toBe(0);
-        console.log(intentions2.potentialStyleStrings);
         expect(intentions2.potentialStyleStrings.length).toBe(0);
 
         const intentions3 = ParamInference.intentionsFrom('18.6, 0.4 to -1, step 0.4');

@@ -186,4 +186,18 @@ describe('ParamConfigFactory', () => {
             });
         }).toThrow();
     });
+
+    it('creates params with provided inference comments', () => {
+        const param = ParamConfigFactory.paramConfigFrom(
+            3,
+            'testNumber',
+            InferenceMode.ProjectFile,
+            '"Test Name", 1 to 5, step 1'
+        );
+        const numberParam = param as NumberParamConfig;
+        expect(numberParam.name).toEqual('Test Name');
+        expect(numberParam.min).toEqual(1);
+        expect(numberParam.max).toEqual(5);
+        expect(numberParam.step).toEqual(1);
+    });
 });
