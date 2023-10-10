@@ -2,16 +2,28 @@ import { describe, it, expect } from 'vitest';
 import ParamInference, { InferenceMode } from '$lib/base/ProjectLoading/ParamInference';
 import {
     NumberParamConfigDefaults,
-    type NumberParamConfig
+    type NumberParamConfig,
+    NumberParamStyle
 } from '$lib/base/ConfigModels/ParamConfigs/NumberParamConfig';
 import {
     NumericArrayParamConfigDefaults,
-    type NumericArrayParamConfig
+    type NumericArrayParamConfig,
+    NumericArrayParamStyle
 } from '$lib/base/ConfigModels/ParamConfigs/NumericArrayParamConfig';
 import {
     BooleanParamConfigDefaults,
     type BooleanParamConfig
 } from '$lib/base/ConfigModels/ParamConfigs/BooleanParamConfig';
+import {
+    FileParamConfigDefaults,
+    type FileParamConfig,
+    FileReaderMode
+} from '$lib/base/ConfigModels/ParamConfigs/FileParamConfig';
+import {
+    StringParamConfigDefaults,
+    type StringParamConfig,
+    StringParamStyle
+} from '$lib/base/ConfigModels/ParamConfigs/StringParamConfig';
 
 describe('ParamInference.paramAnnotations', () => {
     it('returns empty object with no matches', () => {
@@ -74,6 +86,32 @@ describe('ParamInference.paramAnnotations', () => {
             `
         );
         expect(Object.entries(annotations1).length).toBe(0);
+    });
+
+    it('properly parses annotations for functions', () => {
+        const annotations1 = ParamInference.paramAnnotations(
+            ['foo', 'bar', 'baz'],
+            InferenceMode.ProjectFile,
+            `
+            import Project from '$lib/base/Project/Project';
+
+            export default class InferenceTest extends Project {
+                foo = () => { // "Foo"
+                    // "Not Foo"
+                }
+                bar = () => {
+                    // "Bar"
+                }
+                baz = () => {
+                    console.log('baz');
+                    // "Baz"
+                }
+            }        
+            `
+        );
+        expect(Object.entries(annotations1).length).toBe(2);
+        expect(annotations1['foo']).toEqual('"Foo"');
+        expect(annotations1['bar']).toEqual('"Bar"');
     });
 });
 
@@ -167,6 +205,119 @@ describe('ParamInference.paramWithInference', () => {
         ) as NumericArrayParamConfig;
         expect(inference4.default).toEqual([74, 0.1, -3]);
     });
+
+    it('assigns metadata (styles, etc)', () => {
+        const inference1 = ParamInference.paramWithInference(
+            NumberParamConfigDefaults,
+            InferenceMode.ProjectFile,
+            '23, origin, true, [74, .1, -3], -4, slider'
+        ) as NumberParamConfig;
+        expect(inference1.style).toEqual(NumberParamStyle.Slider);
+
+        const inference2 = ParamInference.paramWithInference(
+            {
+                ...NumericArrayParamConfigDefaults,
+                key: 'arrayColor'
+            },
+            InferenceMode.ProjectFile,
+            ''
+        ) as NumericArrayParamConfig;
+        expect(inference2.style).toEqual(NumericArrayParamStyle.Color);
+
+        const inference3 = ParamInference.paramWithInference(
+            {
+                ...FileParamConfigDefaults,
+                key: 'multipleFiles'
+            },
+            InferenceMode.ProjectFile,
+            '"Not a DataURL", image'
+        ) as FileParamConfig;
+        expect(inference3.mode).toEqual(FileReaderMode.Image);
+        expect(inference3.multiple).toBe(true);
+    });
+});
+
+describe('ParamInference.assignMeta', () => {
+    it('returns the same object with an empty array', () => {
+        const withMeta = ParamInference.assignMeta(NumericArrayParamConfigDefaults, []);
+        expect(withMeta).toEqual(NumericArrayParamConfigDefaults);
+    });
+
+    it('assigns styles for numbers from metaStrings', () => {
+        const withMeta = ParamInference.assignMeta(NumberParamConfigDefaults, [
+            'snacks',
+            'slider'
+        ]) as NumberParamConfig;
+        expect(withMeta.style).toEqual(NumberParamStyle.Slider);
+    });
+
+    it('assigns styles for numbers from key', () => {
+        const withMeta = ParamInference.assignMeta(
+            {
+                ...NumberParamConfigDefaults,
+                key: 'numberSlider'
+            },
+            ['snacks']
+        ) as NumberParamConfig;
+        expect(withMeta.style).toEqual(NumberParamStyle.Slider);
+    });
+
+    it('prefers explicit metaStrings vs key', () => {
+        const withMeta = ParamInference.assignMeta(
+            {
+                ...NumberParamConfigDefaults,
+                key: 'numberSlider'
+            },
+            ['snacks', 'field']
+        ) as NumberParamConfig;
+        expect(withMeta.style).toEqual(NumberParamStyle.Field);
+    });
+
+    it('assigns styles for numeric arrays from metaStrings', () => {
+        const withMeta = ParamInference.assignMeta(NumericArrayParamConfigDefaults, [
+            'snacks',
+            'color'
+        ]) as NumericArrayParamConfig;
+        expect(withMeta.style).toEqual(NumericArrayParamStyle.Color);
+    });
+
+    it('assigns styles for numeric arrays from key', () => {
+        const withMeta = ParamInference.assignMeta(
+            {
+                ...NumericArrayParamConfigDefaults,
+                key: 'arraySliders'
+            },
+            ['snacks']
+        ) as NumericArrayParamConfig;
+        expect(withMeta.style).toEqual(NumericArrayParamStyle.Slider);
+    });
+
+    it('assigns styles for strings from metaStrings', () => {
+        const withMeta = ParamInference.assignMeta(StringParamConfigDefaults, [
+            'snacks',
+            'color',
+            'multi'
+        ]) as StringParamConfig;
+        expect(withMeta.style).toEqual(StringParamStyle.MultiLine);
+    });
+
+    it('assigns styles for numeric arrays from key', () => {
+        const withMeta = ParamInference.assignMeta(
+            { ...StringParamConfigDefaults, key: 'multilineString' },
+            ['snacks']
+        ) as StringParamConfig;
+        expect(withMeta.style).toEqual(StringParamStyle.MultiLine);
+    });
+
+    it('assigns assorted metadata for file params from metaStrings and key', () => {
+        const withMeta = ParamInference.assignMeta(
+            { ...FileParamConfigDefaults, key: 'multiFileSelector' },
+            ['binaryString', 'snacks', 'audio/wav']
+        ) as FileParamConfig;
+        expect(withMeta.mode).toEqual(FileReaderMode.BinaryString);
+        expect(withMeta.multiple).toBe(true);
+        expect(withMeta.accept).toEqual('audio/wav');
+    });
 });
 
 describe('ParamInference.intentionsFrom', () => {
@@ -178,7 +329,7 @@ describe('ParamInference.intentionsFrom', () => {
         expect(intentions1.numberValues.length).toBe(0);
         expect(intentions1.booleanValues.length).toBe(0);
         expect(intentions1.numericArrayValues.length).toBe(0);
-        expect(intentions1.potentialStyleStrings.length).toBe(0);
+        expect(intentions1.metaStrings.length).toBe(0);
     });
 
     it('parses names', () => {
@@ -198,7 +349,7 @@ describe('ParamInference.intentionsFrom', () => {
         expect(intentions1.numberValues.length).toBe(0);
         expect(intentions1.booleanValues.length).toBe(0);
         expect(intentions1.numericArrayValues.length).toBe(0);
-        expect(intentions1.potentialStyleStrings.length).toBe(0);
+        expect(intentions1.metaStrings.length).toBe(0);
 
         const intentions2 = ParamInference.intentionsFrom('0 to 1, step 0.1');
         expect(intentions2.name).toBeUndefined();
@@ -207,7 +358,7 @@ describe('ParamInference.intentionsFrom', () => {
         expect(intentions2.numberValues.length).toBe(0);
         expect(intentions2.booleanValues.length).toBe(0);
         expect(intentions2.numericArrayValues.length).toBe(0);
-        expect(intentions2.potentialStyleStrings.length).toBe(0);
+        expect(intentions2.metaStrings.length).toBe(0);
 
         const intentions3 = ParamInference.intentionsFrom('18.6, 0.4 to -1, step 0.4');
         expect(intentions3.name).toBeUndefined();
@@ -216,7 +367,7 @@ describe('ParamInference.intentionsFrom', () => {
         expect(intentions3.numberValues).toEqual([18.6]);
         expect(intentions3.booleanValues.length).toBe(0);
         expect(intentions3.numericArrayValues.length).toBe(0);
-        expect(intentions3.potentialStyleStrings.length).toBe(0);
+        expect(intentions3.metaStrings.length).toBe(0);
 
         const intentions4 = ParamInference.intentionsFrom('-123 to 18.23, step 123, "foo"');
         expect(intentions4.name).toEqual('foo');
@@ -225,7 +376,7 @@ describe('ParamInference.intentionsFrom', () => {
         expect(intentions4.numberValues.length).toBe(0);
         expect(intentions4.booleanValues.length).toBe(0);
         expect(intentions4.numericArrayValues.length).toBe(0);
-        expect(intentions4.potentialStyleStrings.length).toBe(0);
+        expect(intentions4.metaStrings.length).toBe(0);
 
         const intentions5 = ParamInference.intentionsFrom('.1 to .6, step 0.1, "foo"');
         expect(intentions5.name).toEqual('foo');
@@ -234,7 +385,7 @@ describe('ParamInference.intentionsFrom', () => {
         expect(intentions5.numberValues.length).toBe(0);
         expect(intentions5.booleanValues.length).toBe(0);
         expect(intentions5.numericArrayValues.length).toBe(0);
-        expect(intentions5.potentialStyleStrings.length).toBe(0);
+        expect(intentions5.metaStrings.length).toBe(0);
 
         const intentions6 = ParamInference.intentionsFrom('.1 to end, step 0.1, "foo"');
         expect(intentions6.name).toEqual('foo');
@@ -243,7 +394,7 @@ describe('ParamInference.intentionsFrom', () => {
         expect(intentions6.numberValues.length).toBe(0);
         expect(intentions6.booleanValues.length).toBe(0);
         expect(intentions6.numericArrayValues.length).toBe(0);
-        expect(intentions6.potentialStyleStrings.length).toBe(0);
+        expect(intentions6.metaStrings.length).toBe(0);
     });
 
     it('parses step', () => {
@@ -254,7 +405,7 @@ describe('ParamInference.intentionsFrom', () => {
         expect(intentions1.numberValues.length).toBe(0);
         expect(intentions1.booleanValues.length).toBe(0);
         expect(intentions1.numericArrayValues.length).toBe(0);
-        expect(intentions1.potentialStyleStrings.length).toBe(0);
+        expect(intentions1.metaStrings.length).toBe(0);
 
         const intentions2 = ParamInference.intentionsFrom('step 10, 0 to 1');
         expect(intentions2.name).toBeUndefined();
@@ -263,7 +414,7 @@ describe('ParamInference.intentionsFrom', () => {
         expect(intentions2.numberValues.length).toBe(0);
         expect(intentions2.booleanValues.length).toBe(0);
         expect(intentions2.numericArrayValues.length).toBe(0);
-        expect(intentions2.potentialStyleStrings.length).toBe(0);
+        expect(intentions2.metaStrings.length).toBe(0);
 
         const intentions3 = ParamInference.intentionsFrom('0 to 1, step -4, "foo"');
         expect(intentions3.name).toEqual('foo');
@@ -272,7 +423,7 @@ describe('ParamInference.intentionsFrom', () => {
         expect(intentions3.numberValues.length).toBe(0);
         expect(intentions3.booleanValues.length).toBe(0);
         expect(intentions3.numericArrayValues.length).toBe(0);
-        expect(intentions3.potentialStyleStrings.length).toBe(0);
+        expect(intentions3.metaStrings.length).toBe(0);
 
         const intentions4 = ParamInference.intentionsFrom('0 to 1, step .5, "foo"');
         expect(intentions4.name).toEqual('foo');
@@ -281,7 +432,7 @@ describe('ParamInference.intentionsFrom', () => {
         expect(intentions4.numberValues.length).toBe(0);
         expect(intentions4.booleanValues.length).toBe(0);
         expect(intentions4.numericArrayValues.length).toBe(0);
-        expect(intentions4.potentialStyleStrings.length).toBe(0);
+        expect(intentions4.metaStrings.length).toBe(0);
 
         const intentions5 = ParamInference.intentionsFrom('0 to 1, step .5 yep, "foo"');
         expect(intentions5.name).toEqual('foo');
@@ -290,7 +441,7 @@ describe('ParamInference.intentionsFrom', () => {
         expect(intentions5.numberValues.length).toBe(0);
         expect(intentions5.booleanValues.length).toBe(0);
         expect(intentions5.numericArrayValues.length).toBe(0);
-        expect(intentions5.potentialStyleStrings.length).toBe(0);
+        expect(intentions5.metaStrings.length).toBe(0);
     });
 
     it('parses booleans', () => {
@@ -301,7 +452,7 @@ describe('ParamInference.intentionsFrom', () => {
         expect(intentions1.numberValues.length).toBe(0);
         expect(intentions1.booleanValues).toEqual([true]);
         expect(intentions1.numericArrayValues.length).toBe(0);
-        expect(intentions1.potentialStyleStrings.length).toBe(0);
+        expect(intentions1.metaStrings.length).toBe(0);
 
         const intentions2 = ParamInference.intentionsFrom('false, true');
         expect(intentions2.name).toBeUndefined();
@@ -310,7 +461,7 @@ describe('ParamInference.intentionsFrom', () => {
         expect(intentions2.numberValues.length).toBe(0);
         expect(intentions2.booleanValues).toEqual([false, true]);
         expect(intentions2.numericArrayValues.length).toBe(0);
-        expect(intentions2.potentialStyleStrings.length).toBe(0);
+        expect(intentions2.metaStrings.length).toBe(0);
 
         const intentions3 = ParamInference.intentionsFrom('false, "true", false');
         expect(intentions3.name).toEqual('true');
@@ -319,7 +470,7 @@ describe('ParamInference.intentionsFrom', () => {
         expect(intentions3.numberValues.length).toBe(0);
         expect(intentions3.booleanValues).toEqual([false, false]);
         expect(intentions3.numericArrayValues.length).toBe(0);
-        expect(intentions3.potentialStyleStrings.length).toBe(0);
+        expect(intentions3.metaStrings.length).toBe(0);
 
         const intentions4 = ParamInference.intentionsFrom(
             'false, "true", false, true yea, no false'
@@ -330,7 +481,7 @@ describe('ParamInference.intentionsFrom', () => {
         expect(intentions4.numberValues.length).toBe(0);
         expect(intentions4.booleanValues).toEqual([false, false]);
         expect(intentions4.numericArrayValues.length).toBe(0);
-        expect(intentions4.potentialStyleStrings.length).toBe(0);
+        expect(intentions4.metaStrings.length).toBe(0);
     });
 
     it('parses numbers', () => {
@@ -341,7 +492,7 @@ describe('ParamInference.intentionsFrom', () => {
         expect(intentions1.numberValues).toEqual([69]);
         expect(intentions1.booleanValues.length).toBe(0);
         expect(intentions1.numericArrayValues.length).toBe(0);
-        expect(intentions1.potentialStyleStrings.length).toBe(0);
+        expect(intentions1.metaStrings.length).toBe(0);
 
         const intentions2 = ParamInference.intentionsFrom('69, 420');
         expect(intentions2.name).toBeUndefined();
@@ -350,7 +501,7 @@ describe('ParamInference.intentionsFrom', () => {
         expect(intentions2.numberValues).toEqual([69, 420]);
         expect(intentions2.booleanValues.length).toBe(0);
         expect(intentions2.numericArrayValues.length).toBe(0);
-        expect(intentions2.potentialStyleStrings.length).toBe(0);
+        expect(intentions2.metaStrings.length).toBe(0);
 
         const intentions3 = ParamInference.intentionsFrom('69, "420", 69');
         expect(intentions3.name).toEqual('420');
@@ -359,7 +510,7 @@ describe('ParamInference.intentionsFrom', () => {
         expect(intentions3.numberValues).toEqual([69, 69]);
         expect(intentions3.booleanValues.length).toBe(0);
         expect(intentions3.numericArrayValues.length).toBe(0);
-        expect(intentions3.potentialStyleStrings.length).toBe(0);
+        expect(intentions3.metaStrings.length).toBe(0);
 
         const intentions4 = ParamInference.intentionsFrom(
             '69.5, -420, "69", .5, step 0.1, -17.1 to 400, [1, 3, -4, 0.5]'
@@ -370,7 +521,7 @@ describe('ParamInference.intentionsFrom', () => {
         expect(intentions4.numberValues).toEqual([69.5, -420, 0.5]);
         expect(intentions4.booleanValues.length).toBe(0);
         expect(intentions4.numericArrayValues).toEqual([[1, 3, -4, 0.5]]);
-        expect(intentions4.potentialStyleStrings.length).toBe(0);
+        expect(intentions4.metaStrings.length).toBe(0);
     });
 
     it('parses numeric arrays', () => {
@@ -381,7 +532,7 @@ describe('ParamInference.intentionsFrom', () => {
         expect(intentions1.numberValues.length).toBe(0);
         expect(intentions1.booleanValues.length).toBe(0);
         expect(intentions1.numericArrayValues).toEqual([[1, 2, 3]]);
-        expect(intentions1.potentialStyleStrings.length).toBe(0);
+        expect(intentions1.metaStrings.length).toBe(0);
 
         const intentions2 = ParamInference.intentionsFrom('[-1, 0.1, .6, 0.5, 0.5]');
         expect(intentions2.name).toBeUndefined();
@@ -390,7 +541,7 @@ describe('ParamInference.intentionsFrom', () => {
         expect(intentions2.numberValues.length).toBe(0);
         expect(intentions2.booleanValues.length).toBe(0);
         expect(intentions2.numericArrayValues).toEqual([[-1, 0.1, 0.6, 0.5, 0.5]]);
-        expect(intentions2.potentialStyleStrings.length).toBe(0);
+        expect(intentions2.metaStrings.length).toBe(0);
 
         const intentions3 = ParamInference.intentionsFrom(
             '[-1, 0.1, .6, 0.5, 0.5], 100.5, test, "[12, 3, 0.5]", [-10, 1.0]'
@@ -404,7 +555,7 @@ describe('ParamInference.intentionsFrom', () => {
             [-1, 0.1, 0.6, 0.5, 0.5],
             [-10, 1.0]
         ]);
-        expect(intentions3.potentialStyleStrings).toEqual(['test']);
+        expect(intentions3.metaStrings).toEqual(['test']);
     });
 
     it('parses styles', () => {
@@ -415,7 +566,7 @@ describe('ParamInference.intentionsFrom', () => {
         expect(intentions1.numberValues.length).toBe(0);
         expect(intentions1.booleanValues.length).toBe(0);
         expect(intentions1.numericArrayValues.length).toBe(0);
-        expect(intentions1.potentialStyleStrings).toEqual(['test']);
+        expect(intentions1.metaStrings).toEqual(['test']);
 
         const intentions2 = ParamInference.intentionsFrom(
             'test, step, step 01, true, testDeux, false, 100.3 to 3'
@@ -426,6 +577,6 @@ describe('ParamInference.intentionsFrom', () => {
         expect(intentions2.numberValues.length).toBe(0);
         expect(intentions2.booleanValues).toEqual([true, false]);
         expect(intentions2.numericArrayValues.length).toBe(0);
-        expect(intentions2.potentialStyleStrings).toEqual(['test', 'step', 'testDeux']);
+        expect(intentions2.metaStrings).toEqual(['test', 'step', 'testDeux']);
     });
 });

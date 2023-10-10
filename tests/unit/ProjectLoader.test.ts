@@ -15,7 +15,8 @@ import ParamValueProvider from '$lib/base/ProjectLoading/ParamValueProvider';
 import FragShaderProject from '$lib/base/Project/FragShaderProject';
 import {
     NumberParamConfigDefaults,
-    type NumberParamConfig
+    type NumberParamConfig,
+    NumberParamStyle
 } from '$lib/base/ConfigModels/ParamConfigs/NumberParamConfig';
 import type { BooleanParamConfig } from '$lib/base/ConfigModels/ParamConfigs/BooleanParamConfig';
 import type { NumericArrayParamConfig } from '$lib/base/ConfigModels/ParamConfigs/NumericArrayParamConfig';
@@ -417,7 +418,7 @@ describe('loading projects w/ inline / inferred config', async () => {
         expect(testNumberParam1.max).toEqual(100);
         expect(testNumberParam1.step).toEqual(1);
         expect(testNumberParam1.default).toBeUndefined();
-        expect(testNumberParam1.style).toEqual(NumberParamConfigDefaults.style);
+        expect(testNumberParam1.style).toEqual(NumberParamStyle.Field);
         expect(testNumberParam1.name).toEqual('Number Name');
 
         // Check number config #2
@@ -451,7 +452,7 @@ describe('loading projects w/ inline / inferred config', async () => {
         expect(testNumberParam1.max).toEqual(100);
         expect(testNumberParam1.step).toEqual(1);
         expect(testNumberParam1.default).toEqual(42);
-        expect(testNumberParam1.style).toEqual(NumberParamConfigDefaults.style);
+        expect(testNumberParam1.style).toEqual(NumberParamStyle.Field);
         expect(testNumberParam1.name).toEqual('Number Name');
         const actualValue = Object.getOwnPropertyDescriptor(
             projectTuple!.project,
