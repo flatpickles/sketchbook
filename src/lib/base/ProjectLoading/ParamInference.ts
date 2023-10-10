@@ -146,7 +146,10 @@ export default class ParamInference {
                 else if (metaString.includes('field')) config.style = NumericArrayParamStyle.Field;
                 else if (metaString.includes('unitcolor'))
                     config.style = NumericArrayParamStyle.UnitColor;
-                else if (metaString.includes('color')) config.style = NumericArrayParamStyle.Color;
+                else if (metaString.includes('bytecolor'))
+                    config.style = NumericArrayParamStyle.ByteColor;
+                else if (metaString.includes('color'))
+                    config.style = NumericArrayParamStyle.UnitColor;
             } else if (ParamGuards.isStringParamConfig(config)) {
                 if (metaString.includes('single')) config.style = StringParamStyle.SingleLine;
                 else if (metaString.includes('multi')) config.style = StringParamStyle.MultiLine;

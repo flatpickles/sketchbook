@@ -222,7 +222,7 @@ describe('ParamInference.paramWithInference', () => {
             InferenceMode.ProjectFile,
             ''
         ) as NumericArrayParamConfig;
-        expect(inference2.style).toEqual(NumericArrayParamStyle.Color);
+        expect(inference2.style).toEqual(NumericArrayParamStyle.UnitColor);
 
         const inference3 = ParamInference.paramWithInference(
             {
@@ -278,7 +278,7 @@ describe('ParamInference.assignMeta', () => {
             'snacks',
             'color'
         ]) as NumericArrayParamConfig;
-        expect(withMeta.style).toEqual(NumericArrayParamStyle.Color);
+        expect(withMeta.style).toEqual(NumericArrayParamStyle.UnitColor);
     });
 
     it('assigns styles for numeric arrays from key', () => {
