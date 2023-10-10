@@ -154,7 +154,7 @@ export default class ProjectLoader {
         const rawFileText = (await allImports.projectFilesRaw[
             classFilePath || textFilePath
         ]()) as string;
-        const inferenceMode = !projectConfig.inlineConfig
+        const inferenceMode = projectConfig.explicitConfig
             ? InferenceMode.None
             : classFilePath != undefined
             ? InferenceMode.ProjectFile
