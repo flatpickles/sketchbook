@@ -149,7 +149,7 @@
                 bind:value
                 on:change={inputUpdated.bind(null, true)}
             />
-        {:else if config.style === NumericArrayParamStyle.Color || config.style === NumericArrayParamStyle.UnitColor}
+        {:else if config.style === NumericArrayParamStyle.ByteColor || config.style === NumericArrayParamStyle.UnitColor}
             <ColorInput
                 id={config.key}
                 name={config.name}
