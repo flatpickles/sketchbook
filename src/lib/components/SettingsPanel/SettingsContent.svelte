@@ -23,7 +23,18 @@
 
     // Reset sketchbook with reset button click
     function resetSketchbook() {
+        // Clear localStorage
         localStorage.clear();
+
+        // Clear cookies
+        const cookies = document.cookie.split(';');
+        for (const cookie of cookies) {
+            const eqPos = cookie.indexOf('=');
+            const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+            document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT';
+        }
+
+        // Reload the page
         location.reload();
     }
 
