@@ -312,11 +312,21 @@ describe('ParamInference.assignMeta', () => {
     it('assigns assorted metadata for file params from metaStrings and key', () => {
         const withMeta = ParamInference.assignMeta(
             { ...FileParamConfigDefaults, key: 'multiFileSelector' },
-            ['binaryString', 'snacks', 'audio/wav']
+            ['binaryString', 'snacks']
         ) as FileParamConfig;
         expect(withMeta.mode).toEqual(FileReaderMode.BinaryString);
         expect(withMeta.multiple).toBe(true);
-        expect(withMeta.accept).toEqual('audio/wav');
+    });
+
+    it('assigns meta from name even with no metaStrings', () => {
+        const withMeta = ParamInference.assignMeta(
+            {
+                ...NumericArrayParamConfigDefaults,
+                key: 'arraySliders'
+            },
+            undefined
+        ) as NumericArrayParamConfig;
+        expect(withMeta.style).toEqual(NumericArrayParamStyle.Slider);
     });
 });
 

@@ -71,8 +71,8 @@ Let's make the size and color of the rectangle customizable! To define Sketchboo
 
 ```ts
 export default class QuickStart extends Project {
-    rectSize = 0.5;
-    rectColor = '#34b00c';
+    rectSize = 0.5; // "Rect Size"
+    rectColor = '#34b00c'; // "Rect Color"
 
     update() {
         const ctx = this.canvas?.getContext('2d');
@@ -90,34 +90,29 @@ export default class QuickStart extends Project {
 }
 ```
 
-We've added a couple things, most notably property definitions for `rectSize` and `rectColor`, each with a default value. If you check back in the browser, Sketchbook has automatically created inputs for each in the project details panel on the right, and we can use these properties within our `Project` subclass to access and use the most recent values set in the UI.
+We've added a couple things, most notably property definitions for `rectSize` and `rectColor`, each with a default value. We've also added a comment next to each, indicating its display name.
+
+If you check back in the browser, Sketchbook has automatically created inputs for each in the project details panel on the right, and we can use these properties within our `Project` subclass to access and use the most recent values set in the UI.
 
 _You can define many different types of parameters, including numbers, booleans, strings, and numeric arrays. Sketchbook also offers file input and more via class property definitions._
 
 ### Configure Your Project
 
-Now that you have a parameterized code sketch set up, let's look at some basic configuration options. You can define a `config.json` alongside `QuickStart.ts` to impact the behavior and presentation of your project. Add this code within a `src/art/QuickStart/config.json`:
+Now that you have a parameterized code sketch set up, let's look at some basic configuration options. You can create a `config.json` alongside `QuickStart.ts` to impact the behavior and presentation of your project. Add this code within a new `src/art/QuickStart/config.json` file:
 
 ```json
 {
     "title": "Quick Start",
     "date": "2023-09-19",
-    "description": "This is the completed project from the quick start guide.",
-    "params": {
-        "rectSize": {
-            "name": "Rect Size"
-        },
-        "rectColor": {
-            "name": "Rect Color",
-            "style": "color"
-        }
-    }
+    "description": "This is the completed project from the quick start guide."
 }
 ```
 
-Here we're defining a title, date, and description for the project, and configuring a display name for each parameter input. We're also setting the "style" of `rectColor` to be a "color", so Sketchbook will show this parameter with a color picker input. Check your browser, and you'll see all of these changes reflected in the project details panel.
+Here we're defining a title, date, and description for the project. Check your browser, and you'll see these changes reflected in the project details panel.
 
 <img src="media/quickstart.png" style="width: 300px" />
+
+_Note that `rectColor` is displayed with a color picker input – Sketchbook has inferred from its name that this parameter is a color hex string. This is a parameter "style" that we could also have configured explicitly. To learn more, see the documentation for [parameter configuration](param-config.md)._
 
 ### What's Next
 

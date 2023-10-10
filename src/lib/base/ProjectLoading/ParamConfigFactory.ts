@@ -98,10 +98,8 @@ export class ParamConfigFactory {
         // Assign the param key
         param.key = key;
 
-        // Apply any intentions inferred within the annotation string (comment)
-        if (annotation) {
-            param = ParamInference.paramWithInference(param, inferenceMode, annotation);
-        }
+        // Apply any inferred intentions, using param & annotation as context
+        param = ParamInference.paramWithInference(param, inferenceMode, annotation);
 
         // If the name is still the default, assign the key as the name
         if (param.name === ParamConfigDefaults.name) param.name = key;

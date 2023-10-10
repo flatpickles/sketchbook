@@ -44,14 +44,15 @@ A basic fragment shader implementation in Sketchbook might look like this:
 precision mediump float;
 varying vec2 uv;
 uniform float time;
+uniform float green; // "Greenness", 0.5
 
 void main() {
-    vec3 bgColor = vec3(uv.x, uv.y, sin(time) / 2.0 + 0.5);
+    vec3 bgColor = vec3(uv.x, green, sin(time) / 2.0 + 0.5);
     gl_FragColor = vec4(bgColor, 1.0);
 }
 ```
 
-You can configure your fragment shader projects and parameters as you would for other Sketchbook projects, i.e. by creating a `config.json` file alongside your fragment shader within its containing project directory. Your uniform names will be used as parameter keys for configuration.
+You can configure your fragment shader projects as you would configure other Sketchbook projects, with a `config.json` file in your project directory. Uniform names are used as keys for parameter configuration in the config file, or you can use inline annotations as described in the [param config](param-config.md) documentation. Default values can also be defined alongside your shader parameters; `0.5` will be used as the default value for "Greenness", above.
 
 Sketchbook also comes with built-in [glslify](https://github.com/glslify/glslify) support: any GLSL shader files you define will be automatically be compiled with glslify, using whichever glslify modules you've added via `npm install`. This applies for fragment shader projects as discussed above, and also for any GLSL files that you import in a custom GL project.
 

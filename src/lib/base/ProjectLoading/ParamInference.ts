@@ -71,13 +71,13 @@ export default class ParamInference {
     static paramWithInference(
         initialConfig: ParamConfig,
         mode: InferenceMode,
-        comment: string
+        comment: string | undefined
     ): ParamConfig {
         if (mode === InferenceMode.None) return initialConfig;
 
         // Fill out a config and value with inferred values, if available
         const newConfig = { ...initialConfig };
-        const intentions = this.intentionsFrom(comment);
+        const intentions = comment ? this.intentionsFrom(comment) : undefined;
 
         // Assign name token
         if (intentions?.name) {
@@ -126,7 +126,7 @@ export default class ParamInference {
 
     // Helper functions, public for easy unit testing
 
-    static assignMeta(config: ParamConfig, metaStrings: string[]): ParamConfig {
+    static assignMeta(config: ParamConfig, metaStrings: string[] | undefined): ParamConfig {
         // Interpret meta strings as styles, modes, etc, depending on the parameter type
         const applyString = (metaString: string) => {
             if (ParamGuards.isNumberParamConfig(config)) {
@@ -135,8 +135,6 @@ export default class ParamInference {
                 else if (metaString.includes('field')) config.style = NumberParamStyle.Field;
             } else if (ParamGuards.isNumericArrayParamConfig(config)) {
                 if (metaString.includes('combo')) config.style = NumericArrayParamStyle.Combo;
-                else if (metaString.includes('compact'))
-                    config.style = NumericArrayParamStyle.CompactSlider;
                 else if (metaString.includes('compactslider'))
                     config.style = NumericArrayParamStyle.CompactSlider;
                 else if (metaString.includes('slider'))
@@ -148,6 +146,9 @@ export default class ParamInference {
                     config.style = NumericArrayParamStyle.UnitColor;
                 else if (metaString.includes('bytecolor'))
                     config.style = NumericArrayParamStyle.ByteColor;
+                // shorthand: "compact" implies "compactslider", "color" implies "unitcolor"
+                else if (metaString.includes('compact'))
+                    config.style = NumericArrayParamStyle.CompactSlider;
                 else if (metaString.includes('color'))
                     config.style = NumericArrayParamStyle.UnitColor;
             } else if (ParamGuards.isStringParamConfig(config)) {
@@ -162,12 +163,6 @@ export default class ParamInference {
                 else if (metaString.includes('text')) config.mode = FileReaderMode.Text;
                 else if (metaString.includes('image')) config.mode = FileReaderMode.Image;
                 if (metaString.includes('multi')) config.multiple = true;
-                if (
-                    metaString.includes('image/') ||
-                    metaString.includes('audio/') ||
-                    metaString.includes('video/')
-                )
-                    config.accept = metaString;
             } else if (ParamGuards.isFunctionParamConfig(config)) {
                 // No-op; function params have no meta assignments at the moment
             } else if (ParamGuards.isBooleanParamConfig(config)) {
@@ -179,8 +174,10 @@ export default class ParamInference {
         applyString(config.key.toLowerCase());
 
         // Then assign annotations as meta strings
-        for (const potentialMeta of metaStrings) {
-            applyString(potentialMeta.toLowerCase());
+        if (metaStrings) {
+            for (const potentialMeta of metaStrings) {
+                applyString(potentialMeta.toLowerCase());
+            }
         }
 
         return config;
