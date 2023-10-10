@@ -151,7 +151,7 @@ describe('ParamConfigFactory', () => {
         // Color 0-255
         expect(() => {
             ParamConfigFactory.paramConfigFrom([0, 100, 255], 'param', InferenceMode.None, '', {
-                style: 'color'
+                style: 'byteColor'
             });
         }).not.toThrow();
         // Color 0-1
@@ -164,13 +164,13 @@ describe('ParamConfigFactory', () => {
         // Must have 3 elements
         expect(() => {
             ParamConfigFactory.paramConfigFrom([1, 2, 3, 4], 'param', InferenceMode.None, '', {
-                style: 'color'
+                style: 'byteColor'
             });
         }).toThrow();
         // Out of bounds 0-255
         expect(() => {
             ParamConfigFactory.paramConfigFrom([0, 100, 256], 'param', InferenceMode.None, '', {
-                style: 'color'
+                style: 'byteColor'
             });
         }).toThrow();
         // Out of bounds 0-1
@@ -182,7 +182,7 @@ describe('ParamConfigFactory', () => {
         // Non-integer values 0-255
         expect(() => {
             ParamConfigFactory.paramConfigFrom([0, 100.5, 255], 'param', InferenceMode.None, '', {
-                style: 'color'
+                style: 'byteColor'
             });
         }).toThrow();
     });

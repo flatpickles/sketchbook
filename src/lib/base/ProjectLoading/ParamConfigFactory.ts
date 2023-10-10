@@ -142,7 +142,7 @@ export class ParamConfigFactory {
         // Validate array param config style
         if (isNumericArrayParamConfig(param) && isNumericArray(value)) {
             if (
-                param.style === NumericArrayParamStyle.Color ||
+                param.style === NumericArrayParamStyle.ByteColor ||
                 param.style === NumericArrayParamStyle.UnitColor
             ) {
                 // Validate number of components
@@ -158,10 +158,10 @@ export class ParamConfigFactory {
                         throw new Error(
                             `Array param with a "${style}" style must have values between 0 and ${colorCompUpperBound} (${key})`
                         );
-                    if (style === NumericArrayParamStyle.Color) {
+                    if (style === NumericArrayParamStyle.ByteColor) {
                         if (!Number.isInteger(colorComponent))
                             throw new Error(
-                                `Array param with "color" style must have integer values; use "unitColor" for 0-1 values (${key})`
+                                `Array param with "byteColor" style must have integer values; use "unitColor" for 0-1 values (${key})`
                             );
                     }
                 });
