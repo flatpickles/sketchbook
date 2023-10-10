@@ -7,10 +7,10 @@ varying vec2 uv;
 uniform float time;
 uniform vec2 renderSize;
 
-uniform vec3 bgColor;
+uniform vec3 bgColor; // [0.1, 0.5, 0.6]
 uniform bool softBlob;
-uniform float blobRed;
-uniform float blobGreen;
+uniform float blobRed; // 0.3
+uniform float blobGreen; // 0.9
 
 void main() {
     float aspect = renderSize.x / renderSize.y;

@@ -1,8 +1,8 @@
 import Project from '$lib/base/Project/Project';
 
 export default class QuickStart extends Project {
-    rectSize = 0.5;
-    rectColor = '#34b00c';
+    rectSize = 0.5; // "Rect Size"
+    rectColor = '#34b00c'; // "Rect Color"
 
     update() {
         const ctx = this.canvas?.getContext('2d');

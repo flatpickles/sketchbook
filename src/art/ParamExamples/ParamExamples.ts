@@ -6,6 +6,13 @@ enum StringOptions {
     Option3 = 'option3'
 }
 
+/**
+ * This project demonstrates all the different types of parameters that can be used in a project.
+ *
+ * Note: all parameter configuration is done in config.json for demonstrative purposes, but in
+ * practice, it may be more convenient to configure parameters via commented annotations inline
+ * with your instance variable definitions. See https://skbk.cc/#/param-config for more details.
+ */
 export default class AllParams extends Project {
     // Numbers
     numberDefault = 0.1;
