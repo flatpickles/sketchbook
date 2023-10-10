@@ -58,7 +58,7 @@ export default class ParamInference {
                     // If we find a match, extract the comment
                     if (comment && comment.length > 1) annotations[key] = comment[1];
                     // Otherwise if this line contains a function definition, use next line
-                    else if (line.match(/.*\) => \{\s*$/)) keyForNextLine = key;
+                    else if (line.match(/.*\)\s*=>\s*\{\s*$/)) keyForNextLine = key;
                 }
             }
 
@@ -188,7 +188,7 @@ export default class ParamInference {
         const stringTokens = parseString.trim().split(/\s*,\s*(?![^[]*])/);
 
         // Collect tokens that match intention patterns
-        const nameTokens = stringTokens.filter((token) => token.match(/^"([^"]*)"$/));
+        const nameTokens = stringTokens.filter((token) => token.match(/^["']([^"']*)["']$/));
         const rangeTokens = stringTokens.filter((token) =>
             token.match(/^(-?\d*\.{0,1}\d+)\s*to\s*(-?\d*\.{0,1}\d+)$/)
         );
@@ -209,7 +209,7 @@ export default class ParamInference {
         // Return an object with adapted tokens, if any
         const rangeMinMax = rangeTokens?.length ? rangeTokens[0].split(/\s*to\s*/) : undefined;
         return {
-            name: nameTokens?.length ? nameTokens[0].replace(/"/g, '').trim() : undefined,
+            name: nameTokens?.length ? nameTokens[0].replace(/["']/g, '').trim() : undefined,
             range: rangeMinMax ? [Number(rangeMinMax[0]), Number(rangeMinMax[1])] : undefined,
             step: stepTokens?.length ? Number(stepTokens[0].replace(/\s*step\s*/, '')) : undefined,
             booleanValues: booleanTokens?.length
