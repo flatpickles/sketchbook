@@ -99,10 +99,10 @@ describe('ParamInference.paramAnnotations', () => {
                 foo = () => { // "Foo"
                     // "Not Foo"
                 }
-                bar = () => {
+                bar = ()=>{
                     // "Bar"
                 }
-                baz = () => {
+                baz = ()    =>  {
                     console.log('baz');
                     // "Baz"
                 }
@@ -339,6 +339,8 @@ describe('ParamInference.intentionsFrom', () => {
         expect(intentions2.name).toEqual('foo bar');
         const intentions3 = ParamInference.intentionsFrom('69 , "  foo  Bar  "   , 420');
         expect(intentions3.name).toEqual('foo  Bar');
+        const intentions4 = ParamInference.intentionsFrom("69, 'foo bar'");
+        expect(intentions4.name).toEqual('foo bar');
     });
 
     it('parses ranges', () => {
