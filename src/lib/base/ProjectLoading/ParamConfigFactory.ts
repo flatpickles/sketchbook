@@ -95,6 +95,9 @@ export class ParamConfigFactory {
             throw new Error(`${typeof value} params are unsupported (${key})`);
         }
 
+        // Assign the param key
+        param.key = key;
+
         // Apply any intentions inferred within the annotation string (comment)
         if (annotation) {
             param = ParamInference.paramWithInference(param, inferenceMode, annotation);
@@ -166,7 +169,6 @@ export class ParamConfigFactory {
         }
 
         // Return the generated param
-        param.key = key;
         return param;
     }
 }

@@ -1,6 +1,7 @@
 import {
     type NumberParamConfig,
-    NumberParamConfigDefaults
+    NumberParamConfigDefaults,
+    NumberParamStyle
 } from '$lib/base/ConfigModels/ParamConfigs/NumberParamConfig';
 import { ProjectConfigDefaults } from '$lib/base/ConfigModels/ProjectConfig';
 import { ProjectConfigFactory } from '$lib/base/ProjectLoading/ProjectConfigFactory';
@@ -137,7 +138,7 @@ describe('ProjectConfigFactory.paramConfigsFrom', () => {
         expect(numberParam.max).toEqual(100);
         expect(numberParam.step).toEqual(1);
         expect(numberParam.applyDuringInput).toEqual(NumberParamConfigDefaults.applyDuringInput);
-        expect(numberParam.style).toEqual(NumberParamConfigDefaults.style);
+        expect(numberParam.style).toEqual(NumberParamStyle.Field);
     });
 
     it('loads params properly from a project object with inference and config data', () => {
@@ -171,7 +172,7 @@ describe('ProjectConfigFactory.paramConfigsFrom', () => {
         expect(numberParam.max).toEqual(5);
         expect(numberParam.step).toEqual(1);
         expect(numberParam.applyDuringInput).toEqual(NumberParamConfigDefaults.applyDuringInput);
-        expect(numberParam.style).toEqual(NumberParamConfigDefaults.style);
+        expect(numberParam.style).toEqual(NumberParamStyle.Field);
     });
 
     it('applies applyDuringInputDefault properly', () => {

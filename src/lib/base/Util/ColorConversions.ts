@@ -17,7 +17,7 @@ export default class ColorConversions {
             if (component < 0 || component > 255)
                 throw new Error('rgbToHex: rgb components must be between 0 and 255');
             if (!Number.isInteger(component))
-                throw new Error('rgbToHex: rgb components must be integers');
+                throw new Error(`rgbToHex: rgb components must be integers (${rgb})`);
         });
         const rHex = ColorConversions.componentToHex(rgb[0]);
         const gHex = ColorConversions.componentToHex(rgb[1]);

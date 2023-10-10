@@ -1,4 +1,8 @@
 import type { ParamConfig } from '../ConfigModels/ParamConfig';
+import { FileReaderMode } from '../ConfigModels/ParamConfigs/FileParamConfig';
+import { NumberParamStyle } from '../ConfigModels/ParamConfigs/NumberParamConfig';
+import { NumericArrayParamStyle } from '../ConfigModels/ParamConfigs/NumericArrayParamConfig';
+import { StringParamStyle } from '../ConfigModels/ParamConfigs/StringParamConfig';
 import { ParamGuards } from '../ConfigModels/ParamTypes';
 
 export enum InferenceMode {
@@ -14,7 +18,7 @@ type Intentions = {
     numberValues: number[];
     booleanValues: boolean[];
     numericArrayValues: number[][];
-    potentialStyleStrings: string[];
+    metaStrings: string[];
 };
 
 /**
@@ -34,21 +38,31 @@ export default class ParamInference {
 
         const lines = rawFileText.split('\n');
         const annotations: Record<string, string> = {};
+        let keyForNextLine: string | undefined;
         for (const line of lines) {
+            const comment = line.match(/\/\/\s*(.*)/);
+            // Look for an annotation on the next line, after a function definition
+            if (comment && comment.length > 1 && keyForNextLine) {
+                annotations[keyForNextLine] = comment[1];
+            }
+            keyForNextLine = undefined;
+
+            // Find definition lines that contain the key
             for (const key of paramKeys) {
-                // Find definition lines that contain the key
-                const matcher =
+                const definitionMatcher =
                     mode === InferenceMode.ShaderFile
                         ? `.*uniform.*${key}`
                         : `(${key}\\s*[:=])|(this.${key}\\s*[:=])`;
 
-                // If we find a match, extract the comment
-                if (line.match(new RegExp(matcher))) {
-                    const comment = line.match(/\/\/\s*(.*)/);
+                if (line.match(new RegExp(definitionMatcher))) {
+                    // If we find a match, extract the comment
                     if (comment && comment.length > 1) annotations[key] = comment[1];
-                    break;
+                    // Otherwise if this line contains a function definition, use next line
+                    else if (line.match(/.*\) => \{\s*$/)) keyForNextLine = key;
                 }
             }
+
+            // Break early if we've collected all possible annotations
             if (Object.keys(annotations).length === paramKeys.length) break;
         }
         return annotations;
@@ -104,14 +118,73 @@ export default class ParamInference {
             }
         }
 
-        // todo: infer styles from stringTokens and the parameter key
-        console.log(intentions?.potentialStyleStrings);
+        // Infer styles, modes, etc from stringTokens and the parameter key
+        const configWithStyle = this.assignMeta(newConfig, intentions?.metaStrings);
 
-        return newConfig;
+        return configWithStyle;
+    }
+
+    // Helper functions, public for easy unit testing
+
+    static assignMeta(config: ParamConfig, metaStrings: string[]): ParamConfig {
+        // Interpret meta strings as styles, modes, etc, depending on the parameter type
+        const applyString = (metaString: string) => {
+            if (ParamGuards.isNumberParamConfig(config)) {
+                if (metaString.includes('combo')) config.style = NumberParamStyle.Combo;
+                else if (metaString.includes('slider')) config.style = NumberParamStyle.Slider;
+                else if (metaString.includes('field')) config.style = NumberParamStyle.Field;
+            } else if (ParamGuards.isNumericArrayParamConfig(config)) {
+                if (metaString.includes('combo')) config.style = NumericArrayParamStyle.Combo;
+                else if (metaString.includes('compact'))
+                    config.style = NumericArrayParamStyle.CompactSlider;
+                else if (metaString.includes('compactslider'))
+                    config.style = NumericArrayParamStyle.CompactSlider;
+                else if (metaString.includes('slider'))
+                    config.style = NumericArrayParamStyle.Slider;
+                else if (metaString.includes('compactfield'))
+                    config.style = NumericArrayParamStyle.CompactField;
+                else if (metaString.includes('field')) config.style = NumericArrayParamStyle.Field;
+                else if (metaString.includes('unitcolor'))
+                    config.style = NumericArrayParamStyle.UnitColor;
+                else if (metaString.includes('color')) config.style = NumericArrayParamStyle.Color;
+            } else if (ParamGuards.isStringParamConfig(config)) {
+                if (metaString.includes('single')) config.style = StringParamStyle.SingleLine;
+                else if (metaString.includes('multi')) config.style = StringParamStyle.MultiLine;
+                else if (metaString.includes('color')) config.style = StringParamStyle.Color;
+            } else if (ParamGuards.isFileParamConfig(config)) {
+                if (metaString.includes('arraybuffer')) config.mode = FileReaderMode.ArrayBuffer;
+                else if (metaString.includes('binarystring'))
+                    config.mode = FileReaderMode.BinaryString;
+                else if (metaString.includes('dataurl')) config.mode = FileReaderMode.DataURL;
+                else if (metaString.includes('text')) config.mode = FileReaderMode.Text;
+                else if (metaString.includes('image')) config.mode = FileReaderMode.Image;
+                if (metaString.includes('multi')) config.multiple = true;
+                if (
+                    metaString.includes('image/') ||
+                    metaString.includes('audio/') ||
+                    metaString.includes('video/')
+                )
+                    config.accept = metaString;
+            } else if (ParamGuards.isFunctionParamConfig(config)) {
+                // No-op; function params have no meta assignments at the moment
+            } else if (ParamGuards.isBooleanParamConfig(config)) {
+                // No-op; boolean params have no meta assignments at the moment
+            }
+        };
+
+        // First apply key name as a meta string
+        applyString(config.key.toLowerCase());
+
+        // Then assign annotations as meta strings
+        for (const potentialMeta of metaStrings) {
+            applyString(potentialMeta.toLowerCase());
+        }
+
+        return config;
     }
 
     static intentionsFrom(parseString: string): Intentions {
-        // Split on commas, not inside whitespace, ignoring commas inside square brackets
+        // Split on commas, don't include whitespace, ignore commas inside square brackets
         const stringTokens = parseString.trim().split(/\s*,\s*(?![^[]*])/);
 
         // Collect tokens that match intention patterns
@@ -129,7 +202,7 @@ export default class ParamInference {
         const numericArrayTokens = stringTokens.filter((token) =>
             token.match(/^\[(\s*-?\d*\.{0,1}\d+\s*,\s*)+(\s*-?\d*\.{0,1}\d+\s*)\]$/)
         );
-        const potentialStyleTokens = stringTokens.filter(
+        const potentialMetaTokens = stringTokens.filter(
             (token) => token.match(/^[a-zA-Z]+$/) && !token.match(/true|false/)
         );
 
@@ -151,7 +224,7 @@ export default class ParamInference {
                           .map((x) => Number(x))
                   )
                 : [],
-            potentialStyleStrings: potentialStyleTokens?.length ? potentialStyleTokens : []
+            metaStrings: potentialMetaTokens?.length ? potentialMetaTokens : []
         };
     }
 }
