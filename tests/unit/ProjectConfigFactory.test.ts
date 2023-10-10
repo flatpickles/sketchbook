@@ -9,6 +9,10 @@ import { describe, it, expect } from 'vitest';
 import ConfigAndSupport from './TestFiles/ConfigAndSupport/ConfigAndSupport';
 import NoConfig from './TestFiles/NoConfig/NoConfig';
 import { InferenceMode } from '$lib/base/ProjectLoading/ParamInference';
+import {
+    NumericArrayParamStyle,
+    type NumericArrayParamConfig
+} from '$lib/base/ConfigModels/ParamConfigs/NumericArrayParamConfig';
 
 describe('ProjectConfigFactory.projectConfigFrom', () => {
     it('creates default props without provided config data', () => {
@@ -123,6 +127,7 @@ describe('ProjectConfigFactory.paramConfigsFrom', () => {
             export default class ConfigAndSupport extends Project {
                 testNumber = 42; // -100 to 100, step 1, "Number Name", field
                 testString = 'test string'; // "String Name"
+                arrayColor = [0.1, 0.2, 0.3];
                 #internalProperty = 42;
             }`,
             InferenceMode.ProjectFile
@@ -137,6 +142,12 @@ describe('ProjectConfigFactory.paramConfigsFrom', () => {
         expect(numberParam.step).toEqual(1);
         expect(numberParam.applyDuringInput).toEqual(NumberParamConfigDefaults.applyDuringInput);
         expect(numberParam.style).toEqual(NumberParamStyle.Field);
+        const arrayParam = params.filter(
+            (param) => param.key === 'arrayColor'
+        )[0] as NumericArrayParamConfig;
+        expect(arrayParam).toBeDefined();
+        expect(arrayParam.type).toEqual('numericArray');
+        expect(arrayParam.style).toEqual(NumericArrayParamStyle.UnitColor);
     });
 
     it('loads params properly from a project object with inference and config data', () => {

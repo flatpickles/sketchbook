@@ -170,7 +170,7 @@ describe('loading specific projects', async () => {
         // Check params config
         const paramsConfig = projectTuple!.params;
         expect(paramsConfig).toBeDefined();
-        expect(Object.keys(paramsConfig!).length).toEqual(2);
+        expect(Object.keys(paramsConfig!).length).toEqual(3);
         const testNumberParam = paramsConfig.filter((param) => param.key === 'testNumber')[0];
         expect(testNumberParam).toBeDefined();
         expect(testNumberParam.type).toEqual(ParamType.Number);
@@ -367,7 +367,7 @@ describe('loading specific projects, in browser mode (re: stored values)', async
         expect(stringDescriptor?.value).toEqual('hello world');
 
         // Check ParamValueProvider calls
-        expect(ParamValueProvider.getValue).toHaveBeenCalledTimes(2);
+        expect(ParamValueProvider.getValue).toHaveBeenCalledTimes(3);
     });
 });
 
