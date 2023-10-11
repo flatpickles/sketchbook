@@ -7,12 +7,25 @@ import Project from '$lib/base/Project/Project';
 import type { ProjectTuple } from '$lib/base/ProjectLoading/ProjectLoader';
 import { ProjectConfigDefaults } from '$lib/base/ConfigModels/ProjectConfig';
 import { NumberParamConfigDefaults } from '$lib/base/ConfigModels/ParamConfigs/NumberParamConfig';
+import { defaultPresetKey } from '$lib/base/ProjectLoading/PresetLoader';
 
 class TestProject extends Project {
     num1 = 0;
     num2 = 0;
     num3 = 0;
 }
+
+const defaultPresets = {
+    [defaultPresetKey]: {
+        title: 'Default Values',
+        key: defaultPresetKey,
+        values: {
+            num1: 0,
+            num2: 0,
+            num3: 0
+        }
+    }
+};
 
 const testProjectTuple: ProjectTuple = {
     key: 'testProject',
@@ -33,6 +46,7 @@ const testProjectTuple: ProjectTuple = {
         }
     ],
     presets: {
+        ...defaultPresets,
         testPreset1: {
             title: 'Test Preset 1',
             key: 'testPreset1',
@@ -65,7 +79,7 @@ describe('ProjectDetailPanel', () => {
         render(ProjectDetailPanel, {
             projectTuple: {
                 ...testProjectTuple,
-                presets: {}
+                presets: defaultPresets
             },
             headerButtonIcon: undefined
         });
@@ -80,7 +94,7 @@ describe('ProjectDetailPanel', () => {
         render(ProjectDetailPanel, {
             projectTuple: {
                 ...testProjectTuple,
-                presets: {}
+                presets: defaultPresets
             },
             headerButtonIcon: undefined
         });

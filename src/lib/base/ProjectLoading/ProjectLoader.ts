@@ -257,8 +257,6 @@ export default class ProjectLoader {
             }
         }
 
-        console.log(projectPresets);
-
         // Return tuple
         return {
             key,

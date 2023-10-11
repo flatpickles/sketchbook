@@ -1,14 +1,60 @@
 <script lang="ts">
-    import type { ProjectTuple } from '$lib/base/ProjectLoading/ProjectLoader';
+    import {
+        defaultPresetKey,
+        type Preset,
+        type PresetMap
+    } from '$lib/base/ProjectLoading/PresetLoader';
+    import { createEventDispatcher } from 'svelte';
 
-    export let projectTuple: ProjectTuple;
+    export let presets: PresetMap;
+    export let currentPresetKey: string;
+    export let edited = false;
+
+    let dispatchEvent = createEventDispatcher();
+
+    // Simple alphabetical sorting for now
+    $: presetList = Object.values(presets).sort((presetA, presetB) => {
+        if (presetA.key === defaultPresetKey) {
+            return -1;
+        } else if (presetB.key === defaultPresetKey) {
+            return 1;
+        } else {
+            return presetA.key.localeCompare(presetB.key);
+        }
+    });
+    $: currentPresetIndex = presetList.findIndex((preset) => preset.key === currentPresetKey);
+
+    function nextPreset() {
+        if (currentPresetIndex < presetList.length - 1) {
+            const nextPresetKey = presetList[currentPresetIndex + 1].key;
+            dispatchEvent('preset-selected', nextPresetKey);
+        }
+    }
+
+    function previousPreset() {
+        if (currentPresetIndex > 0) {
+            const nextPresetKey = presetList[currentPresetIndex - 1].key;
+            dispatchEvent('preset-selected', nextPresetKey);
+        }
+    }
 </script>
 
 <div class="presets-wrapper" data-testid="presets-ui">
     <div class="preset-selector">
-        <i class="fa fa-angle-left" style="color: rgba(0, 0, 0, 30%)" />
-        Default Values *
-        <i class="fa fa-angle-right" />
+        <i
+            class="fa fa-angle-left preset-arrow"
+            class:disabled={currentPresetIndex === 0}
+            on:click={previousPreset}
+            on:keypress={previousPreset}
+        />
+        {presetList[currentPresetIndex].title}
+        {#if edited}*{/if}
+        <i
+            class="fa fa-angle-right preset-arrow"
+            class:disabled={currentPresetIndex === presetList.length - 1}
+            on:click={nextPreset}
+            on:keypress={nextPreset}
+        />
     </div>
 </div>
 
@@ -33,8 +79,12 @@
         align-items: center;
     }
 
-    // .control-button {
-    //     @include preset-control-item;
-    //     cursor: pointer;
-    // }
+    .preset-arrow {
+        cursor: pointer;
+    }
+
+    .disabled {
+        color: rgba(0, 0, 0, 30%);
+        cursor: default;
+    }
 </style>
