@@ -20,9 +20,15 @@ function importProjectConfigFiles(): Record<string, () => Promise<unknown>> {
     return import.meta.glob('/src/art/*/config.json', { as: 'raw' });
 }
 
+function importProjectPresetFiles(): Record<string, () => Promise<unknown>> {
+    // Import as raw so we can catch any deserialization errors in the loader
+    return import.meta.glob('/src/art/*/presets/*.json', { as: 'raw' });
+}
+
 export {
     importProjectClassFiles,
     importProjectTextFiles,
     importRawProjectFiles,
-    importProjectConfigFiles
+    importProjectConfigFiles,
+    importProjectPresetFiles
 };

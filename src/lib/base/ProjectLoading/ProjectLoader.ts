@@ -14,12 +14,15 @@ import FragShaderProject from '../Project/FragShaderProject';
 import { InferenceMode } from './ParamInference';
 import { isNumericArray } from '../ConfigModels/ParamConfigs/NumericArrayParamConfig';
 import { ParamGuards } from '../ConfigModels/ParamTypes';
+import type { Preset, PresetMap } from './PresetLoader';
+import PresetLoader from './PresetLoader';
 
 export interface ProjectTuple {
     key: string;
     project: Project;
     config: ProjectConfig;
     params: ParamConfig[];
+    presets: PresetMap;
 }
 
 // Type to match the Project constructor
@@ -227,12 +230,17 @@ export default class ProjectLoader {
             }
         }
 
+        // Load presets for this project
+        const projectPresets = await PresetLoader.loadPresets(key);
+        console.log(projectPresets);
+
         // Return tuple
         return {
             key,
             project,
             config: projectConfig,
-            params: paramConfigs
+            params: paramConfigs,
+            presets: projectPresets
         };
     }
 
