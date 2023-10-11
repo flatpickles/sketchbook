@@ -2,16 +2,14 @@
     import type { ProjectTuple } from '$lib/base/ProjectLoading/ProjectLoader';
 
     export let projectTuple: ProjectTuple;
-    console.log(projectTuple);
 </script>
 
 <div class="presets-wrapper" data-testid="presets-ui">
     <div class="preset-selector">
         <i class="fa fa-angle-left" style="color: rgba(0, 0, 0, 30%)" />
-        Default Values
+        Default Values *
         <i class="fa fa-angle-right" />
     </div>
-    <!-- <div class="control-button"><i class="fa fa-pen-to-square" /></div> -->
 </div>
 
 <style lang="scss">

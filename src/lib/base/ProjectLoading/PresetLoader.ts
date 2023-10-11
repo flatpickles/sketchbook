@@ -2,6 +2,8 @@ import type { AnyParamValueType } from '../ConfigModels/ParamTypes';
 import { importProjectPresetFiles } from './ImportProviders';
 import { dev } from '$app/environment';
 
+export const defaultPresetKey = 'defaults';
+
 export type Preset = {
     title: string;
     key: string;

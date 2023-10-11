@@ -15,7 +15,7 @@ import { InferenceMode } from './ParamInference';
 import { isNumericArray } from '../ConfigModels/ParamConfigs/NumericArrayParamConfig';
 import { ParamGuards } from '../ConfigModels/ParamTypes';
 import type { PresetMap } from './PresetLoader';
-import PresetLoader from './PresetLoader';
+import PresetLoader, { defaultPresetKey } from './PresetLoader';
 
 export interface ProjectTuple {
     key: string;
@@ -175,22 +175,31 @@ export default class ProjectLoader {
             projectConfig.title = key;
         }
 
-        // Apply defaults for compatible configs (either explicit or inferred)
-        for (const paramConfig of paramConfigs) {
-            if (
-                ParamGuards.isConfigTypeWithDefault(paramConfig) &&
-                paramConfig.default !== undefined
-            ) {
-                // Defining these directly on the project object (instead of just using them when
-                // setting values below) allows ParamValueProvider to update provided values when
-                // config values change, as it does when assigned values change in project files.
+        // Load presets for this project, and create a default preset if none exists
+        const projectPresets = await PresetLoader.loadPresets(key);
+        if (!projectPresets[defaultPresetKey]) {
+            projectPresets[defaultPresetKey] = {
+                key: defaultPresetKey,
+                title: 'Default Values',
+                values: {}
+            };
+        }
 
-                // Check to make sure the value is legit
-                const value = paramConfig.default;
-                const currentValue = Object.getOwnPropertyDescriptor(
-                    project,
-                    paramConfig.key
-                )?.value;
+        // Apply config defaults (explicit/inferred) and preset defaults for compatible configs
+        for (const paramConfig of paramConfigs) {
+            // Defining these directly on the project object (instead of just using them when
+            // setting values below) allows ParamValueProvider to update provided values when
+            // config values change, as it does when assigned values change in project files.
+
+            // If there's no default value to be had, proceed
+            if (!ParamGuards.isConfigTypeWithDefault(paramConfig)) continue;
+
+            // Get the current value
+            const currentValue = Object.getOwnPropertyDescriptor(project, paramConfig.key)?.value;
+            let newValue = currentValue;
+
+            // Helper function to validate types for new values
+            const validateType = (value: unknown) => {
                 // Assert that the values are the same type
                 if (typeof value !== typeof currentValue) {
                     throw new Error(
@@ -205,10 +214,28 @@ export default class ProjectLoader {
                         );
                     }
                 }
+            };
 
-                // Define the property on the project
+            // Apply explicit and inferred config defaults
+            const configDefault = paramConfig.default;
+            if (configDefault !== undefined) {
+                validateType(configDefault);
+                newValue = configDefault;
+            }
+
+            // Apply preset defaults, or create them if they don't exist
+            const presetDefault = projectPresets[defaultPresetKey].values[paramConfig.key];
+            if (presetDefault !== undefined) {
+                validateType(presetDefault);
+                newValue = presetDefault;
+            } else {
+                projectPresets[defaultPresetKey].values[paramConfig.key] = newValue;
+            }
+
+            // Define the property
+            if (newValue !== currentValue) {
                 Object.defineProperty(project, paramConfig.key, {
-                    value: paramConfig.default,
+                    value: newValue,
                     writable: true,
                     enumerable: true,
                     configurable: true
@@ -216,7 +243,7 @@ export default class ProjectLoader {
             }
         }
 
-        // Set project properties to stored values (overriding inferred values above, if present)
+        // Set project properties to stored values (overriding defaults)
         if (browser) {
             for (const param of paramConfigs) {
                 const storedValue = ParamValueProvider.getValue(param, key, project, true);
@@ -230,8 +257,7 @@ export default class ProjectLoader {
             }
         }
 
-        // Load presets for this project
-        const projectPresets = await PresetLoader.loadPresets(key);
+        console.log(projectPresets);
 
         // Return tuple
         return {

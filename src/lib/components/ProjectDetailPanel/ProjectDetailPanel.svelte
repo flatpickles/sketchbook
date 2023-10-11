@@ -4,7 +4,7 @@
     import Panel from '../Panels/Panel.svelte';
     import PanelHeader from '../Panels/PanelHeader.svelte';
     import PresetControl from './PresetControl.svelte';
-    import ProjectParams from './ParamList.svelte';
+    import ParamList from './ParamList.svelte';
 
     export let projectTuple: ProjectTuple;
     export let headerButtonIcon: string | undefined;
@@ -30,7 +30,7 @@
             <PresetControl {projectTuple} />
         {/if}
         {#if projectTuple.params && Object.values(projectTuple.params).length > 0}
-            <ProjectParams {projectTuple} />
+            <ParamList {projectTuple} />
         {/if}
     </div>
 </Panel>
