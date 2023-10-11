@@ -20,7 +20,6 @@ describe('ProjectConfigFactory.projectConfigFrom', () => {
         expect(props.title).toEqual(ProjectConfigDefaults.title);
         expect(props.date).toEqual(ProjectConfigDefaults.date);
         expect(props.description).toEqual(ProjectConfigDefaults.description);
-        expect(props.defaultPresetName).toEqual(ProjectConfigDefaults.defaultPresetName);
         expect(props.paramsApplyDuringInput).toEqual(ProjectConfigDefaults.paramsApplyDuringInput);
         expect(props.groups).toEqual(ProjectConfigDefaults.groups);
         expect(props.experimental).toEqual(ProjectConfigDefaults.experimental);
@@ -40,7 +39,6 @@ describe('ProjectConfigFactory.projectConfigFrom', () => {
         expect(props.title).toEqual(configData.title);
         expect(props.date).toEqual(new Date(configData.date));
         expect(props.description).toEqual(configData.description);
-        expect(props.defaultPresetName).toEqual(configData.defaultPresetName);
         expect(props.paramsApplyDuringInput).toEqual(configData.paramsApplyDuringInput);
         expect(props.groups).toEqual(configData.groups);
         expect(props.experimental).toEqual(configData.experimental);
@@ -55,7 +53,6 @@ describe('ProjectConfigFactory.projectConfigFrom', () => {
         expect(props.title).toEqual(configData.title);
         expect(props.date).toEqual(new Date(configData.date));
         expect(props.description).toEqual(ProjectConfigDefaults.description);
-        expect(props.defaultPresetName).toEqual(ProjectConfigDefaults.defaultPresetName);
         expect(props.paramsApplyDuringInput).toEqual(ProjectConfigDefaults.paramsApplyDuringInput);
         expect(props.groups).toEqual(ProjectConfigDefaults.groups);
         expect(props.experimental).toEqual(ProjectConfigDefaults.experimental);

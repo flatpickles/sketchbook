@@ -14,7 +14,7 @@ import FragShaderProject from '../Project/FragShaderProject';
 import { InferenceMode } from './ParamInference';
 import { isNumericArray } from '../ConfigModels/ParamConfigs/NumericArrayParamConfig';
 import { ParamGuards } from '../ConfigModels/ParamTypes';
-import type { Preset, PresetMap } from './PresetLoader';
+import type { PresetMap } from './PresetLoader';
 import PresetLoader from './PresetLoader';
 
 export interface ProjectTuple {
@@ -232,7 +232,6 @@ export default class ProjectLoader {
 
         // Load presets for this project
         const projectPresets = await PresetLoader.loadPresets(key);
-        console.log(projectPresets);
 
         // Return tuple
         return {

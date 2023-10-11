@@ -453,7 +453,7 @@ describe('Full width ParamItem', () => {
 describe('Color styles for numeric arrays', () => {
     afterEach(cleanup);
 
-    it('renders a color input with the "color" style', () => {
+    it('renders a color input with the "byteColor" style', () => {
         const param: NumericArrayParamConfig = {
             key: 'color',
             name: 'Color',
@@ -461,7 +461,7 @@ describe('Color styles for numeric arrays', () => {
             min: 0,
             max: 255,
             step: 1,
-            style: NumericArrayParamStyle.Color,
+            style: NumericArrayParamStyle.ByteColor,
             applyDuringInput: true,
             fullWidthInput: false
         };

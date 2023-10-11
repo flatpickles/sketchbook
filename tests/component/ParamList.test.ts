@@ -113,7 +113,8 @@ function renderParams(
         key: 'testProject',
         project: project,
         config: testProjectConfig,
-        params: paramsWithApplyDuringInput(applyDuringInput, sectionOption)
+        params: paramsWithApplyDuringInput(applyDuringInput, sectionOption),
+        presets: {}
     };
     render(ParamList, {
         projectTuple: testTuple
