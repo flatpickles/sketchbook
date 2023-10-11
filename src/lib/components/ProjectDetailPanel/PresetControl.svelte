@@ -5,7 +5,7 @@
     console.log(projectTuple);
 </script>
 
-<div class="presets-wrapper">
+<div class="presets-wrapper" data-testid="presets-ui">
     <div class="preset-selector">
         <i class="fa fa-angle-left" style="color: rgba(0, 0, 0, 30%)" />
         Default Values

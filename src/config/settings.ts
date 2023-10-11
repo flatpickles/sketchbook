@@ -33,6 +33,9 @@ const hidePanelButtonsTimeout: number | undefined = 2000;
 const projectSortOrder = SortOrder.ReverseChronological;
 const groupSortOrder = SortOrder.Alphabetical;
 
+// Always show presets UI; otherwise, the UI will only be visible when a project has presets.
+const alwaysShowPresets = dev;
+
 // Anything listed here will appear in the user settings panel with the given label. Values changed
 // in the settings panel will be persisted in local storage, and the values set above will be used
 // as defaults.
@@ -51,5 +54,6 @@ export const config = {
     panelMouseTriggerWidth,
     hidePanelButtonsTimeout,
     projectSortOrder,
-    groupSortOrder
+    groupSortOrder,
+    alwaysShowPresets
 };

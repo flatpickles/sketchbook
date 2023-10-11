@@ -26,7 +26,7 @@
             {headerButtonIcon}
             on:headeraction
         />
-        {#if projectTuple.config.presetsAvailable}
+        {#if $settingsStore.alwaysShowPresets || Object.values(projectTuple.presets).length > 0}
             <PresetControl {projectTuple} />
         {/if}
         {#if projectTuple.params && Object.values(projectTuple.params).length > 0}
