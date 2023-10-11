@@ -10,7 +10,6 @@
 
     import ParamItem from './ParamItem.svelte';
     import ParamValueProvider from '$lib/base/ProjectLoading/ParamValueProvider';
-    import { createEventDispatcher } from 'svelte';
 
     export let projectTuple: ProjectTuple;
 

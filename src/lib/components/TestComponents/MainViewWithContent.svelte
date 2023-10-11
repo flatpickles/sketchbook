@@ -9,6 +9,7 @@
     import MainView from '$lib/components/MainView/MainView.svelte';
     import { ProjectConfigDefaults } from '$lib/base/ConfigModels/ProjectConfig';
     import ProjectContent from '$lib/components/MainView/ProjectContent.svelte';
+    import { defaultPresetKey } from '$lib/base/ProjectLoading/PresetLoader';
 
     export let hasDetails: boolean = true;
 
@@ -24,7 +25,14 @@
         key: 'Untitled',
         project: new Project(),
         config: configs.untitled,
-        params: []
+        params: [],
+        presets: {
+            [defaultPresetKey]: {
+                key: defaultPresetKey,
+                title: 'Default Values',
+                values: {}
+            }
+        }
     };
 </script>
 

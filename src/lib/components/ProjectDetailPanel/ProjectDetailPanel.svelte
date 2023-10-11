@@ -5,6 +5,8 @@
     import PanelHeader from '../Panels/PanelHeader.svelte';
     import PresetControl from './PresetControl.svelte';
     import ParamList from './ParamList.svelte';
+    import { defaultPresetKey } from '$lib/base/ProjectLoading/PresetLoader';
+    import PresetManager from '$lib/base/ProjectLoading/PresetManager';
 
     export let projectTuple: ProjectTuple;
     export let headerButtonIcon: string | undefined;
@@ -12,6 +14,17 @@
     // Add margin-bottom to overlaid panel if there are no params
     // (adding to header-wrapper's margin-bottom, completing 1x panel-section-spacing)
     $: marginBottom = $settingsStore.overlayPanels && projectTuple.params.length == 0;
+
+    // Update the selected & stored preset keys as project & preset selections change
+    $: projectSelected(projectTuple.key);
+    let selectedPresetKey = PresetManager.getSelectedPresetKey(projectTuple.key);
+    function projectSelected(projectKey: string) {
+        selectedPresetKey = PresetManager.getSelectedPresetKey(projectKey);
+    }
+    function presetSelected(event: CustomEvent) {
+        PresetManager.setSelectedPresetKey(projectTuple.key, event.detail);
+        selectedPresetKey = event.detail;
+    }
 </script>
 
 <Panel style={$settingsStore.overlayPanels ? 'overlay' : 'right-fill'}>
@@ -26,8 +39,12 @@
             {headerButtonIcon}
             on:headeraction
         />
-        {#if $settingsStore.alwaysShowPresets || Object.values(projectTuple.presets).length > 0}
-            <PresetControl {projectTuple} />
+        {#if $settingsStore.alwaysShowPresets || Object.values(projectTuple.presets).length > 1}
+            <PresetControl
+                presets={projectTuple.presets}
+                currentPresetKey={selectedPresetKey}
+                on:preset-selected={presetSelected}
+            />
         {/if}
         {#if projectTuple.params && Object.values(projectTuple.params).length > 0}
             <ParamList {projectTuple} />
