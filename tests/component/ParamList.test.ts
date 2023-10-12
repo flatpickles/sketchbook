@@ -115,7 +115,18 @@ function renderParams(
         project: project,
         config: testProjectConfig,
         params: paramsWithApplyDuringInput(applyDuringInput, sectionOption),
-        presets: {}
+        presets: {
+            [defaultPresetKey]: {
+                title: 'Default Values',
+                key: defaultPresetKey,
+                values: {
+                    testNumber: 42,
+                    testBoolean: true,
+                    testString: 'hello',
+                    testNumericArray: [1, 2, 3]
+                }
+            }
+        }
     };
     render(ParamList, {
         projectTuple: testTuple,
@@ -401,7 +412,7 @@ describe('string param input', () => {
         expect(project.testString).toBe('goodbye');
         fireEvent.change(stringInput);
         expect(changedListener).toHaveBeenCalledTimes(2);
-        expect(ParamValueProvider.setValue).toHaveBeenCalledTimes(2);
+        expect(ParamValueProvider.setValue).toHaveBeenCalledTimes(1);
 
         // Validate param-updated event
         expect(changedListener.mock.calls[0][0].bubbles).toEqual(true);
@@ -461,7 +472,7 @@ describe('numeric array param input', () => {
         expect(changedListener).toHaveBeenCalledTimes(2);
         expect(numericArrayInput[1].value).toBe('5');
         expect(project.testNumericArray).toEqual([4, 5, 3]);
-        expect(ParamValueProvider.setValue).toHaveBeenCalledTimes(2);
+        expect(ParamValueProvider.setValue).toHaveBeenCalledTimes(1);
 
         // Validate param-updated event
         expect(changedListener.mock.calls[0][0].bubbles).toEqual(true);
