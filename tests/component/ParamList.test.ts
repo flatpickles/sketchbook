@@ -10,6 +10,7 @@ import type { UserFileLoaderReturnType } from '$lib/base/ConfigModels/ParamTypes
 import FileParamLoader from '$lib/base/Util/FileParamLoader';
 
 import ParamValueProvider from '$lib/base/ProjectLoading/ParamValueProvider';
+import { defaultPresetKey } from '$lib/base/ProjectLoading/PresetLoader';
 vi.spyOn(ParamValueProvider, 'getValue');
 vi.spyOn(ParamValueProvider, 'setValue');
 
@@ -117,7 +118,8 @@ function renderParams(
         presets: {}
     };
     render(ParamList, {
-        projectTuple: testTuple
+        projectTuple: testTuple,
+        selectedPresetKey: defaultPresetKey
     });
 
     const changedListener = vi.fn();

@@ -10,12 +10,29 @@
 
     import ParamItem from './ParamItem.svelte';
     import ParamValueProvider from '$lib/base/ProjectLoading/ParamValueProvider';
+    import PresetUtil from '$lib/base/ProjectLoading/PresetUtil';
 
     export let projectTuple: ProjectTuple;
+    export let selectedPresetKey: string;
+    export let presetEdited = false;
 
     let wrapperDiv: HTMLDivElement;
     $: [noSectionParams, paramSections] = getParamSections(projectTuple.params);
     const incompleteUpdateKeys = new Set<string>();
+
+    // Apply a preset to the project's parameter values and displayed param UI, from detail panel.
+    // "Applying" a preset involves actually updating the project's values, and then updating the
+    // displayed values to match. Prior to application, selectedPresetKey may be set to a preset
+    // that is not the currently applied preset, e.g. if the user has edited the preset values.
+    export function applyPreset(presetKey: string) {
+        PresetUtil.applyPreset(
+            projectTuple,
+            presetKey,
+            (paramKey: string, paramValue: AnyParamValueType) => {
+                displayedValues[paramKey] = paramValue;
+            }
+        );
+    }
 
     // Derive initial display values from the project's current values when switched. Employ some
     // Svelte trickery so this is only reactive to projectTuple reassignments, and not property
