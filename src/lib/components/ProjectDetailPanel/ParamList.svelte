@@ -32,13 +32,14 @@
                 displayedValues[paramKey] = paramValue;
             }
         );
+        presetEdited = false;
     }
 
     // Derive initial display values from the project's current values when switched. Employ some
     // Svelte trickery so this is only reactive to projectTuple reassignments, and not property
     // changes within it.
-    let displayedValues = getDisplayedValues(projectTuple);
-    function getDisplayedValues(currentTuple: ProjectTuple) {
+    let displayedValues = getCurrentParamValues(projectTuple);
+    function getCurrentParamValues(currentTuple: ProjectTuple) {
         return Object.fromEntries(
             currentTuple.params.map((param) => {
                 return [param.key, initialValueForParam(param)];
@@ -47,7 +48,8 @@
     }
     $: projectSwitched(projectTuple);
     function projectSwitched(newTuple: ProjectTuple) {
-        displayedValues = getDisplayedValues(newTuple);
+        displayedValues = getCurrentParamValues(newTuple);
+        presetEdited = !PresetUtil.presetIsApplied(newTuple, selectedPresetKey);
     }
 
     // On each animation frame, check if any param values have diverged from their displayed values,
@@ -83,6 +85,7 @@
             if (updatedValue !== undefined) {
                 displayedValues[param.key] = updatedValue;
                 ParamValueProvider.setValue(param, projectTuple.key, displayedValues[param.key]);
+                presetEdited = !PresetUtil.presetIsApplied(projectTuple, selectedPresetKey);
             }
         }
 
@@ -143,7 +146,11 @@
                 enumerable: true,
                 configurable: true
             });
-            ParamValueProvider.setValue(updatedConfig, projectTuple.key, value);
+            // Update the stored value and the preset edited state, if the update is complete
+            if (updateComplete) {
+                ParamValueProvider.setValue(updatedConfig, projectTuple.key, value);
+                presetEdited = !PresetUtil.presetIsApplied(projectTuple, selectedPresetKey);
+            }
         }
 
         // Dispatch an update event so ProjectViewer can call the paramUpdated lifecycle method.
