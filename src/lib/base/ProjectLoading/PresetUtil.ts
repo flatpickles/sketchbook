@@ -73,7 +73,9 @@ export default class PresetUtil {
             }
 
             // Set value in project, stored state, and displayed values
-            const typedValue = paramValue as ParamValueType<typeof paramConfig>; // sorry
+            const typedValue = (
+                Array.isArray(paramValue) ? [...paramValue] : paramValue
+            ) as ParamValueType<typeof paramConfig>; // sorry
             Object.defineProperty(projectTuple.project, paramKey, {
                 value: typedValue,
                 writable: true,
