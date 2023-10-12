@@ -5,8 +5,7 @@
     import PanelHeader from '../Panels/PanelHeader.svelte';
     import PresetControl from './PresetControl.svelte';
     import ParamList from './ParamList.svelte';
-    import { defaultPresetKey } from '$lib/base/ProjectLoading/PresetLoader';
-    import PresetManager from '$lib/base/ProjectLoading/PresetManager';
+    import PresetUtil from '$lib/base/ProjectLoading/PresetUtil';
 
     export let projectTuple: ProjectTuple;
     export let headerButtonIcon: string | undefined;
@@ -17,14 +16,21 @@
 
     // Update the selected & stored preset keys as project & preset selections change
     $: projectSelected(projectTuple.key);
-    let selectedPresetKey = PresetManager.getSelectedPresetKey(projectTuple.key);
+    let selectedPresetKey = PresetUtil.getSelectedPresetKey(projectTuple.key);
     function projectSelected(projectKey: string) {
-        selectedPresetKey = PresetManager.getSelectedPresetKey(projectKey);
+        selectedPresetKey = PresetUtil.getSelectedPresetKey(projectKey);
     }
     function presetSelected(event: CustomEvent) {
-        PresetManager.setSelectedPresetKey(projectTuple.key, event.detail);
+        // Update selected preset state
+        PresetUtil.setSelectedPresetKey(projectTuple.key, event.detail);
         selectedPresetKey = event.detail;
+        // Apply newly selected preset values to project
+        paramList.applyPreset(event.detail);
     }
+
+    // Track state for preset updates and edit state
+    let paramList: ParamList;
+    let presetEdited = false;
 </script>
 
 <Panel style={$settingsStore.overlayPanels ? 'overlay' : 'right-fill'}>
@@ -43,11 +49,12 @@
             <PresetControl
                 presets={projectTuple.presets}
                 currentPresetKey={selectedPresetKey}
+                edited={presetEdited}
                 on:preset-selected={presetSelected}
             />
         {/if}
         {#if projectTuple.params && Object.values(projectTuple.params).length > 0}
-            <ParamList {projectTuple} />
+            <ParamList bind:this={paramList} {projectTuple} {selectedPresetKey} bind:presetEdited />
         {/if}
     </div>
 </Panel>
