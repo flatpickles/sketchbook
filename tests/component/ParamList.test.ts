@@ -25,6 +25,39 @@ class TestProject extends Project {
     };
 }
 
+const testPresets = {
+    [defaultPresetKey]: {
+        title: 'Default Values',
+        key: defaultPresetKey,
+        values: {
+            testNumber: 42,
+            testBoolean: true,
+            testString: 'hello',
+            testNumericArray: [1, 2, 3]
+        }
+    },
+    'preset1': {
+        title: 'Preset 1',
+        key: 'preset1',
+        values: {
+            testNumber: 43,
+            testBoolean: false,
+            testString: 'goodbye',
+            testNumericArray: [4, 5, 6]
+        }
+    },
+    'preset2': {
+        title: 'Preset 2',
+        key: 'preset2',
+        values: {
+            testNumber: 44,
+            testBoolean: true,
+            testString: 'hello again',
+            testNumericArray: [7, 8, 9]
+        }
+    }
+};
+
 enum SectionOption {
     NoSections = 'none', // no params in sections
     SomeSections = 'someSectioned', // some params in sections
@@ -103,8 +136,9 @@ function paramsWithApplyDuringInput(
 function renderParams(
     applyDuringInput = true,
     sectionOption: SectionOption = SectionOption.NoSections,
-    twoWaySync = true
-): [TestProject, ReturnType<typeof vi.fn>] {
+    twoWaySync = true,
+    selectedPresetKey = defaultPresetKey
+): [TestProject, ReturnType<typeof vi.fn>, ParamList] {
     const project = new TestProject();
     const testProjectConfig = ProjectConfigFactory.projectConfigFrom({
         applyDuringInput: applyDuringInput,
@@ -115,22 +149,11 @@ function renderParams(
         project: project,
         config: testProjectConfig,
         params: paramsWithApplyDuringInput(applyDuringInput, sectionOption),
-        presets: {
-            [defaultPresetKey]: {
-                title: 'Default Values',
-                key: defaultPresetKey,
-                values: {
-                    testNumber: 42,
-                    testBoolean: true,
-                    testString: 'hello',
-                    testNumericArray: [1, 2, 3]
-                }
-            }
-        }
+        presets: testPresets
     };
-    render(ParamList, {
+    const { component } = render(ParamList, {
         projectTuple: testTuple,
-        selectedPresetKey: defaultPresetKey
+        selectedPresetKey: selectedPresetKey
     });
 
     const changedListener = vi.fn();
@@ -138,7 +161,7 @@ function renderParams(
 
     expect(ParamValueProvider.getValue).toHaveBeenCalledTimes(0);
     expect(ParamValueProvider.setValue).toHaveBeenCalledTimes(0);
-    return [project, changedListener];
+    return [project, changedListener, component];
 }
 
 function cleanupParams() {
@@ -256,6 +279,47 @@ describe('ParamList list', () => {
         expect(numberInputSliders[1].value).toBe('1');
         expect(numberInputSliders[2].value).toBe('2');
         expect(numberInputSliders[3].value).toBe('3');
+    });
+
+    it('updates displayed values when changing projects', async () => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const [project, changedListener, component] = renderParams(true);
+        expect(component.presetEdited).toBe(false);
+
+        // Create a new project and set values that don't correspond with the defaults
+        const project2 = new TestProject();
+        project2.testNumber = 43;
+        project2.testBoolean = false;
+        project2.testString = 'goodbye';
+        project2.testNumericArray = [4, 5, 6];
+        const testProjectConfig = ProjectConfigFactory.projectConfigFrom({
+            applyDuringInput: true,
+            twoWaySync: true
+        });
+        const testTuple: ProjectTuple = {
+            key: 'testProject2',
+            project: project2,
+            config: testProjectConfig,
+            params: paramsWithApplyDuringInput(true),
+            presets: testPresets
+        };
+
+        // After setting the projectTuple, displayed values should be updated
+        component.projectTuple = testTuple;
+        const numberInput = screen.getAllByTestId('number-param-slider')[0] as HTMLInputElement;
+        expect(numberInput.value).toBe('43');
+        const booleanInput = screen.getByTestId('boolean-param-input') as HTMLInputElement;
+        expect(booleanInput.checked).toBe(false);
+        const stringInput = screen.getByTestId('string-param-input-singleline') as HTMLInputElement;
+        expect(stringInput.value).toBe('goodbye');
+        const numericArrayInput = screen.getAllByTestId(
+            'number-param-slider'
+        ) as HTMLInputElement[];
+        numericArrayInput.shift(); // first is the non-array numeric input
+        expect(numericArrayInput.length).toBe(3);
+        expect(numericArrayInput[0].value).toBe('4');
+        expect(numericArrayInput[1].value).toBe('5');
+        expect(numericArrayInput[2].value).toBe('6');
     });
 });
 
@@ -695,5 +759,119 @@ describe('ParamList display sync w/ project property values', () => {
         expect(project.testNumericArray).toEqual([4, 5, 6]);
 
         expect(ParamValueProvider.setValue).toHaveBeenCalledTimes(0);
+    });
+});
+
+describe('ParamList w/ presets', () => {
+    afterEach(cleanupParams);
+
+    it('changes values when a preset is applied', async () => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const [project, changedListener, component] = renderParams(
+            false,
+            SectionOption.NoSections,
+            false
+        );
+        expect(component.presetEdited).toBe(false);
+        component.applyPreset('preset1');
+        expect(component.presetEdited).toBe(false);
+
+        const numberInput = screen.getAllByTestId('number-param-slider')[0] as HTMLInputElement;
+        await waitFor(() => expect(numberInput.value).toBe('43'));
+        expect(project.testNumber).toBe(43);
+
+        const booleanInput = screen.getByTestId('boolean-param-input') as HTMLInputElement;
+        expect(booleanInput.checked).toBe(false);
+        expect(project.testBoolean).toBe(false);
+
+        const stringInput = screen.getByTestId('string-param-input-singleline') as HTMLInputElement;
+        expect(stringInput.value).toBe('goodbye');
+        expect(project.testString).toBe('goodbye');
+
+        const numericArrayInput = screen.getAllByTestId(
+            'number-param-slider'
+        ) as HTMLInputElement[];
+        numericArrayInput.shift(); // first is the non-array numeric input
+        expect(numericArrayInput.length).toBe(3);
+        expect(numericArrayInput[0].value).toBe('4');
+        expect(numericArrayInput[1].value).toBe('5');
+        expect(numericArrayInput[2].value).toBe('6');
+        expect(project.testNumericArray).toEqual([4, 5, 6]);
+    });
+
+    it('presetEdited=true when loading values that differ from selected preset', async () => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const [project, changedListener, component] = renderParams(
+            false,
+            SectionOption.NoSections,
+            false,
+            'preset1'
+        );
+        expect(component.presetEdited).toBe(true);
+        component.applyPreset('preset1');
+        expect(component.presetEdited).toBe(false);
+    });
+
+    it('presetEdited changes when default value changes are committed', async () => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const [project, changedListener, component] = renderParams(true);
+        const numberInput = screen.getAllByTestId('number-param-slider')[0] as HTMLInputElement;
+        expect(component.presetEdited).toBe(false);
+        fireEvent.input(numberInput, { target: { value: '43' } });
+        expect(component.presetEdited).toBe(false);
+        fireEvent.change(numberInput, { target: { value: '44' } });
+        expect(component.presetEdited).toBe(true);
+        component.applyPreset(defaultPresetKey);
+        expect(component.presetEdited).toBe(false);
+    });
+
+    it('presetEdited changes when preset values changes are committed', async () => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const [project, changedListener, component] = renderParams(true);
+        expect(component.presetEdited).toBe(false);
+        component.applyPreset('preset2');
+        expect(component.presetEdited).toBe(false);
+        const numberInput = screen.getAllByTestId('number-param-slider')[0] as HTMLInputElement;
+        fireEvent.change(numberInput, { target: { value: '42' } });
+        expect(component.presetEdited).toBe(true);
+        component.applyPreset(defaultPresetKey);
+        expect(component.presetEdited).toBe(false);
+    });
+
+    it('presetEdited=true after project updates values internally', async () => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const [project, changedListener, component] = renderParams(true);
+        expect(component.presetEdited).toBe(false);
+        project.testNumber = 43;
+        await new Promise((r) => setTimeout(r, 100)); // Make sure displaySyncLoop has time to run
+        expect(component.presetEdited).toBe(true);
+    });
+
+    it('sets presetEdited when changing projects', async () => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const [project, changedListener, component] = renderParams(true);
+        expect(component.presetEdited).toBe(false);
+
+        // Create a new project and set values that don't correspond with the defaults
+        const project2 = new TestProject();
+        project2.testNumber = 43;
+        project2.testBoolean = false;
+        project2.testString = 'goodbye';
+        project2.testNumericArray = [4, 5, 6];
+        const testProjectConfig = ProjectConfigFactory.projectConfigFrom({
+            applyDuringInput: true,
+            twoWaySync: true
+        });
+        const testTuple: ProjectTuple = {
+            key: 'testProject2',
+            project: project2,
+            config: testProjectConfig,
+            params: paramsWithApplyDuringInput(true),
+            presets: testPresets
+        };
+
+        // After updating the projectTuple, preset should be edited
+        component.projectTuple = testTuple;
+        expect(component.presetEdited).toBe(true);
     });
 });
