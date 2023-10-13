@@ -1,0 +1,17 @@
+{
+    "title": "Presets project",
+    "date": "2023-06-27",
+    "description": "Yadda yadda.",
+    "paramsApplyDuringInput": false,
+    "groups": ["Test"],
+    "experimental": true,
+    "explicitConfig": false,
+    "inferStyle": true,
+
+    "params": {
+        "testNumber3": {
+            "default": 21
+        }
+    },
+    "param_sections": []
+}

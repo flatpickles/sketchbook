@@ -1,0 +1,8 @@
+{
+    "title": "Preset 2",
+    "values": {
+        "testNumber1": 1,
+        "testNumber2": 2,
+        "testArray1": [1, 2, 3]
+    }
+}

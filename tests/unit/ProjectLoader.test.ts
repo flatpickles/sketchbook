@@ -20,6 +20,7 @@ import {
 } from '$lib/base/ConfigModels/ParamConfigs/NumberParamConfig';
 import type { BooleanParamConfig } from '$lib/base/ConfigModels/ParamConfigs/BooleanParamConfig';
 import type { NumericArrayParamConfig } from '$lib/base/ConfigModels/ParamConfigs/NumericArrayParamConfig';
+import { defaultPresetKey, type Preset } from '$lib/base/ProjectLoading/PresetLoader';
 vi.spyOn(ParamValueProvider, 'getValue');
 vi.spyOn(ParamValueProvider, 'setValue');
 
@@ -28,10 +29,12 @@ const testProjects = import.meta.glob('/tests/unit/TestFiles/*/*.ts');
 const testRawFiles = import.meta.glob('/tests/unit/TestFiles/*/*.(ts|js|frag)', { as: 'raw' });
 const testConfigs = import.meta.glob('/tests/unit/TestFiles/*/config.json', { as: 'raw' });
 const testTextFiles = import.meta.glob('/tests/unit/TestFiles/*/*.frag', { as: 'raw' });
+const testPresets = import.meta.glob('/tests/unit/TestFiles/*/presets/*.json', { as: 'raw' });
 vi.spyOn(fileProviders, 'importProjectClassFiles').mockReturnValue(testProjects);
 vi.spyOn(fileProviders, 'importProjectConfigFiles').mockReturnValue(testConfigs);
 vi.spyOn(fileProviders, 'importRawProjectFiles').mockReturnValue(testRawFiles);
 vi.spyOn(fileProviders, 'importProjectTextFiles').mockReturnValue(testTextFiles);
+vi.spyOn(fileProviders, 'importProjectPresetFiles').mockReturnValue(testPresets);
 
 describe('loading available projects', async () => {
     afterEach(() => {
@@ -41,7 +44,7 @@ describe('loading available projects', async () => {
     const availableProjects = await ProjectLoader.loadAvailableProjects();
 
     it('has correct number of available projects', () => {
-        expect(Object.values(availableProjects).length).toBe(8);
+        expect(Object.values(availableProjects).length).toBe(11);
     });
 
     it('correctly configures a project without a config file', () => {
@@ -542,15 +545,159 @@ describe('default value loading from config', async () => {
         expect(actualValue).toEqual(21);
     });
 
-    it('throws an error with the wrong default type', async () => {
+    it('throws an error with the wrong default type in config default', async () => {
         expect(ProjectLoader.loadProject('BadDefaultType')).rejects.toThrow(
             'Default value for testString has incorrect type: number'
         );
     });
 
-    it('throws an error with the wrong default length', async () => {
+    it('throws an error with the wrong default length in config default', async () => {
         expect(ProjectLoader.loadProject('BadDefaultLength')).rejects.toThrow(
             'Default value for testArray has incorrect length: 2'
+        );
+    });
+});
+
+describe('preset loading', async () => {
+    it('creates default preset from initial project values', async () => {
+        const projectTuple = await ProjectLoader.loadProject('NoConfig');
+        expect(projectTuple).toBeDefined();
+        expect(Object.values(projectTuple!.presets).length).toBe(1);
+        const defaultPreset = projectTuple!.presets[defaultPresetKey] as Preset;
+        expect(defaultPreset).toBeDefined();
+        expect(defaultPreset.title).toEqual('Default Values');
+        expect(defaultPreset.values['testNumber']).toEqual(42);
+        expect(defaultPreset.values['testNumericArray']).toEqual([1, 2, 3]);
+        expect(defaultPreset.values['testFunction']).toBeUndefined();
+        expect(defaultPreset.values['#internalProperty']).toBeUndefined();
+    });
+
+    it('creates default preset with config file and inline config', async () => {
+        const projectTuple = await ProjectLoader.loadProject('TSWithInference');
+        expect(projectTuple).toBeDefined();
+        expect(Object.values(projectTuple!.presets).length).toBe(1);
+        const defaultPreset = projectTuple!.presets[defaultPresetKey] as Preset;
+        expect(defaultPreset).toBeDefined();
+        expect(defaultPreset.values['testNumber1']).toEqual(42);
+        expect(defaultPreset.values['testNumber2']).toEqual(42);
+        expect(defaultPreset.values['testNumber3']).toEqual(21);
+        expect(defaultPreset.values['testBoolean']).toBe(true);
+    });
+
+    it('creates default preset with inline config (frag shader)', async () => {
+        const projectTuple = await ProjectLoader.loadProject('ShaderWithInference');
+        expect(projectTuple).toBeDefined();
+        expect(Object.values(projectTuple!.presets).length).toBe(1);
+        const defaultPreset = projectTuple!.presets[defaultPresetKey] as Preset;
+        expect(defaultPreset).toBeDefined();
+        expect(defaultPreset.values['testNumber1']).toEqual(42);
+        expect(defaultPreset.values['testNumber2']).toEqual(35);
+        expect(defaultPreset.values['testNumber3']).toEqual(0);
+        expect(defaultPreset.values['testBoolean']).toBe(true);
+        expect(defaultPreset.values['array1']).toEqual([0.1, 0.5, 0.9]);
+        expect(defaultPreset.values['array2']).toEqual([15, 25]);
+    });
+
+    it('uses and supplements existing default preset', async () => {
+        const projectTuple = await ProjectLoader.loadProject('ProjectWithPresets');
+        expect(projectTuple).toBeDefined();
+        expect(Object.values(projectTuple!.presets).length).toBe(3);
+        const defaultPreset = projectTuple!.presets[defaultPresetKey] as Preset;
+        expect(defaultPreset).toBeDefined();
+
+        // Check default preset values
+        expect(defaultPreset.title).toEqual('Fun Default Name');
+        expect(defaultPreset.values['testNumber1']).toEqual(42);
+        expect(defaultPreset.values['testNumber2']).toEqual(1);
+        expect(defaultPreset.values['testNumber3']).toEqual(2);
+        expect(defaultPreset.values['testArray1']).toEqual([1, 2, 3]);
+        expect(defaultPreset.values['testArray2']).toEqual([1, 2, 3]);
+
+        // Check actual values
+        const testNumber1 = Object.getOwnPropertyDescriptor(
+            projectTuple!.project,
+            'testNumber1'
+        )!.value;
+        expect(testNumber1).toEqual(42);
+        const testNumber2 = Object.getOwnPropertyDescriptor(
+            projectTuple!.project,
+            'testNumber2'
+        )!.value;
+        expect(testNumber2).toEqual(1);
+        const testNumber3 = Object.getOwnPropertyDescriptor(
+            projectTuple!.project,
+            'testNumber3'
+        )!.value;
+        expect(testNumber3).toEqual(2);
+        const testArray1 = Object.getOwnPropertyDescriptor(
+            projectTuple!.project,
+            'testArray1'
+        )!.value;
+        expect(testArray1).toEqual([1, 2, 3]);
+        const testArray2 = Object.getOwnPropertyDescriptor(
+            projectTuple!.project,
+            'testArray2'
+        )!.value;
+        expect(testArray2).toEqual([1, 2, 3]);
+    });
+
+    it('creates more presets from preset files', async () => {
+        const projectTuple = await ProjectLoader.loadProject('ProjectWithPresets');
+        expect(projectTuple).toBeDefined();
+        expect(Object.values(projectTuple!.presets).length).toBe(3);
+
+        // Check preset #1
+        const preset1 = projectTuple!.presets['preset1'] as Preset;
+        expect(preset1).toBeDefined();
+        expect(preset1.title).toEqual('Preset Numero Uno');
+        expect(preset1.values['testNumber1']).toEqual(1);
+        expect(preset1.values['testNumber2']).toEqual(2);
+        expect(preset1.values['testNumber3']).toEqual(3);
+        expect(preset1.values['testArray1']).toEqual([4, 5, 6]);
+        expect(preset1.values['testArray2']).toEqual([7, 8, 9]);
+
+        // Check preset #2
+        const preset2 = projectTuple!.presets['preset2'] as Preset;
+        expect(preset2).toBeDefined();
+        expect(preset2.title).toEqual('Preset 2');
+        expect(preset2.values['testNumber1']).toEqual(1);
+        expect(preset2.values['testNumber2']).toEqual(2);
+        expect(preset2.values['testArray3']).toBeUndefined();
+        expect(preset2.values['testArray1']).toEqual([1, 2, 3]);
+        expect(preset2.values['testArray2']).toBeUndefined();
+    });
+
+    it('logs console errors for invalid presets', async () => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
+        const mockConsoleError = vi.fn((error: string) => {});
+        vi.spyOn(console, 'error').mockImplementation(mockConsoleError);
+        import.meta.env.MODE = 'production'; // for this test only
+
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const projectTuple = await ProjectLoader.loadProject('ProjectWithPresets');
+        expect(console.error).toHaveBeenCalledTimes(3);
+        expect(console.error).toHaveBeenCalledWith(
+            'Error parsing bad_notitle.json: Error: Preset must have a "title" string'
+        );
+        expect(console.error).toHaveBeenCalledWith(
+            'Error parsing bad_notjson.json: SyntaxError: Unexpected end of JSON input'
+        );
+        expect(console.error).toHaveBeenCalledWith(
+            'Error parsing bad_novalues.json: Error: Preset must have a "values" object'
+        );
+
+        import.meta.env.MODE = 'test'; // set it back
+    });
+
+    it('throws an error with the wrong default type in default preset', async () => {
+        expect(ProjectLoader.loadProject('BadPresetDefaultType')).rejects.toThrow(
+            'Default value for testArray1 has incorrect type: number'
+        );
+    });
+
+    it('throws an error with the wrong default length in default preset', async () => {
+        expect(ProjectLoader.loadProject('BadPresetDefaultLength')).rejects.toThrow(
+            'Default value for testArray1 has incorrect length: 4'
         );
     });
 });
