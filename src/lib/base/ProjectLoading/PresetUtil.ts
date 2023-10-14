@@ -1,4 +1,8 @@
-import type { AnyParamValueType, ParamValueType } from '../ConfigModels/ParamTypes';
+import {
+    ParamGuards,
+    type AnyParamValueType,
+    type ParamValueType
+} from '../ConfigModels/ParamTypes';
 import ParamValueProvider from './ParamValueProvider';
 import { defaultPresetKey } from './PresetLoader';
 import type { ProjectTuple } from './ProjectLoader';
@@ -42,6 +46,9 @@ export default class PresetUtil {
             // Find the relevant config
             const paramConfig = projectTuple.params.find((param) => param.key === paramKey);
             if (!paramConfig) throw new Error(`Param ${paramKey} not found`);
+
+            // Don't continue for parameters that can't have values
+            if (!ParamGuards.isConfigTypeWithDefault(paramConfig)) continue;
 
             // Do some basic type checking
             const currentValue = Object.getOwnPropertyDescriptor(
