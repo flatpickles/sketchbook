@@ -6,6 +6,7 @@
     import PresetControl from './PresetControl.svelte';
     import ParamList from './ParamList.svelte';
     import PresetUtil from '$lib/base/ProjectLoading/PresetUtil';
+    import { defaultPresetKey } from '$lib/base/ProjectLoading/PresetLoader';
 
     export let projectTuple: ProjectTuple;
     export let headerButtonIcon: string | undefined;
@@ -16,7 +17,7 @@
 
     // Update the selected & stored preset keys as project & preset selections change
     $: projectSelected(projectTuple.key);
-    let selectedPresetKey = PresetUtil.getSelectedPresetKey(projectTuple.key);
+    let selectedPresetKey = defaultPresetKey;
     function projectSelected(projectKey: string) {
         selectedPresetKey = PresetUtil.getSelectedPresetKey(projectKey);
     }

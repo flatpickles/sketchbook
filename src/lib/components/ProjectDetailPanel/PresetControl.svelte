@@ -44,6 +44,7 @@
         <i
             class="fa fa-angle-left preset-arrow"
             class:disabled={currentPresetIndex === 0}
+            data-testid="previous-preset"
             on:click={previousPreset}
             on:keypress={previousPreset}
         />
@@ -52,6 +53,7 @@
         <i
             class="fa fa-angle-right preset-arrow"
             class:disabled={currentPresetIndex === presetList.length - 1}
+            data-testid="next-preset"
             on:click={nextPreset}
             on:keypress={nextPreset}
         />
