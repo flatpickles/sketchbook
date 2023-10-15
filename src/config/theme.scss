@@ -56,6 +56,7 @@ $panel-show-button-bg-opacity-hover: 0.7;
 
 // Group list
 $group-colors: $panel-highlight-color;
+$group-text-size: $small-text-size;
 $group-spacing: 0.25rem;
 $group-padding: 0.25rem 0.75rem;
 $group-border-radius: 1rem;
@@ -90,6 +91,26 @@ $project-unselected-bg-opacity-odd: 0.025;
 $project-unselected-bg-opacity-even: 0.0;
 $project-experiment-icon-opacity: 0.5;
 $project-list-scroll-fade: true;
+
+// Preset control
+$preset-control-text-size: $small-text-size;
+$preset-control-padding: 0.25rem;
+$preset-control-border-radius: 1rem;
+$preset-control-outer-border-size: 1px;
+$preset-control-outer-border-opacity: 0.3;
+$preset-control-inner-border-size: 1px;
+$preset-control-inner-border-opacity: 0.3;
+$preset-control-shadow-size: 0;
+$preset-control-shadow-opacity: 0;
+$preset-control-name-fg-opacity: 1.0;
+$preset-control-name-bg-opacity: 0.05;
+$preset-control-button-width: 1.5rem;
+$preset-control-button-fg-opacity: 0.6;
+$preset-control-button-bg-opacity: 0.05;
+$preset-control-button-fg-opacity-hover: 0.65;
+$preset-control-button-bg-opacity-hover: 0.1;
+$preset-control-button-fg-opacity-disabled: 0.3;
+$preset-control-button-bg-opacity-disabled: 0.05;
 
 // Parameter list
 $param-spacing: 0.25rem;

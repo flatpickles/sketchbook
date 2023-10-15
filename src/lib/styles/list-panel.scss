@@ -7,7 +7,7 @@ $group-border-color: rgba($panel-fg-color, $group-border-opacity);
     padding: $group-padding;
     border: $group-border-size solid $group-border-color;
     border-radius: $group-border-radius;
-    font-size: $small-text-size;
+    font-size: $group-text-size;
     font-weight: $group-unselected-text-weight;
     
     // Default group color is the last defined color in the $group-colors list
