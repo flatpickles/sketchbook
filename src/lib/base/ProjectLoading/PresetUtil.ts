@@ -121,6 +121,12 @@ export default class PresetUtil {
         return true;
     }
 
+    /**
+     * Export the current project parameter values in a preset JSON file. These files can be added
+     * directly to a project's `presets` directory and used as bundled presets.
+     * @param projectTuple - The project tuple from which to draw the current parameter values.
+     * @param newPresetName - The name to give the preset. File name/key is also derived from this.
+     */
     public static exportPresetFile(projectTuple: ProjectTuple, newPresetName: string) {
         // Create a preset object from current project state
         const presetObject: Preset = {

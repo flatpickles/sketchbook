@@ -219,3 +219,52 @@ describe('Checking if presets are applied via PresetUtil.presetIsApplied', () =>
         );
     });
 });
+
+describe('Preset export via PresetUtil.exportPresetFile', () => {
+    afterEach(() => {
+        cleanup();
+        localStorage.clear();
+        vi.clearAllMocks();
+        testProject.testNumberKey = 42;
+        testProject.testArrayKey = [42, 21, 10.5];
+    });
+
+    it('should create a preset file', () => {
+        // Mock some stuff
+        global.JSON.stringify = vi.fn(() => 'testJSON');
+        global.URL.createObjectURL = vi.fn();
+        const mockLink = {
+            href: 'unset',
+            download: 'unset',
+            click: vi.fn()
+        };
+        global.document.createElement = vi.fn(() => {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            return mockLink as any;
+        });
+
+        // Set values and export the file
+        testProject.testNumberKey = 85;
+        testProject.testArrayKey = [18, 19, 21];
+        PresetUtil.exportPresetFile(projectTuple, 'Test Preset');
+
+        // Check the JSON & URL creation and click
+        expect(global.JSON.stringify).toHaveBeenCalledWith(
+            {
+                title: 'Test Preset',
+                key: 'TestPreset',
+                values: {
+                    testNumberKey: 85,
+                    testArrayKey: [18, 19, 21]
+                }
+            },
+            null,
+            4
+        );
+        expect(global.URL.createObjectURL).toHaveBeenCalledWith(expect.any(Blob));
+        expect(global.document.createElement).toHaveBeenCalledWith('a');
+        expect(mockLink.href).not.toBe('unset');
+        expect(mockLink.download).toBe('TestPreset.json');
+        expect(mockLink.click).toHaveBeenCalled();
+    });
+});
