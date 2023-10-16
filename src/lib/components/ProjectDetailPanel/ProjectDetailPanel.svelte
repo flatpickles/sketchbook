@@ -40,7 +40,7 @@
                 'Enter a name for the new preset:',
             `${projectTuple.key} Preset`
         );
-        if (presetName && presetName.length > 0) {
+        if (presetName && presetName.replace(/\s/g, '').length > 0) {
             PresetUtil.exportPresetFile(projectTuple, presetName);
         }
     }

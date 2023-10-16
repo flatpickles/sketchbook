@@ -2,6 +2,8 @@ import { render, fireEvent, screen, cleanup } from '@testing-library/svelte';
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import PresetControl from '$lib/components/ProjectDetailPanel/PresetControl.svelte';
 import { type PresetMap, defaultPresetKey } from '$lib/base/ProjectLoading/PresetLoader';
+import { settingsStore } from '$lib/base/Util/AppState';
+import { get } from 'svelte/store';
 
 const testPresetMap: PresetMap = {
     [defaultPresetKey]: {
@@ -241,5 +243,60 @@ describe('PresetControl interactions', () => {
                 detail: defaultPresetKey
             })
         );
+    });
+
+    it('shows export action if enabled', async () => {
+        // enable export
+        settingsStore.set({
+            ...get(settingsStore),
+            enablePresetExport: true
+        });
+
+        const component = renderTestPresets();
+        const exportFn = vi.fn();
+        component.$on('export', exportFn);
+
+        const presetSelect = screen.getByTestId('preset-select') as HTMLSelectElement;
+        expect(presetSelect).toBeDefined();
+
+        const exportOption = screen.getByTestId('Export') as HTMLOptionElement;
+        expect(exportOption).toBeDefined();
+    });
+
+    it('does not show export action if disabled', async () => {
+        // disable export
+        settingsStore.set({
+            ...get(settingsStore),
+            enablePresetExport: false
+        });
+
+        const component = renderTestPresets();
+        const exportFn = vi.fn();
+        component.$on('export', exportFn);
+
+        const presetSelect = screen.getByTestId('preset-select') as HTMLSelectElement;
+        expect(presetSelect).toBeDefined();
+
+        const exportOption = screen.queryByTestId('Export') as HTMLOptionElement;
+        expect(exportOption).toBeNull();
+    });
+
+    it('emits export event when export action is clicked', async () => {
+        // enable export
+        settingsStore.set({
+            ...get(settingsStore),
+            enablePresetExport: true
+        });
+
+        const component = renderTestPresets();
+        const exportFn = vi.fn();
+        component.$on('export', exportFn);
+
+        const presetSelect = screen.getByTestId('preset-select') as HTMLSelectElement;
+        expect(presetSelect).toBeDefined();
+        const exportOption = screen.getByTestId('Export') as HTMLOptionElement;
+        expect(exportOption).toBeDefined();
+        await fireEvent.change(presetSelect, { target: { value: exportOption.value } });
+        expect(exportFn).toHaveBeenCalledTimes(1);
     });
 });

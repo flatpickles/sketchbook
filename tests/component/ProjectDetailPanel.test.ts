@@ -9,6 +9,8 @@ import { ProjectConfigDefaults } from '$lib/base/ConfigModels/ProjectConfig';
 import { NumberParamConfigDefaults } from '$lib/base/ConfigModels/ParamConfigs/NumberParamConfig';
 import { defaultPresetKey } from '$lib/base/ProjectLoading/PresetLoader';
 import PresetUtil from '$lib/base/ProjectLoading/PresetUtil';
+import { settingsStore } from '$lib/base/Util/AppState';
+import { get } from 'svelte/store';
 
 class TestProject extends Project {
     num1 = 0;
@@ -149,5 +151,66 @@ describe('ProjectDetailPanel', () => {
         };
         component.projectTuple = newProjectTuple;
         expect(PresetUtil.getSelectedPresetKey).toHaveBeenCalledTimes(2);
+    });
+
+    it('prompts the user to name a new preset when export is triggered', async () => {
+        settingsStore.set({
+            ...get(settingsStore),
+            enablePresetExport: true
+        });
+
+        // Render component
+        vi.spyOn(PresetUtil, 'exportPresetFile').mockImplementation(
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            (projectTuple: ProjectTuple, newPresetName: string) => {
+                // no-op
+            }
+        );
+        render(ProjectDetailPanel, {
+            projectTuple: testProjectTuple,
+            headerButtonIcon: undefined
+        });
+        expect(PresetUtil.exportPresetFile).toHaveBeenCalledTimes(0);
+
+        // Mock window.prompt
+        const promptFn = vi.fn(() => 'New Preset');
+        vi.spyOn(window, 'prompt').mockImplementation(promptFn);
+
+        // Get selector
+        const presetSelect = screen.getByTestId('preset-select') as HTMLSelectElement;
+        expect(presetSelect).toBeDefined();
+        await fireEvent.change(presetSelect, { target: { value: 'Export Action' } });
+
+        // Check results
+        expect(promptFn).toHaveBeenCalledTimes(1);
+        expect(PresetUtil.exportPresetFile).toHaveBeenCalledTimes(1);
+        expect(PresetUtil.exportPresetFile).toHaveBeenCalledWith(testProjectTuple, 'New Preset');
+    });
+
+    it("doesn't trigger export with empty prompt response", async () => {
+        settingsStore.set({
+            ...get(settingsStore),
+            enablePresetExport: true
+        });
+
+        // Render component
+        vi.spyOn(PresetUtil, 'exportPresetFile');
+        render(ProjectDetailPanel, {
+            projectTuple: testProjectTuple,
+            headerButtonIcon: undefined
+        });
+
+        // Mock window.prompt
+        const promptFn = vi.fn(() => '  ');
+        vi.spyOn(window, 'prompt').mockImplementation(promptFn);
+
+        // Get selector
+        const presetSelect = screen.getByTestId('preset-select') as HTMLSelectElement;
+        expect(presetSelect).toBeDefined();
+        await fireEvent.change(presetSelect, { target: { value: 'Export Action' } });
+
+        // Check results
+        expect(promptFn).toHaveBeenCalledTimes(1);
+        expect(PresetUtil.exportPresetFile).toHaveBeenCalledTimes(0);
     });
 });
