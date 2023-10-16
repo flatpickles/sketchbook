@@ -1,9 +1,5 @@
 <script lang="ts">
-    import {
-        defaultPresetKey,
-        type Preset,
-        type PresetMap
-    } from '$lib/base/ProjectLoading/PresetLoader';
+    import { defaultPresetKey, type PresetMap } from '$lib/base/ProjectLoading/PresetLoader';
     import { createEventDispatcher } from 'svelte';
 
     export let presets: PresetMap;
@@ -20,7 +16,7 @@
         } else if (presetB.key === defaultPresetKey) {
             return 1;
         } else {
-            return presetA.key.localeCompare(presetB.key);
+            return presetA.title.localeCompare(presetB.title);
         }
     });
     $: currentPresetIndex = presetList.findIndex((preset) => preset.key === currentPresetKey);
@@ -79,17 +75,25 @@
             on:click={previousPreset}
             on:keypress={previousPreset}
         />
-        <select class="preset-select" bind:this={presetSelector} on:change={optionSelected}>
+        <select
+            class="preset-select"
+            data-testid="preset-select"
+            bind:this={presetSelector}
+            on:change={optionSelected}
+        >
             {#each presetList as preset}
-                <option value={preset.key} selected={preset.key === currentPresetKey}>
-                    {preset.title}
-                    {#if edited && preset.key === currentPresetKey}*{/if}
+                <option
+                    value={preset.key}
+                    selected={preset.key === currentPresetKey}
+                    data-testid="preset-option"
+                >
+                    {preset.title}{#if edited && preset.key === currentPresetKey}*{/if}
                 </option>
             {/each}
             {#if Object.keys(presetActions).length > 0}
                 <option disabled>———</option>
                 {#each Object.keys(presetActions) as action}
-                    <option value={action + actionPostfix}>
+                    <option value={action + actionPostfix} data-testid={action}>
                         {action}
                     </option>
                 {/each}
