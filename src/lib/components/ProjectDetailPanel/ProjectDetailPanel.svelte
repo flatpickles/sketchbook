@@ -32,6 +32,18 @@
     // Track state for preset updates and edit state
     let paramList: ParamList;
     let presetEdited = false;
+
+    // Handle exporting current values as new preset file
+    function exportPreset() {
+        const presetName = window.prompt(
+            'Exporting a new preset file with the current parameter values.\n\n' +
+                'Enter a name for the new preset:',
+            `${projectTuple.key} Preset`
+        );
+        if (presetName && presetName.length > 0) {
+            PresetUtil.exportPresetFile(projectTuple, presetName);
+        }
+    }
 </script>
 
 <Panel style={$settingsStore.overlayPanels ? 'overlay' : 'right-fill'}>
@@ -52,6 +64,7 @@
                 currentPresetKey={selectedPresetKey}
                 edited={presetEdited}
                 on:preset-selected={presetSelected}
+                on:export={exportPreset}
             />
         {/if}
         {#if projectTuple.params && Object.values(projectTuple.params).length > 0}

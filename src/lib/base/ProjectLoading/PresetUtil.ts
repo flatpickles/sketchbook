@@ -4,7 +4,7 @@ import {
     type ParamValueType
 } from '../ConfigModels/ParamTypes';
 import ParamValueProvider from './ParamValueProvider';
-import { defaultPresetKey } from './PresetLoader';
+import { defaultPresetKey, type Preset } from './PresetLoader';
 import type { ProjectTuple } from './ProjectLoader';
 
 export default class PresetUtil {
@@ -98,7 +98,7 @@ export default class PresetUtil {
         }
 
         // Completion callback should update UI accordingly
-        if (complete) complete(changedKeys, { ...preset.values });
+        if (complete) complete(changedKeys, JSON.parse(JSON.stringify(preset.values)));
     }
 
     /**
@@ -119,5 +119,31 @@ export default class PresetUtil {
             if (JSON.stringify(paramValue) !== JSON.stringify(currentValue)) return false;
         }
         return true;
+    }
+
+    public static exportPresetFile(projectTuple: ProjectTuple, newPresetName: string) {
+        // Create a preset object from current project state
+        const presetObject: Preset = {
+            title: newPresetName,
+            key: newPresetName.replace(/\s/g, ''),
+            values: {}
+        };
+        for (const paramConfig of projectTuple.params) {
+            if (!ParamGuards.isConfigTypeWithDefault(paramConfig)) continue;
+            const currentValue = Object.getOwnPropertyDescriptor(
+                projectTuple.project,
+                paramConfig.key
+            )?.value;
+            presetObject.values[paramConfig.key] = currentValue;
+        }
+
+        // Save a JSON file with the preset values
+        const presetString = JSON.stringify(presetObject, null, 4);
+        const presetBlob = new Blob([presetString], { type: 'application/json' });
+        const presetUrl = URL.createObjectURL(presetBlob);
+        const presetLink = document.createElement('a');
+        presetLink.href = presetUrl;
+        presetLink.download = `${presetObject.key}.json`;
+        presetLink.click();
     }
 }
