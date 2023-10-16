@@ -25,6 +25,12 @@
     // displayed values to match. Prior to application, selectedPresetKey may be set to a preset
     // that is not the currently applied preset, e.g. if the user has edited the preset values.
     export function applyPreset(presetKey: string) {
+        // Suspend the display sync loop while applying the preset (if it's running)
+        const previousLoopSetting = displaySyncLoopEnabled;
+        displaySyncLoopEnabled = false;
+        if (displaySyncLoopID) cancelAnimationFrame(displaySyncLoopID);
+
+        // Apply the preset, update UI values, clear edited state, and resume the display loop
         PresetUtil.applyPreset(
             projectTuple,
             presetKey,
@@ -32,6 +38,7 @@
                 if (changedKeys.length > 0) dispatchParamsChangedEvent(changedKeys);
                 presetEdited = false;
                 displayedValues = appliedValues;
+                displaySyncLoopEnabled = previousLoopSetting;
             }
         );
     }
@@ -57,6 +64,7 @@
     // e.g. if they have been updated within a project. Keep both the UI and stored state in sync.
     $: displaySyncLoopEnabled = projectTuple.config.twoWaySync;
     $: if (displaySyncLoopEnabled) displaySyncLoop();
+    let displaySyncLoopID: number | undefined;
     function displaySyncLoop() {
         const currentValues = projectTuple.project as { [key: string]: any };
         for (const param of projectTuple.params) {
@@ -91,7 +99,7 @@
         }
 
         // Continue checking for divergence on each animation frame
-        if (displaySyncLoopEnabled) requestAnimationFrame(displaySyncLoop);
+        if (displaySyncLoopEnabled) displaySyncLoopID = requestAnimationFrame(displaySyncLoop);
     }
 
     // Apply the updated param (or call the associated function)

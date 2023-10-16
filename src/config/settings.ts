@@ -34,7 +34,11 @@ const projectSortOrder = SortOrder.ReverseChronological;
 const groupSortOrder = SortOrder.Alphabetical;
 
 // Always show presets UI; otherwise, the UI will only be visible when a project has presets.
-const alwaysShowPresets = dev;
+const alwaysShowPresets = false;
+
+// Allow exporting the current project parameter values in a preset JSON file from the presets UI.
+// These files can be added directly to a project's `presets` directory and used as bundled presets.
+const enablePresetExport = dev;
 
 // Anything listed here will appear in the user settings panel with the given label. Values changed
 // in the settings panel will be persisted in local storage, and the values set above will be used
@@ -55,5 +59,6 @@ export const config = {
     hidePanelButtonsTimeout,
     projectSortOrder,
     groupSortOrder,
-    alwaysShowPresets
+    alwaysShowPresets,
+    enablePresetExport
 };

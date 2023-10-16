@@ -1,5 +1,6 @@
 <script lang="ts">
     import { defaultPresetKey, type PresetMap } from '$lib/base/ProjectLoading/PresetLoader';
+    import { settingsStore } from '$lib/base/Util/AppState';
     import { createEventDispatcher } from 'svelte';
 
     export let presets: PresetMap;
@@ -28,7 +29,11 @@
                 dispatchEvent('preset-selected', currentPresetKey);
             };
         }
-        // todo: export action
+        if ($settingsStore.enablePresetExport) {
+            actions['Export'] = () => {
+                dispatchEvent('export');
+            };
+        }
         return actions;
     })() as Record<string, () => void>;
     const actionPostfix = ' Action'; // for option values, avoid collisions w/ preset keys
