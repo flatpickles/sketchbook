@@ -51,9 +51,9 @@ export default class Project {
     update(detail: UpdateDetail<typeof this.canvasType>) {}
 
     /**
-     * paramChanged is called when a parameter is changed in the UI.
+     * paramsChanged is called when one or more parameters are changed in the UI.
      */
-    paramChanged(detail: ParamChangedDetail<typeof this.canvasType>) {}
+    paramsChanged(detail: ParamsChangedDetail<typeof this.canvasType>) {}
 
     /**
      * resized is called when the container div and/or active canvas is resized.
@@ -125,14 +125,14 @@ export type UpdateDetail2D = UpdateDetail<CanvasType.Context2D>;
 export type UpdateDetailWebGL = UpdateDetail<CanvasType.WebGL>;
 
 /**
- * Detail object type used with the project's paramChanged method. Contains the following:
- * - key: the key of the parameter that was changed.
+ * Detail object type used with the project's paramsChanged method. Contains the following:
+ * - keys: the keys of any parameters that were changed
  */
-export type ParamChangedDetail<T extends CanvasType = CanvasType.Unknown> = Detail<T> & {
-    key: string;
+export type ParamsChangedDetail<T extends CanvasType = CanvasType.Unknown> = Detail<T> & {
+    keys: string;
 };
-export type ParamChangedDetail2D = ParamChangedDetail<CanvasType.Context2D>;
-export type ParamChangedDetailWebGL = ParamChangedDetail<CanvasType.WebGL>;
+export type ParamsChangedDetail2D = ParamsChangedDetail<CanvasType.Context2D>;
+export type ParamsChangedDetailWebGL = ParamsChangedDetail<CanvasType.WebGL>;
 
 /**
  * Detail object type used with the project's resized method. Contains the following:

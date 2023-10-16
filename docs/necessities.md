@@ -57,7 +57,7 @@ The same approach applies for any other user events you'd like to respond to in 
 
 ## Non-animated projects
 
-The `update` function in your `Project` subclass is called continuously in a `requestAnimationFrame` loop, but you don't have to implement your drawing code there! If your project isn't meant to render in real time, you could implement a custom drawing method that is called directly from `init`, `paramChanged`, and `resized`. This is a great choice if your rendering code takes longer than a frame to execute, and your project isn't intended to render dynamic content.
+The `update` function in your `Project` subclass is called continuously in a `requestAnimationFrame` loop, but you don't have to implement your drawing code there! If your project isn't meant to render in real time, you could implement a custom drawing method that is called directly from `init`, `paramsChanged`, and `resized`. This is a great choice if your rendering code takes longer than a frame to execute, and your project isn't intended to render dynamic content.
 
 ## Exporting photos & videos
 
@@ -74,7 +74,7 @@ If you want to dynamically set the canvas size within your project (e.g. for con
 ```ts
 import Project, {
     type Detail2D,
-    type ParamChangedDetail2D,
+    type ParamsChangedDetail2D,
     type ResizedDetail2D
 } from '$lib/base/Project/Project';
 
@@ -85,8 +85,8 @@ export default class ResizableCanvas extends Project {
         this.#resetDimensions(canvas);
     }
 
-    paramChanged({ key, canvas }: ParamChangedDetail2D): void {
-        if (key === 'dimensions') this.#resetDimensions(canvas);
+    paramsChanged({ keys, canvas }: ParamsChangedDetail2D): void {
+        if (keys.includes('dimensions')) this.#resetDimensions(canvas);
     }
 
     resized({ canvas }: ResizedDetail2D): void {

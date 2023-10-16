@@ -33,15 +33,17 @@ export default class PresetUtil {
      * project's parameters.
      * @param projectTuple - The project tuple to apply the preset to.
      * @param presetKey - The key of the preset to apply.
-     * @param paramUpdated - An optional callback function to call for each updated parameter.
+     * @param complete - An optional completion callback, passed the keys to params that were
+     * changed, and all preset values that were applied (including those that weren't changed).
      */
     public static applyPreset(
         projectTuple: ProjectTuple,
         presetKey: string,
-        paramUpdated?: (paramKey: string, paramValue: AnyParamValueType) => void
+        complete?: (changedKeys: string[], appliedValues: Record<string, AnyParamValueType>) => void
     ) {
         const preset = projectTuple.presets[presetKey];
         if (!preset) throw new Error(`Preset ${presetKey} not found`);
+        const changedKeys = [];
         for (const [paramKey, paramValue] of Object.entries(preset.values)) {
             // Find the relevant config
             const paramConfig = projectTuple.params.find((param) => param.key === paramKey);
@@ -78,20 +80,25 @@ export default class PresetUtil {
                     );
                 }
             }
-
-            // Set value in project, stored state, and displayed values
             const typedValue = (
                 Array.isArray(paramValue) ? [...paramValue] : paramValue
             ) as ParamValueType<typeof paramConfig>; // sorry
-            Object.defineProperty(projectTuple.project, paramKey, {
-                value: typedValue,
-                writable: true,
-                enumerable: true,
-                configurable: true
-            });
-            ParamValueProvider.setValue(paramConfig, projectTuple.key, typedValue);
-            if (paramUpdated) paramUpdated(paramKey, typedValue);
+
+            // Set object and stored values if they've changed
+            if (JSON.stringify(typedValue) !== JSON.stringify(currentValue)) {
+                Object.defineProperty(projectTuple.project, paramKey, {
+                    value: typedValue,
+                    writable: true,
+                    enumerable: true,
+                    configurable: true
+                });
+                ParamValueProvider.setValue(paramConfig, projectTuple.key, typedValue);
+                changedKeys.push(paramKey);
+            }
         }
+
+        // Completion callback should update UI accordingly
+        if (complete) complete(changedKeys, { ...preset.values });
     }
 
     /**

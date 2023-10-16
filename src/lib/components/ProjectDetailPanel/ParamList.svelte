@@ -28,11 +28,12 @@
         PresetUtil.applyPreset(
             projectTuple,
             presetKey,
-            (paramKey: string, paramValue: AnyParamValueType) => {
-                displayedValues[paramKey] = paramValue;
+            (changedKeys: string[], appliedValues: Record<string, AnyParamValueType>) => {
+                if (changedKeys.length > 0) dispatchParamsChangedEvent(changedKeys);
+                presetEdited = false;
+                displayedValues = appliedValues;
             }
         );
-        presetEdited = false;
     }
 
     // Derive initial display values from the project's current values when switched. Employ some
@@ -153,11 +154,7 @@
             }
         }
 
-        // Dispatch an update event so ProjectViewer can call the paramUpdated lifecycle method.
-        // Svelte custom events cannot bubble, so use a native DOM event instead.
-        wrapperDiv.dispatchEvent(
-            new CustomEvent('param-updated', { detail: updatedConfig, bubbles: true })
-        );
+        dispatchParamsChangedEvent([updatedConfig.key]);
     }
 
     // Get the properly typed initial value for a given param
@@ -169,6 +166,14 @@
 
         // If it's an array, we need to copy it so that we don't mutate the original
         return Array.isArray(objectValue) ? [...objectValue] : objectValue;
+    }
+
+    // Dispatch an update event so ProjectViewer can call the paramUpdated lifecycle method.
+    // Svelte custom events cannot bubble, so use a native DOM event instead.
+    function dispatchParamsChangedEvent(changedKeys: string[]) {
+        wrapperDiv.dispatchEvent(
+            new CustomEvent('params-changed', { detail: changedKeys, bubbles: true })
+        );
     }
 </script>
 

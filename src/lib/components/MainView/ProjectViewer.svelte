@@ -66,11 +66,11 @@
         // Update the canvas size whenever the window is resized
         window.addEventListener('resize', () => setCanvasSize());
 
-        // Call the paramChanged project lifecycle method whenever a param is updated
-        window.addEventListener('param-updated', (event) => {
+        // Call the paramsChanged project lifecycle method whenever a param is updated
+        window.addEventListener('params-changed', (event) => {
             const customEvent = event as CustomEvent;
-            project.paramChanged({
-                key: customEvent.detail.key,
+            project.paramsChanged({
+                keys: customEvent.detail,
                 ...getCurrentDetail()
             });
         });
