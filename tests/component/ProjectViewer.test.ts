@@ -369,12 +369,12 @@ describe('Project resize calls from CanvasViewer', () => {
     });
 });
 
-describe('Project paramChanged calls from CanvasViewer', () => {
+describe('Project paramsChanged calls from CanvasViewer', () => {
     afterEach(cleanup);
 
-    it('includes expected params when calling paramChanged', async () => {
+    it('includes expected params when calling paramsChanged', async () => {
         const project = new Project();
-        vi.spyOn(project, 'paramChanged');
+        vi.spyOn(project, 'paramsChanged');
 
         const { getByTestId } = render(ProjectViewer, {
             project: project
@@ -389,14 +389,14 @@ describe('Project paramChanged calls from CanvasViewer', () => {
         };
         fireEvent(
             document.body,
-            new CustomEvent('param-updated', { detail: testParamConfig, bubbles: true })
+            new CustomEvent('params-changed', { detail: [testParamConfig.key], bubbles: true })
         );
 
-        expect(project.paramChanged).toHaveBeenCalledWith({
+        expect(project.paramsChanged).toHaveBeenCalledWith({
             canvas: canvas2D,
             container: container,
             context: undefined, // undefined during testing, alas
-            key: 'test'
+            keys: expect.arrayContaining(['test'])
         });
     });
 });

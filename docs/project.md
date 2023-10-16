@@ -37,10 +37,10 @@ The `Project` class defines several lifecycle methods, which Sketchbook will cal
     -   `update` is called continuously in a frame update loop. Override this with your custom drawing code.
     -   `update` invocations receive a `detail` object containing the current `frame`, and the `time` offset in milliseconds, each starting from 0 when the project is loaded.
     -   You do not need to call `requestAnimationFrame` directly for animated content; Sketchbook will call `update` repeatedly on each animation frame.
--   **`paramChanged`**`({ key, container, canvas, context })`
-    -   `paramChanged` is called when a parameter value is changed via the Sketchbook app UI. Override this to implement any custom behavior that should be invoked when a parameter changes.
-    -   `paramChanged` invocations receive a `detail` object containing the `key` of the parameter that was just changed.
-    -   See the [Parameters](params-presets.md) page for more info on using parameters in your projects.
+-   **`paramsChanged`**`({ keys, container, canvas, context })`
+    -   `paramsChanged` is called when a parameter value is changed via the Sketchbook app UI. Override this to implement any custom behavior that should be invoked when a parameter changes.
+    -   `paramsChanged` invocations receive a `detail` object containing the `keys` of the parameters that were just changed. `keys` is often a one-element array, but can contain multiple keys e.g. when changing presets.
+    -   See the [Params & Presets](params-presets.md) page for more info on using parameters in your projects.
 -   **`resized`**`({ containerSize, canvasSize, container, canvas, context })`
     -   `resized` is called when the `canvas` and/or `container` sizes change, e.g. when the user resizes their browser window.
     -   `resized` invocations receive a `detail` object containing the current `containerSize` and `canvasSize` in pixels. The latter will be undefined when using `CanvasType.None`.

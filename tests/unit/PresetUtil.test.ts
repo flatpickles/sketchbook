@@ -52,6 +52,14 @@ const projectTuple: ProjectTuple = {
                 testArrayKey: [10.5, 21, 42]
             }
         },
+        'goodPreset2': {
+            'title': 'Test Preset',
+            'key': 'goodPreset2',
+            'values': {
+                testNumberKey: 42,
+                testArrayKey: [10.5, 21, 42]
+            }
+        },
         'badParamKey': {
             'title': 'Test Preset',
             'key': 'badParamKey',
@@ -101,6 +109,14 @@ describe('PresetUtil', () => {
 });
 
 describe('Preset application via PresetUtil.applyPreset', () => {
+    afterEach(() => {
+        cleanup();
+        localStorage.clear();
+        vi.clearAllMocks();
+        testProject.testNumberKey = 42;
+        testProject.testArrayKey = [42, 21, 10.5];
+    });
+
     it("applies a preset to a project's values", () => {
         PresetUtil.applyPreset(projectTuple, 'goodPreset');
         expect(testProject.testNumberKey).toBe(21);
@@ -117,7 +133,25 @@ describe('Preset application via PresetUtil.applyPreset', () => {
     it('calls the callback if provided', () => {
         const callback = vi.fn();
         PresetUtil.applyPreset(projectTuple, 'goodPreset', callback);
-        expect(callback).toHaveBeenCalledWith('testNumberKey', 21);
+        expect(callback).toHaveBeenCalledWith(
+            expect.arrayContaining(['testNumberKey', 'testArrayKey']),
+            expect.objectContaining({
+                testNumberKey: 21,
+                testArrayKey: [10.5, 21, 42]
+            })
+        );
+    });
+
+    it("doesn't indicate changes for unchanged values", () => {
+        const callback = vi.fn();
+        PresetUtil.applyPreset(projectTuple, 'goodPreset2', callback);
+        expect(callback).toHaveBeenCalledWith(
+            expect.not.arrayContaining(['testNumberKey']),
+            expect.objectContaining({
+                testNumberKey: 42,
+                testArrayKey: [10.5, 21, 42]
+            })
+        );
     });
 
     it('throws an error if the preset is not found', () => {
