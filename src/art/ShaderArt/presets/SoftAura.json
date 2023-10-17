@@ -1,0 +1,14 @@
+{
+    "title": "Soft Aura",
+    "key": "SoftAura",
+    "values": {
+        "bgColor": [
+            0.1411764705882353,
+            0.0196078431372549,
+            0.4196078431372549
+        ],
+        "softBlob": true,
+        "blobRed": 0.7,
+        "blobGreen": 0
+    }
+}

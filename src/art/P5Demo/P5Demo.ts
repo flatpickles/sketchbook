@@ -1,5 +1,5 @@
 import P5Project from '$lib/base/Project/P5Project';
-import type { ParamChangedDetail, ResizedDetail } from '$lib/base/Project/Project';
+import type { ParamsChangedDetail, ResizedDetail } from '$lib/base/Project/Project';
 import type P5 from 'p5';
 
 type ColorArray = [number, number, number];
@@ -36,8 +36,8 @@ export default class P5Demo extends P5Project {
         this.resetCanvas();
     }
 
-    paramChanged(detail: ParamChangedDetail) {
-        super.paramChanged(detail);
-        if (detail.key === 'bgColor') this.resetCanvas();
+    paramsChanged(detail: ParamsChangedDetail) {
+        super.paramsChanged(detail);
+        if (detail.keys.includes('bgColor')) this.resetCanvas();
     }
 }
