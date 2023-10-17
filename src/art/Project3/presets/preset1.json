@@ -1,9 +1,0 @@
-{
-    "title": "Preset #1",
-    "values": {
-        "number": 4,
-        "string": "Hello World",
-        "boolean": true,
-        "array": [3, 2, 1]
-    }
-}

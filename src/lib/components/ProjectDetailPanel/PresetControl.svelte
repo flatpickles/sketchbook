@@ -92,7 +92,8 @@
                     selected={preset.key === currentPresetKey}
                     data-testid="preset-option"
                 >
-                    {preset.title}{#if edited && preset.key === currentPresetKey}*{/if}
+                    {preset.title}
+                    {#if edited && preset.key === currentPresetKey}*{/if}
                 </option>
             {/each}
             {#if Object.keys(presetActions).length > 0}

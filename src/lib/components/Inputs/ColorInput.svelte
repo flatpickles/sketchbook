@@ -14,8 +14,8 @@
     // Avoid binding to the value directly within the input elements; depending on the type of
     // value, we may need to convert rgb <-> hex. Within this component we're using hex only (i.e.
     // both values below are hex strings)
-    let fieldValue: string = maybeRgbToHex(value);
-    let colorPickerValue: string = maybeRgbToHex(value);
+    $: fieldValue = maybeRgbToHex(value);
+    $: colorPickerValue = maybeRgbToHex(value);
 
     // Convert rgb to hex if necessary, scaling to [0, 1] if using unitColorArrays
     function maybeRgbToHex(maybeRgb: string | number[]): string {
