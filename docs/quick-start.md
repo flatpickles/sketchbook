@@ -114,8 +114,30 @@ Here we're defining a title, date, and description for the project. Check your b
 
 _Note that `rectColor` is displayed with a color picker input – Sketchbook has inferred from its name that this parameter is a color hex string. This is a parameter "style" that we could also have configured explicitly. To learn more, see the documentation for [parameter configuration](param-config.md)._
 
+### Extra Credit: Make a Preset
+
+Sketchbook makes it easy to create "presets", curated sets of parameter values that can be applied all at once. When you create one or more presets for a project, they'll appear in a selector UI above your parameter inputs.
+
+Presets are derived from JSON files in a `presets` directory, within the main project directory. To try creating one for your Quick Start project, make a `presets` directory, and add this code within a new `src/art/QuickStart/presets/DemoPreset.json` file:
+
+```json
+{
+    "title": "Demo Preset",
+    "values": {
+        "rectSize": 0.25,
+        "rectColor": "#dd14ff"
+    }
+}
+```
+
+If you check back in your browser, you'll now see the preset selector above the params we defined earlier, and you can flip from the project's default values to "Demo Preset" by using the right arrow control, or the selector dropdown.
+
+<img src="media/demo-preset.png" style="width: 300px" />
+
+_See the [presets documentation](params-presets.md?id=presets-in-sketchbook) to learn more about working with presets in Sketchbook._
+
 ### What's Next
 
 Hopefully you're feeling comfortable with the basics after this Quick Start, and you're ready to start building your own projects in Sketchbook! Come back to the docs listed in the index whenever you're interested in developing your understanding, or seeking reference materials in any particular area.
 
-If you're feeling particularly motivated, the Sketchbook docs are suitable for reading in top-top-bottom order. Continue onward into [Creating Project Files](file-structure.md) to keep learning.
+If you're feeling motivated, the Sketchbook docs are suitable for reading in top-top-bottom order. Continue onward into [Creating Project Files](file-structure.md) to keep learning.

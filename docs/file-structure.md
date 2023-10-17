@@ -15,6 +15,8 @@ src/art/
 ├─ Project2/
 │  ├─ config.json
 │  ├─ presets/
+│  │  ├─ CoolBeans.json
+│  │  ├─ FrigidFrijoles.json
 │  ├─ Project2.ts
 │  ├─ ProjectHelpers.ts
 ├─ util/

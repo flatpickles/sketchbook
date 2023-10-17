@@ -2,7 +2,7 @@
 
 While building art and prototypes in code, we typically want to create parameterizable systems, i.e. projects that change in appearance or behavior depending on a collection of configurable inputs. Depending on how you like to work, you might be "tuning" values while perfecting your final product, or you might be designing an abstract system that can achieve many different goals depending on how it's configured.
 
-One of Sketchbook's core features is its parameter system: you can easily define and use parameters within a project implementation, and these parameters will be presented with adjustable inputs alongside your project in the Sketchbook app. You can also define "presets": collections of parameter values that you can easily switch between. _[Note: presets are still [on the roadmap](https://github.com/flatpickles/sketchbook/issues/21).]_
+One of Sketchbook's core features is its parameter system: you can easily define and use parameters within a project implementation, and these parameters will be presented with adjustable inputs alongside your project in the Sketchbook app. You can also define "presets": curated collections of parameter values that a viewer can easily flip through.
 
 ## Implementing Parameters
 
@@ -41,19 +41,30 @@ Sketchbook provides reasonable default UI for each supported parameter type, but
 
 ## Presets in Sketchbook
 
-_[Note: presets are still [on the roadmap](https://github.com/flatpickles/sketchbook/issues/21). This section is aspirational, for now.]_
-
 Presets in Sketchbook are modeled as JSON objects, and stored in `.json` files. These files are contained in a `presets` directory alongside the associated project file, and Sketchbook will automatically make these presets available from a preset selector in the app UI. When a preset is selected, Sketchbook will set each parameter to the value indicated in the preset file. A preset file might look like this (for the parameters defined in `ProjectExample` above):
 
 ```json
 {
-    "numberParam": 0.42,
-    "boolParam": true,
-    "stringParam": "preset string",
-    "arrayParam": [0.9, 0.8, 0.7]
+    "title": "Demo Preset",
+    "values": {
+        "numberParam": 0.42,
+        "boolParam": false,
+        "stringParam": "preset string",
+        "arrayParam": [0.9, 0.8, 0.7]
+    }
 }
 ```
 
-Each parameter is optional: if a parameter's value isn't specified in a selected preset, it will not be changed from its value prior to loading the preset.
+If you were to create a JSON file with this code in a project's `presets` directory, you'd see this preset in the Sketchbook UI:
 
-As with projects, the name of each preset file matters: it will be used both as the display name for the preset, and in its permalink URL. If you'd like to set a different display name for a preset, you can set preset display names as a part of the [project configuration](project-config.md).
+<img src="media/preset-example.png" style="width: 300px" />
+
+Presets can only contain values for parameters that have values, so function-based parameters (including file inputs) cannot have their values set in a preset. Within a preset, each parameter value is optional. If a parameter's value isn't specified in a selected preset, it will not be changed from its value prior to loading the preset.
+
+Sketchbook automatically creates a "Default Values" preset, and will display this as the first preset when other presets are available. If you'd like to override default values in the "Default Values" preset, or create a custom title for a project's default preset, you can create a `presets/defaults.json` preset file. Any values contained in `defaults.json` will be used instead of the default values defined elsewhere (e.g. via inline definitions in your TS project file).
+
+Sketchbook tracks which parameter values have varied from the selected preset value, and you'll notice an asterisk (\*) appear next to the preset name if any values have changed. Edited parameter values can be reset to the current preset values via the "Reset" option in the selector dropdown.
+
+<img src="media/preset-reset.png" style="width: 200px" />
+
+When enabled in the [app settings](settings.md), you'll also see an "Export" option in the selector dropdown. This provides an easy way to generate JSON files from the current project values, so you can create preset files without having to type them out by hand. After exporting a preset file, you can simply drop it into your project's `presets` directory to see it listed in the selector UI.
