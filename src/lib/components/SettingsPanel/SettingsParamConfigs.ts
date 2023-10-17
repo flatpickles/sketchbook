@@ -95,7 +95,19 @@ export const settingsParamConfigs: ParamConfig[] = [
             Chronological: 'chronological',
             'Reverse Chron': 'reverse-chronological'
         }
-    } as StringParamConfig
+    } as StringParamConfig,
+
+    // alwaysShowPresets
+    {
+        ...BooleanParamConfigDefaults,
+        key: 'alwaysShowPresets'
+    } as BooleanParamConfig,
+
+    // enablePresetExport
+    {
+        ...BooleanParamConfigDefaults,
+        key: 'enablePresetExport'
+    } as BooleanParamConfig
 ].map((paramConfig) => {
     // Add the label to each ParamConfig from config/settings.ts
     paramConfig.name = userSettingsLabels[paramConfig.key];
