@@ -50,14 +50,16 @@ const enablePresetExport = dev;
 // Anything listed here will appear in the user settings panel with the given label. Values changed
 // in the settings panel will be persisted in cookies, and values above will be used as defaults.
 export const userSettingsLabels: Record<string, string> = {
-    overlayPanels: 'Overlay Panels',
     showExperiments: 'Show Experiments',
-    projectSortOrder: 'Project Sorting',
-    groupSortOrder: 'Group Sorting',
+    overlayPanels: 'Overlay Panels',
     projectListPanelState: 'Project List State',
     projectDetailPanelState: 'Project Detail State',
     panelMouseTriggerWidth: 'Mouse Trigger Width (px)',
-    hidePanelButtonsTimeout: 'Hide Panel Buttons (ms)'
+    hidePanelButtonsTimeout: 'Hide Panel Timeout (ms)',
+    projectSortOrder: 'Project Sorting',
+    groupSortOrder: 'Group Sorting',
+    alwaysShowPresets: 'Always Show Presets',
+    enablePresetExport: 'Enable Preset Export'
 };
 
 // Export all settings for use elsewhere in the app.

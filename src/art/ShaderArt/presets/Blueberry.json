@@ -1,0 +1,14 @@
+{
+    "title": "Blueberry",
+    "key": "Blueberry",
+    "values": {
+        "bgColor": [
+            0.34901960784313724,
+            0.9686274509803922,
+            0.9607843137254902
+        ],
+        "softBlob": false,
+        "blobRed": 0.25,
+        "blobGreen": 0
+    }
+}
