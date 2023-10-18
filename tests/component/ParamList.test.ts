@@ -55,6 +55,14 @@ const testPresets = {
             testString: 'hello again',
             testNumericArray: [7, 8, 9]
         }
+    },
+    'preset3': {
+        title: 'Preset 3',
+        key: 'preset3',
+        values: {
+            testNumber: 45,
+            testBoolean: true
+        }
     }
 };
 
@@ -873,5 +881,62 @@ describe('ParamList w/ presets', () => {
         // After updating the projectTuple, preset should be edited
         component.projectTuple = testTuple;
         expect(component.presetEdited).toBe(true);
+    });
+
+    it('enables partial preset application (with not all params defined)', async () => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const [project, changedListener, component] = renderParams(
+            false,
+            SectionOption.NoSections,
+            false
+        );
+
+        // Apply a preset with all params defined
+
+        component.applyPreset('preset1');
+
+        const numberInput = screen.getAllByTestId('number-param-slider')[0] as HTMLInputElement;
+        await waitFor(() => expect(numberInput.value).toBe('43'));
+        expect(project.testNumber).toBe(43);
+
+        const booleanInput = screen.getByTestId('boolean-param-input') as HTMLInputElement;
+        expect(booleanInput.checked).toBe(false);
+        expect(project.testBoolean).toBe(false);
+
+        const stringInput = screen.getByTestId('string-param-input-singleline') as HTMLInputElement;
+        expect(stringInput.value).toBe('goodbye');
+        expect(project.testString).toBe('goodbye');
+
+        const numericArrayInput = screen.getAllByTestId(
+            'number-param-slider'
+        ) as HTMLInputElement[];
+        numericArrayInput.shift(); // first is the non-array numeric input
+        expect(numericArrayInput.length).toBe(3);
+        expect(numericArrayInput[0].value).toBe('4');
+        expect(numericArrayInput[1].value).toBe('5');
+        expect(numericArrayInput[2].value).toBe('6');
+        expect(project.testNumericArray).toEqual([4, 5, 6]);
+
+        // Apply a preset with only some params defined
+
+        component.applyPreset('preset3');
+
+        // Wait for display sync loop to make sure there's no error...
+        await new Promise((r) => setTimeout(r, 100));
+
+        await waitFor(() => expect(numberInput.value).toBe('45'));
+        expect(project.testNumber).toBe(45);
+
+        expect(booleanInput.checked).toBe(true);
+        expect(project.testBoolean).toBe(true);
+
+        expect(stringInput.value).toBe('goodbye');
+        expect(project.testString).toBe('goodbye');
+
+        expect(numericArrayInput.length).toBe(3);
+        expect(numericArrayInput[0].value).toBe('4');
+        expect(numericArrayInput[1].value).toBe('5');
+        expect(numericArrayInput[2].value).toBe('6');
+        expect(project.testNumericArray).toEqual([4, 5, 6]);
     });
 });

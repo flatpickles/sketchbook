@@ -37,7 +37,10 @@
             (changedKeys: string[], appliedValues: Record<string, AnyParamValueType>) => {
                 if (changedKeys.length > 0) dispatchParamsChangedEvent(changedKeys);
                 presetEdited = false;
-                displayedValues = appliedValues;
+                displayedValues = {
+                    ...displayedValues,
+                    ...appliedValues
+                };
                 displaySyncLoopEnabled = previousLoopSetting;
             }
         );
