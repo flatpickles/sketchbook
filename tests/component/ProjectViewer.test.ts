@@ -49,7 +49,8 @@ describe('CanvasViewer', () => {
 
     it('renders a canvas', async () => {
         const { getByTestId } = render(ProjectViewer, {
-            project: new Project()
+            project: new Project(),
+            projectKey: 'testKey'
         });
 
         const canvas2D = getByTestId('shared-canvas-2D');
@@ -64,7 +65,8 @@ describe('CanvasViewer', () => {
         vi.spyOn(proj, 'update');
 
         const { getByTestId } = render(ProjectViewer, {
-            project: proj
+            project: proj,
+            projectKey: 'testkey'
         });
         const canvas2D = getByTestId('shared-canvas-2D');
         const canvas3D = getByTestId('shared-canvas-WebGL');
@@ -88,7 +90,8 @@ describe('CanvasViewer', () => {
         vi.spyOn(proj, 'update');
 
         const { getByTestId } = render(ProjectViewer, {
-            project: proj
+            project: proj,
+            projectKey: 'testkey'
         });
         const canvas2D = getByTestId('shared-canvas-2D');
         const canvas3D = getByTestId('shared-canvas-WebGL');
@@ -109,7 +112,8 @@ describe('CanvasViewer', () => {
         const proj = new Project();
         expect(proj.canvas).toBeUndefined();
         render(ProjectViewer, {
-            project: proj
+            project: proj,
+            projectKey: 'testkey'
         });
         expect(proj.canvas).toBeDefined();
         expect(proj.container).toBeDefined();
@@ -120,7 +124,8 @@ describe('CanvasViewer', () => {
         vi.spyOn(proj1, 'destroy');
 
         const { component, getByTestId } = render(ProjectViewer, {
-            project: proj1
+            project: proj1,
+            projectKey: 'testkey'
         });
         const canvas2D = getByTestId('shared-canvas-2D');
         const container = getByTestId('container');
@@ -146,7 +151,8 @@ describe('CanvasViewer', () => {
 
         // Render first project with per-frame updates and let it roll for 0.25 seconds
         const { component } = render(ProjectViewer, {
-            project: proj1
+            project: proj1,
+            projectKey: 'testkey'
         });
         await waitFor(() => expect(lastTime).toBeGreaterThanOrEqual(250));
 
@@ -173,7 +179,8 @@ describe('CanvasViewer', () => {
         const proj = new Project();
 
         const { getByTestId } = render(ProjectViewer, {
-            project: proj
+            project: proj,
+            projectKey: 'testkey'
         });
 
         const canvas2D = getByTestId('shared-canvas-2D') as HTMLCanvasElement;
@@ -196,6 +203,7 @@ describe('CanvasViewer', () => {
 
         const { getByTestId } = render(ProjectViewer, {
             project: proj,
+            projectKey: 'testkey',
             canvasSizeConfig: [1000, 800],
             pixelRatioConfig: 4
         });
@@ -224,7 +232,8 @@ describe('Project update calls from CanvasViewer', () => {
         });
 
         render(ProjectViewer, {
-            project: project
+            project: project,
+            projectKey: 'testkey'
         });
         await new Promise((r) => setTimeout(r, 250)); // wait 0.25 seconds
         expect(callCount).toBeGreaterThan(1);
@@ -235,7 +244,8 @@ describe('Project update calls from CanvasViewer', () => {
         vi.spyOn(project, 'update');
 
         const { getByTestId } = render(ProjectViewer, {
-            project: project
+            project: project,
+            projectKey: 'testkey'
         });
         const canvas2D = getByTestId('shared-canvas-2D');
         const container = getByTestId('container');
@@ -255,7 +265,8 @@ describe('Project update calls from CanvasViewer', () => {
         vi.spyOn(project, 'update');
 
         const { getByTestId } = render(ProjectViewer, {
-            project: project
+            project: project,
+            projectKey: 'testkey'
         });
         const canvas3D = getByTestId('shared-canvas-WebGL');
         const container = getByTestId('container');
@@ -275,7 +286,8 @@ describe('Project update calls from CanvasViewer', () => {
         vi.spyOn(project, 'update');
 
         const { getByTestId } = render(ProjectViewer, {
-            project: project
+            project: project,
+            projectKey: 'testkey'
         });
         const container = getByTestId('container');
 
@@ -298,7 +310,8 @@ describe('Project resize calls from CanvasViewer', () => {
         vi.spyOn(project, 'resized');
 
         render(ProjectViewer, {
-            project: project
+            project: project,
+            projectKey: 'testkey'
         });
         await new Promise((r) => setTimeout(r, 250)); // wait 0.25 seconds
         expect(project.resized).toHaveBeenCalledTimes(0);
@@ -312,7 +325,8 @@ describe('Project resize calls from CanvasViewer', () => {
             overlayPanels: false
         });
         render(ProjectViewer, {
-            project: project
+            project: project,
+            projectKey: 'testkey'
         });
         await waitFor(() => expect(project.resized).toHaveBeenCalledTimes(0));
 
@@ -330,7 +344,8 @@ describe('Project resize calls from CanvasViewer', () => {
             overlayPanels: false
         });
         const { getByTestId } = render(ProjectViewer, {
-            project: project
+            project: project,
+            projectKey: 'testkey'
         });
         const canvas2D = getByTestId('shared-canvas-2D');
         const container = getByTestId('container');
@@ -357,7 +372,8 @@ describe('Project resize calls from CanvasViewer', () => {
         });
 
         const { component } = render(ProjectViewer, {
-            project: project
+            project: project,
+            projectKey: 'testkey'
         });
         component.containerResizing = true;
         await waitFor(() => expect(callCount).toBeGreaterThan(1));
@@ -377,7 +393,8 @@ describe('Project paramsChanged calls from CanvasViewer', () => {
         vi.spyOn(project, 'paramsChanged');
 
         const { getByTestId } = render(ProjectViewer, {
-            project: project
+            project: project,
+            projectKey: 'testkey'
         });
         const canvas2D = getByTestId('shared-canvas-2D');
         const container = getByTestId('container');
@@ -402,14 +419,18 @@ describe('Project paramsChanged calls from CanvasViewer', () => {
 });
 
 describe('CanvasViewer w/ p5', () => {
-    afterEach(cleanup);
+    afterEach(() => {
+        cleanup();
+        vi.clearAllMocks();
+    });
 
     it("doesn't use the shared canvas, instead instantiates p5", async () => {
         const proj = new P5Project();
 
         expect(mockedP5).toHaveBeenCalledTimes(0);
         const { getByTestId } = render(ProjectViewer, {
-            project: proj
+            project: proj,
+            projectKey: 'testkey'
         });
 
         const canvas2D = getByTestId('shared-canvas-2D');
@@ -425,7 +446,8 @@ describe('CanvasViewer w/ p5', () => {
         vi.spyOn(proj, 'update');
 
         render(ProjectViewer, {
-            project: proj
+            project: proj,
+            projectKey: 'testkey'
         });
         await new Promise((r) => setTimeout(r, 250)); // wait 0.25 seconds
         await waitFor(() => expect(proj.update).toHaveBeenCalledTimes(0));
@@ -436,7 +458,8 @@ describe('CanvasViewer w/ p5', () => {
         const proj = new P5Project();
 
         const { component, getByTestId } = render(ProjectViewer, {
-            project: proj
+            project: proj,
+            projectKey: 'testkey'
         });
         const container = getByTestId('container');
         expect(mockP5Object.remove).toHaveBeenCalledTimes(0);

@@ -2,9 +2,11 @@
     import type Project from '$lib/base/Project/Project';
     import { CanvasType, type Detail } from '$lib/base/Project/Project';
     import { settingsStore } from '$lib/base/Util/AppState';
-    import { onMount } from 'svelte';
+    import { onDestroy, onMount } from 'svelte';
+    import { beforeNavigate } from '$app/navigation';
 
     export let project: Project;
+    export let projectKey: string;
     export let containerResizing = false;
     export let canvasSizeConfig: [number, number] | undefined = undefined;
     export let pixelRatioConfig: number | undefined = undefined;
@@ -76,6 +78,12 @@
         });
     });
 
+    // Destroy the project when navigating away and destroying the component (e.g. hot update)
+    beforeNavigate((navigation) => {
+        if (navigation.to?.params?.key !== projectKey) destroyProject();
+    });
+    onDestroy(destroyProject);
+
     // Initialize and update the project when loading & changing projects
     $: {
         if (containerElement) projectLoaded(project);
@@ -92,15 +100,11 @@
 
     /* Project & canvas management */
 
-    // Called when the current `project` reference changes (i.e. a new project is loaded)
-    function projectLoaded(newProject: Project) {
-        if (!containerElement) {
-            throw new Error("Cannot update a project when the container doesn't exist");
-        }
-
-        // Track the previous project so we can destroy it
+    // Called when a new project is loaded, or when the component is destroyed
+    function destroyProject() {
+        // Destroy the previousProject (not project, so it's safe to call this from projectLoaded)
         previousProject?.destroy(getCurrentDetail());
-        previousProject = newProject;
+        previousProject = undefined;
 
         // Destroy previous non-shared contents of the canvas container
         for (const child of containerElement.children) {
@@ -108,6 +112,17 @@
                 containerElement.removeChild(child);
             }
         }
+    }
+
+    // Called when the current `project` reference changes (i.e. a new project is loaded)
+    function projectLoaded(newProject: Project) {
+        if (!containerElement) {
+            throw new Error("Cannot update a project when the container doesn't exist");
+        }
+
+        // Destroy the previous project, and track the new project for future destruction
+        destroyProject();
+        previousProject = newProject;
 
         // Assign the canvas reference if the project uses a shared canvas
         newProject.container = containerElement;

@@ -51,6 +51,7 @@
 <div class="project-viewer">
     <ProjectViewer
         project={projectTuple.project}
+        projectKey={projectTuple.key}
         containerResizing={!$settingsStore.overlayPanels && $stateStore.panelResizing}
         canvasSizeConfig={projectTuple.config.canvasSize}
         pixelRatioConfig={projectTuple.config.pixelRatio}
