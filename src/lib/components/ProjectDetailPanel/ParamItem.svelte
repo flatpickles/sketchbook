@@ -32,7 +32,7 @@
     }
 
     // File selection is special!
-    function filesSelected(event: any) {
+    function filesSelected(event: CustomEvent<FileList>) {
         const files = event.detail;
         dispatch('update', {
             config: config,

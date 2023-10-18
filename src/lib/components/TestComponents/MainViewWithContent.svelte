@@ -11,7 +11,7 @@
     import ProjectContent from '$lib/components/MainView/ProjectContent.svelte';
     import { defaultPresetKey } from '$lib/base/ProjectLoading/PresetLoader';
 
-    export let hasDetails: boolean = true;
+    export let hasDetails = true;
 
     const configs = {
         untitled: {

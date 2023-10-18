@@ -10,8 +10,8 @@
     export let disabled = false;
     $: fieldValue = value;
 
-    export let showSlider: boolean = true;
-    export let showField: boolean = true;
+    export let showSlider = true;
+    export let showField = true;
 
     const dispatch = createEventDispatcher();
     function fieldInputEvent(event: Event) {
