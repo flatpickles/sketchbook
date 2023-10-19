@@ -156,7 +156,7 @@ export default class FragShaderProject extends Project {
         });
 
         // Add to the uniform params map
-        this.#uniformParams[uniformNames.scaledTime] = () => {
+        this.#uniformParams[uniformName] = () => {
             const scaleParamValue = Object.getOwnPropertyDescriptor(
                 this,
                 scaledTimeParamKey
