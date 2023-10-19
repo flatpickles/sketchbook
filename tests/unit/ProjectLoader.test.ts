@@ -44,7 +44,7 @@ describe('loading available projects', async () => {
     const availableProjects = await ProjectLoader.loadAvailableProjects();
 
     it('has correct number of available projects', () => {
-        expect(Object.values(availableProjects).length).toBe(11);
+        expect(Object.values(availableProjects).length).toBe(13);
     });
 
     it('correctly configures a project without a config file', () => {
@@ -554,6 +554,65 @@ describe('default value loading from config', async () => {
     it('throws an error with the wrong default length in config default', async () => {
         expect(ProjectLoader.loadProject('BadDefaultLength')).rejects.toThrow(
             'Default value for testArray has incorrect length: 2'
+        );
+    });
+
+    it('loads hex values as numeric array defaults when appropriate', async () => {
+        const projectTuple = await ProjectLoader.loadProject('ProjectWithHexStringsForArrays');
+        expect(projectTuple).toBeDefined();
+
+        // Check params config
+        const paramsConfig = projectTuple!.params;
+        expect(paramsConfig).toBeDefined();
+
+        // arrayColorUnit1
+        const arrayColorUnit1 = paramsConfig.filter(
+            (param) => param.key === 'arrayColorUnit1'
+        )[0] as NumberParamConfig;
+        expect(arrayColorUnit1.default).toEqual('#0000ff');
+        const actualValue = Object.getOwnPropertyDescriptor(
+            projectTuple!.project,
+            'arrayColorUnit1'
+        )!.value;
+        expect(actualValue).toEqual([0, 0, 1]);
+
+        // arrayColorUnit2
+        const arrayColorUnit2 = paramsConfig.filter(
+            (param) => param.key === 'arrayColorUnit2'
+        )[0] as NumberParamConfig;
+        expect(arrayColorUnit2.default).toBeUndefined();
+        const actualValue2 = Object.getOwnPropertyDescriptor(
+            projectTuple!.project,
+            'arrayColorUnit2'
+        )!.value;
+        expect(actualValue2).toEqual([1, 0, 0]);
+
+        // arrayColorByte1
+        const arrayColorByte1 = paramsConfig.filter(
+            (param) => param.key === 'arrayColorByte1'
+        )[0] as NumberParamConfig;
+        expect(arrayColorByte1.default).toEqual('#00ff00');
+        const actualValue3 = Object.getOwnPropertyDescriptor(
+            projectTuple!.project,
+            'arrayColorByte1'
+        )!.value;
+        expect(actualValue3).toEqual([0, 255, 0]);
+
+        // arrayColorByte2
+        const arrayColorByte2 = paramsConfig.filter(
+            (param) => param.key === 'arrayColorUnit2'
+        )[0] as NumberParamConfig;
+        expect(arrayColorByte2.default).toBeUndefined();
+        const actualValue4 = Object.getOwnPropertyDescriptor(
+            projectTuple!.project,
+            'arrayColorByte2'
+        )!.value;
+        expect(actualValue4).toEqual([0, 0, 255]);
+    });
+
+    it('throws an error when loading hex string for non-color numeric array', async () => {
+        expect(ProjectLoader.loadProject('BadHexStringsForArrays')).rejects.toThrow(
+            'Default value for numericArray1 has incorrect type: hex strings can only be assigned for numeric arrays with color style.'
         );
     });
 });

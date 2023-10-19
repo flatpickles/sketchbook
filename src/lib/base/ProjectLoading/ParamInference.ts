@@ -140,16 +140,16 @@ export default class ParamInference {
                 else if (metaString.includes('field')) config.style = NumberParamStyle.Field;
             } else if (ParamGuards.isNumericArrayParamConfig(config)) {
                 if (metaString.includes('combo')) config.style = NumericArrayParamStyle.Combo;
-                else if (metaString.includes('compactslider'))
+                else if (metaString.includes('compact') && metaString.includes('slider'))
                     config.style = NumericArrayParamStyle.CompactSlider;
                 else if (metaString.includes('slider'))
                     config.style = NumericArrayParamStyle.Slider;
-                else if (metaString.includes('compactfield'))
+                else if (metaString.includes('compact') && metaString.includes('field'))
                     config.style = NumericArrayParamStyle.CompactField;
                 else if (metaString.includes('field')) config.style = NumericArrayParamStyle.Field;
-                else if (metaString.includes('unitcolor'))
+                else if (metaString.includes('unit') && metaString.includes('color'))
                     config.style = NumericArrayParamStyle.UnitColor;
-                else if (metaString.includes('bytecolor'))
+                else if (metaString.includes('byte') && metaString.includes('color'))
                     config.style = NumericArrayParamStyle.ByteColor;
                 // shorthand: "compact" implies "compactslider", "color" implies "unitcolor"
                 else if (metaString.includes('compact'))

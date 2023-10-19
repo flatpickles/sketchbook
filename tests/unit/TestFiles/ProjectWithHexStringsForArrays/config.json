@@ -1,0 +1,20 @@
+{
+    "title": "Presets project",
+    "date": "2023-06-27",
+    "description": "Yadda yadda.",
+    "paramsApplyDuringInput": false,
+    "groups": ["Test"],
+    "experimental": true,
+    "explicitConfig": false,
+    "inferStyle": true,
+
+    "params": {
+        "arrayColorUnit1": {
+            "default": "#0000ff"
+        },
+        "arrayColorByte1": {
+            "default": "#00ff00"
+        }
+    },
+    "param_sections": []
+}

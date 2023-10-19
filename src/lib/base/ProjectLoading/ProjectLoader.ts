@@ -12,10 +12,14 @@ import ParamValueProvider from './ParamValueProvider';
 import { browser, dev } from '$app/environment';
 import FragShaderProject from '../Project/FragShaderProject';
 import { InferenceMode } from './ParamInference';
-import { isNumericArray } from '../ConfigModels/ParamConfigs/NumericArrayParamConfig';
-import { ParamGuards } from '../ConfigModels/ParamTypes';
+import {
+    NumericArrayParamStyle,
+    isNumericArray
+} from '../ConfigModels/ParamConfigs/NumericArrayParamConfig';
+import { ParamGuards, type AnyParamValueType } from '../ConfigModels/ParamTypes';
 import type { PresetMap } from './PresetLoader';
 import PresetLoader, { defaultPresetKey } from './PresetLoader';
+import ColorConversions from '../Util/ColorConversions';
 
 export interface ProjectTuple {
     key: string;
@@ -199,7 +203,29 @@ export default class ProjectLoader {
             let newValue = currentValue;
 
             // Helper function to validate types for new values
-            const validateType = (value: unknown) => {
+            const validatedType = (value: unknown): AnyParamValueType => {
+                // Allow hex values to be used for color numeric array params
+                if (
+                    ParamGuards.isNumericArrayParamConfig(paramConfig) &&
+                    typeof value === 'string' &&
+                    value.match(/^#[0-9a-f]{6}$/i)
+                ) {
+                    if (
+                        [
+                            NumericArrayParamStyle.ByteColor,
+                            NumericArrayParamStyle.UnitColor
+                        ].includes(paramConfig.style)
+                    ) {
+                        return ColorConversions.hexToRgb(
+                            value,
+                            paramConfig.style === NumericArrayParamStyle.UnitColor
+                        );
+                    } else {
+                        throw new Error(
+                            `Default value for ${paramConfig.key} has incorrect type: hex strings can only be assigned for numeric arrays with color style.`
+                        );
+                    }
+                }
                 // Assert that the values are the same type
                 if (typeof value !== typeof currentValue) {
                     throw new Error(
@@ -214,20 +240,19 @@ export default class ProjectLoader {
                         );
                     }
                 }
+                return value as AnyParamValueType;
             };
 
             // Apply explicit and inferred config defaults
             const configDefault = paramConfig.default;
             if (configDefault !== undefined) {
-                validateType(configDefault);
-                newValue = configDefault;
+                newValue = validatedType(configDefault);
             }
 
             // Apply preset defaults, or create them if they don't exist
             const presetDefault = projectPresets[defaultPresetKey].values[paramConfig.key];
             if (presetDefault !== undefined) {
-                validateType(presetDefault);
-                newValue = presetDefault;
+                newValue = validatedType(presetDefault);
             } else {
                 projectPresets[defaultPresetKey].values[paramConfig.key] = newValue;
             }
