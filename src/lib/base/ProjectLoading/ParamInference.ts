@@ -112,7 +112,7 @@ export default class ParamInference {
 
             // Assign numeric array value tokens via numeric array or hex string
             const hexMetaString = intentions?.metaStrings?.find((meta) =>
-                meta.match(/^#([0-9a-f]{6})$/)
+                meta.match(/^#([0-9a-f]{6})$/i)
             );
             if (ParamGuards.isNumericArrayParamConfig(newConfig)) {
                 if (intentions?.numericArrayValues?.length) {
@@ -208,7 +208,8 @@ export default class ParamInference {
             token.match(/^\[(\s*-?\d*\.{0,1}\d+\s*,\s*)+(\s*-?\d*\.{0,1}\d+\s*)\]$/)
         );
         const potentialMetaTokens = stringTokens.filter(
-            (token) => token.match(/(^[a-zA-Z]+$)|(^#([0-9a-f]{6})$)/) && !token.match(/true|false/)
+            (token) =>
+                token.match(/(^[a-zA-Z]+$)|(^#([0-9a-fA-F]{6})$)/) && !token.match(/true|false/)
         );
 
         // Return an object with adapted tokens, if any

@@ -217,7 +217,7 @@ describe('ParamInference.paramWithInference', () => {
         const inference2 = ParamInference.paramWithInference(
             NumericArrayParamConfigDefaults,
             InferenceMode.ShaderFile,
-            '23, origin, true, -4, #9933cc'
+            '23, origin, true, -4, #9933CC'
         ) as NumericArrayParamConfig;
         expect(inference2.default).toEqual([0.6, 0.2, 0.8]);
     });
@@ -609,14 +609,14 @@ describe('ParamInference.intentionsFrom', () => {
     });
 
     it('includes hex strings in metaStrings', () => {
-        const intentions1 = ParamInference.intentionsFrom('#dd00ff');
+        const intentions1 = ParamInference.intentionsFrom('#dd00FF');
         expect(intentions1.name).toBeUndefined();
         expect(intentions1.range).toBeUndefined();
         expect(intentions1.step).toBeUndefined();
         expect(intentions1.numberValues.length).toBe(0);
         expect(intentions1.booleanValues.length).toBe(0);
         expect(intentions1.numericArrayValues.length).toBe(0);
-        expect(intentions1.metaStrings).toEqual(['#dd00ff']);
+        expect(intentions1.metaStrings).toEqual(['#dd00FF']);
 
         const intentions2 = ParamInference.intentionsFrom(
             '#ff00ff, step, step 01, true, testDeux, false, 100.3 to 3'

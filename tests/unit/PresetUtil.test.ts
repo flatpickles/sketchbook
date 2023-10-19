@@ -7,13 +7,18 @@ import { NumberParamConfigDefaults } from '$lib/base/ConfigModels/ParamConfigs/N
 import { defaultPresetKey } from '$lib/base/ProjectLoading/PresetLoader';
 import type { ProjectTuple } from '$lib/base/ProjectLoading/ProjectLoader';
 import { ProjectConfigDefaults } from '$lib/base/ConfigModels/ProjectConfig';
-import { NumericArrayParamConfigDefaults } from '$lib/base/ConfigModels/ParamConfigs/NumericArrayParamConfig';
+import {
+    NumericArrayParamConfigDefaults,
+    NumericArrayParamStyle
+} from '$lib/base/ConfigModels/ParamConfigs/NumericArrayParamConfig';
 import { FunctionParamConfigDefaults } from '$lib/base/ConfigModels/ParamConfigs/FunctionParamConfig';
 
 class TestProject extends Project {
     testNumberKey = 42;
     testArrayKey = [42, 21, 10.5];
     functionParamKey = () => 42;
+    colorArrayUnit = [0.5, 0.5, 0.5];
+    colorArrayByte = [100, 100, 100];
 }
 
 const testProject = new TestProject();
@@ -33,6 +38,16 @@ const projectTuple: ProjectTuple = {
         {
             ...FunctionParamConfigDefaults,
             key: 'functionParamKey'
+        },
+        {
+            ...NumericArrayParamConfigDefaults,
+            key: 'colorArrayUnit',
+            style: NumericArrayParamStyle.UnitColor
+        },
+        {
+            ...NumericArrayParamConfigDefaults,
+            key: 'colorArrayByte',
+            style: NumericArrayParamStyle.ByteColor
         }
     ],
     presets: {
@@ -80,6 +95,21 @@ const projectTuple: ProjectTuple = {
             'values': {
                 testArrayKey: [42, 84]
             }
+        },
+        'arrayColorsWithHex': {
+            'title': 'Test Preset',
+            'key': 'arrayColorsWithHex',
+            'values': {
+                colorArrayUnit: '#ffffff',
+                colorArrayByte: '#ffffff'
+            }
+        },
+        'badColor': {
+            'title': 'Test Preset',
+            'key': 'badColors',
+            'values': {
+                testArrayKey: '#ffffff'
+            }
         }
     }
 };
@@ -115,6 +145,8 @@ describe('Preset application via PresetUtil.applyPreset', () => {
         vi.clearAllMocks();
         testProject.testNumberKey = 42;
         testProject.testArrayKey = [42, 21, 10.5];
+        testProject.colorArrayUnit = [0.5, 0.5, 0.5];
+        testProject.colorArrayByte = [100, 100, 100];
     });
 
     it("applies a preset to a project's values", () => {
@@ -177,6 +209,18 @@ describe('Preset application via PresetUtil.applyPreset', () => {
             'Preset value type mismatch for param testArrayKey: array lengths 2 vs 3'
         );
     });
+
+    it('assigns color strings as numeric arrays with color style', () => {
+        PresetUtil.applyPreset(projectTuple, 'arrayColorsWithHex');
+        expect(testProject.colorArrayUnit).toEqual([1, 1, 1]);
+        expect(testProject.colorArrayByte).toEqual([255, 255, 255]);
+    });
+
+    it('throws an error if a color string is assigned to a non-color array', () => {
+        expect(() => PresetUtil.applyPreset(projectTuple, 'badColor')).toThrowError(
+            'Preset value type mismatch for param testArrayKey: hex strings can only be assigned for numeric arrays with color style.'
+        );
+    });
 });
 
 describe('Checking if presets are applied via PresetUtil.presetIsApplied', () => {
@@ -186,11 +230,19 @@ describe('Checking if presets are applied via PresetUtil.presetIsApplied', () =>
         vi.clearAllMocks();
         testProject.testNumberKey = 42;
         testProject.testArrayKey = [42, 21, 10.5];
+        testProject.colorArrayUnit = [0.5, 0.5, 0.5];
+        testProject.colorArrayByte = [100, 100, 100];
     });
 
     it('returns true if preset has been applied', () => {
         PresetUtil.applyPreset(projectTuple, 'goodPreset');
         const isApplied = PresetUtil.presetIsApplied(projectTuple, 'goodPreset');
+        expect(isApplied).toBe(true);
+    });
+
+    it('returns true if hex color preset has been applied', () => {
+        PresetUtil.applyPreset(projectTuple, 'arrayColorsWithHex');
+        const isApplied = PresetUtil.presetIsApplied(projectTuple, 'arrayColorsWithHex');
         expect(isApplied).toBe(true);
     });
 
@@ -213,6 +265,16 @@ describe('Checking if presets are applied via PresetUtil.presetIsApplied', () =>
         expect(isApplied).toBe(false);
     });
 
+    it('returns false if hex color preset has been applied then modified, true if changed back', () => {
+        PresetUtil.applyPreset(projectTuple, 'arrayColorsWithHex');
+        testProject.colorArrayUnit[1] = 0.3;
+        const isApplied = PresetUtil.presetIsApplied(projectTuple, 'arrayColorsWithHex');
+        expect(isApplied).toBe(false);
+        testProject.colorArrayUnit[1] = 1.0;
+        const isApplied2 = PresetUtil.presetIsApplied(projectTuple, 'arrayColorsWithHex');
+        expect(isApplied2).toBe(true);
+    });
+
     it('throws an error if the preset is not found', () => {
         expect(() => PresetUtil.presetIsApplied(projectTuple, 'ghostPreset')).toThrowError(
             'Preset ghostPreset not found'
@@ -227,6 +289,8 @@ describe('Preset export via PresetUtil.exportPresetFile', () => {
         vi.clearAllMocks();
         testProject.testNumberKey = 42;
         testProject.testArrayKey = [42, 21, 10.5];
+        testProject.colorArrayUnit = [0.5, 0.5, 0.5];
+        testProject.colorArrayByte = [100, 100, 100];
     });
 
     it('should create a preset file', () => {
@@ -255,7 +319,9 @@ describe('Preset export via PresetUtil.exportPresetFile', () => {
                 key: 'TestPreset',
                 values: {
                     testNumberKey: 85,
-                    testArrayKey: [18, 19, 21]
+                    testArrayKey: [18, 19, 21],
+                    colorArrayUnit: [0.5, 0.5, 0.5],
+                    colorArrayByte: [100, 100, 100]
                 }
             },
             null,

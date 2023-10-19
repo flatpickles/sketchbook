@@ -1,8 +1,10 @@
+import { NumericArrayParamStyle } from '../ConfigModels/ParamConfigs/NumericArrayParamConfig';
 import {
     ParamGuards,
     type AnyParamValueType,
     type ParamValueType
 } from '../ConfigModels/ParamTypes';
+import ColorConversions from '../Util/ColorConversions';
 import ParamValueProvider from './ParamValueProvider';
 import { defaultPresetKey, type Preset } from './PresetLoader';
 import type { ProjectTuple } from './ProjectLoader';
@@ -49,29 +51,54 @@ export default class PresetUtil {
             const paramConfig = projectTuple.params.find((param) => param.key === paramKey);
             if (!paramConfig) throw new Error(`Param ${paramKey} not found`);
 
-            // Don't continue for parameters that can't have values
+            // Don't proceed with parameters that can't have values
             if (!ParamGuards.isConfigTypeWithDefault(paramConfig)) continue;
+
+            // Type value assertion with config type, apologies
+            let typedValue = paramValue as ParamValueType<typeof paramConfig>;
+
+            // Allow hex values to be used for color numeric array params
+            if (
+                ParamGuards.isNumericArrayParamConfig(paramConfig) &&
+                typeof typedValue === 'string' &&
+                typedValue.match(/^#[0-9a-f]{6}$/i)
+            ) {
+                if (
+                    [NumericArrayParamStyle.ByteColor, NumericArrayParamStyle.UnitColor].includes(
+                        paramConfig.style
+                    )
+                ) {
+                    typedValue = ColorConversions.hexToRgb(
+                        typedValue,
+                        paramConfig.style === NumericArrayParamStyle.UnitColor
+                    );
+                } else {
+                    throw new Error(
+                        `Preset value type mismatch for param ${paramKey}: hex strings can only be assigned for numeric arrays with color style.`
+                    );
+                }
+            }
 
             // Do some basic type checking
             const currentValue = Object.getOwnPropertyDescriptor(
                 projectTuple.project,
                 paramConfig.key
             )?.value;
-            if (typeof paramValue !== typeof currentValue) {
+            if (typeof typedValue !== typeof currentValue) {
                 throw new Error(
-                    `Preset value type mismatch for param ${paramKey}: ${typeof paramValue} vs ${typeof currentValue}`
+                    `Preset value type mismatch for param ${paramKey}: ${typeof typedValue} vs ${typeof currentValue}`
                 );
-            } else if (Array.isArray(paramValue) !== Array.isArray(currentValue)) {
+            } else if (Array.isArray(typedValue) !== Array.isArray(currentValue)) {
                 throw new Error(
                     `Preset value type mismatch for param ${paramKey}: array vs non-array`
                 );
-            } else if (Array.isArray(paramValue) && Array.isArray(currentValue)) {
-                if (paramValue.length !== currentValue.length) {
+            } else if (Array.isArray(typedValue) && Array.isArray(currentValue)) {
+                if (typedValue.length !== currentValue.length) {
                     throw new Error(
-                        `Preset value type mismatch for param ${paramKey}: array lengths ${paramValue.length} vs ${currentValue.length}`
+                        `Preset value type mismatch for param ${paramKey}: array lengths ${typedValue.length} vs ${currentValue.length}`
                     );
                 }
-                const arrayTypeMismatch = paramValue.some(
+                const arrayTypeMismatch = typedValue.some(
                     (v: number, i: number) => typeof v !== typeof currentValue[i]
                 );
                 if (arrayTypeMismatch) {
@@ -80,9 +107,9 @@ export default class PresetUtil {
                     );
                 }
             }
-            const typedValue = (
-                Array.isArray(paramValue) ? [...paramValue] : paramValue
-            ) as ParamValueType<typeof paramConfig>; // sorry
+
+            // Copy array to avoid aliasing if need be
+            typedValue = Array.isArray(typedValue) ? [...typedValue] : typedValue;
 
             // Set object and stored values if they've changed
             if (JSON.stringify(typedValue) !== JSON.stringify(currentValue)) {
@@ -116,7 +143,29 @@ export default class PresetUtil {
                 projectTuple.project,
                 paramKey
             )?.value;
-            if (JSON.stringify(paramValue) !== JSON.stringify(currentValue)) return false;
+            const possibleValues: (typeof paramValue)[] = [paramValue];
+
+            // Allow hex values to be used for three-element numeric array params
+            // More permissive than applyPreset, because we don't need user-legible errors here
+            if (
+                Array.isArray(currentValue) &&
+                currentValue.length === 3 &&
+                typeof paramValue === 'string' &&
+                paramValue.match(/^#[0-9a-f]{6}$/i)
+            ) {
+                possibleValues.push(ColorConversions.hexToRgb(paramValue, false));
+                possibleValues.push(ColorConversions.hexToRgb(paramValue, true));
+            }
+
+            // Check if any of the possible values match the current value
+            let anyMatch = false;
+            for (const possibleValue of possibleValues) {
+                if (JSON.stringify(possibleValue) === JSON.stringify(currentValue)) {
+                    anyMatch = true;
+                    break;
+                }
+            }
+            if (!anyMatch) return false;
         }
         return true;
     }
