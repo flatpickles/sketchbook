@@ -76,9 +76,10 @@ export default class FragShaderProject extends Project {
             const type = uniformLineComponents[uniformTypeIndex];
             const name = uniformLineComponents[uniformTypeIndex + 1];
 
-            // Provide scaled time uniform if desired (in uniform order)
-            if (name === uniformNames.scaledTime) {
-                this.#provideScaledTime();
+            // Provide scaled time uniforms if desired
+            const scaledTimeMatcher = new RegExp(`${uniformNames.scaledTime}\\d*`, 'i');
+            if (scaledTimeMatcher.test(name)) {
+                this.#provideScaledTime(name);
                 return;
             }
 
@@ -140,13 +141,13 @@ export default class FragShaderProject extends Project {
      * added timeScale parameter. This is useful for animations with a configurable motion rate that
      * should be continuous as the time scale changes.
      */
-    #provideScaledTime() {
+    #provideScaledTime(uniformName: string) {
         // These variables are used to calculate the scaled time, and updated in a JS closure below
         let lastFrameTime = Date.now();
         let totalScaledTime = 0;
 
         // Create the parameter property
-        const scaledTimeParamKey = 'timeScale';
+        const scaledTimeParamKey = 'timeScale' + uniformName.replace(uniformNames.scaledTime, '');
         Object.defineProperty(this, scaledTimeParamKey, {
             value: 1.0,
             writable: true,
