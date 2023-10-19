@@ -206,6 +206,22 @@ describe('ParamInference.paramWithInference', () => {
         expect(inference4.default).toEqual([74, 0.1, -3]);
     });
 
+    it('assigns numeric array value from hex string', () => {
+        const inference1 = ParamInference.paramWithInference(
+            NumericArrayParamConfigDefaults,
+            InferenceMode.ShaderFile,
+            '23, origin, true, -4, #ff00ff'
+        ) as NumericArrayParamConfig;
+        expect(inference1.default).toEqual([1, 0, 1]);
+
+        const inference2 = ParamInference.paramWithInference(
+            NumericArrayParamConfigDefaults,
+            InferenceMode.ShaderFile,
+            '23, origin, true, -4, #9933cc'
+        ) as NumericArrayParamConfig;
+        expect(inference2.default).toEqual([0.6, 0.2, 0.8]);
+    });
+
     it('assigns metadata (styles, etc)', () => {
         const inference1 = ParamInference.paramWithInference(
             NumberParamConfigDefaults,
@@ -590,5 +606,27 @@ describe('ParamInference.intentionsFrom', () => {
         expect(intentions2.booleanValues).toEqual([true, false]);
         expect(intentions2.numericArrayValues.length).toBe(0);
         expect(intentions2.metaStrings).toEqual(['test', 'step', 'testDeux']);
+    });
+
+    it('includes hex strings in metaStrings', () => {
+        const intentions1 = ParamInference.intentionsFrom('#dd00ff');
+        expect(intentions1.name).toBeUndefined();
+        expect(intentions1.range).toBeUndefined();
+        expect(intentions1.step).toBeUndefined();
+        expect(intentions1.numberValues.length).toBe(0);
+        expect(intentions1.booleanValues.length).toBe(0);
+        expect(intentions1.numericArrayValues.length).toBe(0);
+        expect(intentions1.metaStrings).toEqual(['#dd00ff']);
+
+        const intentions2 = ParamInference.intentionsFrom(
+            '#ff00ff, step, step 01, true, testDeux, false, 100.3 to 3'
+        );
+        expect(intentions2.name).toBeUndefined();
+        expect(intentions2.range).toEqual([100.3, 3]);
+        expect(intentions2.step).toEqual(1);
+        expect(intentions2.numberValues.length).toBe(0);
+        expect(intentions2.booleanValues).toEqual([true, false]);
+        expect(intentions2.numericArrayValues.length).toBe(0);
+        expect(intentions2.metaStrings).toEqual(['#ff00ff', 'step', 'testDeux']);
     });
 });

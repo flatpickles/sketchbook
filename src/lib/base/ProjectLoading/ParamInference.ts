@@ -4,6 +4,7 @@ import { NumberParamStyle } from '../ConfigModels/ParamConfigs/NumberParamConfig
 import { NumericArrayParamStyle } from '../ConfigModels/ParamConfigs/NumericArrayParamConfig';
 import { StringParamStyle } from '../ConfigModels/ParamConfigs/StringParamConfig';
 import { ParamGuards } from '../ConfigModels/ParamTypes';
+import ColorConversions from '../Util/ColorConversions';
 
 export enum InferenceMode {
     ProjectFile,
@@ -109,12 +110,16 @@ export default class ParamInference {
                 newConfig.default = intentions.booleanValues[0];
             }
 
-            // Assign numeric array value tokens
-            if (
-                ParamGuards.isNumericArrayParamConfig(newConfig) &&
-                intentions?.numericArrayValues?.length
-            ) {
-                newConfig.default = intentions.numericArrayValues[0];
+            // Assign numeric array value tokens via numeric array or hex string
+            const hexMetaString = intentions?.metaStrings?.find((meta) =>
+                meta.match(/^#([0-9a-f]{6})$/)
+            );
+            if (ParamGuards.isNumericArrayParamConfig(newConfig)) {
+                if (intentions?.numericArrayValues?.length) {
+                    newConfig.default = intentions.numericArrayValues[0];
+                } else if (hexMetaString) {
+                    newConfig.default = ColorConversions.hexToRgb(hexMetaString, true);
+                }
             }
         }
 
@@ -203,7 +208,7 @@ export default class ParamInference {
             token.match(/^\[(\s*-?\d*\.{0,1}\d+\s*,\s*)+(\s*-?\d*\.{0,1}\d+\s*)\]$/)
         );
         const potentialMetaTokens = stringTokens.filter(
-            (token) => token.match(/^[a-zA-Z]+$/) && !token.match(/true|false/)
+            (token) => token.match(/(^[a-zA-Z]+$)|(^#([0-9a-f]{6})$)/) && !token.match(/true|false/)
         );
 
         // Return an object with adapted tokens, if any

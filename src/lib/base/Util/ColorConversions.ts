@@ -1,14 +1,16 @@
 export default class ColorConversions {
-    public static hexToRgb(hex: string): number[] {
+    public static hexToRgb(hex: string, unit = false): number[] {
         const hexComponents = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
         if (!hexComponents) throw new Error('rgbToHex: invalid hex string');
         if (hexComponents.length !== 4)
             throw new Error('rgbToHex: hex value must be in the format #rrggbb');
-        return [
+        const value255 = [
             parseInt(hexComponents[1], 16),
             parseInt(hexComponents[2], 16),
             parseInt(hexComponents[3], 16)
         ];
+        if (unit) return value255.map((x) => x / 255);
+        else return value255;
     }
 
     public static rgbToHex(rgb: number[]): string {
