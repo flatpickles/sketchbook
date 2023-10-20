@@ -46,6 +46,7 @@ export default class PresetUtil {
         const preset = projectTuple.presets[presetKey];
         if (!preset) throw new Error(`Preset ${presetKey} not found`);
         const changedKeys = [];
+        const allValues: Record<string, AnyParamValueType> = {};
         for (const [paramKey, paramValue] of Object.entries(preset.values)) {
             // Find the relevant config
             const paramConfig = projectTuple.params.find((param) => param.key === paramKey);
@@ -108,10 +109,8 @@ export default class PresetUtil {
                 }
             }
 
-            // Copy array to avoid aliasing if need be
+            // Set object and stored values if they've changed, copying arrays to avoid aliasing
             typedValue = Array.isArray(typedValue) ? [...typedValue] : typedValue;
-
-            // Set object and stored values if they've changed
             if (JSON.stringify(typedValue) !== JSON.stringify(currentValue)) {
                 Object.defineProperty(projectTuple.project, paramKey, {
                     value: typedValue,
@@ -122,10 +121,13 @@ export default class PresetUtil {
                 ParamValueProvider.setValue(paramConfig, projectTuple.key, typedValue);
                 changedKeys.push(paramKey);
             }
+
+            // Set all values for completion callback (also avoid aliasing issues here)
+            allValues[paramKey] = Array.isArray(typedValue) ? [...typedValue] : typedValue;
         }
 
         // Completion callback should update UI accordingly
-        if (complete) complete(changedKeys, JSON.parse(JSON.stringify(preset.values)));
+        if (complete) complete(changedKeys, allValues);
     }
 
     /**

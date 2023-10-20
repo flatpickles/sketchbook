@@ -11,6 +11,7 @@
     import ParamItem from './ParamItem.svelte';
     import ParamValueProvider from '$lib/base/ProjectLoading/ParamValueProvider';
     import PresetUtil from '$lib/base/ProjectLoading/PresetUtil';
+    import { onDestroy } from 'svelte';
 
     export let projectTuple: ProjectTuple;
     export let selectedPresetKey: string;
@@ -104,6 +105,10 @@
         // Continue checking for divergence on each animation frame
         if (displaySyncLoopEnabled) displaySyncLoopID = requestAnimationFrame(displaySyncLoop);
     }
+
+    onDestroy(() => {
+        if (displaySyncLoopID) cancelAnimationFrame(displaySyncLoopID);
+    });
 
     // Apply the updated param (or call the associated function)
     async function paramUpdated(event: CustomEvent) {

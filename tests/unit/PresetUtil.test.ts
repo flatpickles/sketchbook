@@ -211,9 +211,17 @@ describe('Preset application via PresetUtil.applyPreset', () => {
     });
 
     it('assigns color strings as numeric arrays with color style', () => {
-        PresetUtil.applyPreset(projectTuple, 'arrayColorsWithHex');
+        const completion = vi.fn();
+        PresetUtil.applyPreset(projectTuple, 'arrayColorsWithHex', completion);
         expect(testProject.colorArrayUnit).toEqual([1, 1, 1]);
         expect(testProject.colorArrayByte).toEqual([255, 255, 255]);
+        expect(completion).toHaveBeenCalledWith(
+            expect.arrayContaining(['colorArrayUnit', 'colorArrayByte']),
+            expect.objectContaining({
+                colorArrayUnit: [1, 1, 1],
+                colorArrayByte: [255, 255, 255]
+            })
+        );
     });
 
     it('throws an error if a color string is assigned to a non-color array', () => {
