@@ -59,7 +59,7 @@ If you were to create a JSON file with this code in a project's `presets` direct
 
 <img src="media/preset-example.png" style="width: 300px" />
 
-Presets can only contain values for parameters that have values, so function-based parameters (including file inputs) cannot have their values set in a preset. Within a preset, each parameter value is optional. If a parameter's value isn't specified in a selected preset, it will not be changed from its value prior to loading the preset.
+Presets can only contain values for parameters that have values, so function-based parameters (including file inputs) cannot have their values set in a preset. Within a preset, each parameter value is optional. If a parameter's value isn't specified in a selected preset, it will not be changed from its value prior to loading the preset. Preset values must adhere to expected types for each parameter, with one exception: you can pass in a hex color string (e.g. `"#34b00c"`) as the value for three-element numeric array parameter, as long as it is using the `UnitColor` or `ByteColor` [style](param-config.md?id=numeric-array-parameters).
 
 Sketchbook automatically creates a "Default Values" preset, and will display this as the first preset when other presets are available. If you'd like to override default values in the "Default Values" preset, or create a custom title for a project's default preset, you can create a `presets/defaults.json` preset file. Any values contained in `defaults.json` will be used instead of the default values defined elsewhere (e.g. via inline definitions in your TS project file).
 
