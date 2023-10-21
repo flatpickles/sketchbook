@@ -84,7 +84,7 @@
         </div>
         {#if content.cookiesWarning?.length}
             <div class="cookies-warning">
-                <p>{content.cookiesWarning}</p>
+                <p>{@html content.cookiesWarning}</p>
             </div>
         {/if}
     </div>
