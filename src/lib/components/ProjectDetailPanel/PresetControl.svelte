@@ -144,7 +144,6 @@
 
         // For Safari:
         text-align-last: center;
-        outline: none;
         border-radius: 0;
     }
 

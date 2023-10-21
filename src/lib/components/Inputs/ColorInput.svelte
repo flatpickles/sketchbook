@@ -86,17 +86,19 @@
         on:change={fieldInputEvent}
         data-testid="color-param-field"
     />
-    <input
-        type="color"
-        id={`${id}-picker`}
-        aria-label={`${name} Color Picker`}
-        class="color-selector"
-        {disabled}
-        value={colorPickerValue}
-        on:input={pickerInputEvent}
-        on:change={pickerInputEvent}
-        data-testid="color-param-selector"
-    />
+    <div class="picker-wrapper">
+        <input
+            type="color"
+            id={`${id}-picker`}
+            aria-label={`${name} Color Picker`}
+            class="color-picker"
+            {disabled}
+            value={colorPickerValue}
+            on:input={pickerInputEvent}
+            on:change={pickerInputEvent}
+            data-testid="color-param-selector"
+        />
+    </div>
 </div>
 
 <style lang="scss">
@@ -115,13 +117,25 @@
         border-radius: $field-input-border-radius 0 0 $field-input-border-radius;
     }
 
-    .color-selector {
+    .picker-wrapper {
         height: 100%;
         width: 100%;
         max-width: $param-input-item-min-width;
         border: $field-input-border;
         border-left: 0;
         border-radius: 0 $field-input-border-radius $field-input-border-radius 0;
+
+        // Firefox hax: color input has a mysterious inner outline, so make it overflow and clip it
+        overflow: hidden;
+    }
+
+    .color-picker {
+        position: relative;
+        left: -50%;
+        top: -50%;
+        height: 200%;
+        width: 200%;
+        overflow: hidden;
     }
 
     input:disabled {

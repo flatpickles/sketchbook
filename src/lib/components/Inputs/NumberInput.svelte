@@ -77,15 +77,19 @@
     }
 
     input[type='range'] {
+        width: 100%;
         flex-grow: 1;
+        flex-shrink: 1;
     }
 
     input[type='number'] {
         @include string-parameter-input;
-        text-align: right;
+        width: 100%;
         flex-grow: 1;
+        flex-shrink: 2;
         min-width: $param-input-item-min-width;
         max-width: $param-input-item-partial-width;
+        text-align: right;
 
         // Hide up/down arrows: Firefox
         appearance: textfield;

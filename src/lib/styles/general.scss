@@ -7,6 +7,10 @@ $canvas-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.5); // canvas shadow above container
     color: $panel-highlight-color;
 }
 
+@mixin input-style {
+    outline: none;
+}
+
 // https://css-tricks.com/snippets/css/prevent-long-urls-from-breaking-out-of-container/
 @mixin word-wrap {
     overflow-wrap: break-word;

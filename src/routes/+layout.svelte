@@ -30,4 +30,8 @@
     :global(a) {
         @include link-style;
     }
+
+    :global(textarea, input, select, button) {
+        @include input-style;
+    }
 </style>

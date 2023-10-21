@@ -64,8 +64,6 @@ $ie-bottom-track-color: darken($track-color, $contrast) !default;
     }
 
     &:focus {
-        outline: 0;
-
         &::-webkit-slider-runnable-track {
             background: lighten($track-color, $contrast);
         }
@@ -99,7 +97,7 @@ $ie-bottom-track-color: darken($track-color, $contrast) !default;
         background: $track-color;
         border: $track-border-width solid $track-border-color;
         border-radius: $track-radius;
-        height: math.div($track-height, 2);
+        height: $track-height;
     }
 
     &::-moz-range-thumb {
