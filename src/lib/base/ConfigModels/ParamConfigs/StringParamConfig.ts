@@ -8,8 +8,8 @@ export enum StringParamStyle {
 
 export interface StringParamConfig extends ParamConfig {
     style: StringParamStyle;
-    default?: string;
-    options?: string[] | Record<string, string>;
+    default: string | undefined;
+    options: string[] | Record<string, string> | undefined;
 }
 
 export const StringParamConfigDefaults: StringParamConfig = {

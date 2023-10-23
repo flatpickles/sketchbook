@@ -336,6 +336,19 @@ describe('Project resize calls from CanvasViewer', () => {
         await waitFor(() => expect(project.resized).toHaveBeenCalledTimes(1));
     });
 
+    it('calls resized when the window gets a resize event', async () => {
+        const project = new Project();
+        vi.spyOn(project, 'resized');
+
+        render(ProjectViewer, {
+            project: project,
+            projectKey: 'testkey'
+        });
+
+        window.dispatchEvent(new Event('resize'));
+        await waitFor(() => expect(project.resized).toHaveBeenCalledTimes(1));
+    });
+
     it('includes expected params when calling resized', async () => {
         const project = new Project();
         vi.spyOn(project, 'resized');
@@ -382,6 +395,102 @@ describe('Project resize calls from CanvasViewer', () => {
         component.containerResizing = false;
         await new Promise((r) => setTimeout(r, 250)); // wait 0.5 seconds
         expect(callCount).toBe(currentCallCount);
+    });
+});
+
+describe('ProjectViewer staticMode', () => {
+    afterEach(cleanup);
+
+    it('calls update with init', async () => {
+        const project = new Project();
+        vi.spyOn(project, 'update');
+
+        const { getByTestId, component } = render(ProjectViewer, {
+            project: project,
+            projectKey: 'testkey',
+            staticMode: true
+        });
+        const canvas2D = getByTestId('shared-canvas-2D');
+        const container = getByTestId('container');
+
+        await new Promise((r) => setTimeout(r, 100)); // wait 0.1 seconds
+        expect(project.update).toHaveBeenCalledTimes(1);
+        expect(project.update).toHaveBeenCalledWith({
+            canvas: canvas2D,
+            container: container,
+            context: undefined, // undefined during testing, alas
+            frame: expect.anything(),
+            time: expect.anything()
+        });
+
+        const project2 = new Project();
+        vi.spyOn(project2, 'update');
+        component.project = project2;
+
+        await new Promise((r) => setTimeout(r, 100)); // wait 0.1 seconds
+        expect(project2.update).toHaveBeenCalledTimes(1);
+        expect(project2.update).toHaveBeenCalledWith({
+            canvas: canvas2D,
+            container: container,
+            context: undefined, // undefined during testing, alas
+            frame: expect.anything(),
+            time: expect.anything()
+        });
+    });
+
+    it('calls update when param changes', async () => {
+        const project = new Project();
+        vi.spyOn(project, 'update');
+
+        const { getByTestId } = render(ProjectViewer, {
+            project: project,
+            projectKey: 'testkey',
+            staticMode: true
+        });
+        const canvas2D = getByTestId('shared-canvas-2D');
+        const container = getByTestId('container');
+
+        await new Promise((r) => setTimeout(r, 100)); // wait 0.1 seconds
+        expect(project.update).toHaveBeenCalledTimes(1);
+        expect(project.update).toHaveBeenCalledWith({
+            canvas: canvas2D,
+            container: container,
+            context: undefined, // undefined during testing, alas
+            frame: expect.anything(),
+            time: expect.anything()
+        });
+
+        const testParamConfig = {
+            ...NumberParamConfigDefaults,
+            key: 'test'
+        };
+        fireEvent(
+            document.body,
+            new CustomEvent('params-changed', { detail: [testParamConfig.key], bubbles: true })
+        );
+        expect(project.update).toHaveBeenCalledTimes(2);
+        expect(project.update).toHaveBeenCalledWith({
+            canvas: canvas2D,
+            container: container,
+            context: undefined, // undefined during testing, alas
+            frame: expect.anything(),
+            time: expect.anything()
+        });
+    });
+
+    it('calls update when the window gets a resize event', async () => {
+        const project = new Project();
+        vi.spyOn(project, 'update');
+
+        render(ProjectViewer, {
+            project: project,
+            projectKey: 'testkey',
+            staticMode: true
+        });
+        expect(project.update).toHaveBeenCalledTimes(1);
+
+        window.dispatchEvent(new Event('resize'));
+        expect(project.update).toHaveBeenCalledTimes(2);
     });
 });
 
@@ -441,7 +550,7 @@ describe('CanvasViewer w/ p5', () => {
         expect(mockedP5).toHaveBeenCalledTimes(1);
     });
 
-    it("doesn't call update directly", async () => {
+    it('calls update AND draw (for better or worse)', async () => {
         const proj = new P5Project();
         vi.spyOn(proj, 'update');
 
@@ -450,7 +559,7 @@ describe('CanvasViewer w/ p5', () => {
             projectKey: 'testkey'
         });
         await new Promise((r) => setTimeout(r, 250)); // wait 0.25 seconds
-        await waitFor(() => expect(proj.update).toHaveBeenCalledTimes(0));
+        await waitFor(() => expect(proj.update).toHaveBeenCalled());
         expect(mockP5Object.draw).toHaveBeenCalled();
     });
 

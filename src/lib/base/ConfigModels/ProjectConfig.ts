@@ -1,14 +1,15 @@
 export interface ProjectConfig {
     title: string;
-    date?: Date;
-    description?: string;
+    date: Date | undefined;
+    description: string | undefined;
     groups: string[];
     experimental: boolean;
     paramsApplyDuringInput: boolean;
-    canvasSize?: [number, number];
-    pixelRatio?: number;
+    canvasSize: [number, number] | undefined;
+    pixelRatio: number | undefined;
     twoWaySync: boolean;
-    explicitConfig?: boolean;
+    explicitConfig: boolean;
+    staticMode: boolean;
 }
 
 export const ProjectConfigDefaults: ProjectConfig = {
@@ -21,5 +22,6 @@ export const ProjectConfigDefaults: ProjectConfig = {
     canvasSize: undefined,
     pixelRatio: undefined,
     twoWaySync: true,
-    explicitConfig: false
+    explicitConfig: false,
+    staticMode: false
 };

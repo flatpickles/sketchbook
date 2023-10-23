@@ -59,6 +59,8 @@ The same approach applies for any other user events you'd like to respond to in 
 
 The `update` function in your `Project` subclass is called continuously in a `requestAnimationFrame` loop, but you don't have to implement your drawing code there! If your project isn't meant to render in real time, you could implement a custom drawing method that is called directly from `init`, `paramsChanged`, and `resized`. This is a great choice if your rendering code takes longer than a frame to execute, and your project isn't intended to render dynamic content.
 
+You can also enable `staticMode` in your [project config](project-config.md), which is effectively a shortcut to the technique described above. With `staticMode` enabled, you can implement your drawing code in `update`, and expect that it will only be called after your project's other lifecycle methods.
+
 ## Exporting photos & videos
 
 Sketchbook doesn't yet provide native support for photo and video export. If you're starting a project that you'd like to save photo or video content from, you could consider using a framework within Sketchbook that supports artwork export; [`canvas-sketch`](https://github.com/mattdesl/canvas-sketch/blob/master/docs/exporting-artwork.md) is one great option.

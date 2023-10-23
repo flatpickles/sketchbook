@@ -305,7 +305,7 @@ export default class ProjectLoader {
         if (filePath.includes('.ts') || filePath.includes('.js')) {
             return rawProject.includes('export default class') && rawProject.includes('extends');
         } else if (filePath.includes('.frag')) {
-            return rawProject.includes('void main()');
+            return rawProject.includes('void main');
         }
         return true;
     }

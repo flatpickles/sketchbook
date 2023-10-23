@@ -15,7 +15,7 @@ export interface ParamConfig {
     key: string;
     name: string;
     fullWidthInput: boolean;
-    section?: string;
+    section: string | undefined;
     hoverText?: string;
     applyDuringInput: boolean;
 }

@@ -16,8 +16,8 @@ export interface NumericArrayParamConfig extends ParamConfig {
     max: number;
     step: number;
     style: NumericArrayParamStyle;
-    default?: number[];
-    options?: number[][] | Record<string, number[]>;
+    default: number[] | undefined;
+    options: number[][] | Record<string, number[]> | undefined;
 }
 
 export const NumericArrayParamConfigDefaults: NumericArrayParamConfig = {

@@ -7,6 +7,7 @@
 
     export let project: Project;
     export let projectKey: string;
+    export let staticMode = false;
     export let containerResizing = false;
     export let canvasSizeConfig: [number, number] | undefined = undefined;
     export let pixelRatioConfig: number | undefined = undefined;
@@ -20,25 +21,17 @@
     let frameCount = 0;
     let startTime = Date.now();
 
-    // Update the project, component, and DOM state each frame
+    // Call the update function each frame when not in static mode
     const updateLoop = () => {
         if (containerElement) {
             // Set the canvas size each frame if the container is actively resizing
             if (containerResizing) setCanvasSize();
 
-            // Update the project, if update is implemented
-            if (Object.getPrototypeOf(project).hasOwnProperty('update')) {
-                project.update({
-                    frame: frameCount,
-                    time: Date.now() - startTime,
-                    ...getCurrentDetail()
-                });
-                frameCount += 1;
-            }
+            // Update the project, if not in static mode
+            if (!staticMode) updateProject();
         }
         requestAnimationFrame(updateLoop);
     };
-    updateLoop();
 
     function getCurrentDetail(): Detail<typeof project.canvasType> {
         // Get the current canvas & context references, depending on canvas type
@@ -65,9 +58,6 @@
     /* Svelte events & reactivity */
 
     onMount(() => {
-        // Update the canvas size whenever the window is resized
-        window.addEventListener('resize', () => setCanvasSize());
-
         // Call the paramsChanged project lifecycle method whenever a param is updated
         window.addEventListener('params-changed', (event) => {
             const customEvent = event as CustomEvent;
@@ -75,7 +65,14 @@
                 keys: customEvent.detail,
                 ...getCurrentDetail()
             });
+            if (staticMode) updateProject();
         });
+
+        // Update the canvas size whenever the window is resized
+        window.addEventListener('resize', () => setCanvasSize());
+
+        // Start the update loop after the component is mounted
+        updateLoop();
     });
 
     // Destroy the project when navigating away and destroying the component (e.g. hot update)
@@ -99,6 +96,16 @@
     })($settingsStore.overlayPanels);
 
     /* Project & canvas management */
+
+    // Called to update the project, bumping the frame count and calculating the time
+    function updateProject() {
+        project.update({
+            frame: frameCount,
+            time: Date.now() - startTime,
+            ...getCurrentDetail()
+        });
+        frameCount += 1;
+    }
 
     // Called when a new project is loaded, or when the component is destroyed
     function destroyProject() {
@@ -136,6 +143,7 @@
         // Initialize the new project
         setCanvasSize(true);
         newProject.init(getCurrentDetail());
+        if (staticMode) updateProject();
 
         // Update component state
         frameCount = 0;
@@ -144,11 +152,7 @@
 
     // Called to reset the canvas size to the container size, or to a configured size
     function setCanvasSize(initializingProject = false) {
-        if (!containerElement) {
-            console.trace(); // todo: remove this (after debugging sporadic calls)
-            throw new Error("Cannot set canvas size when the container doesn't exist");
-        }
-
+        if (!containerElement) return;
         const pixelRatio = pixelRatioConfig ?? window.devicePixelRatio;
 
         // If initializing the project, reset the shared canvas styles (in case set by last project)
@@ -197,6 +201,7 @@
                 ? [canvasElementWebGL.width, canvasElementWebGL.height]
                 : undefined;
         project.resized({ containerSize, canvasSize, ...getCurrentDetail() });
+        if (staticMode) updateProject();
     }
 </script>
 
