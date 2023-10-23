@@ -47,7 +47,7 @@ export default defineConfig({
         }
     },
     optimizeDeps: {
-        // force pre-bundling of these dependencies, to avoid page reloads when they're imported
-        include: ['regl', 'js-cookie', 'p5']
+        // Enable in both dev & build, so we don't get page reloads when changing projects locally.
+        disabled: false
     }
 });
