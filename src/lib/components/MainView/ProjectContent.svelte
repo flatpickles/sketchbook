@@ -52,6 +52,7 @@
     <ProjectViewer
         project={projectTuple.project}
         projectKey={projectTuple.key}
+        staticMode={projectTuple.config.staticMode}
         containerResizing={!$settingsStore.overlayPanels && $stateStore.panelResizing}
         canvasSizeConfig={projectTuple.config.canvasSize}
         pixelRatioConfig={projectTuple.config.pixelRatio}
