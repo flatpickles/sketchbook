@@ -3,6 +3,10 @@ import { defineConfig } from 'vitest/config';
 import fsp from 'node:fs/promises';
 import glslify from 'glslify';
 
+// List any dependencies here that you want to be pre-bundled. This avoids page reloads when loading
+// projects that use these dependencies.
+const bundleDeps = ['regl', 'p5'];
+
 // viteGlslify is a lightweight Vite plugin that compiles GLSL files with glslify. It will
 // automatically compile any .vert, .frag, or .glsl files that are imported. Doing this in 'load'
 // instead of 'transform' enables importing these with the 'raw' specifier, which is useful for
@@ -47,7 +51,6 @@ export default defineConfig({
         }
     },
     optimizeDeps: {
-        // Enable in both dev & build, so we don't get page reloads when changing projects locally.
-        disabled: false
+        include: bundleDeps
     }
 });
