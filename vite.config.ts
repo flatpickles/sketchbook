@@ -5,7 +5,7 @@ import glslify from 'glslify';
 
 // List any dependencies here that you want to be pre-bundled. This avoids page reloads when loading
 // projects that use these dependencies.
-const bundleDeps = ['regl', 'p5'];
+const bundleDeps = ['js-cookie', 'regl', 'p5'];
 
 // viteGlslify is a lightweight Vite plugin that compiles GLSL files with glslify. It will
 // automatically compile any .vert, .frag, or .glsl files that are imported. Doing this in 'load'
