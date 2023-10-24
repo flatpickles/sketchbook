@@ -120,6 +120,7 @@ export type DetailWebGL = UpdateDetail<CanvasType.WebGL>;
 export type UpdateDetail<T extends CanvasType = CanvasType.Unknown> = Detail<T> & {
     frame: number;
     time: number;
+    paramsChanged: string[];
     width: T extends CanvasType.None
         ? undefined
         : T extends CanvasType.Unknown

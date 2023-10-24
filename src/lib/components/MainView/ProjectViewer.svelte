@@ -18,6 +18,7 @@
     // Local state used when updating project
     let frameCount = 0;
     let startTime = Date.now();
+    let paramsChanged = new Set<string>();
 
     // Call the update function each frame when not in static mode
     let updateLoopID: number | undefined = undefined;
@@ -64,6 +65,7 @@
                 keys: customEvent.detail,
                 ...getCurrentDetail()
             });
+            for (let key of customEvent.detail) paramsChanged.add(key);
             if (staticMode) updateProject();
         });
 
@@ -94,13 +96,15 @@
     function updateProject() {
         const currentDetail = getCurrentDetail();
         project.update({
+            ...currentDetail,
             frame: frameCount,
             time: Date.now() - startTime,
-            ...currentDetail,
             width: currentDetail.canvas?.width,
-            height: currentDetail.canvas?.height
+            height: currentDetail.canvas?.height,
+            paramsChanged: Array.from(paramsChanged)
         });
         frameCount += 1;
+        paramsChanged.clear();
     }
 
     // Called when a new project is loaded, or when the component is destroyed
@@ -143,6 +147,7 @@
         // Update component state
         frameCount = 0;
         startTime = Date.now();
+        paramsChanged.clear();
 
         // Start the update loop after first project load, and call update for static projects
         if (!updateLoopID) updateLoop();

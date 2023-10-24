@@ -248,7 +248,8 @@ describe('Project update calls from CanvasViewer', () => {
             frame: expect.anything(),
             time: expect.anything(),
             width: expect.anything(),
-            height: expect.anything()
+            height: expect.anything(),
+            paramsChanged: []
         });
     });
 
@@ -270,7 +271,8 @@ describe('Project update calls from CanvasViewer', () => {
             frame: expect.anything(),
             time: expect.anything(),
             width: expect.anything(),
-            height: expect.anything()
+            height: expect.anything(),
+            paramsChanged: []
         });
     });
 
@@ -291,7 +293,8 @@ describe('Project update calls from CanvasViewer', () => {
             frame: expect.anything(),
             time: expect.anything(),
             width: undefined,
-            height: undefined
+            height: undefined,
+            paramsChanged: []
         });
     });
 });
@@ -410,7 +413,8 @@ describe('ProjectViewer staticMode', () => {
             frame: expect.anything(),
             time: expect.anything(),
             width: expect.anything(),
-            height: expect.anything()
+            height: expect.anything(),
+            paramsChanged: []
         });
 
         const project2 = new Project();
@@ -426,7 +430,8 @@ describe('ProjectViewer staticMode', () => {
             frame: expect.anything(),
             time: expect.anything(),
             width: expect.anything(),
-            height: expect.anything()
+            height: expect.anything(),
+            paramsChanged: []
         });
     });
 
@@ -450,7 +455,8 @@ describe('ProjectViewer staticMode', () => {
             frame: expect.anything(),
             time: expect.anything(),
             width: expect.anything(),
-            height: expect.anything()
+            height: expect.anything(),
+            paramsChanged: []
         });
 
         const testParamConfig = {
@@ -469,7 +475,30 @@ describe('ProjectViewer staticMode', () => {
             frame: expect.anything(),
             time: expect.anything(),
             width: expect.anything(),
-            height: expect.anything()
+            height: expect.anything(),
+            paramsChanged: [testParamConfig.key]
+        });
+
+        // Do another one! Mostly to check that the paramsChanged array is being reset
+
+        const testParamConfig2 = {
+            ...NumberParamConfigDefaults,
+            key: 'test2'
+        };
+        fireEvent(
+            document.body,
+            new CustomEvent('params-changed', { detail: [testParamConfig2.key], bubbles: true })
+        );
+        expect(project.update).toHaveBeenCalledTimes(3);
+        expect(project.update).toHaveBeenCalledWith({
+            canvas: canvas2D,
+            container: container,
+            context: undefined, // undefined during testing, alas
+            frame: expect.anything(),
+            time: expect.anything(),
+            width: expect.anything(),
+            height: expect.anything(),
+            paramsChanged: [testParamConfig2.key]
         });
     });
 
