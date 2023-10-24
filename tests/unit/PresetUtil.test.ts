@@ -79,7 +79,9 @@ const projectTuple: ProjectTuple = {
             'title': 'Test Preset',
             'key': 'badParamKey',
             'values': {
-                notAParam: 12
+                notAParam: 12,
+                testNumberKey: 42,
+                testArrayKey: [10.5, 21, 42]
             }
         },
         'typeofValuesMismatch': {
@@ -113,6 +115,20 @@ const projectTuple: ProjectTuple = {
         }
     }
 };
+
+function consoleErrorMock() {
+    import.meta.env.MODE = 'production'; // for this test only
+    // eslint-disable-next-line @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars
+    const mockConsoleError = vi.fn((error: string) => {});
+    vi.spyOn(console, 'error').mockImplementation(mockConsoleError);
+}
+
+function checkConsoleErrorMock(error: string) {
+    expect(console.error).toHaveBeenCalledTimes(1);
+    expect(console.error).toHaveBeenCalledWith(error);
+    import.meta.env.MODE = 'test'; // set it back
+    vi.spyOn(console, 'error').mockRestore();
+}
 
 describe('PresetUtil', () => {
     beforeEach(() => {
@@ -192,21 +208,35 @@ describe('Preset application via PresetUtil.applyPreset', () => {
         );
     });
 
-    it('throws an error if the param is not found', () => {
-        expect(() => PresetUtil.applyPreset(projectTuple, 'badParamKey')).toThrowError(
-            'Param notAParam not found'
+    it('logs an error if the param is not found, and still calls callback', () => {
+        const callback = vi.fn();
+        consoleErrorMock();
+        PresetUtil.applyPreset(projectTuple, 'badParamKey', callback);
+        checkConsoleErrorMock(
+            'Error applying preset badParamKey. Error: Param notAParam not found'
+        );
+        expect(callback).toHaveBeenCalledWith(
+            expect.not.objectContaining(['badParamKey']),
+            expect.objectContaining({
+                testNumberKey: 42,
+                testArrayKey: [10.5, 21, 42]
+            })
         );
     });
 
-    it('throws an error if the preset value type does not match the current value type', () => {
-        expect(() => PresetUtil.applyPreset(projectTuple, 'typeofValuesMismatch')).toThrowError(
-            'Preset value type mismatch for param testNumberKey: string vs number'
+    it('logs an error if the preset value type does not match the current value type', () => {
+        consoleErrorMock();
+        PresetUtil.applyPreset(projectTuple, 'typeofValuesMismatch');
+        checkConsoleErrorMock(
+            'Error applying preset typeofValuesMismatch. Error: Preset value type mismatch for param testNumberKey: string vs number'
         );
     });
 
-    it('throws an error if assigned array length does not match', () => {
-        expect(() => PresetUtil.applyPreset(projectTuple, 'arrayLengthMismatch')).toThrowError(
-            'Preset value type mismatch for param testArrayKey: array lengths 2 vs 3'
+    it('logs an error if assigned array length does not match', () => {
+        consoleErrorMock();
+        PresetUtil.applyPreset(projectTuple, 'arrayLengthMismatch');
+        checkConsoleErrorMock(
+            'Error applying preset arrayLengthMismatch. Error: Preset value type mismatch for param testArrayKey: array lengths 2 vs 3'
         );
     });
 
@@ -224,9 +254,11 @@ describe('Preset application via PresetUtil.applyPreset', () => {
         );
     });
 
-    it('throws an error if a color string is assigned to a non-color array', () => {
-        expect(() => PresetUtil.applyPreset(projectTuple, 'badColor')).toThrowError(
-            'Preset value type mismatch for param testArrayKey: hex strings can only be assigned for numeric arrays with color style.'
+    it('logs an error if a color string is assigned to a non-color array', () => {
+        consoleErrorMock();
+        PresetUtil.applyPreset(projectTuple, 'badColor');
+        checkConsoleErrorMock(
+            'Error applying preset badColor. Error: Preset value type mismatch for param testArrayKey: hex strings can only be assigned for numeric arrays with color style.'
         );
     });
 });

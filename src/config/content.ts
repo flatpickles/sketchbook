@@ -19,6 +19,9 @@ const resetButtonLabel = 'Reset Sketchbook';
 const cookiesWarning =
     'This site uses cookies to store settings. By changing values in the settings panel, you agree to the use of cookies.';
 
+// Miscellany
+const defaultPresetTitle = 'Default Values';
+
 // Export all content for use elsewhere in the app
 export const content = {
     title,
@@ -32,5 +35,6 @@ export const content = {
     settingsTitle,
     settingsDescription,
     resetButtonLabel,
-    cookiesWarning
+    cookiesWarning,
+    defaultPresetTitle
 };

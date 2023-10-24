@@ -20,6 +20,7 @@ import { ParamGuards, type AnyParamValueType } from '../ConfigModels/ParamTypes'
 import type { PresetMap } from './PresetLoader';
 import PresetLoader, { defaultPresetKey } from './PresetLoader';
 import ColorConversions from '../Util/ColorConversions';
+import { content } from '$config/content';
 
 export interface ProjectTuple {
     key: string;
@@ -184,9 +185,11 @@ export default class ProjectLoader {
         if (!projectPresets[defaultPresetKey]) {
             projectPresets[defaultPresetKey] = {
                 key: defaultPresetKey,
-                title: 'Default Values',
+                title: content.defaultPresetTitle,
                 values: {}
             };
+        } else if (projectPresets[defaultPresetKey].title === defaultPresetKey) {
+            projectPresets[defaultPresetKey].title = content.defaultPresetTitle;
         }
 
         // Apply config defaults (explicit/inferred) and preset defaults for compatible configs

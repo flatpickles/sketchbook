@@ -21,6 +21,7 @@ import {
 import type { BooleanParamConfig } from '$lib/base/ConfigModels/ParamConfigs/BooleanParamConfig';
 import type { NumericArrayParamConfig } from '$lib/base/ConfigModels/ParamConfigs/NumericArrayParamConfig';
 import { defaultPresetKey, type Preset } from '$lib/base/ProjectLoading/PresetLoader';
+import { content } from '$config/content';
 vi.spyOn(ParamValueProvider, 'getValue');
 vi.spyOn(ParamValueProvider, 'setValue');
 
@@ -624,7 +625,7 @@ describe('preset loading', async () => {
         expect(Object.values(projectTuple!.presets).length).toBe(1);
         const defaultPreset = projectTuple!.presets[defaultPresetKey] as Preset;
         expect(defaultPreset).toBeDefined();
-        expect(defaultPreset.title).toEqual('Default Values');
+        expect(defaultPreset.title).toEqual(content.defaultPresetTitle);
         expect(defaultPreset.values['testNumber']).toEqual(42);
         expect(defaultPreset.values['testNumericArray']).toEqual([1, 2, 3]);
         expect(defaultPreset.values['testFunction']).toBeUndefined();
@@ -660,7 +661,7 @@ describe('preset loading', async () => {
     it('uses and supplements existing default preset', async () => {
         const projectTuple = await ProjectLoader.loadProject('ProjectWithPresets');
         expect(projectTuple).toBeDefined();
-        expect(Object.values(projectTuple!.presets).length).toBe(3);
+        expect(Object.values(projectTuple!.presets).length).toBe(5);
         const defaultPreset = projectTuple!.presets[defaultPresetKey] as Preset;
         expect(defaultPreset).toBeDefined();
 
@@ -703,7 +704,7 @@ describe('preset loading', async () => {
     it('creates more presets from preset files', async () => {
         const projectTuple = await ProjectLoader.loadProject('ProjectWithPresets');
         expect(projectTuple).toBeDefined();
-        expect(Object.values(projectTuple!.presets).length).toBe(3);
+        expect(Object.values(projectTuple!.presets).length).toBe(5);
 
         // Check preset #1
         const preset1 = projectTuple!.presets['preset1'] as Preset;
@@ -726,6 +727,34 @@ describe('preset loading', async () => {
         expect(preset2.values['testArray2']).toBeUndefined();
     });
 
+    it('allows presets with no title', async () => {
+        const projectTuple = await ProjectLoader.loadProject('ProjectWithPresets');
+        expect(projectTuple).toBeDefined();
+
+        const noTitlePreset = projectTuple!.presets['notitle'] as Preset;
+        expect(noTitlePreset).toBeDefined();
+        expect(noTitlePreset.title).toEqual('notitle');
+    });
+
+    it('allows presets with no values', async () => {
+        const projectTuple = await ProjectLoader.loadProject('ProjectWithPresets');
+        expect(projectTuple).toBeDefined();
+
+        const noValuesPreset = projectTuple!.presets['novalues'] as Preset;
+        expect(noValuesPreset).toBeDefined();
+        expect(noValuesPreset.title).toEqual('No values here!');
+        expect(noValuesPreset.values).toEqual({});
+    });
+
+    it('allows a default preset with no title', async () => {
+        const projectTuple = await ProjectLoader.loadProject('ProjectWithHexStringsForArrays');
+        expect(projectTuple).toBeDefined();
+
+        const defaultPreset = projectTuple!.presets[defaultPresetKey] as Preset;
+        expect(defaultPreset).toBeDefined();
+        expect(defaultPreset.title).toEqual(content.defaultPresetTitle);
+    });
+
     it('logs console errors for invalid presets', async () => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
         const mockConsoleError = vi.fn((error: string) => {});
@@ -734,15 +763,9 @@ describe('preset loading', async () => {
 
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const projectTuple = await ProjectLoader.loadProject('ProjectWithPresets');
-        expect(console.error).toHaveBeenCalledTimes(3);
-        expect(console.error).toHaveBeenCalledWith(
-            'Error parsing bad_notitle.json: Error: Preset must have a "title" string'
-        );
+        expect(console.error).toHaveBeenCalledTimes(1);
         expect(console.error).toHaveBeenCalledWith(
             'Error parsing bad_notjson.json: SyntaxError: Unexpected end of JSON input'
-        );
-        expect(console.error).toHaveBeenCalledWith(
-            'Error parsing bad_novalues.json: Error: Preset must have a "values" object'
         );
 
         import.meta.env.MODE = 'test'; // set it back

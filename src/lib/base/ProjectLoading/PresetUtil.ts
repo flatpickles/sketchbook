@@ -1,3 +1,4 @@
+import { dev } from '$app/environment';
 import { NumericArrayParamStyle } from '../ConfigModels/ParamConfigs/NumericArrayParamConfig';
 import {
     ParamGuards,
@@ -48,82 +49,90 @@ export default class PresetUtil {
         const changedKeys = [];
         const allValues: Record<string, AnyParamValueType> = {};
         for (const [paramKey, paramValue] of Object.entries(preset.values)) {
-            // Find the relevant config
-            const paramConfig = projectTuple.params.find((param) => param.key === paramKey);
-            if (!paramConfig) throw new Error(`Param ${paramKey} not found`);
+            try {
+                // Find the relevant config
+                const paramConfig = projectTuple.params.find((param) => param.key === paramKey);
+                if (!paramConfig) throw new Error(`Param ${paramKey} not found`);
 
-            // Don't proceed with parameters that can't have values
-            if (!ParamGuards.isConfigTypeWithDefault(paramConfig)) continue;
+                // Don't proceed with parameters that can't have values
+                if (!ParamGuards.isConfigTypeWithDefault(paramConfig)) continue;
 
-            // Type value assertion with config type, apologies
-            let typedValue = paramValue as ParamValueType<typeof paramConfig>;
+                // Type value assertion with config type, apologies
+                let typedValue = paramValue as ParamValueType<typeof paramConfig>;
 
-            // Allow hex values to be used for color numeric array params
-            if (
-                ParamGuards.isNumericArrayParamConfig(paramConfig) &&
-                typeof typedValue === 'string' &&
-                typedValue.match(/^#[0-9a-f]{6}$/i)
-            ) {
+                // Allow hex values to be used for color numeric array params
                 if (
-                    [NumericArrayParamStyle.ByteColor, NumericArrayParamStyle.UnitColor].includes(
-                        paramConfig.style
-                    )
+                    ParamGuards.isNumericArrayParamConfig(paramConfig) &&
+                    typeof typedValue === 'string' &&
+                    typedValue.match(/^#[0-9a-f]{6}$/i)
                 ) {
-                    typedValue = ColorConversions.hexToRgb(
-                        typedValue,
-                        paramConfig.style === NumericArrayParamStyle.UnitColor
-                    );
-                } else {
-                    throw new Error(
-                        `Preset value type mismatch for param ${paramKey}: hex strings can only be assigned for numeric arrays with color style.`
-                    );
+                    if (
+                        [
+                            NumericArrayParamStyle.ByteColor,
+                            NumericArrayParamStyle.UnitColor
+                        ].includes(paramConfig.style)
+                    ) {
+                        typedValue = ColorConversions.hexToRgb(
+                            typedValue,
+                            paramConfig.style === NumericArrayParamStyle.UnitColor
+                        );
+                    } else {
+                        throw new Error(
+                            `Preset value type mismatch for param ${paramKey}: hex strings can only be assigned for numeric arrays with color style.`
+                        );
+                    }
                 }
-            }
 
-            // Do some basic type checking
-            const currentValue = Object.getOwnPropertyDescriptor(
-                projectTuple.project,
-                paramConfig.key
-            )?.value;
-            if (typeof typedValue !== typeof currentValue) {
-                throw new Error(
-                    `Preset value type mismatch for param ${paramKey}: ${typeof typedValue} vs ${typeof currentValue}`
-                );
-            } else if (Array.isArray(typedValue) !== Array.isArray(currentValue)) {
-                throw new Error(
-                    `Preset value type mismatch for param ${paramKey}: array vs non-array`
-                );
-            } else if (Array.isArray(typedValue) && Array.isArray(currentValue)) {
-                if (typedValue.length !== currentValue.length) {
+                // Do some basic type checking
+                const currentValue = Object.getOwnPropertyDescriptor(
+                    projectTuple.project,
+                    paramConfig.key
+                )?.value;
+                if (typeof typedValue !== typeof currentValue) {
                     throw new Error(
-                        `Preset value type mismatch for param ${paramKey}: array lengths ${typedValue.length} vs ${currentValue.length}`
+                        `Preset value type mismatch for param ${paramKey}: ${typeof typedValue} vs ${typeof currentValue}`
                     );
-                }
-                const arrayTypeMismatch = typedValue.some(
-                    (v: number, i: number) => typeof v !== typeof currentValue[i]
-                );
-                if (arrayTypeMismatch) {
+                } else if (Array.isArray(typedValue) !== Array.isArray(currentValue)) {
                     throw new Error(
-                        `Preset value type mismatch for param ${paramKey}: array element types`
+                        `Preset value type mismatch for param ${paramKey}: array vs non-array`
                     );
+                } else if (Array.isArray(typedValue) && Array.isArray(currentValue)) {
+                    if (typedValue.length !== currentValue.length) {
+                        throw new Error(
+                            `Preset value type mismatch for param ${paramKey}: array lengths ${typedValue.length} vs ${currentValue.length}`
+                        );
+                    }
+                    const arrayTypeMismatch = typedValue.some(
+                        (v: number, i: number) => typeof v !== typeof currentValue[i]
+                    );
+                    if (arrayTypeMismatch) {
+                        throw new Error(
+                            `Preset value type mismatch for param ${paramKey}: array element types`
+                        );
+                    }
                 }
-            }
 
-            // Set object and stored values if they've changed, copying arrays to avoid aliasing
-            typedValue = Array.isArray(typedValue) ? [...typedValue] : typedValue;
-            if (JSON.stringify(typedValue) !== JSON.stringify(currentValue)) {
-                Object.defineProperty(projectTuple.project, paramKey, {
-                    value: typedValue,
-                    writable: true,
-                    enumerable: true,
-                    configurable: true
-                });
-                ParamValueProvider.setValue(paramConfig, projectTuple.key, typedValue);
-                changedKeys.push(paramKey);
-            }
+                // Set object and stored values if they've changed, copying arrays to avoid aliasing
+                typedValue = Array.isArray(typedValue) ? [...typedValue] : typedValue;
+                if (JSON.stringify(typedValue) !== JSON.stringify(currentValue)) {
+                    Object.defineProperty(projectTuple.project, paramKey, {
+                        value: typedValue,
+                        writable: true,
+                        enumerable: true,
+                        configurable: true
+                    });
+                    ParamValueProvider.setValue(paramConfig, projectTuple.key, typedValue);
+                    changedKeys.push(paramKey);
+                }
 
-            // Set all values for completion callback (also avoid aliasing issues here)
-            allValues[paramKey] = Array.isArray(typedValue) ? [...typedValue] : typedValue;
+                // Set all values for completion callback (also avoid aliasing issues here)
+                allValues[paramKey] = Array.isArray(typedValue) ? [...typedValue] : typedValue;
+            } catch (e) {
+                // Don't throw an error; we may still be able to use other preset fields
+                if (dev && import.meta.env.MODE !== 'test')
+                    console.error(`Error applying preset ${presetKey}. ${e}`);
+                continue;
+            }
         }
 
         // Completion callback should update UI accordingly

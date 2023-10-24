@@ -28,16 +28,16 @@ export default class PresetLoader {
             const preset = (await importFunction()) as string;
             try {
                 const presetData: Record<string, unknown> = JSON.parse(preset);
-                if (!presetData.title || typeof presetData.title !== 'string') {
-                    throw new Error('Preset must have a "title" string');
+                if (presetData.title !== undefined && typeof presetData.title !== 'string') {
+                    throw new Error('Preset "title" must be a string if specified');
                 }
-                if (!presetData.values || typeof presetData.values !== 'object') {
-                    throw new Error('Preset must have a "values" object');
+                if (presetData.values !== undefined && typeof presetData.values !== 'object') {
+                    throw new Error('Preset "values" must be an object if specified');
                 }
                 loadedPresets[presetKey] = {
-                    title: presetData.title,
+                    title: presetData.title ?? presetKey,
                     key: presetKey,
-                    values: presetData.values as Record<string, AnyParamValueType>
+                    values: (presetData.values as Record<string, AnyParamValueType>) ?? {}
                 };
             } catch (e) {
                 // Don't throw an error; we may still be able to use other preset files
