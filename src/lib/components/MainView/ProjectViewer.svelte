@@ -75,10 +75,7 @@
         updateLoop();
     });
 
-    // Destroy the project when navigating away and destroying the component (e.g. hot update)
-    beforeNavigate((navigation) => {
-        if (navigation.to?.params?.key !== projectKey) destroyProject();
-    });
+    // Destroy the project when destroying the component (e.g. hot update)
     onDestroy(destroyProject);
 
     // Initialize and update the project when loading & changing projects
