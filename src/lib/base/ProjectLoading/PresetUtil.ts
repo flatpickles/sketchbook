@@ -180,9 +180,8 @@ export default class PresetUtil {
      */
     public static exportPresetFile(projectTuple: ProjectTuple, newPresetName: string) {
         // Create a preset object from current project state
-        const presetObject: Preset = {
+        const presetObject: Pick<Preset, 'title' | 'values'> = {
             title: newPresetName,
-            key: newPresetName.replace(/\s/g, ''),
             values: {}
         };
         for (const paramConfig of projectTuple.params) {
@@ -200,7 +199,7 @@ export default class PresetUtil {
         const presetUrl = URL.createObjectURL(presetBlob);
         const presetLink = document.createElement('a');
         presetLink.href = presetUrl;
-        presetLink.download = `${presetObject.key}.json`;
+        presetLink.download = `${newPresetName.replace(/\s/g, '')}.json`;
         presetLink.click();
     }
 }

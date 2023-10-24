@@ -324,7 +324,6 @@ describe('Preset export via PresetUtil.exportPresetFile', () => {
         expect(global.JSON.stringify).toHaveBeenCalledWith(
             {
                 title: 'Test Preset',
-                key: 'TestPreset',
                 values: {
                     testNumberKey: 85,
                     testArrayKey: [18, 19, 21],

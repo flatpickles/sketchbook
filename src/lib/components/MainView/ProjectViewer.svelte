@@ -3,10 +3,8 @@
     import { CanvasType, type Detail } from '$lib/base/Project/Project';
     import { settingsStore } from '$lib/base/Util/AppState';
     import { onDestroy, onMount } from 'svelte';
-    import { beforeNavigate } from '$app/navigation';
 
     export let project: Project;
-    export let projectKey: string;
     export let staticMode = false;
     export let containerResizing = false;
     export let canvasSizeConfig: [number, number] | undefined = undefined;
