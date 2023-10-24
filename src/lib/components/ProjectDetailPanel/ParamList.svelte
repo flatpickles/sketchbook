@@ -97,7 +97,11 @@
             // If the value has diverged, update displayedValues and the ParamValueProvider
             if (updatedValue !== undefined) {
                 displayedValues[param.key] = updatedValue;
-                ParamValueProvider.setValue(param, projectTuple.key, displayedValues[param.key]);
+                ParamValueProvider.setValue(
+                    param,
+                    projectTuple.key,
+                    displayedValues[param.key] as ParamValueType<typeof param>
+                );
                 presetEdited = !PresetUtil.presetIsApplied(projectTuple, selectedPresetKey);
             }
         }
@@ -123,15 +127,17 @@
         }
         incompleteUpdateKeys.delete(updatedConfig.key);
 
+        // Get the current value descriptor (including functions)
+        const projectObjectValue = Object.getOwnPropertyDescriptor(
+            projectTuple.project,
+            updatedConfig.key
+        )?.value;
+
         // Update the project's value for this key, or call the named function
         if (ParamGuards.isFunctionParamConfig(updatedConfig)) {
             // If it's a function param, call the associated function
-            const descriptor = Object.getOwnPropertyDescriptor(
-                projectTuple.project,
-                updatedConfig.key
-            );
-            if (descriptor?.value) {
-                await descriptor.value();
+            if (projectObjectValue) {
+                await projectObjectValue();
             }
         } else if (ParamGuards.isFileParamConfig(updatedConfig)) {
             // If it's a file param, load the file(s) then call the associated function
@@ -141,36 +147,43 @@
                 const fileLoadResult = await UserFileLoader.loadFileList(fileList, updatedConfig);
 
                 // Call the function with the loaded file(s)
-                const descriptor = Object.getOwnPropertyDescriptor(
-                    projectTuple.project,
-                    updatedConfig.key
-                );
-                if (descriptor?.value) {
-                    await descriptor.value(fileLoadResult.result, fileLoadResult.metadata);
+                if (projectObjectValue) {
+                    await projectObjectValue(fileLoadResult.result, fileLoadResult.metadata);
                 }
             } catch (e) {
                 console.error(e);
                 alert('Error loading file(s). See console for details.');
             }
         } else {
+            // Check if the value has actually changed
+            const valueChanged =
+                JSON.stringify(projectObjectValue) !== JSON.stringify(event.detail.value);
+
             // If it's an array, we need to copy it so that we don't mutate the original
-            const value: ParamValueType<typeof updatedConfig> = Array.isArray(event.detail.value)
+            const inputValue = Array.isArray(event.detail.value)
                 ? [...event.detail.value]
                 : event.detail.value;
-            Object.defineProperty(projectTuple.project, updatedConfig.key, {
-                value: value,
-                writable: true,
-                enumerable: true,
-                configurable: true
-            });
+            if (valueChanged)
+                Object.defineProperty(projectTuple.project, updatedConfig.key, {
+                    value: inputValue,
+                    writable: true,
+                    enumerable: true,
+                    configurable: true
+                });
+
             // Update the stored value and the preset edited state, if the update is complete
             if (updateComplete) {
-                ParamValueProvider.setValue(updatedConfig, projectTuple.key, value);
+                ParamValueProvider.setValue(
+                    updatedConfig,
+                    projectTuple.key,
+                    inputValue as ParamValueType<typeof updatedConfig>
+                );
                 presetEdited = !PresetUtil.presetIsApplied(projectTuple, selectedPresetKey);
             }
-        }
 
-        dispatchParamsChangedEvent([updatedConfig.key]);
+            // Dispatch an update event so ProjectViewer can call the paramUpdated lifecycle method.
+            if (valueChanged) dispatchParamsChangedEvent([updatedConfig.key]);
+        }
     }
 
     // Get the properly typed initial value for a given param

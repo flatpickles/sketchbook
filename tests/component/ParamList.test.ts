@@ -442,6 +442,24 @@ describe('number param input', () => {
             expect.arrayContaining(['testNumber'])
         );
     });
+
+    it("doesn't call paramsChanged when input changes to the same value", async () => {
+        const [project, changedListener] = renderParams(true);
+        vi.spyOn(project, 'update');
+        vi.spyOn(project, 'paramsChanged');
+        const numberInput = screen.getAllByTestId('number-param-slider')[0] as HTMLInputElement;
+        expect(numberInput.value).toBe('42');
+        expect(project.testNumber).toBe(42);
+        fireEvent.input(numberInput, { target: { value: '42' } });
+        expect(changedListener).toHaveBeenCalledTimes(0);
+        expect(numberInput.value).toBe('42');
+        expect(project.testNumber).toBe(42);
+        fireEvent.change(numberInput, { target: { value: '42' } });
+        expect(changedListener).toHaveBeenCalledTimes(0);
+        expect(numberInput.value).toBe('42');
+        expect(project.testNumber).toBe(42);
+        expect(changedListener).toHaveBeenCalledTimes(0);
+    });
 });
 
 describe('boolean param input', () => {
@@ -483,7 +501,7 @@ describe('string param input', () => {
         expect(stringInput.value).toBe('goodbye');
         expect(project.testString).toBe('goodbye');
         fireEvent.change(stringInput);
-        expect(changedListener).toHaveBeenCalledTimes(2);
+        expect(changedListener).toHaveBeenCalledTimes(1);
         expect(ParamValueProvider.setValue).toHaveBeenCalledTimes(1);
 
         // Validate params-changed event
@@ -598,14 +616,8 @@ describe('function param input', () => {
         expect(project.testFunction).toHaveBeenCalledTimes(0);
         fireEvent.click(functionButton);
         await waitFor(() => expect(project.testFunction).toHaveBeenCalledTimes(1));
-        await waitFor(() => expect(changedListener).toHaveBeenCalledTimes(1));
+        await waitFor(() => expect(changedListener).toHaveBeenCalledTimes(0));
         expect(ParamValueProvider.setValue).toHaveBeenCalledTimes(0);
-
-        // Validate params-changed event
-        expect(changedListener.mock.calls[0][0].bubbles).toEqual(true);
-        expect(changedListener.mock.calls[0][0].detail).toEqual(
-            expect.arrayContaining(['testFunction'])
-        );
     });
 });
 
@@ -664,14 +676,8 @@ describe('file param input', () => {
                 mockFiles.map((file) => file.fileObject)
             )
         );
-        await waitFor(() => expect(changedListener).toHaveBeenCalledTimes(1));
+        await waitFor(() => expect(changedListener).toHaveBeenCalledTimes(0));
         expect(ParamValueProvider.setValue).toHaveBeenCalledTimes(0);
-
-        // Validate params-changed event
-        expect(changedListener.mock.calls[0][0].bubbles).toEqual(true);
-        expect(changedListener.mock.calls[0][0].detail).toEqual(
-            expect.arrayContaining(['testFile'])
-        );
     });
 });
 

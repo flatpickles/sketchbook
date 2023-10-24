@@ -20,6 +20,7 @@
     let startTime = Date.now();
 
     // Call the update function each frame when not in static mode
+    let updateLoopID: number | undefined = undefined;
     const updateLoop = () => {
         if (containerElement) {
             // Set the canvas size each frame if the container is actively resizing
@@ -28,7 +29,7 @@
             // Update the project, if not in static mode
             if (!staticMode) updateProject();
         }
-        requestAnimationFrame(updateLoop);
+        updateLoopID = requestAnimationFrame(updateLoop);
     };
 
     function getCurrentDetail(): Detail<typeof project.canvasType> {
@@ -68,9 +69,6 @@
 
         // Update the canvas size whenever the window is resized
         window.addEventListener('resize', () => setCanvasSize());
-
-        // Start the update loop after the component is mounted
-        updateLoop();
     });
 
     // Destroy the project when destroying the component (e.g. hot update)
@@ -138,11 +136,14 @@
         // Initialize the new project
         setCanvasSize(true);
         newProject.init(getCurrentDetail());
-        if (staticMode) updateProject();
 
         // Update component state
         frameCount = 0;
         startTime = Date.now();
+
+        // Start the update loop after first project load, and call update for static projects
+        if (!updateLoopID) updateLoop();
+        if (staticMode) updateProject();
     }
 
     // Called to reset the canvas size to the container size, or to a configured size

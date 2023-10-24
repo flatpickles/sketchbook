@@ -1,7 +1,7 @@
 <script lang="ts">
     import { createEventDispatcher } from 'svelte';
     import type { ParamConfig } from '$lib/base/ConfigModels/ParamConfig';
-    import { ParamGuards, type ParamValueType } from '$lib/base/ConfigModels/ParamTypes';
+    import { ParamGuards, type AnyParamValueType } from '$lib/base/ConfigModels/ParamTypes';
     import BooleanInput from '../Inputs/BooleanInput.svelte';
     import FunctionInput from '../Inputs/FunctionInput.svelte';
     import NumberInput from '../Inputs/NumberInput.svelte';
@@ -18,7 +18,7 @@
     import FileInput from '../Inputs/FileInput.svelte';
 
     export let config: ParamConfig;
-    export let value: ParamValueType<typeof config>;
+    export let value: AnyParamValueType;
     export let even = false;
     export let disabled = false;
 
