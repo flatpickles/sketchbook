@@ -246,7 +246,9 @@ describe('Project update calls from CanvasViewer', () => {
             container: container,
             context: undefined, // undefined during testing, alas
             frame: expect.anything(),
-            time: expect.anything()
+            time: expect.anything(),
+            width: expect.anything(),
+            height: expect.anything()
         });
     });
 
@@ -266,7 +268,9 @@ describe('Project update calls from CanvasViewer', () => {
             container: container,
             context: undefined, // undefined during testing, alas
             frame: expect.anything(),
-            time: expect.anything()
+            time: expect.anything(),
+            width: expect.anything(),
+            height: expect.anything()
         });
     });
 
@@ -285,7 +289,9 @@ describe('Project update calls from CanvasViewer', () => {
             container: container,
             context: undefined,
             frame: expect.anything(),
-            time: expect.anything()
+            time: expect.anything(),
+            width: undefined,
+            height: undefined
         });
     });
 });
@@ -402,7 +408,9 @@ describe('ProjectViewer staticMode', () => {
             container: container,
             context: undefined, // undefined during testing, alas
             frame: expect.anything(),
-            time: expect.anything()
+            time: expect.anything(),
+            width: expect.anything(),
+            height: expect.anything()
         });
 
         const project2 = new Project();
@@ -416,7 +424,9 @@ describe('ProjectViewer staticMode', () => {
             container: container,
             context: undefined, // undefined during testing, alas
             frame: expect.anything(),
-            time: expect.anything()
+            time: expect.anything(),
+            width: expect.anything(),
+            height: expect.anything()
         });
     });
 
@@ -438,7 +448,9 @@ describe('ProjectViewer staticMode', () => {
             container: container,
             context: undefined, // undefined during testing, alas
             frame: expect.anything(),
-            time: expect.anything()
+            time: expect.anything(),
+            width: expect.anything(),
+            height: expect.anything()
         });
 
         const testParamConfig = {
@@ -455,7 +467,9 @@ describe('ProjectViewer staticMode', () => {
             container: container,
             context: undefined, // undefined during testing, alas
             frame: expect.anything(),
-            time: expect.anything()
+            time: expect.anything(),
+            width: expect.anything(),
+            height: expect.anything()
         });
     });
 

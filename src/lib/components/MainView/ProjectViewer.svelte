@@ -92,10 +92,13 @@
 
     // Called to update the project, bumping the frame count and calculating the time
     function updateProject() {
+        const currentDetail = getCurrentDetail();
         project.update({
             frame: frameCount,
             time: Date.now() - startTime,
-            ...getCurrentDetail()
+            ...currentDetail,
+            width: currentDetail.canvas?.width,
+            height: currentDetail.canvas?.height
         });
         frameCount += 1;
     }
