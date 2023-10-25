@@ -8,7 +8,7 @@ const footer = '';
 const leftButtonIcon = 'fa-brands fa-github';
 const leftButtonLink = 'https://github.com/flatpickles/sketchbook';
 
-// Show panel buttons
+// Show panel buttons (visible when panels are hidden)
 const projectListIcon = 'fa-solid fa-bars';
 const projectDetailIcon = 'fa-solid fa-sliders';
 
@@ -21,6 +21,17 @@ const cookiesWarning =
 
 // Miscellany
 const defaultPresetTitle = 'Default Values';
+
+// Content used for OpenGraph tags
+const openGraphContent = {
+    siteName: title,
+    title: title,
+    description: description,
+    imageName: 'preview',
+    url: undefined,
+    author: undefined,
+    locale: undefined
+};
 
 // Export all content for use elsewhere in the app
 export const content = {
@@ -36,5 +47,6 @@ export const content = {
     settingsDescription,
     resetButtonLabel,
     cookiesWarning,
-    defaultPresetTitle
+    defaultPresetTitle,
+    openGraphContent
 };

@@ -17,6 +17,7 @@ src/art/
 │  ├─ presets/
 │  │  ├─ CoolBeans.json
 │  │  ├─ FrigidFrijoles.json
+│  ├─ preview.png
 │  ├─ Project2.ts
 │  ├─ ProjectHelpers.ts
 ├─ util/
@@ -26,6 +27,6 @@ src/art/
 
 Within `src/art`, Sketchbook will automatically look for JavaScript or TypeScript files that share a name with their containing directory. This shared name becomes the "key" for the project, which is used in its URL. For example, [https://demo.skbk.cc/QuickStart](https://demo.skbk.cc/QuickStart) is implemented within a file located at `src/art/QuickStart/QuickStart.ts`.
 
-Your named project files must export a default class that descends from the `Project` base class – see [The Project Class](project.md) to learn more about implementing `Project` subclasses. `config.json` files can optionally be included alongside project files, and will apply to the project file in the same directory.
+Your named project files must export a default class that descends from the `Project` base class – see [The Project Class](project.md) to learn more about implementing `Project` subclasses. `config.json` files can optionally be included alongside project files, and will apply to the project file in the same directory. Project directories may also include [presets](params-presets.md) and a [preview image](content.md?id=open-graph-content).
 
 As long as you're organizing and defining your project classes as expected, you can put anything else within `src/art`. Your additions could include asset files or utility code; anything you add will be bundled with your Sketchbook, and available to import in your project class files.
