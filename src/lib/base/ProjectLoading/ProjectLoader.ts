@@ -114,8 +114,10 @@ export default class ProjectLoader {
      * Fully load the project (Project subclass instance) corresponding to a particular project key.
      * @param key - the project key.
      * @returns a ProjectTuple object containing the project, its properties, and its params.
+     * May also return a Partial<ProjectTuple> with only the key and config, since we don't want to
+     * import the project class files in SSR.
      */
-    public static async loadProject(key: string): Promise<ProjectTuple | null> {
+    public static async loadProject(key: string): Promise<Partial<ProjectTuple> | null> {
         // Vite glob imports for project files
         const allImports: AllImports = {
             projectClassFiles: importProjectClassFiles(),
@@ -133,10 +135,6 @@ export default class ProjectLoader {
             return ProjectLoader.#keyFromProjectPath(path) === key;
         })[0];
 
-        // Instantiate the proper project
-        if (!classFilePath && !textFilePath) return null;
-        const project = await ProjectLoader.#loadProject(allImports, classFilePath || textFilePath);
-
         // Get configuration JSON from config file (if any)
         const configFilePath = Object.keys(projectConfigFiles).filter((path) => {
             return ProjectLoader.#keyFromConfigPath(path) === key;
@@ -153,10 +151,27 @@ export default class ProjectLoader {
             }
         }
 
-        // Collect project configs
+        // Derive project config
         const projectConfig = ProjectConfigFactory.projectConfigFrom(
             configJSON as Record<string, unknown> | undefined
         );
+
+        // Assign the project title if unset
+        if (projectConfig.title === ProjectConfigDefaults.title) {
+            projectConfig.title = key;
+        }
+
+        // Instantiate the proper project, or return early if we're in SSR
+        if (!classFilePath && !textFilePath) return null;
+        let project: Project | undefined;
+        if (browser) {
+            project = await ProjectLoader.#loadProject(allImports, classFilePath || textFilePath);
+        } else {
+            return {
+                key,
+                config: projectConfig
+            };
+        }
 
         // Collect param configs
         const rawFileText = (await allImports.projectFilesRaw[
@@ -175,11 +190,6 @@ export default class ProjectLoader {
             projectConfig.paramsApplyDuringInput
         );
 
-        // Assign the project title if unset
-        if (projectConfig.title === ProjectConfigDefaults.title) {
-            projectConfig.title = key;
-        }
-
         // Load presets for this project, and create a default preset if none exists
         const projectPresets = await PresetLoader.loadPresets(key);
         if (!projectPresets[defaultPresetKey]) {
@@ -192,7 +202,7 @@ export default class ProjectLoader {
             projectPresets[defaultPresetKey].title = content.defaultPresetTitle;
         }
 
-        // Apply config defaults (explicit/inferred) and preset defaults for compatible configs
+        // Apply param config defaults (explicit/inferred) and preset defaults w/ compatible configs
         for (const paramConfig of paramConfigs) {
             // Defining these directly on the project object (instead of just using them when
             // setting values below) allows ParamValueProvider to update provided values when
@@ -272,17 +282,15 @@ export default class ProjectLoader {
         }
 
         // Set project properties to stored values (overriding defaults)
-        if (browser) {
-            for (const param of paramConfigs) {
-                const storedValue = ParamValueProvider.getValue(param, key, project, true);
-                if (typeof storedValue === 'function') continue;
-                Object.defineProperty(project, param.key, {
-                    value: storedValue,
-                    writable: true,
-                    enumerable: true,
-                    configurable: true
-                });
-            }
+        for (const param of paramConfigs) {
+            const storedValue = ParamValueProvider.getValue(param, key, project, true);
+            if (typeof storedValue === 'function') continue;
+            Object.defineProperty(project, param.key, {
+                value: storedValue,
+                writable: true,
+                enumerable: true,
+                configurable: true
+            });
         }
 
         // Return tuple

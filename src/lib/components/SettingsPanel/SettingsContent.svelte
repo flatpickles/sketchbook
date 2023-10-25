@@ -44,7 +44,7 @@
         if (ParamGuards.isFunctionParamConfig(updatedConfig)) {
             throw new Error("Function params shouldn't be present in the settings panel");
         } else {
-            const value: ParamValueType<typeof updatedConfig> = event.detail.value;
+            const value = event.detail.value;
             const newState = {
                 ...get(settingsStore),
                 [updatedConfig.key]: value

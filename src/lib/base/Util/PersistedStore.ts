@@ -1,36 +1,34 @@
 import Cookies from 'js-cookie';
 import { writable } from 'svelte/store';
 import type { AnyParamValueType } from '../ConfigModels/ParamTypes';
+import { dev } from '$app/environment';
 
 /**
- * Custom Svelte store that enables persistence of only specified entries in either localStorage
- * or cookies. These values will be reset to their initial values when these initial values change,
- * so default value updates will be reflected on next load during development.
+ * Custom Svelte store that enables persistence of only specified entries in cookies. These values
+ * will be reset to their initial values when these initial values change, so default value updates
+ * will be reflected on next load. This happens always during development, or if a prod user has
+ * adjusted settings values (i.e. they're already opted-in for cookies usage).
  *
  * @param storeKey The key to use for this store (will be prefixed to all keys)
  * @param initialValues The initial values for this store
  * @param persistKeys The keys to persist (if not specified, all keys will be persisted)
- * @param useCookies Whether to use cookies instead of local storage (e.g. if needed in requests)
  */
 export function createPersistedStore<T>(
     storeKey: string,
     initialValues: T,
-    useCookies = false,
     persistKeys?: string[]
 ) {
     let initialState = initialValues as Record<string, AnyParamValueType>;
     const keysToPersist: string[] = persistKeys || Object.keys(initialState);
 
     // Set & get functions
-    const setItem = (key: string, value: string, useCookies = false) => {
+    const setItem = (key: string, value: string) => {
         const prefixedKey = `${storeKey}_${key}`;
-        if (useCookies) Cookies.set(prefixedKey, value, { expires: 365 });
-        else localStorage.setItem(prefixedKey, value);
+        Cookies.set(prefixedKey, value, { expires: 365 });
     };
-    const getItem = (key: string, useCookies = false) => {
+    const getItem = (key: string) => {
         const prefixedKey = `${storeKey}_${key}`;
-        if (useCookies) return Cookies.get(prefixedKey);
-        else return localStorage.getItem(prefixedKey);
+        return Cookies.get(prefixedKey);
     };
 
     // Restore only values that are specified in keysToPersist
@@ -42,14 +40,14 @@ export function createPersistedStore<T>(
             // Use the new value from initialValues if it's been changed
             const initialValue = JSON.stringify(initialState[key]);
             const lastInitialValue = getItem(lastInitialValueKey);
-            setItem(lastInitialValueKey, initialValue);
+            if (dev || getItem(key)) setItem(lastInitialValueKey, initialValue);
             if (lastInitialValue && lastInitialValue !== initialValue) {
-                setItem(key, initialValue, useCookies);
+                setItem(key, initialValue);
                 continue;
             }
 
-            // Otherwise, use the stored value
-            const value = getItem(key, useCookies) || initialValue;
+            // Otherwise, use the stored or initial value
+            const value = getItem(key) ?? initialValue;
             initialState[key] = JSON.parse(value);
         }
     };
@@ -61,9 +59,21 @@ export function createPersistedStore<T>(
     // Persist only values that are specified in keysToPersist
     const setAndPersist = (state: Record<string, AnyParamValueType>) => {
         for (const key of keysToPersist) {
-            setItem(key, JSON.stringify(state[key]), useCookies);
+            setItem(key, JSON.stringify(state[key]));
         }
         set(state as T);
+    };
+
+    // Load cookie values into the store, primarily for SSR
+    const loadCookies = (cookies: Cookies.CookieAttributes) => {
+        const stateWithCookies = { ...initialState };
+        for (const key of keysToPersist) {
+            const value = cookies.get(`${storeKey}_${key}`);
+            if (value !== undefined) {
+                stateWithCookies[key] = JSON.parse(value);
+            }
+        }
+        set(stateWithCookies as T);
     };
 
     // Reset the store to the initial state (closure ftw)
@@ -75,6 +85,7 @@ export function createPersistedStore<T>(
     return {
         subscribe,
         set: setAndPersist,
-        reset
+        reset,
+        loadCookies
     };
 }

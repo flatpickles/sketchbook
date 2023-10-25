@@ -37,6 +37,9 @@ vi.spyOn(fileProviders, 'importRawProjectFiles').mockReturnValue(testRawFiles);
 vi.spyOn(fileProviders, 'importProjectTextFiles').mockReturnValue(testTextFiles);
 vi.spyOn(fileProviders, 'importProjectPresetFiles').mockReturnValue(testPresets);
 
+// Pretend we're in the browser, except when testing SSR
+vi.spyOn(Environment, 'browser', 'get').mockReturnValue(true);
+
 describe('loading available projects', async () => {
     afterEach(() => {
         vi.clearAllMocks();
@@ -123,24 +126,46 @@ describe('loading specific projects', async () => {
 
         // Check params config
         const paramsConfig = projectTuple!.params;
-        expect(paramsConfig).toBeDefined();
+        expect(paramsConfig!).toBeDefined();
         expect(Object.keys(paramsConfig!).length).toEqual(3);
-        const testNumberParam = paramsConfig.filter((param) => param.key === 'testNumber')[0];
+        const testNumberParam = paramsConfig!.filter((param) => param.key === 'testNumber')[0];
         expect(testNumberParam).toBeDefined();
         expect(testNumberParam.type).toEqual('number');
-        const unlistedParam = paramsConfig.filter((param) => param.key === '#internalProperty')[0];
+        const unlistedParam = paramsConfig!.filter((param) => param.key === '#internalProperty')[0];
         expect(unlistedParam).toBeUndefined();
-        const unlistedParam2 = paramsConfig.filter((param) => param.key === 'internalProperty2')[0];
+        const unlistedParam2 = paramsConfig!.filter(
+            (param) => param.key === 'internalProperty2'
+        )[0];
         expect(unlistedParam2).toBeUndefined();
-        const testFunctionParam = paramsConfig.filter((param) => param.key === 'testFunction')[0];
+        const testFunctionParam = paramsConfig!.filter((param) => param.key === 'testFunction')[0];
         expect(testFunctionParam).toBeDefined();
         expect(testFunctionParam.type).toEqual(ParamType.Function);
-        const testNumericArrayParam = paramsConfig.filter(
+        const testNumericArrayParam = paramsConfig!.filter(
             (param) => param.key === 'testNumericArray'
         );
         expect(testNumericArrayParam).toBeDefined();
         expect(testNumericArrayParam[0].type).toEqual(ParamType.NumericArray);
-        expect(ParamValueProvider.getValue).toHaveBeenCalledTimes(0);
+        expect(ParamValueProvider.getValue).toHaveBeenCalledTimes(3);
+    });
+
+    it('loads only key & config in SSR', async () => {
+        vi.spyOn(Environment, 'browser', 'get').mockReturnValue(false);
+        const projectTuple = await ProjectLoader.loadProject('NoConfig');
+        expect(projectTuple).toBeDefined();
+        expect(projectTuple?.key).toEqual('NoConfig');
+        expect(projectTuple?.project).toBeUndefined();
+        expect(projectTuple?.params).toBeUndefined();
+        expect(projectTuple?.presets).toBeUndefined();
+        expect(projectTuple?.config).toBeDefined();
+        expect(projectTuple?.config?.title).toEqual('NoConfig');
+        expect(projectTuple?.config?.date).toEqual(ProjectConfigDefaults.date);
+        expect(projectTuple?.config?.description).toEqual(ProjectConfigDefaults.description);
+        expect(projectTuple?.config?.paramsApplyDuringInput).toEqual(
+            ProjectConfigDefaults.paramsApplyDuringInput
+        );
+        expect(projectTuple?.config?.groups).toEqual(ProjectConfigDefaults.groups);
+        expect(projectTuple?.config?.experimental).toEqual(ProjectConfigDefaults.experimental);
+        vi.spyOn(Environment, 'browser', 'get').mockReturnValue(true);
     });
 
     it('loads a project with a config file', async () => {
@@ -173,23 +198,23 @@ describe('loading specific projects', async () => {
 
         // Check params config
         const paramsConfig = projectTuple!.params;
-        expect(paramsConfig).toBeDefined();
+        expect(paramsConfig!).toBeDefined();
         expect(Object.keys(paramsConfig!).length).toEqual(3);
-        const testNumberParam = paramsConfig.filter((param) => param.key === 'testNumber')[0];
+        const testNumberParam = paramsConfig!.filter((param) => param.key === 'testNumber')[0];
         expect(testNumberParam).toBeDefined();
         expect(testNumberParam.type).toEqual(ParamType.Number);
         expect(testNumberParam.name).toEqual('Number Param');
         expect(testNumberParam.applyDuringInput).toEqual(true); // explicit definition
-        const testBooleanParam = paramsConfig.filter((param) => param.key === 'testBoolean')[0];
+        const testBooleanParam = paramsConfig!.filter((param) => param.key === 'testBoolean')[0];
         expect(testBooleanParam).toBeUndefined();
-        const testStringParam = paramsConfig.filter((param) => param.key === 'testString')[0];
+        const testStringParam = paramsConfig!.filter((param) => param.key === 'testString')[0];
         expect(testStringParam).toBeDefined();
         expect(testStringParam.type).toEqual(ParamType.String);
         expect(testStringParam.name).toEqual('String Param');
         expect(testStringParam.applyDuringInput).toEqual(false); // project default
-        const testUnusedParam = paramsConfig.filter((param) => param.key === 'testUnusedParam')[0];
+        const testUnusedParam = paramsConfig!.filter((param) => param.key === 'testUnusedParam')[0];
         expect(testUnusedParam).toBeUndefined();
-        expect(ParamValueProvider.getValue).toHaveBeenCalledTimes(0);
+        expect(ParamValueProvider.getValue).toHaveBeenCalledTimes(3);
     });
 
     it('loads a project with an empty (broken) config file', async () => {
@@ -223,23 +248,23 @@ describe('loading specific projects', async () => {
 
         // Check params config
         const paramsConfig = projectTuple!.params;
-        expect(paramsConfig).toBeDefined();
+        expect(paramsConfig!).toBeDefined();
         expect(Object.keys(paramsConfig!).length).toEqual(2);
-        const testNumberParam = paramsConfig.filter((param) => param.key === 'testNumber')[0];
+        const testNumberParam = paramsConfig!.filter((param) => param.key === 'testNumber')[0];
         expect(testNumberParam).toBeDefined();
         expect(testNumberParam.type).toEqual(ParamType.Number);
         expect(testNumberParam.name).toEqual('testNumber');
         expect(testNumberParam.applyDuringInput).toEqual(true); // explicit definition
-        const testBooleanParam = paramsConfig.filter((param) => param.key === 'testBoolean')[0];
+        const testBooleanParam = paramsConfig!.filter((param) => param.key === 'testBoolean')[0];
         expect(testBooleanParam).toBeUndefined();
-        const testStringParam = paramsConfig.filter((param) => param.key === 'testString')[0];
+        const testStringParam = paramsConfig!.filter((param) => param.key === 'testString')[0];
         expect(testStringParam).toBeDefined();
         expect(testStringParam.type).toEqual(ParamType.String);
         expect(testStringParam.name).toEqual('testString');
         expect(testStringParam.applyDuringInput).toEqual(
             ProjectConfigDefaults.paramsApplyDuringInput
         );
-        expect(ParamValueProvider.getValue).toHaveBeenCalledTimes(0);
+        expect(ParamValueProvider.getValue).toHaveBeenCalledTimes(2);
     });
 
     it('loads a project with a frag shader file', async () => {
@@ -260,27 +285,27 @@ describe('loading specific projects', async () => {
 
         // Check params config
         const paramsConfig = projectTuple!.params;
-        expect(paramsConfig).toBeDefined();
+        expect(paramsConfig!).toBeDefined();
         expect(Object.keys(paramsConfig!).length).toEqual(6);
-        const testFloatParam = paramsConfig.filter((param) => param.key === 'testFloat')[0];
+        const testFloatParam = paramsConfig!.filter((param) => param.key === 'testFloat')[0];
         expect(testFloatParam).toBeDefined();
         expect(testFloatParam.type).toEqual('number');
-        const testIntParam = paramsConfig.filter((param) => param.key === 'testInt')[0];
+        const testIntParam = paramsConfig!.filter((param) => param.key === 'testInt')[0];
         expect(testIntParam).toBeDefined();
         expect(testIntParam.type).toEqual('number');
-        const testBoolParam = paramsConfig.filter((param) => param.key === 'testBool')[0];
+        const testBoolParam = paramsConfig!.filter((param) => param.key === 'testBool')[0];
         expect(testBoolParam).toBeDefined();
         expect(testBoolParam.type).toEqual('boolean');
-        const testVec2Param = paramsConfig.filter((param) => param.key === 'testVec2')[0];
+        const testVec2Param = paramsConfig!.filter((param) => param.key === 'testVec2')[0];
         expect(testVec2Param).toBeDefined();
         expect(testVec2Param.type).toEqual(ParamType.NumericArray);
-        const testVec3Param = paramsConfig.filter((param) => param.key === 'testVec3')[0];
+        const testVec3Param = paramsConfig!.filter((param) => param.key === 'testVec3')[0];
         expect(testVec3Param).toBeDefined();
         expect(testVec3Param.type).toEqual(ParamType.NumericArray);
-        const testVec4Param = paramsConfig.filter((param) => param.key === 'testVec4')[0];
+        const testVec4Param = paramsConfig!.filter((param) => param.key === 'testVec4')[0];
         expect(testVec4Param).toBeDefined();
         expect(testVec4Param.type).toEqual(ParamType.NumericArray);
-        expect(ParamValueProvider.getValue).toHaveBeenCalledTimes(0);
+        expect(ParamValueProvider.getValue).toHaveBeenCalledTimes(6);
     });
 
     it('does not load a project without a properly named class file', async () => {
@@ -385,10 +410,10 @@ describe('loading projects w/ inline / inferred config', async () => {
 
         // Check params config
         const paramsConfig = projectTuple!.params;
-        expect(paramsConfig).toBeDefined();
+        expect(paramsConfig!).toBeDefined();
 
         // Check number config
-        const testNumberParam = paramsConfig.filter(
+        const testNumberParam = paramsConfig!.filter(
             (param) => param.key === 'testNumber'
         )[0] as NumberParamConfig;
         expect(testNumberParam).toBeDefined();
@@ -400,7 +425,7 @@ describe('loading projects w/ inline / inferred config', async () => {
         expect(testNumberParam.name).not.toEqual('Number Name');
 
         // Check string config
-        const testStringParam = paramsConfig.filter((param) => param.key === 'testString')[0];
+        const testStringParam = paramsConfig!.filter((param) => param.key === 'testString')[0];
         expect(testStringParam).toBeDefined();
         expect(testStringParam.name).not.toEqual('String Name');
     });
@@ -410,10 +435,10 @@ describe('loading projects w/ inline / inferred config', async () => {
 
         // Check params config
         const paramsConfig = projectTuple!.params;
-        expect(paramsConfig).toBeDefined();
+        expect(paramsConfig!).toBeDefined();
 
         // Check number config #1
-        const testNumberParam1 = paramsConfig.filter(
+        const testNumberParam1 = paramsConfig!.filter(
             (param) => param.key === 'testNumber1'
         )[0] as NumberParamConfig;
         expect(testNumberParam1).toBeDefined();
@@ -426,7 +451,7 @@ describe('loading projects w/ inline / inferred config', async () => {
         expect(testNumberParam1.name).toEqual('Number Name');
 
         // Check number config #2
-        const testNumberParam2 = paramsConfig.filter(
+        const testNumberParam2 = paramsConfig!.filter(
             (param) => param.key === 'testNumber2'
         )[0] as NumberParamConfig;
         expect(testNumberParam2).toBeDefined();
@@ -444,10 +469,10 @@ describe('loading projects w/ inline / inferred config', async () => {
 
         // Check params config
         const paramsConfig = projectTuple!.params;
-        expect(paramsConfig).toBeDefined();
+        expect(paramsConfig!).toBeDefined();
 
         // Check number config #1
-        const testNumberParam1 = paramsConfig.filter(
+        const testNumberParam1 = paramsConfig!.filter(
             (param) => param.key === 'testNumber1'
         )[0] as NumberParamConfig;
         expect(testNumberParam1).toBeDefined();
@@ -465,7 +490,7 @@ describe('loading projects w/ inline / inferred config', async () => {
         expect(actualValue).toEqual(42);
 
         // Check number config #2
-        const testNumberParam2 = paramsConfig.filter(
+        const testNumberParam2 = paramsConfig!.filter(
             (param) => param.key === 'testNumber2'
         )[0] as NumberParamConfig;
         expect(testNumberParam2).toBeDefined();
@@ -483,7 +508,7 @@ describe('loading projects w/ inline / inferred config', async () => {
         expect(actualValue2).toEqual(35);
 
         // Check boolean config
-        const testBooleanParam = paramsConfig.filter(
+        const testBooleanParam = paramsConfig!.filter(
             (param) => param.key === 'testBoolean'
         )[0] as BooleanParamConfig;
         expect(testBooleanParam).toBeDefined();
@@ -497,7 +522,7 @@ describe('loading projects w/ inline / inferred config', async () => {
         expect(actualValue3).toEqual(true);
 
         // Check numeric array config #1
-        const testNumericArrayParam1 = paramsConfig.filter(
+        const testNumericArrayParam1 = paramsConfig!.filter(
             (param) => param.key === 'array1'
         )[0] as NumericArrayParamConfig;
         expect(testNumericArrayParam1).toBeDefined();
@@ -511,7 +536,7 @@ describe('loading projects w/ inline / inferred config', async () => {
         expect(actualValue4).toEqual([0.1, 0.5, 0.9]);
 
         // Check numeric array config #2
-        const testNumericArrayParam2 = paramsConfig.filter(
+        const testNumericArrayParam2 = paramsConfig!.filter(
             (param) => param.key === 'array2'
         )[0] as NumericArrayParamConfig;
         expect(testNumericArrayParam2).toBeDefined();
@@ -532,10 +557,10 @@ describe('default value loading from config', async () => {
 
         // Check params config
         const paramsConfig = projectTuple!.params;
-        expect(paramsConfig).toBeDefined();
+        expect(paramsConfig!).toBeDefined();
 
         // Check number config #3 (default application)
-        const testNumberParam3 = paramsConfig.filter(
+        const testNumberParam3 = paramsConfig!.filter(
             (param) => param.key === 'testNumber3'
         )[0] as NumberParamConfig;
         expect(testNumberParam3.default).toEqual(21);
@@ -564,10 +589,10 @@ describe('default value loading from config', async () => {
 
         // Check params config
         const paramsConfig = projectTuple!.params;
-        expect(paramsConfig).toBeDefined();
+        expect(paramsConfig!).toBeDefined();
 
         // arrayColorUnit1
-        const arrayColorUnit1 = paramsConfig.filter(
+        const arrayColorUnit1 = paramsConfig!.filter(
             (param) => param.key === 'arrayColorUnit1'
         )[0] as NumberParamConfig;
         expect(arrayColorUnit1.default).toEqual('#0000ff');
@@ -578,7 +603,7 @@ describe('default value loading from config', async () => {
         expect(actualValue).toEqual([0, 0, 1]);
 
         // arrayColorUnit2
-        const arrayColorUnit2 = paramsConfig.filter(
+        const arrayColorUnit2 = paramsConfig!.filter(
             (param) => param.key === 'arrayColorUnit2'
         )[0] as NumberParamConfig;
         expect(arrayColorUnit2.default).toBeUndefined();
@@ -589,7 +614,7 @@ describe('default value loading from config', async () => {
         expect(actualValue2).toEqual([1, 0, 0]);
 
         // arrayColorByte1
-        const arrayColorByte1 = paramsConfig.filter(
+        const arrayColorByte1 = paramsConfig!.filter(
             (param) => param.key === 'arrayColorByte1'
         )[0] as NumberParamConfig;
         expect(arrayColorByte1.default).toEqual('#00ff00');
@@ -600,7 +625,7 @@ describe('default value loading from config', async () => {
         expect(actualValue3).toEqual([0, 255, 0]);
 
         // arrayColorByte2
-        const arrayColorByte2 = paramsConfig.filter(
+        const arrayColorByte2 = paramsConfig!.filter(
             (param) => param.key === 'arrayColorUnit2'
         )[0] as NumberParamConfig;
         expect(arrayColorByte2.default).toBeUndefined();
@@ -622,8 +647,8 @@ describe('preset loading', async () => {
     it('creates default preset from initial project values', async () => {
         const projectTuple = await ProjectLoader.loadProject('NoConfig');
         expect(projectTuple).toBeDefined();
-        expect(Object.values(projectTuple!.presets).length).toBe(1);
-        const defaultPreset = projectTuple!.presets[defaultPresetKey] as Preset;
+        expect(Object.values(projectTuple!.presets!).length).toBe(1);
+        const defaultPreset = projectTuple!.presets![defaultPresetKey] as Preset;
         expect(defaultPreset).toBeDefined();
         expect(defaultPreset.title).toEqual(content.defaultPresetTitle);
         expect(defaultPreset.values['testNumber']).toEqual(42);
@@ -635,8 +660,8 @@ describe('preset loading', async () => {
     it('creates default preset with config file and inline config', async () => {
         const projectTuple = await ProjectLoader.loadProject('TSWithInference');
         expect(projectTuple).toBeDefined();
-        expect(Object.values(projectTuple!.presets).length).toBe(1);
-        const defaultPreset = projectTuple!.presets[defaultPresetKey] as Preset;
+        expect(Object.values(projectTuple!.presets!).length).toBe(1);
+        const defaultPreset = projectTuple!.presets![defaultPresetKey] as Preset;
         expect(defaultPreset).toBeDefined();
         expect(defaultPreset.values['testNumber1']).toEqual(42);
         expect(defaultPreset.values['testNumber2']).toEqual(42);
@@ -647,8 +672,8 @@ describe('preset loading', async () => {
     it('creates default preset with inline config (frag shader)', async () => {
         const projectTuple = await ProjectLoader.loadProject('ShaderWithInference');
         expect(projectTuple).toBeDefined();
-        expect(Object.values(projectTuple!.presets).length).toBe(1);
-        const defaultPreset = projectTuple!.presets[defaultPresetKey] as Preset;
+        expect(Object.values(projectTuple!.presets!).length).toBe(1);
+        const defaultPreset = projectTuple!.presets![defaultPresetKey] as Preset;
         expect(defaultPreset).toBeDefined();
         expect(defaultPreset.values['testNumber1']).toEqual(42);
         expect(defaultPreset.values['testNumber2']).toEqual(35);
@@ -661,8 +686,8 @@ describe('preset loading', async () => {
     it('uses and supplements existing default preset', async () => {
         const projectTuple = await ProjectLoader.loadProject('ProjectWithPresets');
         expect(projectTuple).toBeDefined();
-        expect(Object.values(projectTuple!.presets).length).toBe(5);
-        const defaultPreset = projectTuple!.presets[defaultPresetKey] as Preset;
+        expect(Object.values(projectTuple!.presets!).length).toBe(5);
+        const defaultPreset = projectTuple!.presets![defaultPresetKey] as Preset;
         expect(defaultPreset).toBeDefined();
 
         // Check default preset values
@@ -704,10 +729,10 @@ describe('preset loading', async () => {
     it('creates more presets from preset files', async () => {
         const projectTuple = await ProjectLoader.loadProject('ProjectWithPresets');
         expect(projectTuple).toBeDefined();
-        expect(Object.values(projectTuple!.presets).length).toBe(5);
+        expect(Object.values(projectTuple!.presets!).length).toBe(5);
 
         // Check preset #1
-        const preset1 = projectTuple!.presets['preset1'] as Preset;
+        const preset1 = projectTuple!.presets!['preset1'] as Preset;
         expect(preset1).toBeDefined();
         expect(preset1.title).toEqual('Preset Numero Uno');
         expect(preset1.values['testNumber1']).toEqual(1);
@@ -717,7 +742,7 @@ describe('preset loading', async () => {
         expect(preset1.values['testArray2']).toEqual([7, 8, 9]);
 
         // Check preset #2
-        const preset2 = projectTuple!.presets['preset2'] as Preset;
+        const preset2 = projectTuple!.presets!['preset2'] as Preset;
         expect(preset2).toBeDefined();
         expect(preset2.title).toEqual('Preset 2');
         expect(preset2.values['testNumber1']).toEqual(1);
@@ -731,7 +756,7 @@ describe('preset loading', async () => {
         const projectTuple = await ProjectLoader.loadProject('ProjectWithPresets');
         expect(projectTuple).toBeDefined();
 
-        const noTitlePreset = projectTuple!.presets['notitle'] as Preset;
+        const noTitlePreset = projectTuple!.presets!['notitle'] as Preset;
         expect(noTitlePreset).toBeDefined();
         expect(noTitlePreset.title).toEqual('notitle');
     });
@@ -740,7 +765,7 @@ describe('preset loading', async () => {
         const projectTuple = await ProjectLoader.loadProject('ProjectWithPresets');
         expect(projectTuple).toBeDefined();
 
-        const noValuesPreset = projectTuple!.presets['novalues'] as Preset;
+        const noValuesPreset = projectTuple!.presets!['novalues'] as Preset;
         expect(noValuesPreset).toBeDefined();
         expect(noValuesPreset.title).toEqual('No values here!');
         expect(noValuesPreset.values).toEqual({});
@@ -750,7 +775,7 @@ describe('preset loading', async () => {
         const projectTuple = await ProjectLoader.loadProject('ProjectWithHexStringsForArrays');
         expect(projectTuple).toBeDefined();
 
-        const defaultPreset = projectTuple!.presets[defaultPresetKey] as Preset;
+        const defaultPreset = projectTuple!.presets![defaultPresetKey] as Preset;
         expect(defaultPreset).toBeDefined();
         expect(defaultPreset.title).toEqual(content.defaultPresetTitle);
     });
