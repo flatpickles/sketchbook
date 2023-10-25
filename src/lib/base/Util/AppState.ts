@@ -6,7 +6,7 @@ import { writable } from 'svelte/store';
 
 // The settingsStore is backed by values in config. All values will be persisted as cookies, and
 // each will be reset to its backing value when that value changes (e.g. via edits in settings.ts)
-export const settingsStore = createPersistedStore('settings', config, true);
+export const settingsStore = createPersistedStore('settings', config);
 
 // The stateStore is not persisted, and maintains the state of the app
 const stateDefaults = {

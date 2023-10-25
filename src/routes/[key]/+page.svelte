@@ -4,11 +4,11 @@
     import type { PageData } from './$types';
 
     export let data: PageData;
-    $: ogMeta = OGContentGen.project(data.projectTuple.key, data.projectTuple.config);
+    $: ogMeta = OGContentGen.project(data.projectKey, data.projectConfig);
 </script>
 
 <svelte:head>
-    <title>{data.projectTuple.config.title}</title>
+    <title>{data.projectConfig.title}</title>
 
     <meta property="og:title" content={ogMeta.title} />
     <meta property="og:site_name" content={ogMeta.siteName} />
@@ -25,15 +25,14 @@
     {#if ogMeta.url}
         <meta property="og:url" content={ogMeta.url} />
     {/if}
-    {#if data.projectTuple.config.date}
-        <meta
-            property="article:updated_time"
-            content={data.projectTuple.config.date?.toISOString()}
-        />
+    {#if data.projectConfig.date}
+        <meta property="article:updated_time" content={data.projectConfig.date?.toISOString()} />
     {/if}
     {#if ogMeta.author}
         <meta property="article:author" content={ogMeta.author} />
     {/if}
 </svelte:head>
 
-<ProjectContent projectTuple={data.projectTuple} />
+{#if data.projectTuple}
+    <ProjectContent projectTuple={data.projectTuple} />
+{/if}
