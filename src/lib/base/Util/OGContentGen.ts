@@ -58,10 +58,12 @@ export default class OGContentGen {
     }
 
     static project(projectKey: string, projectConfig: ProjectConfig): OGContent {
+        const baseUrl = content.openGraphContent.url as unknown as string | undefined;
+        const projectURL = baseUrl ? baseUrl + '/' + projectKey : undefined;
         return {
             title: projectConfig.title,
             description: projectConfig.description,
-            url: content.openGraphContent.url,
+            url: projectURL,
             image: projectImageUrls[projectKey],
             siteName: content.openGraphContent.siteName,
             locale: content.openGraphContent.locale,
