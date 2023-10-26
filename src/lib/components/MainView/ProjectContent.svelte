@@ -113,10 +113,18 @@
     .right-show-wrapper {
         @include show-button-wrapper;
         right: 0;
+
+        @include mobile-mode {
+            display: none;
+        }
     }
 
     .right-panel-wrapper {
         @include panel-wrapper;
         right: 0;
+
+        @include mobile-mode {
+            display: none;
+        }
     }
 </style>
