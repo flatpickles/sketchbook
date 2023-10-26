@@ -14,7 +14,7 @@ export type OGContent = {
 
 export default class OGContentProvider {
     static allOgImages(): string[] {
-        const staticOgImageImport = import.meta.glob('/static/og/*.(png|jpg|jpeg|gif)', {
+        const staticOgImageImport = import.meta.glob('/og/*.(png|jpg|jpeg|gif)', {
             as: 'url',
             eager: true
         });
@@ -27,7 +27,9 @@ export default class OGContentProvider {
 
     static top(requestUrl: string): OGContent {
         const baseUrl = this.#getBaseUrl(
-            content.openGraphContent.url.length > 0 ? content.openGraphContent.url : requestUrl
+            content.openGraphContent.url && content.openGraphContent.url.length > 0
+                ? content.openGraphContent.url
+                : requestUrl
         );
         const imageUrl =
             content.openGraphContent.image &&
@@ -52,7 +54,9 @@ export default class OGContentProvider {
         projectConfig: ProjectConfig
     ): OGContent {
         const baseUrl = this.#getBaseUrl(
-            content.openGraphContent.url.length > 0 ? content.openGraphContent.url : requestUrl
+            content.openGraphContent.url && content.openGraphContent.url.length > 0
+                ? content.openGraphContent.url
+                : requestUrl
         );
         const projectUrl = baseUrl + '/' + projectKey;
         const imageUrl =
