@@ -2,8 +2,9 @@ import { config } from '../config/settings';
 import ProjectPresentation, { SortOrder } from '../lib/base/ProjectLoading/ProjectPresentation';
 import type { PageServerLoad } from './$types';
 import { redirect } from '@sveltejs/kit';
+import isbot from 'isbot';
 
-export const load = (async ({ parent, cookies }) => {
+export const load = (async ({ parent, cookies, request }) => {
     const { projects } = await parent();
 
     // Load settings from cookies, or use defaults
@@ -23,8 +24,13 @@ export const load = (async ({ parent, cookies }) => {
         experimentsEnabled
     );
 
+    // Get the user agent and check if it's a bot
+    const { headers } = request;
+    const userAgent = headers.get('user-agent');
+    const isBot = isbot(userAgent);
+
     // If there are projects, redirect to the first one
-    if (presentationOrder.length !== 0) {
+    if (presentationOrder.length !== 0 && !isBot) {
         const firstProject = presentationOrder[0];
         throw redirect(307, `/${firstProject}`);
     }

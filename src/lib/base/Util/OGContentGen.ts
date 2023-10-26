@@ -46,11 +46,15 @@ export type OGContent = {
 
 export default class OGContentGen {
     static top(): OGContent {
+        const baseUrl = this.#cleanUrl(
+            content.openGraphContent.url as unknown as string | undefined
+        );
+        const imageUrl = baseUrl && topImageUrl ? baseUrl + topImageUrl : undefined;
         return {
             title: content.openGraphContent.title,
             description: content.openGraphContent.description,
             url: content.openGraphContent.url,
-            image: topImageUrl,
+            image: imageUrl,
             siteName: content.openGraphContent.siteName,
             locale: content.openGraphContent.locale,
             author: content.openGraphContent.author
@@ -58,16 +62,28 @@ export default class OGContentGen {
     }
 
     static project(projectKey: string, projectConfig: ProjectConfig): OGContent {
-        const baseUrl = content.openGraphContent.url as unknown as string | undefined;
-        const projectURL = baseUrl ? baseUrl + '/' + projectKey : undefined;
+        const baseUrl = this.#cleanUrl(
+            content.openGraphContent.url as unknown as string | undefined
+        );
+        const projectUrl = baseUrl ? baseUrl + '/' + projectKey : undefined;
+        const imageUrl =
+            baseUrl && projectImageUrls[projectKey]
+                ? baseUrl + projectImageUrls[projectKey]
+                : undefined;
+
         return {
             title: projectConfig.title,
             description: projectConfig.description,
-            url: projectURL,
-            image: projectImageUrls[projectKey],
+            url: projectUrl,
+            image: imageUrl,
             siteName: content.openGraphContent.siteName,
             locale: content.openGraphContent.locale,
             author: content.openGraphContent.author
         };
+    }
+
+    static #cleanUrl(url: string | undefined): string | undefined {
+        if (!url) return undefined;
+        return url.replace(/(\/$)|([?#].*$)/, '');
     }
 }
