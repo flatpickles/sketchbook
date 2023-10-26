@@ -12,18 +12,16 @@ export type OGContent = {
     publishedTime?: string;
 };
 
+// Collect the OG images that are available in the static folder; we can check that they exist with
+// just the filename, so no need for an eager glob import here.
+const staticOgImageImport = import.meta.glob('/static/og/*.(png|jpg|jpeg|gif)');
+const allOgImages = Object.keys(staticOgImageImport).map((path) => {
+    const pathComponents = path.split('/');
+    return pathComponents.pop() || path;
+});
+
 export default class OGContentProvider {
-    static allOgImages(): string[] {
-        const staticOgImageImport = import.meta.glob('/og/*.(png|jpg|jpeg|gif)', {
-            as: 'url',
-            eager: true
-        });
-        const allOgImages = Object.keys(staticOgImageImport).map((path) => {
-            const pathComponents = path.split('/');
-            return pathComponents.pop() || path;
-        });
-        return allOgImages;
-    }
+    static allOgImages = allOgImages; // mockable!
 
     static top(requestUrl: string): OGContent {
         const baseUrl = this.#getBaseUrl(
@@ -33,7 +31,7 @@ export default class OGContentProvider {
         );
         const imageUrl =
             content.openGraphContent.image &&
-            this.allOgImages().includes(content.openGraphContent.image)
+            this.allOgImages.includes(content.openGraphContent.image)
                 ? baseUrl + '/og/' + content.openGraphContent.image
                 : undefined;
 
@@ -60,7 +58,7 @@ export default class OGContentProvider {
         );
         const projectUrl = baseUrl + '/' + projectKey;
         const imageUrl =
-            projectConfig.ogImage && this.allOgImages().includes(projectConfig.ogImage)
+            projectConfig.ogImage && this.allOgImages.includes(projectConfig.ogImage)
                 ? baseUrl + '/og/' + projectConfig.ogImage
                 : undefined;
 

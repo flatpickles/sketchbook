@@ -1,11 +1,11 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import OGContentProvider from '$lib/base/Util/OGContentProvider';
 import { content } from '$config/content';
 import { ProjectConfigDefaults } from '$lib/base/ConfigModels/ProjectConfig';
 
 // Mock OGContentProvider.allOgImages
 const allOgImages = ['image.png', 'image2.png'];
-OGContentProvider.allOgImages = vi.fn(() => allOgImages);
+OGContentProvider.allOgImages = allOgImages;
 
 describe('OGContentProvider', () => {
     it('returns top-level content when everything is defined', () => {
