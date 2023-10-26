@@ -28,9 +28,9 @@ const openGraphContent = {
     title: title,
     description: description,
     image: 'index.png',
-    url: undefined,
-    author: undefined,
-    locale: undefined
+    url: '',
+    author: '',
+    locale: ''
 };
 
 // Export all content for use elsewhere in the app

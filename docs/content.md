@@ -10,13 +10,13 @@ App text, [Font Awesome](https://fontawesome.com/) icons, and other content can 
 
 Properties in `content.ts` are relatively self-explanatory, though perhaps with the exception of `openGraphContent`. Here you can set options that will be used for link previews in messaging and social platforms, using the [Open Graph protocol](https://ogp.me/). Options are follows:
 
--   `siteName`: The title of the whole site, e.g. "Sketchbook".
--   `title`: The title of the home page, returned only for the root URL. On project pages, this value will be overridden with the project's title.
--   `description`: A description of the home page, returned only for the root URL. On project pages, this value will be overridden with the project's description.
--   `imageName`: The name of an image file to use as the site/project preview, with or without a file extension. Sketchbook will look for an image with this name at the top level of `src/art` to use as the link preview image. Each project directory can also contain a preview image with this name, e.g. `src/art/ProjectKey/preview.png`, which will override the top-level preview image for that project.
--   `url`: The canonical base URL where your Sketchbook is deployed. Project-specific URLs will be generated with this base.
--   `author`: Your name, if you'd like it to be available for project link previews.
--   `locale`: Your locale, if you'd like to specify.
+-   **`siteName`**: The title of the whole site, e.g. "Sketchbook".
+-   **`title`**: The title of the home page, returned only for the root URL. On project pages, this value will be overridden with the project's title.
+-   **`description`**: A description of the home page, returned only for the root URL. On project pages, the project's description will be used instead.
+-   **`image`**: An image file name for the link preview image. Sketchbook will look in the `static/og/` directory for an image with this name, and will serve that as the root URL's `og:image`, if the file exists. On project pages, the project's `ogImage` property will be used instead, as noted in the [project config docs](project-config.md).
+-   **`url`**: The canonical base URL where your Sketchbook is deployed. Project-specific URLs will be generated with this base. If unspecified, request URLs will be parsed and used as Open Graph metadata.
+-   **`author`**: Your name, if you'd like it to be available for project link previews.
+-   **`locale`**: Your locale, if you'd like to specify.
 
 ### Favicon
 

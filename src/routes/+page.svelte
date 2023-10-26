@@ -11,16 +11,22 @@
     <title>{content.title}</title>
 
     <meta property="og:title" content={ogMeta.title} />
+    <meta name="twitter:title" content={ogMeta.title} />
     <meta property="og:site_name" content={ogMeta.siteName} />
-    <meta property="og:locale" content={ogMeta.locale} />
-    <meta property="og:type" content="article" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={ogMeta.url} />
+    {#if ogMeta.locale}
+        <meta property="og:locale" content={ogMeta.locale} />
+    {/if}
     {#if ogMeta.description}
         <meta property="og:description" content={ogMeta.description} />
+        <meta name="twitter:description" content={ogMeta.description} />
     {/if}
     {#if ogMeta.image}
         <meta property="og:image" content={ogMeta.image} />
-    {/if}
-    {#if ogMeta.url}
-        <meta property="og:url" content={ogMeta.url} />
+        <meta name="twitter:image" content={ogMeta.image} />
+        <meta name="twitter:card" content="summary_large_image" />
+    {:else}
+        <meta name="twitter:card" content="summary" />
     {/if}
 </svelte:head>
