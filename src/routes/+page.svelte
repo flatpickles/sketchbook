@@ -1,7 +1,10 @@
 <script lang="ts">
     import { content } from '$config/content';
-    import OGContentGen from '$lib/base/Util/OGContentGen';
-    const ogMeta = OGContentGen.top();
+    import OGContentGen from '$lib/base/Util/OGContentProvider';
+    import type { PageData } from './$types';
+
+    export let data: PageData;
+    const ogMeta = OGContentGen.top(data.requestUrl);
 </script>
 
 <svelte:head>

@@ -1,5 +1,6 @@
 export interface ProjectConfig {
     title: string;
+    ogImage: string;
     date: Date | undefined;
     description: string | undefined;
     groups: string[];
@@ -13,7 +14,8 @@ export interface ProjectConfig {
 }
 
 export const ProjectConfigDefaults: ProjectConfig = {
-    title: 'Untitled',
+    title: 'undefined', // Default set to [key] in ProjectLoader
+    ogImage: 'undefined', // Default set to [key].png in ProjectLoader
     date: undefined,
     description: undefined,
     groups: [],

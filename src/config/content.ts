@@ -27,7 +27,7 @@ const openGraphContent = {
     siteName: title,
     title: title,
     description: description,
-    imageName: 'preview',
+    image: 'index.png',
     url: undefined,
     author: undefined,
     locale: undefined

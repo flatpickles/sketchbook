@@ -156,9 +156,12 @@ export default class ProjectLoader {
             configJSON as Record<string, unknown> | undefined
         );
 
-        // Assign the project title if unset
+        // Assign the project title and ogImage if unset
         if (projectConfig.title === ProjectConfigDefaults.title) {
             projectConfig.title = key;
+        }
+        if (projectConfig.ogImage === ProjectConfigDefaults.ogImage) {
+            projectConfig.ogImage = `${key}.png`;
         }
 
         // Instantiate the proper project, or return early if we're in SSR
