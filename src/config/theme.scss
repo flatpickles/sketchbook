@@ -10,6 +10,9 @@ $xs-text-size: 0.7rem;
 $subtitle-text-opacity: 0.6;
 $footer-text-opacity: 0.4;
 
+// Mobile Mode™
+$mm-breakpoint: 768px;
+
 // Panels
 $panel-bg-color: #fffffe;
 $panel-fg-color: #000000;
@@ -124,6 +127,7 @@ $param-section-header-opacity: 0.7;
 $param-list-scroll-fade: true;
 
 // Derivative styles are defined in these files...
+@import '$lib/styles/mobile-mode.scss';
 @import '$lib/styles/detail-panel.scss';
 @import '$lib/styles/general.scss';
 @import '$lib/styles/list-panel.scss';
