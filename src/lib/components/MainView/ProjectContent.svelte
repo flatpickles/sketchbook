@@ -12,8 +12,13 @@
     } from '$lib/base/Util/PanelState';
     import { MouseState } from '$lib/base/Util/MouseState';
     import { content } from '$config/content';
+    import PresetControl from '../ProjectDetailPanel/PresetControl.svelte';
 
     export let projectTuple: ProjectTuple;
+
+    // Preset control reactive state; controlled here in Mobile Mode, managed in projectDetails
+    let selectedPresetKey: string; // bound to value managed by ProjectDetailPanel
+    let projectDetails: ProjectDetailPanel; // bound to ProjectDetailPanel instance
 
     // Right panel reactive state
     $: projectHasDetail =
@@ -73,6 +78,8 @@
             <ProjectDetailPanel
                 {projectTuple}
                 headerButtonIcon={rightPanelHeaderIcon}
+                bind:this={projectDetails}
+                bind:selectedPresetKey
                 on:headeraction={toggleRightPanel.bind(null, false)}
             />
         </div>
@@ -93,6 +100,18 @@
             >
                 <i class={content.projectDetailIcon} />
             </div>
+        </div>
+    {/if}
+
+    {#if Object.values(projectTuple.presets).length > 1}
+        <div class="mobile-bottom-wrapper">
+            <PresetControl
+                presets={projectTuple.presets}
+                currentPresetKey={selectedPresetKey}
+                edited={false}
+                enablePresetExport={false}
+                on:preset-selected={projectDetails.presetSelected}
+            />
         </div>
     {/if}
 {/if}
@@ -125,6 +144,16 @@
 
         @include mobile-mode {
             display: none;
+        }
+    }
+
+    /* Mobile Mode */
+
+    .mobile-bottom-wrapper {
+        display: none;
+
+        @include mobile-mode {
+            display: block;
         }
     }
 </style>

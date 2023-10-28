@@ -6,6 +6,7 @@
     export let presets: PresetMap;
     export let currentPresetKey: string;
     export let edited = false;
+    export let enablePresetExport = $settingsStore.enablePresetExport;
 
     let dispatchEvent = createEventDispatcher();
     let presetSelector: HTMLSelectElement;
@@ -29,7 +30,7 @@
                 dispatchEvent('preset-selected', currentPresetKey);
             };
         }
-        if ($settingsStore.enablePresetExport) {
+        if (enablePresetExport) {
             actions['Export'] = () => {
                 dispatchEvent('export');
             };
@@ -123,6 +124,11 @@
         display: flex;
         flex-direction: row;
         user-select: none;
+
+        @include mobile-mode {
+            padding: 0;
+            background-color: #fff;
+        }
     }
 
     .preset-control {
@@ -132,6 +138,13 @@
         display: flex;
         flex-direction: row;
         align-items: center;
+
+        @include mobile-mode {
+            border-radius: 0;
+            border-left: none;
+            border-right: none;
+            border-bottom: none;
+        }
     }
 
     .preset-select {
