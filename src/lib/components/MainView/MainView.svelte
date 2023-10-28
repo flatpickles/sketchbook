@@ -15,6 +15,7 @@
         headerIconForPanelState
     } from '$lib/base/Util/PanelState';
     import { MouseState, mouseStateTransition } from '$lib/base/Util/MouseState';
+    import MobileProjectSelector from '../ProjectListPanel/MobileProjectSelector.svelte';
 
     export let projectConfigs: Record<string, ProjectConfig>;
     export let selectedProjectKey: string;
@@ -185,6 +186,10 @@
                 />
             </div>
         </div>
+
+        <div class="mobile-top-wrapper">
+            <MobileProjectSelector projects={projectConfigs} {selectedProjectKey} />
+        </div>
     {/if}
 
     <slot />
@@ -224,6 +229,10 @@
         width: 100%;
         height: 100%;
         overflow: hidden;
+
+        @include mobile-mode {
+            flex-direction: column;
+        }
     }
 
     /* Left panel */
@@ -231,11 +240,19 @@
     .left-show-wrapper {
         @include show-button-wrapper;
         left: 0;
+
+        @include mobile-mode {
+            display: none;
+        }
     }
 
     .left-panel-wrapper {
         @include panel-wrapper;
         left: 0;
+
+        @include mobile-mode {
+            display: none;
+        }
     }
 
     .panel-dummy {
@@ -246,6 +263,16 @@
         opacity: 0;
         width: $panel-width;
         left: calc(-1 * $panel-width);
+    }
+
+    /* Mobile Mode */
+
+    .mobile-top-wrapper {
+        display: none;
+
+        @include mobile-mode {
+            display: block;
+        }
     }
 
     /* Settings */

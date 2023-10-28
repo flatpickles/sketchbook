@@ -17,11 +17,11 @@
 
     // Update the selected & stored preset keys as project & preset selections change
     $: projectSelected(projectTuple.key);
-    let selectedPresetKey = defaultPresetKey;
+    export let selectedPresetKey = defaultPresetKey;
     function projectSelected(projectKey: string) {
         selectedPresetKey = PresetUtil.getSelectedPresetKey(projectKey);
     }
-    function presetSelected(event: CustomEvent) {
+    export function presetSelected(event: CustomEvent) {
         // Update selected preset state
         PresetUtil.setSelectedPresetKey(projectTuple.key, event.detail);
         selectedPresetKey = event.detail;

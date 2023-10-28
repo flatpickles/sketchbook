@@ -11,7 +11,7 @@ After forking the [Sketchbook repository](https://github.com/flatpickles), you c
 
 In addition to giving you a friendly place to develop and view canvas projects, Sketchbook also automatically displays UI inputs for any instance variables declared on `Project` subclasses. A wide variety of parameter types and styles are supported, and Sketchbook also provides a "preset" interface for switching between pre-defined collections of parameter values. Sketchbook's parameterization system is easy to understand and use, but nonetheless facilitates the design of highly configurable projects.
 
-Sketchbook is a webapp at its heart, and when you want to publish your projects, you can simply deploy the app on a hosting provider of your choice. No frontend work is required outside of your canvas drawing code, but your audience will be able to view and interact with your projects via the same browser-based interface you've been using during during development. If you'd rather publish your projects in isolation, your code is portable: Sketchbook's relatively unopinionated nature makes it easy to move your work into other contexts.
+Sketchbook is a webapp at its heart, and when you want to publish your projects, you can simply deploy the app on a hosting provider of your choice. No frontend work is required outside of your canvas drawing code, but your audience will be able to view and interact with your projects via the same browser-based interface you've been using during development. If you'd rather publish your projects in isolation, your code is portable: Sketchbook's relatively unopinionated nature makes it easy to move your work into other contexts.
 
 ### Diving In
 
