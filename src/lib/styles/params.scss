@@ -1,21 +1,24 @@
 // todo: clean these up, and expose more configuration options in theme.scss
 
+// Spacing & sizing
 $parameter-section-gap: $param-spacing + $param-padding;
 $parameter-section-header-color: rgba($panel-fg-color, $param-section-header-opacity);
 $parameter-section-divider: 1px solid $parameter-section-header-color;
+$param-input-item-min-width: 2rem;
+$param-input-item-partial-width: 4rem;
+$checkbox-input-size: 0.9rem;
 
+// Colors
 $param-fg-color: $panel-fg-color;
 $param-field-bg-color: rgba(color.scale($panel-bg-color, $saturation: -90%), 0.9);
 $param-accent-color: rgba(color.scale($panel-fg-color, $saturation: -90%), 0.3);
 $param-light-accent-color: rgba(color.scale($panel-fg-color, $saturation: -90%), 0.1);
 
-$field-input-border: 1px solid $param-accent-color;
-$field-input-border-radius: 0.25rem;
-
-$param-input-item-min-width: 2rem;
-$param-input-item-partial-width: 4rem;
-
-$checkbox-input-size: 0.9rem;
+// Border radius & outline
+$param-input-outline-size: 1px;
+$param-input-outline-color: $param-accent-color;
+$param-input-outline: $param-input-outline-size solid $param-input-outline-color;
+$param-input-border-radius: 0.25rem;
 
 // Param sections
 @mixin param-section-header {
@@ -56,8 +59,8 @@ $checkbox-input-size: 0.9rem;
     color: $param-fg-color;
     font-size: $xs-text-size;
     line-height: $xs-text-size;
-    border: $field-input-border;
-    border-radius: $field-input-border-radius;
+    outline: $param-input-outline;
+    border-radius: $param-input-border-radius;
     background-color: $background-color;
     padding: 0.15rem 0.25rem;
 }
@@ -65,7 +68,7 @@ $checkbox-input-size: 0.9rem;
     $background-color: $param-light-accent-color;
     color: $param-fg-color;
     font-size: $xs-text-size;
-    outline: $field-input-border;
+    outline: $param-input-outline;
     border-radius: 1rem;
     font-weight: bold;
     background-color: $background-color;

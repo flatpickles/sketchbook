@@ -76,6 +76,7 @@
         on:click={nameInputClicked}
         data-testid="file-name-field"
     />
+    <div class="file-input-divider" />
     <label
         class="file-button"
         aria-label={`${name} File Input Button`}
@@ -89,26 +90,33 @@
 
 <style lang="scss">
     .file-input-wrapper {
-        overflow: hidden;
         display: flex;
         flex-direction: row;
         align-items: center;
+        outline: $param-input-outline;
+        border-radius: $param-input-border-radius;
     }
 
     .file-name-field {
         @include string-parameter-input;
+        outline: none;
         width: 100%;
-        border-radius: $field-input-border-radius 0 0 $field-input-border-radius;
+        border-radius: $param-input-border-radius 0 0 $param-input-border-radius;
         text-overflow: ellipsis;
+    }
+
+    .file-input-divider {
+        flex-shrink: 0;
+        height: 100%;
+        width: $param-input-outline-size;
+        background-color: $param-input-outline-color;
     }
 
     .file-button {
         height: 100%;
         width: 100%;
         max-width: $param-input-item-min-width;
-        border: $field-input-border;
-        border-left: 0;
-        border-radius: 0 $field-input-border-radius $field-input-border-radius 0;
+        border-radius: 0 $param-input-border-radius $param-input-border-radius 0;
 
         display: grid;
         place-items: center;

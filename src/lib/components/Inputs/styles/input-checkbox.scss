@@ -12,8 +12,8 @@ input[type='checkbox'] {
 
     width: $checkbox-input-size;
     height: $checkbox-input-size;
-    border: $field-input-border;
-    border-radius: $field-input-border-radius;
+    outline: $param-input-outline;
+    border-radius: $param-input-border-radius;
 
     display: grid;
     place-content: center;
