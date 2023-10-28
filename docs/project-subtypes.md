@@ -4,7 +4,7 @@ Though anything you can do with Sketchbook can be accomplished by subclassing th
 
 ## `P5Project`
 
-`P5Project` is a relatively lightweight `Project` subclass that makes it easy to use [p5.js](https://p5js.org/) within Sketchbook. When you create a Sketchbook project that subclasses `P5Project`, a p5.js will be spun up in ["instance mode"](https://p5js.org/reference/#/p5/p5), and you'll be able to use this p5 instance for rendering.
+`P5Project` is a relatively lightweight `Project` subclass that makes it easy to use [p5.js](https://p5js.org/) within Sketchbook. When you create a Sketchbook project that subclasses `P5Project`, p5.js will be spun up in ["instance mode"](https://p5js.org/reference/#/p5/p5), and you'll be able to use this p5 instance for rendering.
 
 The `P5Project` class defines a few methods that match the standard functions used in a p5.js context, so you can build p5 projects in a familiar way. When using p5.js in instance mode, all library functions must be called on a p5 instance; `P5Project` offers a `p5` instance variable, and the same reference is also passed as a parameter to p5-related methods.
 
