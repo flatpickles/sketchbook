@@ -1,34 +1,66 @@
-@mixin preset-control {
-    border: $preset-control-outer-border-size solid rgba($panel-fg-color, $preset-control-outer-border-opacity);
-    border-radius: $preset-control-border-radius;
+@mixin preset-selector {
+    border: $preset-selector-outer-border-size solid rgba($panel-fg-color, $preset-selector-outer-border-opacity);
+    border-radius: $preset-selector-border-radius;
     overflow: hidden;
-    font-size: $preset-control-text-size;
+    font-size: $preset-selector-text-size;
     font-weight: bold;
-    box-shadow: 0 $preset-control-shadow-size 0 rgba($panel-fg-color, $preset-control-shadow-opacity);
+    box-shadow: 0 $preset-selector-shadow-size 0 rgba($panel-fg-color, $preset-selector-shadow-opacity);
 
+    @include mobile-mode {
+        font-size: $preset-selector-text-size-mobile; 
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+    }
 }
 
-@mixin preset-select {
-    color: rgba($panel-fg-color, $preset-control-name-fg-opacity);
-    background-color: rgba($panel-fg-color, $preset-control-name-bg-opacity);
+@mixin preset-select-element {
+    color: rgba($panel-fg-color, $preset-selector-name-fg-opacity);
+    background-color: rgba($panel-fg-color, $preset-selector-name-bg-opacity);
+
+    @include mobile-mode {
+        color: rgba($panel-fg-color, $preset-selector-name-fg-opacity-mobile);
+        background-color: rgba($panel-fg-color, $preset-selector-name-bg-opacity-mobile);
+    }
+
     @include ellipsis;
 }
 
 @mixin preset-button {
     cursor: pointer;
-    width: $preset-control-button-width;
+    width: $preset-selector-button-width;
 
-    color: rgba($panel-fg-color, $preset-control-button-fg-opacity);
-    background-color: rgba($panel-fg-color, $preset-control-button-bg-opacity);
+    color: rgba($panel-fg-color, $preset-selector-button-fg-opacity);
+    background-color: rgba($panel-fg-color, $preset-selector-button-bg-opacity);
 
     &:hover:not(.disabled) {
-        color: rgba($panel-fg-color, $preset-control-button-fg-opacity-hover);
-        background-color: rgba($panel-fg-color, $preset-control-button-bg-opacity-hover);
+        color: rgba($panel-fg-color, $preset-selector-button-fg-opacity-hover);
+        background-color: rgba($panel-fg-color, $preset-selector-button-bg-opacity-hover);
     }
 
     &.disabled {
-        color: rgba($panel-fg-color, $preset-control-button-fg-opacity-disabled);
-        background-color: rgba($panel-fg-color, $preset-control-button-bg-opacity-disabled);
+        color: rgba($panel-fg-color, $preset-selector-button-fg-opacity-disabled);
+        background-color: rgba($panel-fg-color, $preset-selector-button-bg-opacity-disabled);
         cursor: default;
+    }
+
+    @include mobile-mode {
+        color: rgba($panel-fg-color, $preset-selector-button-fg-opacity-mobile);
+        background-color: rgba($panel-fg-color, $preset-selector-button-bg-opacity-mobile);
+
+        // Hover is disregarded in mobile mode
+        &:hover:not(.disabled) {
+            color: rgba($panel-fg-color, $preset-selector-button-fg-opacity-mobile);
+            background-color: rgba($panel-fg-color, $preset-selector-button-bg-opacity-mobile);
+        }
+
+        &.disabled {
+            color: rgba($panel-fg-color, $preset-selector-button-fg-opacity-disabled-mobile);
+            background-color: rgba($panel-fg-color, $preset-selector-button-bg-opacity-disabled-mobile);
+
+            // Remove tap effects (still has a click handler even when disabled)
+            -webkit-tap-highlight-color: rgba(0,0,0,0);
+            -webkit-touch-callout: none;
+        }
     }
 }

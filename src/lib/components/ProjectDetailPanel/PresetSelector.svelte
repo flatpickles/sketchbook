@@ -73,7 +73,7 @@
 </script>
 
 <div class="presets-wrapper" data-testid="presets-ui">
-    <div class="preset-control">
+    <div class="preset-selector">
         <i
             class="fa fa-angle-left preset-button left"
             class:disabled={currentPresetIndex === 0}
@@ -82,7 +82,7 @@
             on:keypress={previousPreset}
         />
         <select
-            class="preset-select"
+            class="preset-select-element"
             data-testid="preset-select"
             bind:this={presetSelector}
             on:change={optionSelected}
@@ -127,33 +127,25 @@
 
         @include mobile-mode {
             padding: 0;
-            background-color: #fff;
         }
     }
 
-    .preset-control {
-        @include preset-control;
+    .preset-selector {
+        @include preset-selector;
 
         width: 100%;
         display: flex;
         flex-direction: row;
         align-items: center;
-
-        @include mobile-mode {
-            border-radius: 0;
-            border-left: none;
-            border-right: none;
-            border-bottom: none;
-        }
     }
 
-    .preset-select {
-        @include preset-select;
+    .preset-select-element {
+        @include preset-select-element;
 
         flex-grow: 1;
         width: 100%;
         text-align: center;
-        padding: $preset-control-padding;
+        padding: $preset-selector-padding;
 
         // For Safari:
         text-align-last: center;
@@ -170,13 +162,13 @@
         line-height: inherit; // Safari fix
 
         &.left {
-            border-right: $preset-control-inner-border-size solid
-                rgba($panel-fg-color, $preset-control-inner-border-opacity);
+            border-right: $preset-selector-inner-border-size solid
+                rgba($panel-fg-color, $preset-selector-inner-border-opacity);
         }
 
         &.right {
-            border-left: $preset-control-inner-border-size solid
-                rgba($panel-fg-color, $preset-control-inner-border-opacity);
+            border-left: $preset-selector-inner-border-size solid
+                rgba($panel-fg-color, $preset-selector-inner-border-opacity);
         }
     }
 </style>

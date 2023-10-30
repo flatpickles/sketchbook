@@ -48,7 +48,7 @@
         <i class="fa fa-angle-left selector-button left disabled" data-testid="previous-project" />
     {/if}
 
-    <select class="project-selector" data-testid="project-select" on:change={selectEvent}>
+    <select class="project-select-element" data-testid="project-select" on:change={selectEvent}>
         {#each visibleKeys as key}
             <option value={key} selected={key === selectedProjectKey} data-testid="project-option">
                 {projects[key].title}
@@ -72,20 +72,18 @@
     }
 
     .project-selector-wrapper {
-        background-color: #fff;
+        @include project-selector;
 
         display: flex;
         flex-direction: row;
         justify-content: center;
-
-        border-bottom: 1px solid #ccc;
     }
 
-    .project-selector {
+    .project-select-element {
+        @include project-select-element;
+
         flex-grow: 1;
         text-align: center;
-        padding: 0.5rem 0;
-        font-size: $large-text-size;
 
         // For Safari:
         text-align-last: center;
@@ -93,23 +91,16 @@
     }
 
     .selector-button {
+        @include project-select-button;
+
         flex-grow: 0;
         display: grid;
         place-items: center;
-        width: 2rem;
         height: 100%;
 
-        &.left {
-            border-right: 1px solid #ccc;
-        }
-
-        &.right {
-            border-left: 1px solid #ccc;
-        }
-
         &.disabled {
-            color: #ccc;
-            height: auto; // hack?
+            // Hack to keep the button full-height with no a tag:
+            height: auto;
         }
     }
 </style>
