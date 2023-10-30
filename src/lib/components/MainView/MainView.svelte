@@ -15,7 +15,7 @@
         headerIconForPanelState
     } from '$lib/base/Util/PanelState';
     import { MouseState, mouseStateTransition } from '$lib/base/Util/MouseState';
-    import MobileProjectSelector from '../ProjectListPanel/MobileProjectSelector.svelte';
+    import ProjectSelector from '../ProjectListPanel/ProjectSelector.svelte';
 
     export let projectConfigs: Record<string, ProjectConfig>;
     export let selectedProjectKey: string;
@@ -188,7 +188,7 @@
         </div>
 
         <div class="mobile-top-wrapper">
-            <MobileProjectSelector projects={projectConfigs} {selectedProjectKey} />
+            <ProjectSelector projects={projectConfigs} {selectedProjectKey} />
         </div>
     {/if}
 
