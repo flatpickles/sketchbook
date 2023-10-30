@@ -1,6 +1,6 @@
 import { render, fireEvent, screen, cleanup } from '@testing-library/svelte';
 import { describe, it, expect, afterEach, vi } from 'vitest';
-import PresetControl from '$lib/components/ProjectDetailPanel/PresetControl.svelte';
+import PresetSelector from '$lib/components/ProjectDetailPanel/PresetSelector.svelte';
 import { type PresetMap, defaultPresetKey } from '$lib/base/ProjectLoading/PresetLoader';
 import { settingsStore } from '$lib/base/Util/AppState';
 import { get } from 'svelte/store';
@@ -28,15 +28,15 @@ const testPresetMap: PresetMap = {
     }
 };
 
-function renderTestPresets(currentKey = defaultPresetKey): PresetControl {
-    const { component } = render(PresetControl, {
+function renderTestPresets(currentKey = defaultPresetKey): PresetSelector {
+    const { component } = render(PresetSelector, {
         presets: testPresetMap,
         currentPresetKey: currentKey
     });
     return component;
 }
 
-describe('PresetControl rendering', () => {
+describe('PresetSelector rendering', () => {
     afterEach(cleanup);
 
     it('renders presets alphabetically w/ defaults first', async () => {
@@ -148,7 +148,7 @@ describe('PresetControl rendering', () => {
     });
 });
 
-describe('PresetControl interactions', () => {
+describe('PresetSelector interactions', () => {
     afterEach(cleanup);
 
     it('emits preset change event on selection change', async () => {

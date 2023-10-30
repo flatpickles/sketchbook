@@ -3,7 +3,7 @@
     import { settingsStore } from '$lib/base/Util/AppState';
     import Panel from '../Panels/Panel.svelte';
     import PanelHeader from '../Panels/PanelHeader.svelte';
-    import PresetControl from './PresetControl.svelte';
+    import PresetSelector from './PresetSelector.svelte';
     import ParamList from './ParamList.svelte';
     import PresetUtil from '$lib/base/ProjectLoading/PresetUtil';
     import { defaultPresetKey } from '$lib/base/ProjectLoading/PresetLoader';
@@ -16,6 +16,7 @@
     $: marginBottom = $settingsStore.overlayPanels && projectTuple.params.length == 0;
 
     // Update the selected & stored preset keys as project & preset selections change
+    // These are used elsewhere in the app for preset management; non-ideal architecture, task #217
     $: projectSelected(projectTuple.key);
     export let selectedPresetKey = defaultPresetKey;
     function projectSelected(projectKey: string) {
@@ -59,7 +60,7 @@
             on:headeraction
         />
         {#if $settingsStore.alwaysShowPresets || Object.values(projectTuple.presets).length > 1}
-            <PresetControl
+            <PresetSelector
                 presets={projectTuple.presets}
                 currentPresetKey={selectedPresetKey}
                 edited={presetEdited}

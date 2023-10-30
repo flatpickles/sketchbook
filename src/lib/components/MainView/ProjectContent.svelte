@@ -12,7 +12,7 @@
     } from '$lib/base/Util/PanelState';
     import { MouseState } from '$lib/base/Util/MouseState';
     import { content } from '$config/content';
-    import PresetControl from '../ProjectDetailPanel/PresetControl.svelte';
+    import PresetSelector from '../ProjectDetailPanel/PresetSelector.svelte';
 
     export let projectTuple: ProjectTuple;
 
@@ -105,7 +105,7 @@
 
     {#if Object.values(projectTuple.presets).length > 1}
         <div class="mobile-bottom-wrapper">
-            <PresetControl
+            <PresetSelector
                 presets={projectTuple.presets}
                 currentPresetKey={selectedPresetKey}
                 edited={false}
