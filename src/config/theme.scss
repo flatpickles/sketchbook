@@ -10,8 +10,8 @@ $xs-text-size: 0.7rem;
 $subtitle-text-opacity: 0.6;
 $footer-text-opacity: 0.4;
 
-// Mobile Mode™
-$mm-breakpoint: 768px;
+// Mobile Mode™ (see $lib/styles/mobile-mode.scss)
+$mobile-mode-breakpoint: 768px;
 
 // Panels
 $panel-bg-color: #fffffe;
@@ -95,25 +95,25 @@ $project-unselected-bg-opacity-even: 0.0;
 $project-experiment-icon-opacity: 0.5;
 $project-list-scroll-fade: true;
 
-// Preset control
-$preset-control-text-size: $small-text-size;
-$preset-control-padding: 0.25rem;
-$preset-control-border-radius: 1rem;
-$preset-control-outer-border-size: 1px;
-$preset-control-outer-border-opacity: 0.3;
-$preset-control-inner-border-size: 1px;
-$preset-control-inner-border-opacity: 0.3;
-$preset-control-shadow-size: 0;
-$preset-control-shadow-opacity: 0;
-$preset-control-name-fg-opacity: 1.0;
-$preset-control-name-bg-opacity: 0.05;
-$preset-control-button-width: 1.5rem;
-$preset-control-button-fg-opacity: 0.6;
-$preset-control-button-bg-opacity: 0.05;
-$preset-control-button-fg-opacity-hover: 0.65;
-$preset-control-button-bg-opacity-hover: 0.1;
-$preset-control-button-fg-opacity-disabled: 0.3;
-$preset-control-button-bg-opacity-disabled: 0.05;
+// Preset selector control
+$preset-selector-text-size: $small-text-size;
+$preset-selector-padding: 0.25rem;
+$preset-selector-border-radius: 1rem;
+$preset-selector-outer-border-size: 1px;
+$preset-selector-outer-border-opacity: 0.3;
+$preset-selector-inner-border-size: 1px;
+$preset-selector-inner-border-opacity: 0.3;
+$preset-selector-shadow-size: 0;
+$preset-selector-shadow-opacity: 0;
+$preset-selector-name-fg-opacity: 1.0;
+$preset-selector-name-bg-opacity: 0.05;
+$preset-selector-button-width: 1.5rem;
+$preset-selector-button-fg-opacity: 0.6;
+$preset-selector-button-bg-opacity: 0.05;
+$preset-selector-button-fg-opacity-hover: 0.65;
+$preset-selector-button-bg-opacity-hover: 0.1;
+$preset-selector-button-fg-opacity-disabled: 0.3;
+$preset-selector-button-bg-opacity-disabled: 0.05;
 
 // Parameter list
 $param-spacing: 0.25rem;

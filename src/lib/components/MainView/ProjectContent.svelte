@@ -103,7 +103,7 @@
         </div>
     {/if}
 
-    {#if Object.values(projectTuple.presets).length > 1}
+    {#if Object.values(projectTuple.presets).length > 1 || $settingsStore.alwaysShowPresets}
         <div class="mobile-bottom-wrapper">
             <PresetSelector
                 presets={projectTuple.presets}
@@ -151,6 +151,7 @@
 
     .mobile-bottom-wrapper {
         display: none;
+        background-color: $panel-bg-color;
 
         @include mobile-mode {
             display: block;

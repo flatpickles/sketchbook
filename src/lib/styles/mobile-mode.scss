@@ -1,5 +1,71 @@
+// Project selector control
+$project-selector-text-size: $title-text-size;
+$project-selector-padding: 0.5rem;
+$project-selector-outer-border-size: 1px;
+$project-selector-outer-border-opacity: 0.3;
+$project-selector-inner-border-size: 1px;
+$project-selector-inner-border-opacity: 0.3;
+$project-selector-name-fg-opacity: 1.0;
+$project-selector-name-bg-opacity: 0.0;
+$project-selector-button-width: 2rem;
+$project-selector-button-fg-opacity: 0.6;
+$project-selector-button-bg-opacity: 0.0;
+$project-selector-button-fg-opacity-disabled: 0.2;
+$project-selector-button-bg-opacity-disabled: 0.0;
+
+// Preset selector control (in Mobile Mode)
+$preset-selector-text-size-mobile: $large-text-size;
+$preset-selector-name-fg-opacity-mobile: 1.0;
+$preset-selector-name-bg-opacity-mobile: 0.0;
+$preset-selector-button-fg-opacity-mobile: 0.6;
+$preset-selector-button-bg-opacity-mobile: 0.0;
+$preset-selector-button-fg-opacity-disabled-mobile: 0.2;
+$preset-selector-button-bg-opacity-disabled-mobile: 0.0;
+
+// Mixin to easily apply mobile-mode styles
 @mixin mobile-mode {
-    @media (max-width: $mm-breakpoint) {
+    @media (max-width: $mobile-mode-breakpoint) {
         @content;
+    }
+}
+
+// Derived variables
+$outer-border: $project-selector-outer-border-size solid rgba($panel-fg-color, $project-selector-outer-border-opacity);
+$inner-border: $project-selector-inner-border-size solid rgba($panel-fg-color, $project-selector-inner-border-opacity);
+
+/* Mixins used in ProjectSelector */
+
+@mixin project-selector {
+    background-color: $panel-bg-color;
+    font-size: $project-selector-text-size;
+    border-top: $outer-border;
+    border-bottom: $outer-border;
+}
+
+@mixin project-select-element {
+    padding: $project-selector-padding;
+    color: rgba($panel-fg-color, $project-selector-name-fg-opacity);
+    background-color: rgba($panel-fg-color, $project-selector-name-bg-opacity);
+    @include ellipsis;
+}
+
+@mixin project-select-button {
+    cursor: pointer;
+    width: $project-selector-button-width;
+    color: rgba($panel-fg-color, $project-selector-button-fg-opacity);
+    background-color: rgba($panel-fg-color, $project-selector-button-bg-opacity);
+
+    &.left {
+        border-right: $inner-border;
+    }
+
+    &.right {
+        border-left: $inner-border;
+    }
+
+    &.disabled {
+        color: rgba($panel-fg-color, $project-selector-button-fg-opacity-disabled);
+        background-color: rgba($panel-fg-color, $project-selector-button-bg-opacity-disabled);
+        cursor: default;
     }
 }
