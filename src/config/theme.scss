@@ -10,9 +10,6 @@ $xs-text-size: 0.7rem;
 $subtitle-text-opacity: 0.6;
 $footer-text-opacity: 0.4;
 
-// Mobile Mode™ (see $lib/styles/mobile-mode.scss)
-$mobile-mode-breakpoint: 768px;
-
 // Panels
 $panel-bg-color: #fffffe;
 $panel-fg-color: #000000;
@@ -125,6 +122,33 @@ $param-bg-opacity-odd: 0.025;
 $param-bg-opacity-even: 0.0;
 $param-section-header-opacity: 0.7;
 $param-list-scroll-fade: true;
+
+// Mobile Mode™
+$mobile-mode-breakpoint: 768px;
+
+// Mobile Mode project selector control
+$project-selector-text-size: $title-text-size;
+$project-selector-padding: 0.5rem;
+$project-selector-outer-border-size: 1px;
+$project-selector-outer-border-opacity: 0.3;
+$project-selector-inner-border-size: 1px;
+$project-selector-inner-border-opacity: 0.3;
+$project-selector-name-fg-opacity: 1.0;
+$project-selector-name-bg-opacity: 0.0;
+$project-selector-button-width: 2rem;
+$project-selector-button-fg-opacity: 0.6;
+$project-selector-button-bg-opacity: 0.0;
+$project-selector-button-fg-opacity-disabled: 0.2;
+$project-selector-button-bg-opacity-disabled: 0.0;
+
+// Mobile Mode preset selector control (desktop mode overrides)
+$preset-selector-text-size-mobile: $large-text-size;
+$preset-selector-name-fg-opacity-mobile: 1.0;
+$preset-selector-name-bg-opacity-mobile: 0.0;
+$preset-selector-button-fg-opacity-mobile: 0.6;
+$preset-selector-button-bg-opacity-mobile: 0.0;
+$preset-selector-button-fg-opacity-disabled-mobile: 0.2;
+$preset-selector-button-bg-opacity-disabled-mobile: 0.0;
 
 // Derivative styles are defined in these files...
 @import '$lib/styles/mobile-mode.scss';

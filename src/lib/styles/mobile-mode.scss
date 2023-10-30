@@ -1,27 +1,3 @@
-// Project selector control
-$project-selector-text-size: $title-text-size;
-$project-selector-padding: 0.5rem;
-$project-selector-outer-border-size: 1px;
-$project-selector-outer-border-opacity: 0.3;
-$project-selector-inner-border-size: 1px;
-$project-selector-inner-border-opacity: 0.3;
-$project-selector-name-fg-opacity: 1.0;
-$project-selector-name-bg-opacity: 0.0;
-$project-selector-button-width: 2rem;
-$project-selector-button-fg-opacity: 0.6;
-$project-selector-button-bg-opacity: 0.0;
-$project-selector-button-fg-opacity-disabled: 0.2;
-$project-selector-button-bg-opacity-disabled: 0.0;
-
-// Preset selector control (in Mobile Mode)
-$preset-selector-text-size-mobile: $large-text-size;
-$preset-selector-name-fg-opacity-mobile: 1.0;
-$preset-selector-name-bg-opacity-mobile: 0.0;
-$preset-selector-button-fg-opacity-mobile: 0.6;
-$preset-selector-button-bg-opacity-mobile: 0.0;
-$preset-selector-button-fg-opacity-disabled-mobile: 0.2;
-$preset-selector-button-bg-opacity-disabled-mobile: 0.0;
-
 // Mixin to easily apply mobile-mode styles
 @mixin mobile-mode {
     @media (max-width: $mobile-mode-breakpoint) {
@@ -32,8 +8,6 @@ $preset-selector-button-bg-opacity-disabled-mobile: 0.0;
 // Derived variables
 $outer-border: $project-selector-outer-border-size solid rgba($panel-fg-color, $project-selector-outer-border-opacity);
 $inner-border: $project-selector-inner-border-size solid rgba($panel-fg-color, $project-selector-inner-border-opacity);
-
-/* Mixins used in ProjectSelector */
 
 @mixin project-selector {
     background-color: $panel-bg-color;
