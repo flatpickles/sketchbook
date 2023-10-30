@@ -42,15 +42,15 @@
 <div class="project-selector-wrapper">
     {#if previousProjectKey}
         <a href={`/${previousProjectKey}`}>
-            <i class="fa fa-angle-left selector-button left" />
+            <i class="fa fa-angle-left selector-button left" data-testid="previous-project" />
         </a>
     {:else}
-        <i class="fa fa-angle-left selector-button left disabled" />
+        <i class="fa fa-angle-left selector-button left disabled" data-testid="previous-project" />
     {/if}
 
-    <select class="project-selector" on:change={selectEvent}>
+    <select class="project-selector" data-testid="project-select" on:change={selectEvent}>
         {#each visibleKeys as key}
-            <option value={key} selected={key === selectedProjectKey}>
+            <option value={key} selected={key === selectedProjectKey} data-testid="project-option">
                 {projects[key].title}
             </option>
         {/each}
@@ -58,10 +58,10 @@
 
     {#if nextProjectKey}
         <a href={`/${nextProjectKey}`}>
-            <i class="fa fa-angle-right selector-button right" />
+            <i class="fa fa-angle-right selector-button right" data-testid="next-project" />
         </a>
     {:else}
-        <i class="fa fa-angle-right selector-button right disabled" />
+        <i class="fa fa-angle-right selector-button right disabled" data-testid="next-project" />
     {/if}
 </div>
 
