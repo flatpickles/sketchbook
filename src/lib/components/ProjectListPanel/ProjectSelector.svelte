@@ -2,10 +2,11 @@
     import type { ProjectConfig } from '$lib/base/ConfigModels/ProjectConfig';
     import { goto } from '$app/navigation';
     import ProjectPresentation, { SortOrder } from '$lib/base/ProjectLoading/ProjectPresentation';
-    import { settingsStore } from '$lib/base/Util/AppState';
+    import { errorStore, settingsStore } from '$lib/base/Util/AppState';
 
     export let projects: Record<string, ProjectConfig>;
     export let selectedProjectKey: string | undefined;
+    let errorDisplayed = $errorStore != null;
 
     $: visibleKeys = ProjectPresentation.presentedKeys(
         projects,
@@ -47,7 +48,11 @@
 
     <select class="project-select-element" data-testid="project-select" on:change={selectEvent}>
         {#each visibleKeys as key}
-            <option value={key} selected={key === selectedProjectKey} data-testid="project-option">
+            <option
+                value={key}
+                selected={key === selectedProjectKey && !errorDisplayed}
+                data-testid="project-option"
+            >
                 {projects[key].title}
             </option>
         {/each}
