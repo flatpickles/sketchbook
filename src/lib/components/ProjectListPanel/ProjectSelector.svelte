@@ -2,17 +2,17 @@
     import type { ProjectConfig } from '$lib/base/ConfigModels/ProjectConfig';
     import { goto } from '$app/navigation';
     import ProjectPresentation, { SortOrder } from '$lib/base/ProjectLoading/ProjectPresentation';
-    import { errorStore, settingsStore } from '$lib/base/Util/AppState';
+    import { settingsStore } from '$lib/base/Util/AppState';
 
     export let projects: Record<string, ProjectConfig>;
     export let selectedProjectKey: string | undefined;
-    let errorDisplayed = $errorStore != null;
 
     $: visibleKeys = ProjectPresentation.presentedKeys(
         projects,
         $settingsStore.projectSortOrder,
         $settingsStore.showExperiments
     );
+    $: keyAvailable = selectedProjectKey && visibleKeys.includes(selectedProjectKey);
     $: previousProjectKey = (() => {
         const currentProjectIndex = visibleKeys.findIndex((key) => key === selectedProjectKey);
         if (currentProjectIndex > 0) {
@@ -47,15 +47,25 @@
     {/if}
 
     <select class="project-select-element" data-testid="project-select" on:change={selectEvent}>
-        {#each visibleKeys as key}
-            <option
-                value={key}
-                selected={key === selectedProjectKey && !errorDisplayed}
-                data-testid="project-option"
-            >
-                {projects[key].title}
+        {#if !keyAvailable}
+            <option value="" selected disabled data-testid="project-option">
+                {#if visibleKeys.length > 0}
+                    Select Project
+                {:else}
+                    No Projects
+                {/if}
             </option>
-        {/each}
+        {:else}
+            {#each visibleKeys as key}
+                <option
+                    value={key}
+                    selected={key === selectedProjectKey}
+                    data-testid="project-option"
+                >
+                    {projects[key].title}
+                </option>
+            {/each}
+        {/if}
     </select>
 
     {#if nextProjectKey}

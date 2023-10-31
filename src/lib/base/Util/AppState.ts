@@ -16,6 +16,3 @@ const stateDefaults = {
     panelShowButtonsVisible: true
 };
 export const stateStore = writable(stateDefaults);
-
-// The errorStore is used to capture and reference a currently displayed error
-export const errorStore = writable<App.Error | null>(null);

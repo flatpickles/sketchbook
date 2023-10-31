@@ -1,8 +1,5 @@
 <script lang="ts">
     import { page } from '$app/stores';
-    import { errorStore } from '$lib/base/Util/AppState';
-
-    $errorStore = $page.error;
 </script>
 
 <div class="error-wrapper">

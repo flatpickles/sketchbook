@@ -111,7 +111,7 @@ describe('ProjectSelector rendering', () => {
         expect(newRight.classList.contains('disabled')).toBe(true);
     });
 
-    it('shows nothing when no projects are available', async () => {
+    it('shows "No Projects" when no projects are available', async () => {
         const { component } = render(ProjectSelector, {
             projects: {},
             selectedProjectKey: 'project1'
@@ -122,9 +122,25 @@ describe('ProjectSelector rendering', () => {
         expect(projectSelect.value).toBe('');
 
         const projectOptions = screen.queryAllByTestId('project-option');
-        expect(projectOptions.length).toBe(0);
+        expect(projectOptions.length).toBe(1);
+        expect(projectOptions[0].textContent).toContain('No Projects');
 
         component.projects = testProjects;
         expect(projectSelect.value).toBe('project1');
+    });
+
+    it('shows "Select Project" when projects is not found', async () => {
+        render(ProjectSelector, {
+            projects: testProjects,
+            selectedProjectKey: 'project7'
+        });
+
+        const projectSelect = screen.getByTestId('project-select') as HTMLSelectElement;
+        expect(projectSelect).toBeDefined();
+        expect(projectSelect.value).toBe('');
+
+        const projectOptions = screen.queryAllByTestId('project-option');
+        expect(projectOptions.length).toBe(1);
+        expect(projectOptions[0].textContent).toContain('Select Project');
     });
 });
