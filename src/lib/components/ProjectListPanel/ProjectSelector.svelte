@@ -55,17 +55,12 @@
                     No Projects
                 {/if}
             </option>
-        {:else}
-            {#each visibleKeys as key}
-                <option
-                    value={key}
-                    selected={key === selectedProjectKey}
-                    data-testid="project-option"
-                >
-                    {projects[key].title}
-                </option>
-            {/each}
         {/if}
+        {#each visibleKeys as key}
+            <option value={key} selected={key === selectedProjectKey} data-testid="project-option">
+                {projects[key].title}
+            </option>
+        {/each}
     </select>
 
     {#if nextProjectKey}

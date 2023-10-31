@@ -140,7 +140,7 @@ describe('ProjectSelector rendering', () => {
         expect(projectSelect.value).toBe('');
 
         const projectOptions = screen.queryAllByTestId('project-option');
-        expect(projectOptions.length).toBe(1);
+        expect(projectOptions.length).toBe(4);
         expect(projectOptions[0].textContent).toContain('Select Project');
     });
 });
