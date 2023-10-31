@@ -6,15 +6,12 @@
 
     export let projects: Record<string, ProjectConfig>;
     export let selectedProjectKey: string | undefined;
-    export let sorting: SortOrder = SortOrder.ReverseChronological;
 
-    // todo: factor this out (duplicated in ProjectList)
     $: visibleKeys = ProjectPresentation.presentedKeys(
         projects,
-        sorting,
+        $settingsStore.projectSortOrder,
         $settingsStore.showExperiments
     );
-
     $: previousProjectKey = (() => {
         const currentProjectIndex = visibleKeys.findIndex((key) => key === selectedProjectKey);
         if (currentProjectIndex > 0) {
