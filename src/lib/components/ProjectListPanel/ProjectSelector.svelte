@@ -12,7 +12,6 @@
         $settingsStore.projectSortOrder,
         $settingsStore.showExperiments
     );
-    $: keyAvailable = selectedProjectKey && visibleKeys.includes(selectedProjectKey);
     $: previousProjectKey = (() => {
         const currentProjectIndex = visibleKeys.findIndex((key) => key === selectedProjectKey);
         if (currentProjectIndex > 0) {
@@ -47,9 +46,18 @@
     {/if}
 
     <select class="project-select-element" data-testid="project-select" on:change={selectEvent}>
-        {#if !keyAvailable}
-            <option value="" selected disabled data-testid="project-option">
-                {#if visibleKeys.length > 0}
+        {#if !(selectedProjectKey && visibleKeys.includes(selectedProjectKey))}
+            <option
+                value={selectedProjectKey && projects[selectedProjectKey] !== undefined
+                    ? selectedProjectKey
+                    : ''}
+                selected
+                disabled
+                data-testid="project-option"
+            >
+                {#if selectedProjectKey && projects[selectedProjectKey] !== undefined}
+                    {projects[selectedProjectKey].title}
+                {:else if visibleKeys.length > 0}
                     Select Project
                 {:else}
                     No Projects

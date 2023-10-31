@@ -2,6 +2,8 @@ import { render, screen, cleanup } from '@testing-library/svelte';
 import { describe, it, expect, afterEach } from 'vitest';
 import ProjectSelector from '$lib/components/ProjectListPanel/ProjectSelector.svelte';
 import { ProjectConfigDefaults } from '$lib/base/ConfigModels/ProjectConfig';
+import { settingsStore } from '$lib/base/Util/AppState';
+import { get } from 'svelte/store';
 
 const testProjects = {
     'project1': {
@@ -15,10 +17,20 @@ const testProjects = {
     'project3': {
         ...ProjectConfigDefaults,
         title: 'Project 3'
+    },
+    'experimentalProject': {
+        ...ProjectConfigDefaults,
+        title: 'Experimental Project',
+        experimental: true
     }
 };
 
 function renderTestProjects(selectedProjectKey = 'project1') {
+    settingsStore.set({
+        ...get(settingsStore),
+        showExperiments: false
+    });
+
     const { component } = render(ProjectSelector, {
         projects: testProjects,
         selectedProjectKey: selectedProjectKey
@@ -142,5 +154,20 @@ describe('ProjectSelector rendering', () => {
         const projectOptions = screen.queryAllByTestId('project-option');
         expect(projectOptions.length).toBe(4);
         expect(projectOptions[0].textContent).toContain('Select Project');
+    });
+
+    it('shows the project name even if it is experimental', async () => {
+        render(ProjectSelector, {
+            projects: testProjects,
+            selectedProjectKey: 'experimentalProject'
+        });
+
+        const projectSelect = screen.getByTestId('project-select') as HTMLSelectElement;
+        expect(projectSelect).toBeDefined();
+        expect(projectSelect.value).toBe('experimentalProject');
+
+        const projectOptions = screen.queryAllByTestId('project-option');
+        expect(projectOptions.length).toBe(4);
+        expect(projectOptions[0].textContent).toContain('Experimental Project');
     });
 });
