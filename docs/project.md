@@ -35,7 +35,7 @@ The `Project` class defines several lifecycle methods, which Sketchbook will cal
     -   `init` is called when a project is loaded, immediately after instantiation. Override this with any custom initialization behavior.
 -   **`update`**`({ frame, time, width, height, paramsChanged, container, canvas, context })`
     -   `update` is called continuously in a frame update loop. Override this with your custom drawing code.
-    -   `update` invocations receive a `detail` object containing the current `frame`, and the `time` offset in milliseconds, each starting from 0 when the project is loaded. `width` and `height` provide the drawing size of the canvas. `paramsChanged` is an array including the keys of any parameters that have changed since the last `update` call.
+    -   `update` invocations receive a `detail` object containing the current `frame`, and the `time` offset in seconds, each starting from 0 when the project is loaded. `width` and `height` provide the drawing size of the canvas. `paramsChanged` is an array including the keys of any parameters that have changed since the last `update` call.
     -   You do not need to call `requestAnimationFrame` directly for animated content; Sketchbook will call `update` repeatedly on each animation frame.
 -   **`paramsChanged`**`({ keys, container, canvas, context })`
     -   `paramsChanged` is called when a parameter value is changed via the Sketchbook app UI. Override this to implement any custom behavior that should be invoked when a parameter changes.

@@ -148,7 +148,7 @@ describe('CanvasViewer', () => {
         const { component } = render(ProjectViewer, {
             project: proj1
         });
-        await waitFor(() => expect(lastTime).toBeGreaterThanOrEqual(250));
+        await waitFor(() => expect(lastTime).toBeGreaterThanOrEqual(0.25));
 
         let nextTime = 0;
         let nextFrame = 0;

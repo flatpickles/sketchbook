@@ -115,7 +115,7 @@ export type DetailWebGL = UpdateDetail<CanvasType.WebGL>;
 /**
  * Detail object type used with the project's Update method. Contains the following:
  * - frame: the current frame number (0 at project load, incremented by 1 for each update call).
- * - time: milliseconds passed since project load (i.e. since init was called).
+ * - time: seconds passed since project load (i.e. since init was called).
  */
 export type UpdateDetail<T extends CanvasType = CanvasType.Unknown> = Detail<T> & {
     frame: number;

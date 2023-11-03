@@ -98,7 +98,7 @@
         project.update({
             ...currentDetail,
             frame: frameCount,
-            time: Date.now() - startTime,
+            time: (Date.now() - startTime) / 1000,
             width: currentDetail.canvas?.width,
             height: currentDetail.canvas?.height,
             paramsChanged: Array.from(paramsChanged)
