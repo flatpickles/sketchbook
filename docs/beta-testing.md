@@ -36,7 +36,6 @@ If it's helpful to guide your thinking about Sketchbook with a few questions, he
 
 -   Does Sketchbook facilitate a stable & comfortable workflow for you? Or is it getting in your way?
 -   Do you need any other parameter types or styles?
--   Would you rather `time` params provided by Sketchbook arrive in seconds or milliseconds? (My intuition is milliseconds, but REGL uses seconds...)
 -   Currently the `main` branch is a fully blank canvas, and all demo content is contained in the `demo` branch. How do you feel about that?
 
 **Project Subtypes**

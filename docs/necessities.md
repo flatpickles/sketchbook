@@ -30,7 +30,7 @@ export default class BundledImage extends Project {
 You can also import assets as strings by using a `?raw` suffix:
 
 ```ts
-import shaderString from './shader.glsl?raw';
+import corpusText from './corpus.txt?raw';
 ```
 
 ## Non-parameterized state
