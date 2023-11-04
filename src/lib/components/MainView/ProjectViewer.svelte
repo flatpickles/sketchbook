@@ -79,21 +79,6 @@
 
     /* Project & canvas management */
 
-    // Called to update the project, bumping the frame count and calculating the time
-    function updateProject() {
-        const currentDetail = getCurrentDetail();
-        project.update({
-            ...currentDetail,
-            frame: frameCount,
-            time: (Date.now() - startTime) / 1000,
-            width: currentDetail.canvas?.width,
-            height: currentDetail.canvas?.height,
-            paramsChanged: Array.from(paramsChanged)
-        });
-        frameCount += 1;
-        paramsChanged.clear();
-    }
-
     // Called to create a new canvas in the DOM, and update the current canvas & context references
     function createCanvas(canvasType: CanvasType) {
         // Unset current references
@@ -119,6 +104,21 @@
             // Add the canvas to the container
             containerElement.appendChild(currentCanvas);
         }
+    }
+
+    // Called to update the project, bumping the frame count and calculating the time
+    function updateProject() {
+        const currentDetail = getCurrentDetail();
+        project.update({
+            ...currentDetail,
+            frame: frameCount,
+            time: (Date.now() - startTime) / 1000,
+            width: currentDetail.canvas?.width,
+            height: currentDetail.canvas?.height,
+            paramsChanged: Array.from(paramsChanged)
+        });
+        frameCount += 1;
+        paramsChanged.clear();
     }
 
     // Called when a new project is loaded, or when the component is destroyed

@@ -20,7 +20,7 @@ The `Project` class defines several instance properties, which you will use in y
     -   If you add any new children to the container, they will be removed when loading a new project.
 -   **`canvasType`:** `CanvasType`
     -   `canvasType` defines what sort of drawing context you expect to use in your project. It is intended to be overridden in `Project` subclasses as needed, and _not_ set directly during runtime.
-    -   You can assign this to a member of the `CanvasType` enum, either `Context2D`, `WebGL`, or `None`. It's default is `CanvasType.Context2D`.
+    -   You can assign this to a member of the `CanvasType` enum, either `Context2D`, `WebGL`, `WebGL2`, or `None`. Its default is `CanvasType.Context2D`.
     -   Because a WebGL canvas cannot be reused with a 2D context (and vice versa), Sketchbook maintains two shared canvases, and will assign the correct one to your project based on its `canvasType`. The canvas's `context` type will vary accordingly.
 -   **`ignoreKeys`:** `string[]`
     -   As described in the [parameters documentation](params-presets.md), any instance variables defined on a `Project` subclass will automatically be available for adjustment in the Sketchbook UI, _unless_ they are listed among `ignoreKeys`.

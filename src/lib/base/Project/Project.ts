@@ -79,6 +79,7 @@ export default class Project {
 export enum CanvasType {
     Context2D = '2d',
     WebGL = 'webgl',
+    WebGL2 = 'webgl2',
     None = 'none',
     Unknown = 'unknown'
 }
@@ -86,8 +87,8 @@ export enum CanvasType {
 /**
  * Detail object type for the parameters to each Project method. More specific types exist below,
  * as intersections with this type. Each detail type is typed with a generic reference to the
- * project's CanvasType, and generic-free versions for each 2D & WebGL are provided for ease of use.
- * Detail contains the following:
+ * project's CanvasType, and generic-free versions for 2D, WebGL, and WebGL2 are provided for ease
+ * of use. Detail contains the following:
  * - container: the container div element.
  * - canvas: the canvas element that the project will draw to, if using a canvas.
  * - context: the canvas context that the project will draw to, if using a canvas.
@@ -105,12 +106,15 @@ export type Detail<T extends CanvasType = CanvasType.Unknown> = {
         ? CanvasRenderingContext2D
         : T extends CanvasType.WebGL
         ? WebGLRenderingContext
+        : T extends CanvasType.WebGL2
+        ? WebGL2RenderingContext
         : T extends CanvasType.Unknown
         ? RenderingContext | null | undefined
         : never;
 };
 export type Detail2D = UpdateDetail<CanvasType.Context2D>;
 export type DetailWebGL = UpdateDetail<CanvasType.WebGL>;
+export type DetailWebGL2 = UpdateDetail<CanvasType.WebGL2>;
 
 /**
  * Detail object type used with the project's Update method. Contains the following:
@@ -134,6 +138,7 @@ export type UpdateDetail<T extends CanvasType = CanvasType.Unknown> = Detail<T> 
 };
 export type UpdateDetail2D = UpdateDetail<CanvasType.Context2D>;
 export type UpdateDetailWebGL = UpdateDetail<CanvasType.WebGL>;
+export type UpdateDetailWebGL2 = UpdateDetail<CanvasType.WebGL2>;
 
 /**
  * Detail object type used with the project's paramsChanged method. Contains the following:
@@ -144,6 +149,7 @@ export type ParamsChangedDetail<T extends CanvasType = CanvasType.Unknown> = Det
 };
 export type ParamsChangedDetail2D = ParamsChangedDetail<CanvasType.Context2D>;
 export type ParamsChangedDetailWebGL = ParamsChangedDetail<CanvasType.WebGL>;
+export type ParamsChangedDetailWebGL2 = ParamsChangedDetail<CanvasType.WebGL2>;
 
 /**
  * Detail object type used with the project's resized method. Contains the following:
@@ -158,3 +164,4 @@ export type ResizedDetail<T extends CanvasType = CanvasType.Unknown> = Detail<T>
 };
 export type ResizedDetail2D = ResizedDetail<CanvasType.Context2D>;
 export type ResizedDetailWebGL = ResizedDetail<CanvasType.WebGL>;
+export type ResizedDetailWebGL2 = ResizedDetail<CanvasType.WebGL2>;
