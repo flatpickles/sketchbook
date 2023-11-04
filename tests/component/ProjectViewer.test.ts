@@ -97,6 +97,27 @@ describe('CanvasViewer', () => {
         await waitFor(() => expect(proj.update).toHaveBeenCalled());
     });
 
+    it('inits and updates a project when rendering (WebGL2 context)', async () => {
+        const proj = new Project();
+        proj.canvasType = CanvasType.WebGL2;
+        vi.spyOn(proj, 'init');
+        vi.spyOn(proj, 'update');
+
+        const { getByTestId } = render(ProjectViewer, {
+            project: proj
+        });
+        const canvas = getByTestId('project-canvas');
+        const container = getByTestId('container');
+
+        expect(proj.init).toHaveBeenCalledWith({
+            canvas: canvas,
+            container: container,
+            context: null // null during testing, alas
+        });
+
+        await waitFor(() => expect(proj.update).toHaveBeenCalled());
+    });
+
     it('inits and updates a project when rendering (Unknown context)', async () => {
         const proj = new Project();
         proj.canvasType = CanvasType.Unknown;
