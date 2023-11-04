@@ -11,9 +11,9 @@
     export let pixelRatioConfig: number | undefined = undefined;
 
     let previousProject: Project | undefined;
-    let canvasElement2D: HTMLCanvasElement;
-    let canvasElementWebGL: HTMLCanvasElement;
     let containerElement: HTMLDivElement;
+    let currentCanvas: HTMLCanvasElement | undefined;
+    let currentContext: RenderingContext | null | undefined;
 
     // Local state used when updating project
     let frameCount = 0;
@@ -34,19 +34,6 @@
     };
 
     function getCurrentDetail(): Detail<typeof project.canvasType> {
-        // Get the current canvas & context references, depending on canvas type
-        let currentCanvas = undefined;
-        let currentContext = undefined;
-        if (canvasElement2D && project.canvasType === CanvasType.Context2D) {
-            currentCanvas = canvasElement2D;
-            const context2D = canvasElement2D.getContext('2d');
-            if (context2D) currentContext = context2D;
-        } else if (canvasElementWebGL && project.canvasType === CanvasType.WebGL) {
-            currentCanvas = canvasElementWebGL;
-            const contextWebGL = canvasElementWebGL.getContext('webgl');
-            if (contextWebGL) currentContext = contextWebGL;
-        }
-
         // Return the detail object, for use with project lifecycle method calls
         return {
             container: containerElement,
@@ -74,7 +61,7 @@
     });
 
     // Destroy the project when destroying the component (e.g. hot update)
-    onDestroy(destroyProject);
+    onDestroy(destroyPreviousProject);
 
     // Initialize and update the project when loading & changing projects
     $: {
@@ -107,17 +94,40 @@
         paramsChanged.clear();
     }
 
-    // Called when a new project is loaded, or when the component is destroyed
-    function destroyProject() {
-        // Destroy the previousProject (not project, so it's safe to call this from projectLoaded)
-        previousProject?.destroy(getCurrentDetail());
-        previousProject = undefined;
+    // Called to create a new canvas in the DOM, and update the current canvas & context references
+    function createCanvas(canvasType: CanvasType) {
+        // Unset current references
+        currentCanvas = undefined;
+        currentContext = undefined;
 
-        // Destroy previous non-shared contents of the canvas container
-        for (const child of containerElement.children) {
-            if (child !== canvasElement2D && child !== canvasElementWebGL) {
-                containerElement.removeChild(child);
+        // Create a new canvas for the project when appropriate
+        if (canvasType !== CanvasType.None) {
+            currentCanvas = document.createElement('canvas');
+            currentCanvas.classList.add('project-canvas');
+            currentCanvas.setAttribute('data-testid', 'project-canvas');
+            if (canvasType !== CanvasType.Unknown) {
+                currentContext = currentCanvas.getContext(project.canvasType as string);
             }
+
+            // Set canvas element size, if configured
+            if (canvasSizeConfig) {
+                const pixelRatio = pixelRatioConfig ?? window.devicePixelRatio;
+                currentCanvas.style.width = `${canvasSizeConfig[0] / pixelRatio}px`;
+                currentCanvas.style.height = `${canvasSizeConfig[1] / pixelRatio}px`;
+            }
+
+            // Add the canvas to the container
+            containerElement.appendChild(currentCanvas);
+        }
+    }
+
+    // Called when a new project is loaded, or when the component is destroyed
+    function destroyPreviousProject() {
+        previousProject?.destroy(getCurrentDetail());
+
+        // Destroy all previous contents of the container
+        for (const child of containerElement.children) {
+            containerElement.removeChild(child);
         }
     }
 
@@ -127,18 +137,16 @@
             throw new Error("Cannot update a project when the container doesn't exist");
         }
 
-        // Destroy the previous project, and track the new project for future destruction
-        destroyProject();
+        // Destroy and reset the previous project
+        destroyPreviousProject();
         previousProject = newProject;
+
+        // Create a new canvas for the project (updates currentCanvas & currentContext)
+        createCanvas(newProject.canvasType);
 
         // Assign the canvas reference if the project uses a shared canvas
         newProject.container = containerElement;
-        newProject.canvas =
-            newProject.canvasType === CanvasType.Context2D
-                ? canvasElement2D
-                : newProject.canvasType === CanvasType.WebGL
-                ? canvasElementWebGL
-                : undefined;
+        newProject.canvas = currentCanvas;
 
         // Initialize the new project
         setCanvasSize(true);
@@ -157,40 +165,22 @@
     // Called to reset the canvas size to the container size, or to a configured size
     function setCanvasSize(initializingProject = false) {
         if (!containerElement) return;
-        const pixelRatio = pixelRatioConfig ?? window.devicePixelRatio;
 
-        // If initializing the project, reset the shared canvas styles (in case set by last project)
-        if (initializingProject) {
-            canvasElement2D.removeAttribute('style');
-            canvasElementWebGL.removeAttribute('style');
-
-            // If the project configures a canvas size, set it
-            if (canvasSizeConfig) {
-                canvasElement2D.style.width = `${canvasSizeConfig[0] / pixelRatio}px`;
-                canvasElement2D.style.height = `${canvasSizeConfig[1] / pixelRatio}px`;
-                canvasElementWebGL.style.width = `${canvasSizeConfig[0] / pixelRatio}px`;
-                canvasElementWebGL.style.height = `${canvasSizeConfig[1] / pixelRatio}px`;
-            }
+        // Update the internal canvas size to match the element size
+        if (currentCanvas) {
+            const pixelRatio = pixelRatioConfig ?? window.devicePixelRatio;
+            const initialCanvasSize: [number, number] = [
+                // these values are used if client sizes return 0, e.g. if display: none
+                canvasSizeConfig ? canvasSizeConfig[0] : pixelRatio * containerElement.clientWidth,
+                canvasSizeConfig ? canvasSizeConfig[1] : pixelRatio * containerElement.clientHeight
+            ];
+            currentCanvas.width = currentCanvas.clientWidth
+                ? pixelRatio * currentCanvas.clientWidth
+                : initialCanvasSize[0];
+            currentCanvas.height = currentCanvas.clientHeight
+                ? pixelRatio * currentCanvas.clientHeight
+                : initialCanvasSize[1];
         }
-
-        // Update the internal canvas sizes to match their style sizing
-        const initialCanvasSize: [number, number] = [
-            // these values are used if client sizes return 0, e.g. if display: none
-            canvasSizeConfig ? canvasSizeConfig[0] : pixelRatio * containerElement.clientWidth,
-            canvasSizeConfig ? canvasSizeConfig[1] : pixelRatio * containerElement.clientHeight
-        ];
-        canvasElement2D.width = canvasElement2D.clientWidth
-            ? pixelRatio * canvasElement2D.clientWidth
-            : initialCanvasSize[0];
-        canvasElement2D.height = canvasElement2D.clientHeight
-            ? pixelRatio * canvasElement2D.clientHeight
-            : initialCanvasSize[1];
-        canvasElementWebGL.width = canvasElementWebGL.clientWidth
-            ? pixelRatio * canvasElementWebGL.clientWidth
-            : initialCanvasSize[0];
-        canvasElementWebGL.height = canvasElementWebGL.clientHeight
-            ? pixelRatio * canvasElementWebGL.clientHeight
-            : initialCanvasSize[1];
 
         // Call the project's resize method (if not initializing)
         if (initializingProject) return;
@@ -198,38 +188,17 @@
             containerElement.clientWidth,
             containerElement.clientHeight
         ];
-        const canvasSize: [number, number] | undefined =
-            project.canvasType == CanvasType.Context2D
-                ? [canvasElement2D.width, canvasElement2D.height]
-                : project.canvasType == CanvasType.WebGL
-                ? [canvasElementWebGL.width, canvasElementWebGL.height]
-                : undefined;
+        const canvasSize: [number, number] | undefined = currentCanvas
+            ? [currentCanvas.width, currentCanvas.height]
+            : undefined;
         project.resized({ containerSize, canvasSize, ...getCurrentDetail() });
         if (staticMode) updateProject();
     }
 </script>
 
-<div id="container" data-testid="container" bind:this={containerElement}>
-    <canvas
-        class="shared-canvas"
-        data-testid="shared-canvas-2D"
-        bind:this={canvasElement2D}
-        class:hidden={project.canvasType !== CanvasType.Context2D}
-    />
-    <canvas
-        class="shared-canvas"
-        data-testid="shared-canvas-WebGL"
-        bind:this={canvasElementWebGL}
-        class:hidden={project.canvasType !== CanvasType.WebGL}
-    />
-</div>
+<div id="container" data-testid="container" bind:this={containerElement} />
 
 <style lang="scss">
-    :global(canvas) {
-        background-color: $canvas-bg-color;
-        box-shadow: $canvas-shadow;
-    }
-
     #container {
         width: 100%;
         height: 100%;
@@ -240,14 +209,13 @@
         align-items: center;
     }
 
-    .shared-canvas {
+    :global(.project-canvas) {
         width: 100%;
         height: 100%;
         max-width: 100%;
         max-height: 100%;
 
-        &.hidden {
-            display: none;
-        }
+        background-color: $canvas-bg-color;
+        box-shadow: $canvas-shadow;
     }
 </style>

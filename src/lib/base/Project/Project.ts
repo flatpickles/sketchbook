@@ -106,7 +106,7 @@ export type Detail<T extends CanvasType = CanvasType.Unknown> = {
         : T extends CanvasType.WebGL
         ? WebGLRenderingContext
         : T extends CanvasType.Unknown
-        ? CanvasRenderingContext2D | WebGLRenderingContext | undefined
+        ? RenderingContext | null | undefined
         : never;
 };
 export type Detail2D = UpdateDetail<CanvasType.Context2D>;

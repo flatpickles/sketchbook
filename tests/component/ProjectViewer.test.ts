@@ -52,10 +52,8 @@ describe('CanvasViewer', () => {
             project: new Project()
         });
 
-        const canvas2D = getByTestId('shared-canvas-2D');
-        expect(canvas2D).toBeDefined();
-        const canvas3D = getByTestId('shared-canvas-WebGL');
-        expect(canvas3D).toBeDefined();
+        const canvas = getByTestId('project-canvas');
+        expect(canvas).toBeDefined();
     });
 
     it('inits and updates a project when rendering (2D context)', async () => {
@@ -66,19 +64,16 @@ describe('CanvasViewer', () => {
         const { getByTestId } = render(ProjectViewer, {
             project: proj
         });
-        const canvas2D = getByTestId('shared-canvas-2D');
-        const canvas3D = getByTestId('shared-canvas-WebGL');
+        const canvas = getByTestId('project-canvas') as HTMLCanvasElement;
         const container = getByTestId('container');
 
         expect(proj.init).toHaveBeenCalledWith({
-            canvas: canvas2D,
+            canvas: canvas,
             container: container,
-            context: undefined // undefined during testing, alas
+            context: null // null during testing, alas
         });
 
         await waitFor(() => expect(proj.update).toHaveBeenCalled());
-        expect(canvas2D.classList.contains('hidden')).toBe(false);
-        expect(canvas3D.classList.contains('hidden')).toBe(true);
     });
 
     it('inits and updates a project when rendering (WebGL context)', async () => {
@@ -90,19 +85,53 @@ describe('CanvasViewer', () => {
         const { getByTestId } = render(ProjectViewer, {
             project: proj
         });
-        const canvas2D = getByTestId('shared-canvas-2D');
-        const canvas3D = getByTestId('shared-canvas-WebGL');
+        const canvas = getByTestId('project-canvas');
         const container = getByTestId('container');
 
         expect(proj.init).toHaveBeenCalledWith({
-            canvas: canvas3D,
+            canvas: canvas,
             container: container,
-            context: undefined // undefined during testing, alas
+            context: null // null during testing, alas
         });
 
         await waitFor(() => expect(proj.update).toHaveBeenCalled());
-        expect(canvas2D.classList.contains('hidden')).toBe(true);
-        expect(canvas3D.classList.contains('hidden')).toBe(false);
+    });
+
+    it('inits and updates a project when rendering (Unknown context)', async () => {
+        const proj = new Project();
+        proj.canvasType = CanvasType.Unknown;
+        vi.spyOn(proj, 'init');
+        vi.spyOn(proj, 'update');
+
+        const { component, getByTestId } = render(ProjectViewer, {
+            project: proj
+        });
+        const canvas = getByTestId('project-canvas');
+        const container = getByTestId('container');
+
+        // Context should be undefined (not null) for unknown canvas types
+        expect(proj.init).toHaveBeenCalledWith({
+            canvas: canvas,
+            container: container,
+            context: undefined
+        });
+
+        // Context should be undefined (not null) for unknown canvas types
+        expect(component.currentContext).toBeUndefined();
+
+        await waitFor(() => expect(proj.update).toHaveBeenCalled());
+    });
+
+    it('does not create a canvas for CanvasType none', async () => {
+        const proj = new Project();
+        proj.canvasType = CanvasType.None;
+
+        const { queryByTestId } = render(ProjectViewer, {
+            project: proj
+        });
+
+        const canvas = queryByTestId('project-canvas');
+        expect(canvas).toBeNull();
     });
 
     it('defines canvas and container objects for the project when rendering', async () => {
@@ -122,14 +151,14 @@ describe('CanvasViewer', () => {
         const { component, getByTestId } = render(ProjectViewer, {
             project: proj1
         });
-        const canvas2D = getByTestId('shared-canvas-2D');
+        const canvas = getByTestId('project-canvas');
         const container = getByTestId('container');
 
         component.project = new Project();
         expect(proj1.destroy).toHaveBeenCalledWith({
-            canvas: canvas2D,
+            canvas: canvas,
             container: container,
-            context: undefined // undefined during testing, alas
+            context: null // null during testing, alas
         });
     });
 
@@ -169,29 +198,24 @@ describe('CanvasViewer', () => {
         expect(lastTime).toBeGreaterThan(nextTime);
     });
 
-    it('sets canvas sizes appropriately when not configured', async () => {
+    it('sets canvas size appropriately when not configured', async () => {
         const proj = new Project();
 
         const { getByTestId } = render(ProjectViewer, {
             project: proj
         });
 
-        const canvas2D = getByTestId('shared-canvas-2D') as HTMLCanvasElement;
-        const canvas3D = getByTestId('shared-canvas-WebGL') as HTMLCanvasElement;
+        const canvas = getByTestId('project-canvas') as HTMLCanvasElement;
 
         // These aren't what we actually expect in production; need to write E2E tests to validate
         // proper canvas sizing behavior: https://github.com/flatpickles/sketchbook/issues/102
-        expect(canvas2D.style.width).toBe('');
-        expect(canvas2D.width).toBe(0);
-        expect(canvas2D.style.height).toBe('');
-        expect(canvas2D.height).toBe(0);
-        expect(canvas3D.style.width).toBe('');
-        expect(canvas3D.width).toBe(0);
-        expect(canvas3D.style.height).toBe('');
-        expect(canvas3D.height).toBe(0);
+        expect(canvas.style.width).toBe('');
+        expect(canvas.width).toBe(0);
+        expect(canvas.style.height).toBe('');
+        expect(canvas.height).toBe(0);
     });
 
-    it('sets the canvas sizes appropriately when configured', async () => {
+    it('sets the canvas size appropriately when configured', async () => {
         const proj = new Project();
 
         const { getByTestId } = render(ProjectViewer, {
@@ -200,16 +224,11 @@ describe('CanvasViewer', () => {
             pixelRatioConfig: 4
         });
 
-        const canvas2D = getByTestId('shared-canvas-2D') as HTMLCanvasElement;
-        const canvas3D = getByTestId('shared-canvas-WebGL') as HTMLCanvasElement;
-        expect(canvas2D.style.width).toBe('250px');
-        expect(canvas2D.width).toBe(1000);
-        expect(canvas2D.style.height).toBe('200px');
-        expect(canvas2D.height).toBe(800);
-        expect(canvas3D.style.width).toBe('250px');
-        expect(canvas3D.width).toBe(1000);
-        expect(canvas3D.style.height).toBe('200px');
-        expect(canvas3D.height).toBe(800);
+        const canvas = getByTestId('project-canvas') as HTMLCanvasElement;
+        expect(canvas.style.width).toBe('250px');
+        expect(canvas.width).toBe(1000);
+        expect(canvas.style.height).toBe('200px');
+        expect(canvas.height).toBe(800);
     });
 });
 
@@ -237,14 +256,14 @@ describe('Project update calls from CanvasViewer', () => {
         const { getByTestId } = render(ProjectViewer, {
             project: project
         });
-        const canvas2D = getByTestId('shared-canvas-2D');
+        const canvas = getByTestId('project-canvas');
         const container = getByTestId('container');
 
         await new Promise((r) => setTimeout(r, 250)); // wait 0.25 seconds
         expect(project.update).toHaveBeenCalledWith({
-            canvas: canvas2D,
+            canvas: canvas,
             container: container,
-            context: undefined, // undefined during testing, alas
+            context: null, // null during testing, alas
             frame: expect.anything(),
             time: expect.anything(),
             width: expect.anything(),
@@ -260,14 +279,14 @@ describe('Project update calls from CanvasViewer', () => {
         const { getByTestId } = render(ProjectViewer, {
             project: project
         });
-        const canvas3D = getByTestId('shared-canvas-WebGL');
+        const canvas = getByTestId('project-canvas');
         const container = getByTestId('container');
 
         await new Promise((r) => setTimeout(r, 250)); // wait 0.25 seconds
         expect(project.update).toHaveBeenCalledWith({
-            canvas: canvas3D,
+            canvas: canvas,
             container: container,
-            context: undefined, // undefined during testing, alas
+            context: null, // null during testing, alas
             frame: expect.anything(),
             time: expect.anything(),
             width: expect.anything(),
@@ -353,7 +372,7 @@ describe('Project resize calls from CanvasViewer', () => {
         const { getByTestId } = render(ProjectViewer, {
             project: project
         });
-        const canvas2D = getByTestId('shared-canvas-2D');
+        const canvas = getByTestId('project-canvas');
         const container = getByTestId('container');
         await waitFor(() => expect(project.resized).toHaveBeenCalledTimes(0));
         settingsStore.set({
@@ -362,9 +381,9 @@ describe('Project resize calls from CanvasViewer', () => {
 
         await new Promise((r) => setTimeout(r, 250)); // wait 0.25 seconds
         expect(project.resized).toHaveBeenCalledWith({
-            canvas: canvas2D,
+            canvas: canvas,
             container: container,
-            context: undefined, // undefined during testing, alas
+            context: null, // null during testing, alas
             canvasSize: [0, 0],
             containerSize: [0, 0]
         });
@@ -401,15 +420,15 @@ describe('ProjectViewer staticMode', () => {
             project: project,
             staticMode: true
         });
-        const canvas2D = getByTestId('shared-canvas-2D');
+        const canvas = getByTestId('project-canvas');
         const container = getByTestId('container');
 
         await new Promise((r) => setTimeout(r, 100)); // wait 0.1 seconds
         expect(project.update).toHaveBeenCalledTimes(1);
         expect(project.update).toHaveBeenCalledWith({
-            canvas: canvas2D,
+            canvas: canvas,
             container: container,
-            context: undefined, // undefined during testing, alas
+            context: null, // null during testing, alas
             frame: expect.anything(),
             time: expect.anything(),
             width: expect.anything(),
@@ -424,9 +443,9 @@ describe('ProjectViewer staticMode', () => {
         await new Promise((r) => setTimeout(r, 100)); // wait 0.1 seconds
         expect(project2.update).toHaveBeenCalledTimes(1);
         expect(project2.update).toHaveBeenCalledWith({
-            canvas: canvas2D,
+            canvas: canvas,
             container: container,
-            context: undefined, // undefined during testing, alas
+            context: null, // null during testing, alas
             frame: expect.anything(),
             time: expect.anything(),
             width: expect.anything(),
@@ -443,15 +462,15 @@ describe('ProjectViewer staticMode', () => {
             project: project,
             staticMode: true
         });
-        const canvas2D = getByTestId('shared-canvas-2D');
+        const canvas = getByTestId('project-canvas');
         const container = getByTestId('container');
 
         await new Promise((r) => setTimeout(r, 100)); // wait 0.1 seconds
         expect(project.update).toHaveBeenCalledTimes(1);
         expect(project.update).toHaveBeenCalledWith({
-            canvas: canvas2D,
+            canvas: canvas,
             container: container,
-            context: undefined, // undefined during testing, alas
+            context: null, // null during testing, alas
             frame: expect.anything(),
             time: expect.anything(),
             width: expect.anything(),
@@ -469,9 +488,9 @@ describe('ProjectViewer staticMode', () => {
         );
         expect(project.update).toHaveBeenCalledTimes(2);
         expect(project.update).toHaveBeenCalledWith({
-            canvas: canvas2D,
+            canvas: canvas,
             container: container,
-            context: undefined, // undefined during testing, alas
+            context: null, // null during testing, alas
             frame: expect.anything(),
             time: expect.anything(),
             width: expect.anything(),
@@ -491,9 +510,9 @@ describe('ProjectViewer staticMode', () => {
         );
         expect(project.update).toHaveBeenCalledTimes(3);
         expect(project.update).toHaveBeenCalledWith({
-            canvas: canvas2D,
+            canvas: canvas,
             container: container,
-            context: undefined, // undefined during testing, alas
+            context: null, // null during testing, alas
             frame: expect.anything(),
             time: expect.anything(),
             width: expect.anything(),
@@ -527,7 +546,7 @@ describe('Project paramsChanged calls from CanvasViewer', () => {
         const { getByTestId } = render(ProjectViewer, {
             project: project
         });
-        const canvas2D = getByTestId('shared-canvas-2D');
+        const canvas = getByTestId('project-canvas');
         const container = getByTestId('container');
 
         await new Promise((r) => setTimeout(r, 250)); // wait 0.25 seconds
@@ -541,9 +560,9 @@ describe('Project paramsChanged calls from CanvasViewer', () => {
         );
 
         expect(project.paramsChanged).toHaveBeenCalledWith({
-            canvas: canvas2D,
+            canvas: canvas,
             container: container,
-            context: undefined, // undefined during testing, alas
+            context: null, // null during testing, alas
             keys: expect.arrayContaining(['test'])
         });
     });
@@ -559,14 +578,12 @@ describe('CanvasViewer w/ p5', () => {
         const proj = new P5Project();
 
         expect(mockedP5).toHaveBeenCalledTimes(0);
-        const { getByTestId } = render(ProjectViewer, {
+        const { queryByTestId } = render(ProjectViewer, {
             project: proj
         });
 
-        const canvas2D = getByTestId('shared-canvas-2D');
-        const canvas3D = getByTestId('shared-canvas-WebGL');
-        expect(canvas2D.classList.contains('hidden')).toBe(true);
-        expect(canvas3D.classList.contains('hidden')).toBe(true);
+        const canvas = queryByTestId('projectCanvas');
+        expect(canvas).toBeNull();
         expect(proj.canvas).toBeUndefined();
         expect(mockedP5).toHaveBeenCalledTimes(1);
     });
