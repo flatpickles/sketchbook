@@ -1,6 +1,6 @@
 # Creating Project Files
 
-Unlike many other tools that you might `npm install` and then use, Sketchbook is a _place_ where you build your projects, while leveraging useful features in the surrounding environment. Sketchbook starts as a blank canvas, but as you create your projects, you'll build up a polished library of work within a coherent interface. Refer back to the [Quick Start Guide](quick-start.md) for a workflow walk-through.
+Unlike many other tools that you might `npm install` and then use, Sketchbook is a _place_ where you build your projects, while leveraging useful features in the surrounding environment. As you create your projects, you'll build up a polished library of work within a coherent interface. Refer back to the [Quick Start Guide](quick-start.md) for a workflow walk-through.
 
 When you fork or clone the base [Sketchbook repo](https://github.com/flatpickles/sketchbook), you pull down the entirety of Sketchbook's app code to build and run locally, but you won't be using this code directly in your Sketchbook project work. The projects you build within Sketchbook are fully contained in the `src/art` directory, and you won't need to venture outside of this directory unless you want to make your own changes to Sketchbook's app code.
 

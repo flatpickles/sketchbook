@@ -1,0 +1,11 @@
+{
+    "title": "About Presets",
+    "values": {
+        "text": "Presets are curated collections of values",
+        "textSize": 70,
+        "font": "Tahoma",
+        "textMotion": [-0.1, 0.3],
+        "backgroundColor": "#e84a4a",
+        "darkOutline": true
+    }
+}

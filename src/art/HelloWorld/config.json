@@ -1,0 +1,29 @@
+{
+    "title": "Hello World",
+    "date": "2023-11-03",
+    "description": "Welcome to Sketchbook! This is a sample project to help you get started. Check out the <a href='https://skbk.cc/#/quick-start'>Quick Start</a> guide to keep learning.",
+    "experimental": true,
+    "params": {
+        "font": {
+            "section": "Typography",
+            "options": [
+                "Arial",
+                "Verdana",
+                "Tahoma",
+                "Times New Roman",
+                "Georgia",
+                "Garamond",
+                "Courier New"
+            ]
+        },
+        "textSize": {
+            "section": "Typography"
+        },
+        "backgroundColor": {
+            "section": "Colors"
+        },
+        "darkOutline": {
+            "section": "Colors"
+        }
+    }
+}

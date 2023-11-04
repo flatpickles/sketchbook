@@ -16,9 +16,9 @@ _Forks on GitHub are public repositories. If you'd like to create a private Sket
 
 Before proceeding, navigate into your local Sketchbook project: `cd sketchbook`
 
-All Sketchbook projects will be contained within the `src/art` subdirectory, so you can just open that directly, e.g. `code src/art` if you use the VSCode CLI.
+All Sketchbook projects are contained within the `src/art` subdirectory. `src/art` in the `main` branch of Sketchbook includes a sample "Hello World" project, which you can look through to get a feel for how Sketchbook projects work, and edit or delete as you see fit. If you're interested in perusing a larger collection of example projects, see [`src/art`](https://github.com/flatpickles/sketchbook/tree/demo/src/art) in the `demo` branch!
 
-`src/art` in the `main` branch of Sketchbook includes only a simple readme file, which you can delete or edit as you see fit. If you're interested in a collection of example projects, see [`src/art`](https://github.com/flatpickles/sketchbook/tree/demo/src/art) in the `demo` branch!
+Going forward in this guide, we'll create a new "Quick Start" project from scratch.
 
 _Sketchbook's global configuration files are located in `src/config`, not in `src/art`. For now, let's just focus on creating our first project!_
 
@@ -26,7 +26,7 @@ _Sketchbook's global configuration files are located in `src/config`, not in `sr
 
 Before running your dev server, you'll need to install all of Sketchbook's dependencies: `npm install`
 
-You can now run the dev server with `npm run dev`. Once Sketchbook is running on your local machine (perhaps at [http://localhost:5173](http://localhost:5173)), the app will hot-reload any time you save a file. Make sure you have Sketchbook open in your browser before you proceed.
+You can now run the dev server with `npm run dev`. Once Sketchbook is running on your local machine (perhaps at [http://localhost:5173](http://localhost:5173)), the app will hot-reload any time you save a file. Make sure you have Sketchbook open in your browser before you proceed; you should see the "Hello World" project mentioned above.
 
 _Sketchbook is a SvelteKit project. You don't need to know anything beyond the basics noted here, but if you're interested in app implementation details, check out the [development notes](dev-notes.md)._
 
@@ -63,7 +63,7 @@ export default class QuickStart extends Project {
 
 If you save and check your browser, your "QuickStart" project now features a black rectangle in the middle of the canvas.
 
-_Sketchbook automatically makes an HTML canvas object available to `Project` instances via the `canvas` property. `update` is a lifecycle method that's automatically called on each animation frame. If you want to avoid null-checking `this.canvas` and its context (as above), you can use the `canvas` and `context` references in the props object passed to `update`. [todo: example, here or elsewhere]_
+_Sketchbook automatically makes an HTML canvas object available to `Project` instances via the `canvas` property. `update` is a lifecycle method that's automatically called on each animation frame. If you want to avoid null-checking `this.canvas` and its context (as above), you can use the `canvas` and `context` references in the props object passed to `update`, as demonstrated in the "Hello World" project._
 
 ### Create Your First Parameter
 

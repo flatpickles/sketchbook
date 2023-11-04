@@ -1,0 +1,11 @@
+{
+    "title": "Emojis",
+    "values": {
+        "text": "🖼️ 🤘 🖼️",
+        "textSize": 300,
+        "font": "Verdana",
+        "textMotion": [0.1, 0.8],
+        "backgroundColor": "#000000",
+        "darkOutline": false
+    }
+}
