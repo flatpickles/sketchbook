@@ -63,7 +63,7 @@ export default class QuickStart extends Project {
 
 If you save and check your browser, your "QuickStart" project now features a black rectangle in the middle of the canvas.
 
-_Sketchbook automatically makes an HTML canvas object available to `Project` instances via the `canvas` property. `update` is a lifecycle method that's automatically called on each animation frame. If you want to avoid null-checking `this.canvas` and its context (as above), you can use the `canvas` and `context` references in the props object passed to `update`, as demonstrated in the "Hello World" project._
+_Sketchbook automatically makes an HTML canvas object available to `Project` instances via the `canvas` property. `update` is a lifecycle method that's automatically called on each animation frame. If you want to avoid null-checking `this.canvas` and its context (as above), you can use the `canvas` and `context` references in the props object passed to `update`, as demonstrated in the ["Hello World" project](https://github.com/flatpickles/sketchbook/blob/main/src/art/HelloWorld/HelloWorld.ts)._
 
 ### Create Your First Parameter
 
