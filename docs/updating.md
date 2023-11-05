@@ -8,7 +8,7 @@ Sketchbook's development adheres to [Semantic Versioning ](https://semver.org/),
 
 Each major and minor release will be accompanied by [release notes](https://github.com/flatpickles/sketchbook/releases). The current Sketchbook version number is noted in [package.json](https://github.com/flatpickles/sketchbook/blob/main/package.json), and you can compare this with the same file in your local Sketchbook.
 
-_**Note:** As of this writing, Sketchbook is still in a 0.x version, which means any part of the project may be subject to breaking changes. Keep an eye out for a 1.0 release, coming soon!_
+_**Note:** As of this writing, Sketchbook is still in a 0.x beta version, which means any part of the project may be subject to breaking changes. With that said, backwards compatibility is a high priority for ongoing work. Breaking changes will be infrequent, and thoroughly documented in the release notes._
 
 ## Syncing Your Fork
 

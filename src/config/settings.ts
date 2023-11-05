@@ -3,7 +3,8 @@ import { PanelState } from '$lib/base/Util/PanelState';
 
 /**
  * This file contains configuration options for the Sketchbook app. You can change these values to
- * customize the app's behavior. See the docs for more info about each of these options.
+ * customize the app's behavior, and include any as keys in `userSettingsLabels` to make them
+ * configurable in the user settings panel.
  */
 
 // The imported `dev` boolean will be true locally, but false in production. Use this for any
@@ -41,8 +42,7 @@ const alwaysShowPresets = false;
 const enablePresetExport = dev;
 
 // Anything listed here will appear in the user settings panel with the given label. Values changed
-// in the settings panel will be persisted in local storage, and the values set above will be used
-// as defaults.
+// in the settings panel will be persisted in cookies, and values above will be used as defaults.
 export const userSettingsLabels: Record<string, string> = {
     projectSortOrder: 'Project Sorting',
     showExperiments: 'Show Experiments',

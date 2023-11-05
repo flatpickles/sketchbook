@@ -50,7 +50,7 @@ The `Project` class defines several lifecycle methods, which Sketchbook will cal
     -   `destroy` is called when the project is unloaded, i.e. when another project is about to be loaded. Override this with any custom cleanup behavior.
     -   This is the only `Project` method with a default implementation: by default, the canvas is cleared before loading the next project. You can override this if you wish.
 
-Each lifecycle method invocation discussed above also has `container`, `canvas`, and `context` props passed within its `detail` object. These provide the same references available via `this.container`, `this.canvas`, and `this.canvas.getContext()`, with a more convenient interface. This is particularly helpful if you're using TypeScript: each prop will be defined and properly typed according to the project's `canvasType`.
+In addition to method-specific props, each lifecycle method discussed above will have `container`, `canvas`, and `context` props passed within its `detail` object. These provide the same references available via `this.container`, `this.canvas`, and `this.canvas.getContext()`, with a more convenient interface. This is particularly helpful if you're using TypeScript: each prop will be defined and properly typed according to the project's `canvasType`.
 
 See the `Project` [class file](https://github.com/flatpickles/sketchbook/blob/main/src/lib/base/Project/Project.ts) to find the utility types used for these detail objects. A TypeScript project implementation that destructures and uses a detail object might look like this:
 
@@ -76,4 +76,4 @@ As you use Sketchbook, you may benefit from creating your own intermediate `Proj
 -   Integrating frameworks that you want to be able to use easily in the Sketchbook context.
 -   Creating "templates" with common [parameters](params-presets.md) for your custom project type.
 
-See [Project Subtypes](project-subtypes.md) for further discussion of the `Project` subclasses included with Sketchbook. If you build any of your own that would be useful for other Sketchbook users, consider [contributing](contributing.md) them back to the main repo!
+See [Project Subtypes](project-subtypes.md) for further discussion of the `Project` subclasses included with Sketchbook. If you build any of your own that would be useful for other Sketchbook users, consider making a PR to contribute them back to the main repo!

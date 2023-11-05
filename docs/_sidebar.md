@@ -1,8 +1,8 @@
 -   Start Here
 
     -   [Sketchbook Overview](/)
-    -   [Notes for Beta Users](beta-testing.md)
     -   [Quick Start Guide](quick-start.md)
+    -   [Notes for Beta Users](beta-testing.md)
 
 -   Using Sketchbook
 
@@ -21,9 +21,4 @@
     -   [App Settings](settings.md)
     -   [Content & Copy](content.md)
     -   [Theme & Styling](theme.md)
-
--   Further Considerations
-    -   [Principles](principles.md)
     -   [License Notes](license-notes.md)
-    -   [Development Notes](dev-notes.md)
-    -   [Contributing](contributing.md)

@@ -28,7 +28,7 @@ Before running your dev server, you'll need to install all of Sketchbook's depen
 
 You can now run the dev server with `npm run dev`. Once Sketchbook is running on your local machine (perhaps at [http://localhost:5173](http://localhost:5173)), the app will hot-reload any time you save a file. Make sure you have Sketchbook open in your browser before you proceed; you should see the "Hello World" project mentioned above.
 
-_Sketchbook is a SvelteKit project. You don't need to know anything beyond the basics noted here, but if you're interested in app implementation details, check out the [development notes](dev-notes.md)._
+_Sketchbook is a [SvelteKit](https://kit.svelte.dev/) project, but unless you're modifying core app behavior or build settings, you won't need to know anything beyond the basics noted above._
 
 ### Create Your First Project
 
@@ -118,7 +118,7 @@ _Note that `rectColor` is displayed with a color picker input – Sketchbook has
 
 Sketchbook makes it easy to create "presets", curated sets of parameter values that can be applied all at once. When you create one or more presets for a project, they'll appear in a selector UI above your parameter inputs.
 
-Presets are derived from JSON files in a `presets` directory, within the main project directory. To try creating one for your Quick Start project, make a `presets` directory, and add this code within a new `src/art/QuickStart/presets/DemoPreset.json` file:
+Each preset is derived its own JSON file a `presets` directory, within the main project directory. To try creating one for your Quick Start project, make a `presets` directory, and add this code within a new `src/art/QuickStart/presets/DemoPreset.json` file:
 
 ```json
 {
@@ -133,6 +133,8 @@ Presets are derived from JSON files in a `presets` directory, within the main pr
 If you check back in your browser, you'll now see the preset selector above the params we defined earlier, and you can flip from the project's default values to "Demo Preset" by using the right arrow control, or the selector dropdown.
 
 <img src="media/demo-preset.png" style="width: 300px" />
+
+If you change parameter values, you'll notice a "Reset" option in the preset dropdown. You'll also see an "Export" option, which will let you save your updated values as a new JSON file that you can then drop into your project's `presets` directory.
 
 _See the [presets documentation](params-presets.md?id=presets-in-sketchbook) to learn more about working with presets in Sketchbook._
 
