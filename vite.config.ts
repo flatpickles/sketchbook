@@ -64,5 +64,11 @@ export default defineConfig({
     },
     optimizeDeps: {
         include: bundleDeps
+    },
+
+    // This is an attempted workaround for a bug in Vite that causes import errors for cached
+    // chunks. See https://github.com/vitejs/vite/issues/11804. This may need to be revised.
+    build: {
+        rollupOptions: { output: { entryFileNames: '[name].js', chunkFileNames: '[name].js' } }
     }
 });
