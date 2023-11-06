@@ -1,0 +1,11 @@
+{
+    "title": "Import Example",
+    "date": "2023-11-06",
+    "description": "Example of importing a bundled asset (the DVD image), then optionally replacing it with a local image asset.",
+    "params": {
+        "randomizeDirection": {
+            "fullWidthInput": true,
+            "buttonText": "Randomize Direction"
+        }
+    }
+}
