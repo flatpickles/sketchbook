@@ -29,6 +29,7 @@ $overlay-panel-edge-inset: 0.5rem;
 $overlay-panel-bg-opacity: 0.75;
 $overlay-panel-bg-filter: blur(1rem);
 $overlay-panel-min-height: 0%;
+$overlay-panel-max-height: 100%;
 $overlay-panel-border-enabled: true;
 
 // Panel buttons
@@ -55,6 +56,7 @@ $panel-show-button-bg-opacity-hover: 0.7;
 
 // Group list
 $group-colors: $panel-highlight-color;
+$group-text-size: $small-text-size;
 $group-spacing: 0.25rem;
 $group-padding: 0rem 0.5rem 0rem 0.25rem;
 $group-border-radius: 0rem;
@@ -90,6 +92,125 @@ $project-unselected-bg-opacity-even: 0.0;
 $project-experiment-icon-opacity: 0.5;
 $project-list-scroll-fade: true;
 
+// Preset selector control
+$preset-selector-text-size: $small-text-size;
+$preset-selector-padding: 0.25rem;
+$preset-selector-border-radius: 1rem;
+$preset-selector-outer-border-size: 1px;
+$preset-selector-outer-border-opacity: 0.3;@use "sass:color";
+
+// Typography
+$font-family: monospace;
+$title-text-size: 1.4rem;
+$large-text-size: 0.9rem;
+$medium-text-size: 0.85rem;
+$small-text-size: 0.75rem;
+$xs-text-size: 0.6rem;
+$subtitle-text-opacity: 0.6;
+$footer-text-opacity: 0.4;
+
+// Panels
+$panel-bg-color: #ebf6ff;
+$panel-fg-color: #000000;
+$panel-highlight-color: #04245a;
+$panel-width: 16rem;
+$panel-border-opacity: 0.8;
+$panel-border-radius: 0rem;
+$panel-border-size: 1px;
+$panel-animation-quick: 0.3s;
+$panel-animation-slow: 0.7s;
+$panel-content-inset: 0.5rem;
+$panel-section-spacing: 0.75rem;
+$panel-header-spacing: 0.5rem;
+
+// Overlaid panels (enabled/disabled in settings.ts)
+$overlay-panel-edge-inset: 0.5rem;
+$overlay-panel-bg-opacity: 0.75;
+$overlay-panel-bg-filter: blur(1rem);
+$overlay-panel-min-height: 0%;
+$overlay-panel-max-height: 100%;
+$overlay-panel-border-enabled: true;
+
+// Panel buttons
+$panel-button-inset: 0rem;
+$panel-button-size: 1.25rem;
+$panel-button-icon-size: $small-text-size;
+$panel-button-border-radius: 0rem;
+$panel-button-border-size: $panel-border-size;
+$panel-button-border-opacity: $panel-border-opacity;
+$panel-button-fg-opacity: 1.0;
+$panel-button-bg-opacity: 0.0;
+$panel-button-fg-opacity-hover: 1.0;
+$panel-button-bg-opacity-hover: 0.1;
+
+// Panel show buttons
+$panel-show-button-inset: 0.25rem;
+$panel-show-button-size: 1.5rem;
+$panel-show-button-icon-size: $small-text-size;
+$panel-show-button-border-radius: 0.25rem;
+$panel-show-button-fg-opacity: 0.5;
+$panel-show-button-fg-opacity-hover: 0.7;
+$panel-show-button-bg-opacity: 0.5;
+$panel-show-button-bg-opacity-hover: 0.7;
+
+// Group list
+$group-colors: $panel-highlight-color;
+$group-text-size: $small-text-size;
+$group-spacing: 0.25rem;
+$group-padding: 0rem 0.5rem 0rem 0.25rem;
+$group-border-radius: 0rem;
+$group-border-size: 0;
+$group-border-opacity: 0;
+$group-selected-bg-opacity: 0.0;
+$group-selected-text-opacity: 1.0;
+$group-selected-text-weight: bold;
+$group-selected-shadow-size: 0rem;
+$group-selected-shadow-opacity: 0.4;
+$group-unselected-bg-opacity: 0.0;
+$group-unselected-text-opacity: 0.5;
+$group-unselected-text-weight: bold;
+$group-list-scroll-fade: true;
+
+// Project list
+$project-spacing: 0rem;
+$project-padding: 0.5rem;
+$project-full-width: true;
+$project-border-radius: 0.5rem;
+$project-border-size: $panel-border-size;
+$project-border-opacity: $panel-border-opacity;
+$project-selected-text-opacity: 1.0;
+$project-selected-text-weight: bold;
+$project-selected-bg-opacity: 0.2;
+$project-selected-shadow-size: 0rem;
+$project-selected-shadow-opacity: 0.4;
+$project-unselected-text-opacity: 1.0;
+$project-unselected-text-weight: normal;
+$project-unselected-bg-opacity-hover: 0.05;
+$project-unselected-bg-opacity-odd: 0.025;
+$project-unselected-bg-opacity-even: 0.0;
+$project-experiment-icon-opacity: 0.5;
+$project-list-scroll-fade: true;
+
+// Preset selector control
+$preset-selector-text-size: $small-text-size;
+$preset-selector-padding: 0.25rem;
+$preset-selector-border-radius: 1rem;
+$preset-selector-outer-border-size: 1px;
+$preset-selector-outer-border-opacity: 1.0;
+$preset-selector-inner-border-size: 1px;
+$preset-selector-inner-border-opacity: 1.0;
+$preset-selector-shadow-size: 0;
+$preset-selector-shadow-opacity: 0;
+$preset-selector-name-fg-opacity: 1.0;
+$preset-selector-name-bg-opacity: 0.05;
+$preset-selector-button-width: 1.5rem;
+$preset-selector-button-fg-opacity: 1.0;
+$preset-selector-button-bg-opacity: 0.05;
+$preset-selector-button-fg-opacity-hover: 1.0;
+$preset-selector-button-bg-opacity-hover: 0.1;
+$preset-selector-button-fg-opacity-disabled: 0.3;
+$preset-selector-button-bg-opacity-disabled: 0.05;
+
 // Parameter list
 $param-spacing: 0rem;
 $param-padding: 0.5rem;
@@ -101,7 +222,95 @@ $param-bg-opacity-even: 0.0;
 $param-section-header-opacity: 1.0;
 $param-list-scroll-fade: true;
 
+// Mobile Mode™
+$mobile-mode-breakpoint: 768px;
+
+// Mobile Mode project selector control
+$project-selector-text-size: $title-text-size;
+$project-selector-padding: 0.5rem;
+$project-selector-outer-border-size: 1px;
+$project-selector-outer-border-opacity: 0.3;
+$project-selector-inner-border-size: 1px;
+$project-selector-inner-border-opacity: 0.3;
+$project-selector-name-fg-opacity: 1.0;
+$project-selector-name-bg-opacity: 0.0;
+$project-selector-button-width: 2rem;
+$project-selector-button-fg-opacity: 0.6;
+$project-selector-button-bg-opacity: 0.0;
+$project-selector-button-fg-opacity-disabled: 0.2;
+$project-selector-button-bg-opacity-disabled: 0.0;
+
+// Mobile Mode preset selector control (desktop mode overrides)
+$preset-selector-text-size-mobile: $large-text-size;
+$preset-selector-name-fg-opacity-mobile: 1.0;
+$preset-selector-name-bg-opacity-mobile: 0.0;
+$preset-selector-button-fg-opacity-mobile: 0.6;
+$preset-selector-button-bg-opacity-mobile: 0.0;
+$preset-selector-button-fg-opacity-disabled-mobile: 0.2;
+$preset-selector-button-bg-opacity-disabled-mobile: 0.0;
+
 // Derivative styles are defined in these files...
+@import '$lib/styles/mobile-mode.scss';
+@import '$lib/styles/detail-panel.scss';
+@import '$lib/styles/general.scss';
+@import '$lib/styles/list-panel.scss';
+@import '$lib/styles/panel-base.scss';
+@import '$lib/styles/params.scss';
+
+$preset-selector-inner-border-size: 1px;
+$preset-selector-inner-border-opacity: 0.3;
+$preset-selector-shadow-size: 0;
+$preset-selector-shadow-opacity: 0;
+$preset-selector-name-fg-opacity: 1.0;
+$preset-selector-name-bg-opacity: 0.05;
+$preset-selector-button-width: 1.5rem;
+$preset-selector-button-fg-opacity: 0.6;
+$preset-selector-button-bg-opacity: 0.05;
+$preset-selector-button-fg-opacity-hover: 0.65;
+$preset-selector-button-bg-opacity-hover: 0.1;
+$preset-selector-button-fg-opacity-disabled: 0.3;
+$preset-selector-button-bg-opacity-disabled: 0.05;
+
+// Parameter list
+$param-spacing: 0rem;
+$param-padding: 0.5rem;
+$param-inner-spacing: 1rem;
+$param-label-max-width: 50%;
+$param-border-radius: 0rem;
+$param-bg-opacity-odd: 0.0;
+$param-bg-opacity-even: 0.0;
+$param-section-header-opacity: 1.0;
+$param-list-scroll-fade: true;
+
+// Mobile Mode™
+$mobile-mode-breakpoint: 768px;
+
+// Mobile Mode project selector control
+$project-selector-text-size: $title-text-size;
+$project-selector-padding: 0.5rem;
+$project-selector-outer-border-size: 1px;
+$project-selector-outer-border-opacity: 0.3;
+$project-selector-inner-border-size: 1px;
+$project-selector-inner-border-opacity: 0.3;
+$project-selector-name-fg-opacity: 1.0;
+$project-selector-name-bg-opacity: 0.0;
+$project-selector-button-width: 2rem;
+$project-selector-button-fg-opacity: 0.6;
+$project-selector-button-bg-opacity: 0.0;
+$project-selector-button-fg-opacity-disabled: 0.2;
+$project-selector-button-bg-opacity-disabled: 0.0;
+
+// Mobile Mode preset selector control (desktop mode overrides)
+$preset-selector-text-size-mobile: $large-text-size;
+$preset-selector-name-fg-opacity-mobile: 1.0;
+$preset-selector-name-bg-opacity-mobile: 0.0;
+$preset-selector-button-fg-opacity-mobile: 0.6;
+$preset-selector-button-bg-opacity-mobile: 0.0;
+$preset-selector-button-fg-opacity-disabled-mobile: 0.2;
+$preset-selector-button-bg-opacity-disabled-mobile: 0.0;
+
+// Derivative styles are defined in these files...
+@import '$lib/styles/mobile-mode.scss';
 @import '$lib/styles/detail-panel.scss';
 @import '$lib/styles/general.scss';
 @import '$lib/styles/list-panel.scss';
