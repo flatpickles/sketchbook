@@ -24,8 +24,8 @@ const defaultPresetTitle = 'Default Values';
 
 // Content used for OpenGraph tags
 const openGraphContent = {
-    siteName: title,
-    title: title,
+    siteName: 'Sketchbook - Demo',
+    title: 'Sketchbook - Demo',
     description: description,
     image: 'index.png',
     url: 'https://demo.skbk.cc',
