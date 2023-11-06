@@ -37,7 +37,7 @@ const panelMouseTriggerWidth = 50;
 const hidePanelButtonsTimeout: number | undefined = 2000;
 
 // Project and group label sorting
-const projectSortOrder = SortOrder.ReverseChronological;
+const projectSortOrder = SortOrder.Alphabetical;
 const groupSortOrder = SortOrder.Alphabetical;
 
 // Always show presets UI; otherwise, the UI will only be visible when a project has presets.
