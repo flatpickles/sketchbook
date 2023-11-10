@@ -27,15 +27,33 @@ function viteGlslify() {
                     throw new Error(`Unexpected shader file format for ${id}: ${code}`);
                 }
                 // Translate escaped characters for glslify
-                const glslifiedCode = glslify.compile(
-                    code.replace(/\\n/g, '\n').replace(/\\t/g, '\t')
-                );
+                const glslifiedCode = glslify.compile(unescapeString(code));
                 // Return the compiled code as a default export
                 return `export default ${JSON.stringify(glslifiedCode)}`;
             }
             return code;
         }
     };
+}
+
+// Apply escape characters within a string
+function unescapeString(str: string): string {
+    return str
+        .replace(/\\n/g, '\n')
+        .replace(/\\t/g, '\t')
+        .replace(/\\r/g, '\r')
+        .replace(/\\b/g, '\b')
+        .replace(/\\f/g, '\f')
+        .replace(/\\v/g, '\v')
+        .replace(/\\'/g, "'")
+        .replace(/\\"/g, '"')
+        .replace(/\\\\/g, '\\')
+        .replace(/\\x([0-9A-Fa-f]{2})/g, (_: unknown, hex: string) =>
+            String.fromCharCode(parseInt(hex, 16))
+        )
+        .replace(/\\u([0-9A-Fa-f]{4})/g, (_: unknown, hex: string) =>
+            String.fromCharCode(parseInt(hex, 16))
+        );
 }
 
 export default defineConfig({
