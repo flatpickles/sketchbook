@@ -52,7 +52,7 @@ export default class ParamInference {
             for (const key of paramKeys) {
                 const definitionMatcher =
                     mode === InferenceMode.ShaderFile
-                        ? `.*uniform.*${key}`
+                        ? `.*uniform.*${key}\\s*;`
                         : `(${key}\\s*[:=])|(this.${key}\\s*[:=])`;
 
                 if (line.match(new RegExp(definitionMatcher))) {
