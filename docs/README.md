@@ -1,6 +1,6 @@
 # Sketchbook Overview
 
-Sketchbook is a forkable development environment for HTML canvas artwork & prototypes. Sketchbook is also a customizable webapp for publishing these projects. Read on for a conceptual overview, or jump right into the [Quick Start Guide](quick-start.md)!
+Sketchbook is a forkable development environment for HTML canvas artwork & prototypes. Sketchbook is also a customizable webapp for publishing these projects. Read on for a conceptual overview, check out [this example](https://longitude.studio) of Sketchbook in use, or jump right into the [Quick Start Guide](quick-start.md)!
 
 ![Sketchbook](media/full-layout.png)
 _Screenshot from the Sketchbook demo deployment, available live [here](https://demo.skbk.cc)._
