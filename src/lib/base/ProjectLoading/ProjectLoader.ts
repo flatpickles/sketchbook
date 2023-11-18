@@ -340,8 +340,14 @@ export default class ProjectLoader {
             }
             return project;
         } else if (filePath.includes('.frag')) {
-            const fragShader: string = (await fromImports.projectTextFiles[filePath]()) as string;
-            return new FragShaderProject(fragShader);
+            // Imports may be raw, or nah
+            const fragShader = (await fromImports.projectTextFiles[filePath]()) as
+                | string
+                | {
+                      default: string;
+                  };
+            if (typeof fragShader === 'string') return new FragShaderProject(fragShader);
+            else return new FragShaderProject(fragShader.default);
         } else {
             throw new Error(`Unsupported project class file type for path: ${filePath}`);
         }

@@ -7,7 +7,7 @@ function importProjectClassFiles(): Record<string, () => Promise<unknown>> {
 
 function importProjectTextFiles(): Record<string, () => Promise<unknown>> {
     // Text files can only be .frag files
-    return import.meta.glob('/src/art/*/*.frag', { as: 'raw' });
+    return import.meta.glob('/src/art/*/*.frag');
 }
 
 function importRawProjectFiles(): Record<string, () => Promise<unknown>> {
