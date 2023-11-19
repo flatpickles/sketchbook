@@ -22,7 +22,7 @@ function viteGlslify() {
                     code = code.replace('export default "', '').slice(0, -1);
                 } else if (/export\s*{/.test(code)) {
                     const afterDef = code.split(/=\s*"/)[1];
-                    code = afterDef.split(/";\n/)[0];
+                    code = afterDef.split(/";/)[0];
                 } else {
                     throw new Error(`Unexpected shader file format for ${id}: ${code}`);
                 }
