@@ -118,7 +118,7 @@ _Note that `rectColor` is displayed with a color picker input – Sketchbook has
 
 Sketchbook makes it easy to create "presets", curated sets of parameter values that can be applied all at once. When you create one or more presets for a project, they'll appear in a selector UI above your parameter inputs.
 
-Each preset is derived its own JSON file a `presets` directory, within the main project directory. To try creating one for your Quick Start project, make a `presets` directory, and add this code within a new `src/art/QuickStart/presets/DemoPreset.json` file:
+Each preset is derived from its own JSON file within a `presets` directory, within the main project directory. To try creating one for your Quick Start project, make a `presets` directory, and add this code within a new `src/art/QuickStart/presets/DemoPreset.json` file:
 
 ```json
 {
