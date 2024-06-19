@@ -1,0 +1,6 @@
+{
+    "title": "Multipass Demo",
+    "date": "2024-06-19",
+    "description": "A simple example of a multipass shader project, as discussed in <a href='https://skbk.cc/#/project-subtypes?id=shader-art'>the docs</a>.",
+    "groups": ["WebGL"]
+}
