@@ -7,7 +7,7 @@ uniform vec2 renderSize;
 uniform sampler2D passBuffer0;
 uniform sampler2D passBuffer1;
 
-uniform float blendAmount; // 0.9, 0.7 to 0.95
+uniform float blendAmount; // "Blend Amount", 0.9, 0.7 to 0.95
 
 void main() {
 
