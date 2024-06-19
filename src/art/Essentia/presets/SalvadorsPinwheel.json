@@ -1,0 +1,18 @@
+{
+    "title": "Salvador's Pinwheel",
+    "values": {
+        "spin": -0.15,
+        "timeScale1": 0.2,
+        "noiseAmount": 0.33,
+        "timeScale2": 0,
+        "noiseDensity": 0.05,
+        "noiseCycles": 0,
+        "colorCycles": 3,
+        "rainbow": false,
+        "color1": "#e1e7da",
+        "color2": "#99b37a",
+        "color3": "#290020",
+        "centerColor": "#290020",
+        "centerRadius": 0.01
+    }
+}

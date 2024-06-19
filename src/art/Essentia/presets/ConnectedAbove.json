@@ -1,0 +1,18 @@
+{
+    "title": "Connected Above",
+    "values": {
+        "spin": 0,
+        "timeScale1": 0.1,
+        "noiseAmount": 0.5,
+        "timeScale2": 0.1,
+        "noiseDensity": 0.4,
+        "noiseCycles": 20,
+        "colorCycles": 2,
+        "rainbow": false,
+        "color1": "#fff70a",
+        "color2": "#940074",
+        "color3": "#18915c",
+        "centerColor": "#540342",
+        "centerRadius": 0.25
+    }
+}

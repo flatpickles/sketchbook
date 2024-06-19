@@ -1,0 +1,18 @@
+{
+    "title": "Connected Below",
+    "values": {
+        "spin": 0,
+        "timeScale1": -0.2,
+        "noiseAmount": 0.7,
+        "timeScale2": 0.04,
+        "noiseDensity": 0.7,
+        "noiseCycles": 0,
+        "colorCycles": 1,
+        "rainbow": false,
+        "color1": "#F5A3A3",
+        "color2": "#240066",
+        "color3": "#006652",
+        "centerColor": "#ffffff",
+        "centerRadius": 0
+    }
+}

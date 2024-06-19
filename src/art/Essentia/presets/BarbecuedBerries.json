@@ -1,0 +1,18 @@
+{
+    "title": "Barbecued Berries",
+    "values": {
+        "spin": 0.35,
+        "timeScale1": -0.15,
+        "noiseAmount": 0.5,
+        "timeScale2": 0.1,
+        "noiseDensity": 0.35,
+        "noiseCycles": 5,
+        "colorCycles": 8,
+        "rainbow": false,
+        "color1": "#500707",
+        "color2": "#FFBE8A",
+        "color3": "#5C00CC",
+        "centerColor": "#5C00CC",
+        "centerRadius": 0.1
+    }
+}

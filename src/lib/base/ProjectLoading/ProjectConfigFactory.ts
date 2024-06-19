@@ -1,7 +1,7 @@
 import type { ParamConfig } from '../ConfigModels/ParamConfig';
-import { ParamConfigFactory } from './ParamConfigFactory';
+import { ProjectConfigDefaults, type ProjectConfig } from '../ConfigModels/ProjectConfig';
 import type Project from '../Project/Project';
-import { type ProjectConfig, ProjectConfigDefaults } from '../ConfigModels/ProjectConfig';
+import { ParamConfigFactory } from './ParamConfigFactory';
 import ParamInference, { InferenceMode } from './ParamInference';
 
 // Property keys that should be ignored when creating a ProjectConfig object from a Project object,

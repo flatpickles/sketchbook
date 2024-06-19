@@ -1,10 +1,10 @@
 import { config } from '../config/settings';
 import ProjectPresentation, { SortOrder } from '../lib/base/ProjectLoading/ProjectPresentation';
-import type { PageServerLoad } from './$types';
+import type { PageServerLoad, PageServerLoadEvent } from './$types';
 import { redirect } from '@sveltejs/kit';
 import isbot from 'isbot';
 
-export const load = (async ({ parent, cookies, request }) => {
+export const load: PageServerLoad = async ({ parent, cookies, request }: PageServerLoadEvent) => {
     const { projects } = await parent();
 
     // Load settings from cookies, or use defaults
@@ -34,4 +34,4 @@ export const load = (async ({ parent, cookies, request }) => {
         const firstProject = presentationOrder[0];
         throw redirect(307, `/${firstProject}`);
     }
-}) satisfies PageServerLoad;
+};

@@ -7,7 +7,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-export default class Project {
+export default abstract class Project {
     /**
      * A canvas element that this project can draw to. This will be set automatically before init
      * is called, and the size will be set to fill to the container div (its parent). It will be
@@ -134,9 +134,9 @@ export type Detail<T extends CanvasType = CanvasType.Unknown> = {
         ? RenderingContext | null | undefined
         : never;
 };
-export type Detail2D = UpdateDetail<CanvasType.Context2D>;
-export type DetailWebGL = UpdateDetail<CanvasType.WebGL>;
-export type DetailWebGL2 = UpdateDetail<CanvasType.WebGL2>;
+export type Detail2D = Detail<CanvasType.Context2D>;
+export type DetailWebGL = Detail<CanvasType.WebGL>;
+export type DetailWebGL2 = Detail<CanvasType.WebGL2>;
 
 /**
  * Detail object type used with the project's `update` method. In addition to `Detail` fields,

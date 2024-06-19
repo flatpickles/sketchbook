@@ -1,0 +1,18 @@
+{
+    "title": "Come Back Soon",
+    "values": {
+        "spin": 0,
+        "timeScale1": 0.1,
+        "noiseAmount": 0.5,
+        "timeScale2": 0.1,
+        "noiseDensity": 1.0,
+        "noiseCycles": 10,
+        "colorCycles": 7,
+        "rainbow": true,
+        "color1": "#FFCB8F",
+        "color2": "#1F0075",
+        "color3": "#12A566",
+        "centerColor": "#ffffff",
+        "centerRadius": 0.05
+    }
+}
