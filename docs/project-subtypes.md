@@ -105,6 +105,8 @@ void main() {
 }
 ```
 
+You can see this running live in the [demo deployment](https://demo.skbk.cc/Multipass).
+
 ### Configuration and Other Features
 
 You can configure your fragment shader projects as you would configure other Sketchbook projects, with a `config.json` file in your project directory. Uniform names are used as keys for parameter configuration in the config file, or you can use inline annotations as described in the [param config](param-config.md) documentation. Default values can also be defined alongside your shader parameters; `0.5` will be used as the default value for "Greenness", in the example [above](project-subtypes.md?id=shader-art).
