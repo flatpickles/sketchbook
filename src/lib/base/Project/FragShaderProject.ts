@@ -4,21 +4,24 @@
  * like src/art/MyShader/MyShader.frag. See the docs for more info.
  */
 
-import REGL, { type DefaultContext } from 'regl';
-import Project, { CanvasType, type DetailWebGL } from './Project';
+import * as THREE from 'three';
+import Project, { CanvasType, type DetailWebGL2, type ResizedDetailWebGL2 } from './Project';
 
 // Uniform names for non-params (i.e. uniforms not specific to a particular project)
 const uniformNames: Record<string, string> = {
     time: 'time',
     scaledTime: 'scaledTime',
-    renderSize: 'renderSize'
+    renderSize: 'renderSize',
+    passBuffer: 'passBuffer'
 };
+
+// Prefix used to define the pass number in the fragment shader (PASS_0, PASS_1, etc.)
+const PassDefPrefix = 'PASS_';
 
 // Uniform typing stuff
 const supportedTypes = ['float', 'int', 'bool', 'vec2', 'vec3', 'vec4'] as const;
 type UniformType = (typeof supportedTypes)[number];
 type UniformParamType = number | number[] | boolean;
-type REGLUniformMap = Record<string, REGL.DynamicVariableFn<REGL.Uniform>>;
 
 // Default values for supported uniform types
 const uniformParamDefaults: Record<UniformType, UniformParamType> = {
@@ -35,37 +38,47 @@ function isSupportedUniformType(uniformTypeString: string): uniformTypeString is
     return supportedTypes.includes(uniformTypeString as UniformType);
 }
 
-// Vertex shader defaults (two triangles to cover the canvas)
-const vertShader = `
-    precision mediump float;
-    varying vec2 uv;
-    attribute vec2 position;
-    void main() {
-        uv = vec2(0.5, 0.5) * position + 0.5;
-        gl_Position = vec4(position, 0, 1);
+// Passthrough vertex shader
+const vertexShader = `
+    varying vec2 vUv; 
+    void main()
+    {
+        vUv = uv;
+        vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+        gl_Position = projectionMatrix * mvPosition;
     }`;
-const positions = [
-    [-1, -1],
-    [-1, 1],
-    [1, 1],
-    [1, 1],
-    [1, -1],
-    [-1, -1]
-];
 
 export default class FragShaderProject extends Project {
-    canvasType = CanvasType.WebGL;
+    canvasType = CanvasType.WebGL2;
+
+    #renderer: THREE.WebGLRenderer | undefined;
+    #scene: THREE.Scene;
+    #camera: THREE.OrthographicCamera;
+    #quad: THREE.Mesh | null = null;
+    #renderTargets: THREE.WebGLRenderTarget[] = [];
+    #passMaterials: THREE.ShaderMaterial[] = [];
+    #finalPassMaterial: THREE.ShaderMaterial | null = null;
 
     #fragShader: string;
-    #uniformParams: REGLUniformMap = {};
-    #regl?: REGL.Regl;
+    #uniforms: {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        [uniform: string]: THREE.IUniform<any>;
+    } = {};
+    #nextAnimationFrame: number | null = null;
+    #scaledTimeUpdaters: (() => void)[] = [];
+    #paramUniformNames: string[] = [];
 
     constructor(fragShader: string) {
         super();
+        this.#fragShader = fragShader;
+
+        // Initialize three stuff
+        this.#scene = new THREE.Scene();
+        this.#camera = new THREE.OrthographicCamera();
+        this.#camera.position.z = 1;
 
         // Load the fragment shader and parse out the uniforms
-        this.#fragShader = fragShader;
-        const uniformLines = fragShader.split(';').filter((line) => line.includes('uniform'));
+        const uniformLines = this.#fragShader.split(';').filter((line) => line.includes('uniform'));
         uniformLines.forEach((line) => {
             // Find uniform name and type for supported uniforms
             const uniformLineComponents = line.split(/\s+/).filter((x) => x.trim().length > 0);
@@ -79,12 +92,13 @@ export default class FragShaderProject extends Project {
             // Provide scaled time uniforms if desired
             const scaledTimeMatcher = new RegExp(`${uniformNames.scaledTime}\\d*`, 'i');
             if (scaledTimeMatcher.test(name)) {
-                this.#provideScaledTime(name);
+                this.#scaledTimeUpdaters.push(this.#generateScaledTimeUpdater(name));
                 return;
             }
 
             // Ignore other non-user-defined uniforms
-            if (Object.keys(uniformNames).includes(name)) return;
+            if (Object.keys(uniformNames).includes(name) || name.includes(uniformNames.passBuffer))
+                return;
 
             // Use name and type to parameterize this uniform
             if (isSupportedUniformType(type) && name.length > 0) {
@@ -96,44 +110,122 @@ export default class FragShaderProject extends Project {
                     enumerable: true,
                     configurable: true
                 });
-                // Add to the uniform params map
-                this.#uniformParams[name] = () => {
-                    return Object.getOwnPropertyDescriptor(this, name)?.value;
-                };
+                this.#uniforms[name] = { value: value };
+                this.#paramUniformNames.push(name);
             }
         });
     }
 
-    init() {
+    init(detail: DetailWebGL2) {
         if (!this.canvas) throw new Error('Canvas not initialized');
+        this.#renderer = new THREE.WebGLRenderer({ canvas: this.canvas, antialias: true });
 
-        // Initialize regl with the shader & uniforms (loaded in the constructor)
-        this.#regl = REGL(this.canvas);
-        const drawFrame = this.#regl({
-            frag: this.#fragShader,
-            vert: vertShader,
-            attributes: {
-                position: positions
-            },
-            uniforms: {
-                ...this.#uniformParams,
-                [uniformNames.time]: ({ time }: DefaultContext) => time,
-                [uniformNames.renderSize]: ({ viewportWidth, viewportHeight }: DefaultContext) => [
-                    viewportWidth,
-                    viewportHeight
-                ]
-            },
-            count: positions.length
+        // Get canvas size & set initial uniforms
+        const size = [detail.canvas.width, detail.canvas.height];
+        this.#uniforms = {
+            ...this.#uniforms,
+            [uniformNames.renderSize]: { value: size },
+            [uniformNames.time]: { value: 0 }
+        };
+
+        // Create pass materials
+        const passBufferCount = findLargestSuffixNum(this.#fragShader, uniformNames.passBuffer) + 1;
+        for (let i = 0; i < passBufferCount; i++) {
+            this.#uniforms[`${uniformNames.passBuffer}${i}`] = { value: null };
+            this.#passMaterials.push(
+                new THREE.ShaderMaterial({
+                    uniforms: this.#uniforms,
+                    vertexShader: vertexShader,
+                    fragmentShader: `#define ${PassDefPrefix}${i}\n${this.#fragShader}`
+                })
+            );
+
+            // Add render targets, resized w/ canvas size
+            this.#renderTargets.push(new THREE.WebGLRenderTarget(size[0], size[1]));
+        }
+
+        // Set up last render
+        this.#finalPassMaterial = new THREE.ShaderMaterial({
+            uniforms: this.#uniforms,
+            vertexShader: vertexShader,
+            fragmentShader: this.#fragShader
         });
 
-        // Immediate draw + animation loop
-        drawFrame();
-        this.#regl.frame(drawFrame);
+        // Add fresh quad
+        const geometry = new THREE.PlaneGeometry(2, 2);
+        const shaderMaterial = new THREE.ShaderMaterial({
+            uniforms: this.#uniforms,
+            vertexShader: vertexShader,
+            fragmentShader: this.#fragShader
+        });
+        this.#quad = new THREE.Mesh(geometry, shaderMaterial);
+        this.#scene.add(this.#quad);
+
+        // Get it started
+        requestAnimationFrame(this.#renderLoop.bind(this));
     }
 
-    destroy(detail: DetailWebGL): void {
+    resized(detail: ResizedDetailWebGL2): void {
+        const size = detail.canvasSize;
+        if (!size) return;
+        this.#renderer?.setSize(size[0], size[1], false);
+        this.#uniforms[uniformNames.renderSize] = { value: size };
+        this.#renderTargets.forEach((renderTarget) => {
+            renderTarget.setSize(size[0], size[1]);
+        });
+        this.#render(performance.now());
+    }
+
+    destroy(detail: DetailWebGL2): void {
         super.destroy(detail);
-        this.#regl?.destroy();
+        this.#renderer?.dispose();
+        this.#renderer = undefined;
+        if (this.#nextAnimationFrame) {
+            cancelAnimationFrame(this.#nextAnimationFrame);
+            this.#nextAnimationFrame = null;
+        }
+    }
+
+    /**
+     * Continue a frame render loop, utilizing the #render method
+     * @param time - The current time in milliseconds
+     */
+    #renderLoop(time: number) {
+        this.#render(time);
+        this.#nextAnimationFrame = requestAnimationFrame(this.#renderLoop.bind(this));
+    }
+
+    /**
+     * Renders the scene and updates the uniforms
+     * @param time - The current time in milliseconds
+     */
+    #render(time: number) {
+        if (!this.#quad || !this.#finalPassMaterial || !this.#renderer) {
+            return;
+        }
+
+        // Update uniforms
+        this.#uniforms[uniformNames.time].value = time / 1000; // seconds
+        this.#scaledTimeUpdaters.map((updater) => updater());
+        for (const uniformName of this.#paramUniformNames) {
+            const paramValue = Object.getOwnPropertyDescriptor(this, uniformName)?.value;
+            this.#uniforms[uniformName].value = paramValue;
+        }
+
+        // Render all render targets
+        for (let i = 0; i < this.#renderTargets.length; i++) {
+            const renderTarget = this.#renderTargets[i];
+            const passMaterial = this.#passMaterials[i];
+            this.#quad.material = passMaterial;
+            this.#renderer.setRenderTarget(renderTarget);
+            this.#renderer.render(this.#scene, this.#camera);
+            this.#uniforms[`${uniformNames.passBuffer}${i}`].value = renderTarget.texture;
+        }
+
+        // Render final pass
+        this.#quad.material = this.#finalPassMaterial;
+        this.#renderer.setRenderTarget(null);
+        this.#renderer.render(this.#scene, this.#camera);
     }
 
     /**
@@ -141,7 +233,7 @@ export default class FragShaderProject extends Project {
      * added timeScale parameter. This is useful for animations with a configurable motion rate that
      * should be continuous as the time scale changes.
      */
-    #provideScaledTime(uniformName: string) {
+    #generateScaledTimeUpdater(uniformName: string): () => void {
         // These variables are used to calculate the scaled time, and updated in a JS closure below
         let lastFrameTime = Date.now();
         let totalScaledTime = 0;
@@ -155,8 +247,11 @@ export default class FragShaderProject extends Project {
             configurable: true
         });
 
-        // Add to the uniform params map
-        this.#uniformParams[uniformName] = () => {
+        // Create the uniform
+        this.#uniforms[uniformName] = { value: 0 };
+
+        // Return a function that updates the uniform when called
+        return () => {
             const scaleParamValue = Object.getOwnPropertyDescriptor(
                 this,
                 scaledTimeParamKey
@@ -165,7 +260,23 @@ export default class FragShaderProject extends Project {
             const elapsed = lastFrameTime - curTime;
             lastFrameTime = curTime;
             totalScaledTime += (elapsed * scaleParamValue) / 1000;
-            return totalScaledTime;
+            this.#uniforms[uniformName].value = totalScaledTime;
         };
     }
+}
+
+// Finds the largest numbered suffix in a string (e.g. finds the largest PASS_X number in a string)
+function findLargestSuffixNum(sourceStr: string, prefix: string): number {
+    const regex = new RegExp(`${prefix}(\\d+)`, 'g');
+    let match;
+    let largestNumber = -1;
+
+    while ((match = regex.exec(sourceStr)) !== null) {
+        const number = parseInt(match[1], 10);
+        if (number > largestNumber) {
+            largestNumber = number;
+        }
+    }
+
+    return largestNumber;
 }

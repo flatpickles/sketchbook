@@ -1,10 +1,10 @@
-import type { PageServerLoad } from './$types';
+import type { PageServerLoad, PageServerLoadEvent } from './$types';
 
 import ProjectLoader from '$lib/base/ProjectLoading/ProjectLoader';
 import { settingsStore } from '$lib/base/Util/AppState';
 import { dev } from '$app/environment';
 
-export const load: PageServerLoad = (async ({ cookies, request }) => {
+export const load: PageServerLoad = (async ({ cookies, request }: PageServerLoadEvent) => {
     settingsStore.loadCookies(cookies);
     const projects = await ProjectLoader.loadAvailableProjects();
     return {

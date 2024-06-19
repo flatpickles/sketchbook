@@ -1,6 +1,6 @@
 {
     "name": "sketchbook2",
-    "version": "0.2.7",
+    "version": "0.2.8",
     "private": true,
     "scripts": {
         "dev": "vite dev",
@@ -20,6 +20,7 @@
         "@testing-library/svelte": "^4.0.3",
         "@testing-library/user-event": "^14.4.3",
         "@types/p5": "^1.7.0",
+        "@types/three": "^0.165.0",
         "@typescript-eslint/eslint-plugin": "^5.45.0",
         "@typescript-eslint/parser": "^5.45.0",
         "autoprefixer": "^10.4.14",
@@ -47,7 +48,7 @@
         "@types/js-cookie": "^3.0.3",
         "isbot": "^3.7.0",
         "js-cookie": "^3.0.5",
-        "regl": "^2.1.0",
-        "ress": "^5.0.2"
+        "ress": "^5.0.2",
+        "three": "^0.165.0"
     }
 }
