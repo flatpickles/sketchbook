@@ -1,8 +1,8 @@
 <script lang="ts">
-    import ProjectPresentation from '$lib/base/ProjectLoading/ProjectPresentation';
     import type { ProjectConfig } from '$lib/base/ConfigModels/ProjectConfig';
+    import ProjectPresentation, { SortOrder } from '$lib/base/ProjectLoading/ProjectPresentation';
     import { settingsStore } from '$lib/base/Util/AppState';
-    import { SortOrder } from '$lib/base/ProjectLoading/ProjectPresentation';
+    import { onMount } from 'svelte';
 
     export let projects: Record<string, ProjectConfig>;
     export let selectedProjectKey: string | undefined;
@@ -15,6 +15,29 @@
         $settingsStore.showExperiments,
         selectedGroup
     );
+
+    onMount(() => {
+        // Scroll to the selected project if it exists
+        if (selectedProjectKey) {
+            const selectedElement = document.querySelector(
+                '.project-list-item.selected'
+            ) as HTMLElement;
+            if (selectedElement) {
+                selectedElement.scrollIntoView({ behavior: 'instant', block: 'nearest' });
+                // Scroll a little more if the selected element is near the bottom of the container
+                const container = selectedElement.parentElement as HTMLElement;
+                const containerRect = container.getBoundingClientRect();
+                const selectedRect = selectedElement.getBoundingClientRect();
+                const containerCenterY = containerRect.top + containerRect.height / 2;
+                const shouldScrollMore = selectedRect.top > containerCenterY;
+                if (shouldScrollMore) {
+                    const computedStyle = getComputedStyle(container);
+                    const scrollOffset = parseInt(computedStyle.paddingBottom, 10) || 0;
+                    container.scrollTop += scrollOffset;
+                }
+            }
+        }
+    });
 </script>
 
 {#if visibleKeys.length === 0}
