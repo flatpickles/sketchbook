@@ -1,8 +1,8 @@
+import { redirect } from '@sveltejs/kit';
+import isbot from 'isbot';
 import { config } from '../config/settings';
 import ProjectPresentation, { SortOrder } from '../lib/base/ProjectLoading/ProjectPresentation';
 import type { PageServerLoad, PageServerLoadEvent } from './$types';
-import { redirect } from '@sveltejs/kit';
-import isbot from 'isbot';
 
 export const load: PageServerLoad = async ({ parent, cookies, request }: PageServerLoadEvent) => {
     const { projects } = await parent();
@@ -32,6 +32,6 @@ export const load: PageServerLoad = async ({ parent, cookies, request }: PageSer
     // If there are projects, redirect to the first one
     if (presentationOrder.length !== 0 && !isBot) {
         const firstProject = presentationOrder[0];
-        throw redirect(307, `/${firstProject}`);
+        throw redirect(307, `/${firstProject}?redirect`);
     }
 };

@@ -30,6 +30,61 @@ describe('MainView layout', () => {
     });
 });
 
+describe('Redirect override for project list panel state', () => {
+    afterEach(cleanup);
+
+    it('redirects to the project list panel if the redirect override is set', async () => {
+        settingsStore.set({
+            ...get(settingsStore),
+            projectListPanelState: PanelState.Hidden,
+            projectListRedirectOverride: true,
+            projectListRedirectOverrideState: PanelState.Visible
+        });
+
+        render(MainViewWithContent, {
+            context: new Map(Object.entries({ pageRedirected: true }))
+        });
+
+        await waitFor(() =>
+            expect(get(settingsStore).projectListPanelState).toBe(PanelState.Visible)
+        );
+    });
+
+    it('does not redirect to the project list panel if not redirected', async () => {
+        settingsStore.set({
+            ...get(settingsStore),
+            projectListPanelState: PanelState.Hidden,
+            projectListRedirectOverride: true,
+            projectListRedirectOverrideState: PanelState.Visible
+        });
+
+        render(MainViewWithContent, {
+            context: new Map(Object.entries({ pageRedirected: false }))
+        });
+
+        await waitFor(() =>
+            expect(get(settingsStore).projectListPanelState).toBe(PanelState.Hidden)
+        );
+    });
+
+    it('does not redirect to the project list panel if the redirect override is disabled', async () => {
+        settingsStore.set({
+            ...get(settingsStore),
+            projectListPanelState: PanelState.Hidden,
+            projectListRedirectOverride: false,
+            projectListRedirectOverrideState: PanelState.Visible
+        });
+
+        render(MainViewWithContent, {
+            context: new Map(Object.entries({ pageRedirected: true }))
+        });
+
+        await waitFor(() =>
+            expect(get(settingsStore).projectListPanelState).toBe(PanelState.Hidden)
+        );
+    });
+});
+
 describe('Panel button visibility', () => {
     afterEach(cleanup);
 

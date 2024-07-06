@@ -2,7 +2,7 @@
 
 Sketchbook offers a number of settings that influence the behavior of the web app. Each of these settings can be configured within `src/config/settings.ts`, and also can be added to the "Settings" UI, shown by clicking the settings button at the bottom of the project list panel.
 
-The [demo deployment](https://demo.skbk.cc) has all settings options visible and adjustable in the settings panel:
+The [demo deployment](https://demo.skbk.cc) has a majority of settings options visible and adjustable in the settings panel:
 
 <img src="media/settings.png" style="width: 400px" />
 

@@ -1,7 +1,7 @@
+import { dev } from '$app/environment';
 import Cookies from 'js-cookie';
 import { writable } from 'svelte/store';
 import type { AnyParamValueType } from '../ConfigModels/ParamTypes';
-import { dev } from '$app/environment';
 
 /**
  * Custom Svelte store that enables persistence of only specified entries in cookies. These values
