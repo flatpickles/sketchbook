@@ -1,20 +1,20 @@
 <script lang="ts">
-    import { onDestroy, onMount } from 'svelte';
+    import { getContext, onDestroy, onMount } from 'svelte';
     import { fade } from 'svelte/transition';
 
     import ProjectListPanel from '$lib/components/ProjectListPanel/ProjectListPanel.svelte';
     import SettingsPanel from '../SettingsPanel/SettingsPanel.svelte';
 
     import { content } from '$config/content';
-    import { settingsStore, stateStore } from '$lib/base/Util/AppState';
     import type { ProjectConfig } from '$lib/base/ConfigModels/ProjectConfig';
-    import {
-        PanelState,
-        toggledPanelState,
-        panelShown,
-        headerIconForPanelState
-    } from '$lib/base/Util/PanelState';
+    import { settingsStore, stateStore } from '$lib/base/Util/AppState';
     import { MouseState, mouseStateTransition } from '$lib/base/Util/MouseState';
+    import {
+        headerIconForPanelState,
+        panelShown,
+        PanelState,
+        toggledPanelState
+    } from '$lib/base/Util/PanelState';
     import ProjectSelector from '../ProjectListPanel/ProjectSelector.svelte';
 
     export let projectConfigs: Record<string, ProjectConfig>;
@@ -25,6 +25,12 @@
 
     // UI activity timeout; show panel buttons when active (state maintained in stateStore)
     let uiActiveTimeout: ReturnType<typeof setTimeout>;
+
+    // Apply redirect override to project list state
+    const pageRedirected = getContext('pageRedirected');
+    if (pageRedirected && $settingsStore.projectListRedirectOverride) {
+        $settingsStore.projectListPanelState = $settingsStore.projectListRedirectOverrideState;
+    }
 
     // Left panel reactive state
     $: leftPanelAvailable = $settingsStore.projectListPanelState !== PanelState.Unavailable;

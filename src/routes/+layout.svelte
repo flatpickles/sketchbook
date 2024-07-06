@@ -1,11 +1,26 @@
 <script lang="ts">
-    import 'ress';
-    import type { LayoutData } from './$types';
-    import MainView from '$lib/components/MainView/MainView.svelte';
+    import { goto } from '$app/navigation';
     import { page } from '$app/stores';
+    import MainView from '$lib/components/MainView/MainView.svelte';
+    import 'ress';
+    import { onMount, setContext } from 'svelte';
+    import type { LayoutData } from './$types';
 
     export let data: LayoutData;
     $: selectedProjectKey = $page.url.pathname.split('/')[1];
+
+    // Set a context flag if page was redirected via URL param
+    let pageRedirected = $page.url.searchParams.get('redirect') != undefined;
+    setContext('pageRedirected', pageRedirected);
+
+    // Remove redirect param
+    onMount(() => {
+        if (pageRedirected) {
+            const url = new URL($page.url);
+            url.searchParams.delete('redirect');
+            goto(url.toString(), { replaceState: true });
+        }
+    });
 </script>
 
 <MainView projectConfigs={data.projects} {selectedProjectKey}>

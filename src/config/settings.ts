@@ -22,6 +22,11 @@ const overlayPanels = true;
 const projectListPanelState = PanelState.Visible;
 const projectDetailPanelState = PanelState.Visible;
 
+// Sketchbook redirects root navigation to the first project listed. In this case, you can override
+// persisted or default project panel state, e.g. showing the project list panel on root navigation.
+const projectListRedirectOverride = true;
+const projectListRedirectOverrideState = PanelState.Visible;
+
 // When using mouse-triggering options for the project list and detail panels above, this is the
 // width of the trigger areas on the left & right, in pixels.
 const panelMouseTriggerWidth = 50;
@@ -55,6 +60,8 @@ export const config = {
     overlayPanels,
     projectListPanelState,
     projectDetailPanelState,
+    projectListRedirectOverride,
+    projectListRedirectOverrideState,
     panelMouseTriggerWidth,
     hidePanelButtonsTimeout,
     projectSortOrder,
