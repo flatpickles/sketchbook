@@ -22,7 +22,7 @@
             const selectedElement = document.querySelector(
                 '.project-list-item.selected'
             ) as HTMLElement;
-            if (selectedElement) {
+            if (selectedElement && selectedElement.scrollIntoView) {
                 selectedElement.scrollIntoView({ behavior: 'instant', block: 'nearest' });
                 // Scroll a little more if the selected element is near the bottom of the container
                 const container = selectedElement.parentElement as HTMLElement;
