@@ -1,16 +1,16 @@
-import ProjectViewer from '$lib/components/MainView/ProjectViewer.svelte';
 import Project, { CanvasType } from '$lib/base/Project/Project';
+import ProjectViewer from '$lib/components/MainView/ProjectViewer.svelte';
 
-import { render, cleanup, waitFor, fireEvent } from '@testing-library/svelte';
-import { describe, it, expect, vi, afterEach, type Mock } from 'vitest';
 import P5Project from '$lib/base/Project/P5Project';
+import { cleanup, fireEvent, render, waitFor } from '@testing-library/svelte';
+import { afterEach, describe, expect, it, vi, type Mock } from 'vitest';
 
 import { settingsStore } from '$lib/base/Util/AppState';
 
 //p5 throws errors when running in unit tests, so we mock it out fully.
 // This precludes more rigorous DOM testing, but it's better than nothing.
-import * as exportsP5 from 'p5';
 import { NumberParamConfigDefaults } from '$lib/base/ConfigModels/ParamConfigs/NumberParamConfig';
+import * as exportsP5 from 'p5';
 const mockedP5: Mock = vi.spyOn(exportsP5, 'default');
 const mockP5Canvas = {
     parent: vi.fn()
@@ -32,6 +32,8 @@ mockedP5.mockImplementation(() => {
 // https://github.com/hustcc/jest-canvas-mock/issues/2
 global.HTMLCanvasElement.prototype.getContext = () => null;
 
+class BasicProject extends Project {}
+
 class Project3D extends Project {
     canvasType = CanvasType.WebGL;
     // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -49,7 +51,7 @@ describe('CanvasViewer', () => {
 
     it('renders a canvas', async () => {
         const { getByTestId } = render(ProjectViewer, {
-            project: new Project()
+            project: new BasicProject()
         });
 
         const canvas = getByTestId('project-canvas');
@@ -57,7 +59,7 @@ describe('CanvasViewer', () => {
     });
 
     it('inits and updates a project when rendering (2D context)', async () => {
-        const proj = new Project();
+        const proj = new BasicProject();
         vi.spyOn(proj, 'init');
         vi.spyOn(proj, 'update');
 
@@ -77,7 +79,7 @@ describe('CanvasViewer', () => {
     });
 
     it('inits and updates a project when rendering (WebGL context)', async () => {
-        const proj = new Project();
+        const proj = new BasicProject();
         proj.canvasType = CanvasType.WebGL;
         vi.spyOn(proj, 'init');
         vi.spyOn(proj, 'update');
@@ -98,7 +100,7 @@ describe('CanvasViewer', () => {
     });
 
     it('inits and updates a project when rendering (WebGL2 context)', async () => {
-        const proj = new Project();
+        const proj = new BasicProject();
         proj.canvasType = CanvasType.WebGL2;
         vi.spyOn(proj, 'init');
         vi.spyOn(proj, 'update');
@@ -119,7 +121,7 @@ describe('CanvasViewer', () => {
     });
 
     it('inits and updates a project when rendering (Unknown context)', async () => {
-        const proj = new Project();
+        const proj = new BasicProject();
         proj.canvasType = CanvasType.Unknown;
         vi.spyOn(proj, 'init');
         vi.spyOn(proj, 'update');
@@ -144,7 +146,7 @@ describe('CanvasViewer', () => {
     });
 
     it('does not create a canvas for CanvasType none', async () => {
-        const proj = new Project();
+        const proj = new BasicProject();
         proj.canvasType = CanvasType.None;
 
         const { queryByTestId } = render(ProjectViewer, {
@@ -156,7 +158,7 @@ describe('CanvasViewer', () => {
     });
 
     it('defines canvas and container objects for the project when rendering', async () => {
-        const proj = new Project();
+        const proj = new BasicProject();
         expect(proj.canvas).toBeUndefined();
         render(ProjectViewer, {
             project: proj
@@ -166,7 +168,7 @@ describe('CanvasViewer', () => {
     });
 
     it('destroys an old project when rendering a new one', async () => {
-        const proj1 = new Project();
+        const proj1 = new BasicProject();
         vi.spyOn(proj1, 'destroy');
 
         const { component, getByTestId } = render(ProjectViewer, {
@@ -175,7 +177,7 @@ describe('CanvasViewer', () => {
         const canvas = getByTestId('project-canvas');
         const container = getByTestId('container');
 
-        component.project = new Project();
+        component.project = new BasicProject();
         expect(proj1.destroy).toHaveBeenCalledWith({
             canvas: canvas,
             container: container,
@@ -183,11 +185,11 @@ describe('CanvasViewer', () => {
         });
     });
 
-    it('resets local state (for update) when loading a new project', async () => {
+    it('resets local state (for update) when loading a new BasicProject', async () => {
         let lastTime = 0;
         let lastFrame = 0;
 
-        const proj1 = new Project();
+        const proj1 = new BasicProject();
         vi.spyOn(proj1, 'destroy');
         vi.spyOn(proj1, 'update').mockImplementation(({ frame, time }) => {
             lastFrame = frame;
@@ -202,7 +204,7 @@ describe('CanvasViewer', () => {
 
         let nextTime = 0;
         let nextFrame = 0;
-        const proj2 = new Project();
+        const proj2 = new BasicProject();
         vi.spyOn(proj2, 'init');
         vi.spyOn(proj2, 'update').mockImplementation(({ frame, time }) => {
             nextFrame = frame;
@@ -218,9 +220,13 @@ describe('CanvasViewer', () => {
         expect(lastFrame).toBeGreaterThan(nextFrame);
         expect(lastTime).toBeGreaterThan(nextTime);
     });
+});
+
+describe('CanvasViewer sizing', () => {
+    afterEach(cleanup);
 
     it('sets canvas size appropriately when not configured', async () => {
-        const proj = new Project();
+        const proj = new BasicProject();
 
         const { getByTestId } = render(ProjectViewer, {
             project: proj
@@ -236,8 +242,8 @@ describe('CanvasViewer', () => {
         expect(canvas.height).toBe(0);
     });
 
-    it('sets the canvas size appropriately when configured', async () => {
-        const proj = new Project();
+    it('sets the canvas size appropriately when project is configured', async () => {
+        const proj = new BasicProject();
 
         const { getByTestId } = render(ProjectViewer, {
             project: proj,
@@ -251,13 +257,115 @@ describe('CanvasViewer', () => {
         expect(canvas.style.height).toBe('200px');
         expect(canvas.height).toBe(800);
     });
+
+    it('uses default canvas size when not in fullscreen', async () => {
+        const proj = new BasicProject();
+        settingsStore.set({
+            useFullscreenCanvas: false,
+            defaultCanvasSize: [500, 400]
+        });
+
+        const { getByTestId } = render(ProjectViewer, {
+            project: proj
+        });
+
+        const canvas = getByTestId('project-canvas') as HTMLCanvasElement;
+        expect(canvas.style.width).toBe('500px');
+        expect(canvas.width).toBe(500);
+        expect(canvas.style.height).toBe('400px');
+        expect(canvas.height).toBe(400);
+    });
+
+    it('overrides default canvas size when project is configured', async () => {
+        const proj = new BasicProject();
+        settingsStore.set({
+            useFullscreenCanvas: false,
+            defaultCanvasSize: [500, 400]
+        });
+
+        const { getByTestId } = render(ProjectViewer, {
+            project: proj,
+            canvasSizeConfig: [1000, 800]
+        });
+
+        const canvas = getByTestId('project-canvas') as HTMLCanvasElement;
+        expect(canvas.style.width).toBe('1000px');
+        expect(canvas.width).toBe(1000);
+        expect(canvas.style.height).toBe('800px');
+        expect(canvas.height).toBe(800);
+    });
+
+    it('updates canvas size reactively when settings change (project not configured)', async () => {
+        const proj = new BasicProject();
+        settingsStore.set({
+            useFullscreenCanvas: false,
+            defaultCanvasSize: [500, 400]
+        });
+
+        const { getByTestId } = render(ProjectViewer, {
+            project: proj
+        });
+
+        const canvas = getByTestId('project-canvas') as HTMLCanvasElement;
+        expect(canvas.style.width).toBe('500px');
+        expect(canvas.width).toBe(500);
+        expect(canvas.style.height).toBe('400px');
+        expect(canvas.height).toBe(400);
+
+        settingsStore.set({
+            useFullscreenCanvas: false,
+            defaultCanvasSize: [1000, 800]
+        });
+
+        expect(canvas.style.width).toBe('1000px');
+        expect(canvas.width).toBe(1000);
+        expect(canvas.style.height).toBe('800px');
+        expect(canvas.height).toBe(800);
+
+        settingsStore.set({
+            useFullscreenCanvas: true
+        });
+
+        expect(canvas.style.width).toBe('');
+        expect(canvas.style.height).toBe('');
+        expect(canvas.width).toBe(0);
+        expect(canvas.height).toBe(0);
+    });
+
+    it('doesnt update canvas size reactively when settings change (project configured)', async () => {
+        const proj = new BasicProject();
+        settingsStore.set({
+            useFullscreenCanvas: true
+        });
+
+        const { getByTestId } = render(ProjectViewer, {
+            project: proj,
+            canvasSizeConfig: [1000, 800]
+        });
+
+        const canvas = getByTestId('project-canvas') as HTMLCanvasElement;
+        expect(canvas.style.width).toBe('1000px');
+        expect(canvas.width).toBe(1000);
+        expect(canvas.style.height).toBe('800px');
+        expect(canvas.height).toBe(800);
+
+        settingsStore.set({
+            useFullscreenCanvas: false,
+            defaultCanvasSize: [500, 400]
+        });
+
+        expect(canvas.style.width).toBe('1000px');
+        expect(canvas.width).toBe(1000);
+        expect(canvas.style.height).toBe('800px');
+        expect(canvas.height).toBe(800);
+    });
 });
 
 describe('Project update calls from CanvasViewer', () => {
     afterEach(cleanup);
 
     it('calls proj update multiple times in render loop', async () => {
-        const project = new Project();
+        const project = new BasicProject();
         let callCount = 0;
         vi.spyOn(project, 'update').mockImplementation(() => {
             callCount++;
@@ -271,7 +379,7 @@ describe('Project update calls from CanvasViewer', () => {
     });
 
     it('calls proj update with canvas & container params (2D)', async () => {
-        const project = new Project();
+        const project = new BasicProject();
         vi.spyOn(project, 'update');
 
         const { getByTestId } = render(ProjectViewer, {
@@ -343,7 +451,7 @@ describe('Project resize calls from CanvasViewer', () => {
     afterEach(cleanup);
 
     it("doesn't call resize on init", async () => {
-        const project = new Project();
+        const project = new BasicProject();
         vi.spyOn(project, 'resized');
 
         render(ProjectViewer, {
@@ -354,7 +462,7 @@ describe('Project resize calls from CanvasViewer', () => {
     });
 
     it('calls resized when overlayPanels value changes', async () => {
-        const project = new Project();
+        const project = new BasicProject();
         vi.spyOn(project, 'resized');
 
         settingsStore.set({
@@ -372,7 +480,7 @@ describe('Project resize calls from CanvasViewer', () => {
     });
 
     it('calls resized when the window gets a resize event', async () => {
-        const project = new Project();
+        const project = new BasicProject();
         vi.spyOn(project, 'resized');
 
         render(ProjectViewer, {
@@ -384,7 +492,7 @@ describe('Project resize calls from CanvasViewer', () => {
     });
 
     it('includes expected params when calling resized', async () => {
-        const project = new Project();
+        const project = new BasicProject();
         vi.spyOn(project, 'resized');
 
         settingsStore.set({
@@ -411,7 +519,7 @@ describe('Project resize calls from CanvasViewer', () => {
     });
 
     it('calls resized multiple times while containerResizing', async () => {
-        const project = new Project();
+        const project = new BasicProject();
         let callCount = 0;
         vi.spyOn(project, 'resized').mockImplementation(() => {
             callCount++;
@@ -434,7 +542,7 @@ describe('ProjectViewer staticMode', () => {
     afterEach(cleanup);
 
     it('calls update with init', async () => {
-        const project = new Project();
+        const project = new BasicProject();
         vi.spyOn(project, 'update');
 
         const { getByTestId, component } = render(ProjectViewer, {
@@ -457,7 +565,7 @@ describe('ProjectViewer staticMode', () => {
             paramsChanged: []
         });
 
-        const project2 = new Project();
+        const project2 = new BasicProject();
         vi.spyOn(project2, 'update');
         component.project = project2;
 
@@ -476,7 +584,7 @@ describe('ProjectViewer staticMode', () => {
     });
 
     it('calls update when param changes', async () => {
-        const project = new Project();
+        const project = new BasicProject();
         vi.spyOn(project, 'update');
 
         const { getByTestId } = render(ProjectViewer, {
@@ -543,7 +651,7 @@ describe('ProjectViewer staticMode', () => {
     });
 
     it('calls update when the window gets a resize event', async () => {
-        const project = new Project();
+        const project = new BasicProject();
         vi.spyOn(project, 'update');
 
         render(ProjectViewer, {
@@ -561,7 +669,7 @@ describe('Project paramsChanged calls from CanvasViewer', () => {
     afterEach(cleanup);
 
     it('includes expected params when calling paramsChanged', async () => {
-        const project = new Project();
+        const project = new BasicProject();
         vi.spyOn(project, 'paramsChanged');
 
         const { getByTestId } = render(ProjectViewer, {
@@ -631,7 +739,7 @@ describe('CanvasViewer w/ p5', () => {
         expect(mockP5Object.remove).toHaveBeenCalledTimes(0);
         expect(mockP5Canvas.parent).toHaveBeenCalledWith(container);
 
-        const newProj = new Project();
+        const newProj = new BasicProject();
         component.project = newProj;
         expect(mockP5Object.remove).toHaveBeenCalledTimes(1);
     });

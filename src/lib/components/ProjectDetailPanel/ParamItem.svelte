@@ -1,7 +1,7 @@
 <script lang="ts">
-    import { createEventDispatcher } from 'svelte';
     import type { ParamConfig } from '$lib/base/ConfigModels/ParamConfig';
     import { ParamGuards, type AnyParamValueType } from '$lib/base/ConfigModels/ParamTypes';
+    import { createEventDispatcher } from 'svelte';
     import BooleanInput from '../Inputs/BooleanInput.svelte';
     import FunctionInput from '../Inputs/FunctionInput.svelte';
     import NumberInput from '../Inputs/NumberInput.svelte';
@@ -14,8 +14,8 @@
     } from '$lib/base/ConfigModels/ParamConfigs/NumericArrayParamConfig';
     import { StringParamStyle } from '$lib/base/ConfigModels/ParamConfigs/StringParamConfig';
     import ColorInput from '../Inputs/ColorInput.svelte';
-    import OptionInput from '../Inputs/OptionInput.svelte';
     import FileInput from '../Inputs/FileInput.svelte';
+    import OptionInput from '../Inputs/OptionInput.svelte';
 
     export let config: ParamConfig;
     export let value: AnyParamValueType;
@@ -275,6 +275,7 @@
 
     .compact {
         grid-template-columns: 1fr 1fr;
+        max-width: calc($param-input-item-partial-width * 2);
     }
 
     .unavailable-param {

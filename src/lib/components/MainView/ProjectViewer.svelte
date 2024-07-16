@@ -42,6 +42,31 @@
         };
     }
 
+    // Derive canvas size from project config + settings
+    let useFullscreenCanvas = $settingsStore.useFullscreenCanvas;
+    let defaultCanvasSize = $settingsStore.defaultCanvasSize;
+    let derivedCanvasSize: [number, number] | undefined = undefined;
+    settingsStore.subscribe((settings) => {
+        useFullscreenCanvas = settings.useFullscreenCanvas;
+        defaultCanvasSize = settings.defaultCanvasSize;
+        derivedCanvasSize =
+            canvasSizeConfig ??
+            ((useFullscreenCanvas ? undefined : defaultCanvasSize) as [number, number] | undefined);
+
+        // Update the current canvas size
+        if (currentCanvas) {
+            if (derivedCanvasSize) {
+                const pixelRatio = pixelRatioConfig ?? window.devicePixelRatio;
+                currentCanvas.style.width = `${derivedCanvasSize[0] / pixelRatio}px`;
+                currentCanvas.style.height = `${derivedCanvasSize[1] / pixelRatio}px`;
+            } else {
+                currentCanvas.style.width = '';
+                currentCanvas.style.height = '';
+            }
+            setCanvasSize();
+        }
+    });
+
     /* Svelte events & reactivity */
 
     onMount(() => {
@@ -95,10 +120,10 @@
             }
 
             // Set canvas element size, if configured
-            if (canvasSizeConfig) {
+            if (derivedCanvasSize) {
                 const pixelRatio = pixelRatioConfig ?? window.devicePixelRatio;
-                currentCanvas.style.width = `${canvasSizeConfig[0] / pixelRatio}px`;
-                currentCanvas.style.height = `${canvasSizeConfig[1] / pixelRatio}px`;
+                currentCanvas.style.width = `${derivedCanvasSize[0] / pixelRatio}px`;
+                currentCanvas.style.height = `${derivedCanvasSize[1] / pixelRatio}px`;
             }
 
             // Add the canvas to the container
@@ -171,8 +196,12 @@
             const pixelRatio = pixelRatioConfig ?? window.devicePixelRatio;
             const initialCanvasSize: [number, number] = [
                 // these values are used if client sizes return 0, e.g. if display: none
-                canvasSizeConfig ? canvasSizeConfig[0] : pixelRatio * containerElement.clientWidth,
-                canvasSizeConfig ? canvasSizeConfig[1] : pixelRatio * containerElement.clientHeight
+                derivedCanvasSize
+                    ? derivedCanvasSize[0]
+                    : pixelRatio * containerElement.clientWidth,
+                derivedCanvasSize
+                    ? derivedCanvasSize[1]
+                    : pixelRatio * containerElement.clientHeight
             ];
             currentCanvas.width = currentCanvas.clientWidth
                 ? pixelRatio * currentCanvas.clientWidth
