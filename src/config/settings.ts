@@ -57,7 +57,7 @@ export const userSettingsLabels: Record<string, string> = {
     projectSortOrder: 'Project Sorting',
     showExperiments: 'Show Experiments',
     overlayPanels: 'Overlay Panels',
-    useFullscreenCanvas: 'Use Fullscreen Canvas',
+    useFullscreenCanvas: 'Fullscreen Canvas',
     defaultCanvasSize: 'Default Canvas Size'
 };
 
