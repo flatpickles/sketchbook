@@ -1,10 +1,10 @@
-import { render, fireEvent, screen, cleanup, waitFor, within } from '@testing-library/svelte';
-import { vi, describe, it, expect, afterEach } from 'vitest';
-import MainViewWithContent from '$lib/components/TestComponents/MainViewWithContent.svelte';
 import { settingsStore, stateStore } from '$lib/base/Util/AppState';
-import { get } from 'svelte/store';
 import { PanelState } from '$lib/base/Util/PanelState';
+import MainViewWithContent from '$lib/components/TestComponents/MainViewWithContent.svelte';
+import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
+import { get } from 'svelte/store';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 // Mocking for getContext is required for HTMLCanvasElement to work with Jest/Vitest
 // https://github.com/hustcc/jest-canvas-mock/issues/2
