@@ -2,16 +2,16 @@
     import ProjectDetailPanel from '../ProjectDetailPanel/ProjectDetailPanel.svelte';
     import ProjectViewer from './ProjectViewer.svelte';
 
+    import { content } from '$config/content';
     import type { ProjectTuple } from '$lib/base/ProjectLoading/ProjectLoader';
     import { settingsStore, stateStore } from '$lib/base/Util/AppState';
+    import { MouseState } from '$lib/base/Util/MouseState';
     import {
         PanelState,
         headerIconForPanelState,
         panelShown,
         toggledPanelState
     } from '$lib/base/Util/PanelState';
-    import { MouseState } from '$lib/base/Util/MouseState';
-    import { content } from '$config/content';
     import PresetSelector from '../ProjectDetailPanel/PresetSelector.svelte';
 
     export let projectTuple: ProjectTuple;

@@ -1,18 +1,23 @@
+import { userSettingsLabels } from '$config/settings';
 import type { ParamConfig } from '$lib/base/ConfigModels/ParamConfig';
 import {
     BooleanParamConfigDefaults,
     type BooleanParamConfig
 } from '$lib/base/ConfigModels/ParamConfigs/BooleanParamConfig';
 import {
+    NumberParamConfigDefaults,
+    NumberParamStyle,
+    type NumberParamConfig
+} from '$lib/base/ConfigModels/ParamConfigs/NumberParamConfig';
+import {
+    NumericArrayParamConfigDefaults,
+    NumericArrayParamStyle,
+    type NumericArrayParamConfig
+} from '$lib/base/ConfigModels/ParamConfigs/NumericArrayParamConfig';
+import {
     StringParamConfigDefaults,
     type StringParamConfig
 } from '$lib/base/ConfigModels/ParamConfigs/StringParamConfig';
-import { userSettingsLabels } from '$config/settings';
-import {
-    NumberParamConfigDefaults,
-    type NumberParamConfig,
-    NumberParamStyle
-} from '$lib/base/ConfigModels/ParamConfigs/NumberParamConfig';
 
 // ParamConfigs for each possible entry in the Settings panel
 export const settingsParamConfigs: ParamConfig[] = [
@@ -107,7 +112,23 @@ export const settingsParamConfigs: ParamConfig[] = [
     {
         ...BooleanParamConfigDefaults,
         key: 'enablePresetExport'
-    } as BooleanParamConfig
+    } as BooleanParamConfig,
+
+    // useFullscreenCanvas
+    {
+        ...BooleanParamConfigDefaults,
+        key: 'useFullscreenCanvas'
+    } as BooleanParamConfig,
+
+    // defaultCanvasSize
+    {
+        ...NumericArrayParamConfigDefaults,
+        style: NumericArrayParamStyle.CompactField,
+        min: 0,
+        max: 5000,
+        step: 1,
+        key: 'defaultCanvasSize'
+    } as NumericArrayParamConfig
 ].map((paramConfig) => {
     // Add the label to each ParamConfig from config/settings.ts
     paramConfig.name = userSettingsLabels[paramConfig.key];

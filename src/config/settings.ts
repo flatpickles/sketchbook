@@ -46,12 +46,19 @@ const alwaysShowPresets = false;
 // These files can be added directly to a project's `presets` directory and used as bundled presets.
 const enablePresetExport = dev;
 
+// Canvas size can be fullscreen, or fixed to defaultCanvasSize. Projects may specify a canvasSize
+// configuration value to avoid fullscreen rendering and override the defaultCanvasSize.
+const defaultCanvasSize = [1080, 1080];
+const useFullscreenCanvas = true;
+
 // Anything listed here will appear in the user settings panel with the given label. Values changed
 // in the settings panel will be persisted in cookies, and values above will be used as defaults.
 export const userSettingsLabels: Record<string, string> = {
     projectSortOrder: 'Project Sorting',
     showExperiments: 'Show Experiments',
-    overlayPanels: 'Overlay Panels'
+    overlayPanels: 'Overlay Panels',
+    defaultCanvasSize: 'Default Canvas Size',
+    useFullscreenCanvas: 'Use Fullscreen Canvas'
 };
 
 // Export all settings for use elsewhere in the app.
@@ -67,5 +74,7 @@ export const config = {
     projectSortOrder,
     groupSortOrder,
     alwaysShowPresets,
-    enablePresetExport
+    enablePresetExport,
+    useFullscreenCanvas,
+    defaultCanvasSize
 };
