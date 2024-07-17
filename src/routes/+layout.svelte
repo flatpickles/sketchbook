@@ -1,6 +1,7 @@
 <script lang="ts">
     import { goto } from '$app/navigation';
     import { page } from '$app/stores';
+    import { CanvasRecorder } from '$lib/base/Util/CanvasRecorder';
     import MainView from '$lib/components/MainView/MainView.svelte';
     import 'ress';
     import { onMount, setContext } from 'svelte';
@@ -21,6 +22,10 @@
             goto(url.toString(), { replaceState: true });
         }
     });
+
+    // Create a canvas recorder and make it available through context
+    const canvasRecorder = new CanvasRecorder();
+    setContext('canvasRecorder', canvasRecorder);
 </script>
 
 <MainView projectConfigs={data.projects} {selectedProjectKey}>

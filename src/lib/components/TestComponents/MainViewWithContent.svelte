@@ -5,13 +5,15 @@
      * so that's what this test component does directly.
      */
 
-    import Project from '$lib/base/Project/Project';
-    import MainView from '$lib/components/MainView/MainView.svelte';
     import { ProjectConfigDefaults } from '$lib/base/ConfigModels/ProjectConfig';
-    import ProjectContent from '$lib/components/MainView/ProjectContent.svelte';
+    import Project from '$lib/base/Project/Project';
     import { defaultPresetKey } from '$lib/base/ProjectLoading/PresetLoader';
+    import MainView from '$lib/components/MainView/MainView.svelte';
+    import ProjectContent from '$lib/components/MainView/ProjectContent.svelte';
 
     export let hasDetails = true;
+
+    class BasicProject extends Project {}
 
     const configs = {
         untitled: {
@@ -23,7 +25,7 @@
     };
     const projectTuple = {
         key: 'Untitled',
-        project: new Project(),
+        project: new BasicProject(),
         config: configs.untitled,
         params: [],
         presets: {

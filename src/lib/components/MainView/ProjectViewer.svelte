@@ -2,13 +2,16 @@
     import type Project from '$lib/base/Project/Project';
     import { CanvasType, type Detail } from '$lib/base/Project/Project';
     import { settingsStore } from '$lib/base/Util/AppState';
-    import { onDestroy, onMount } from 'svelte';
+    import { CanvasRecorder } from '$lib/base/Util/CanvasRecorder';
+    import { getContext, onDestroy, onMount } from 'svelte';
 
     export let project: Project;
     export let staticMode = false;
     export let containerResizing = false;
     export let canvasSizeConfig: [number, number] | undefined = undefined;
     export let pixelRatioConfig: number | undefined = undefined;
+
+    const canvasRecorder: CanvasRecorder = getContext('canvasRecorder');
 
     let previousProject: Project | undefined;
     let containerElement: HTMLDivElement;
@@ -86,7 +89,10 @@
     });
 
     // Destroy the project when destroying the component (e.g. hot update)
-    onDestroy(destroyPreviousProject);
+    onDestroy(() => {
+        destroyPreviousProject();
+        canvasRecorder.canvas = undefined;
+    });
 
     // Initialize and update the project when loading & changing projects
     $: {
@@ -118,6 +124,7 @@
             if (canvasType !== CanvasType.Unknown) {
                 currentContext = currentCanvas.getContext(project.canvasType as string);
             }
+            canvasRecorder.canvas = currentCanvas;
 
             // Set canvas element size, if configured
             if (derivedCanvasSize) {
@@ -128,6 +135,8 @@
 
             // Add the canvas to the container
             containerElement.appendChild(currentCanvas);
+        } else {
+            canvasRecorder.canvas = undefined;
         }
     }
 

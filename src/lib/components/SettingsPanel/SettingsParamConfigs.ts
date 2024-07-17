@@ -1,9 +1,13 @@
 import { userSettingsLabels } from '$config/settings';
-import type { ParamConfig } from '$lib/base/ConfigModels/ParamConfig';
+import { ParamConfigDefaults, type ParamConfig } from '$lib/base/ConfigModels/ParamConfig';
 import {
     BooleanParamConfigDefaults,
     type BooleanParamConfig
 } from '$lib/base/ConfigModels/ParamConfigs/BooleanParamConfig';
+import {
+    FunctionParamConfigDefaults,
+    type FunctionParamConfig
+} from '$lib/base/ConfigModels/ParamConfigs/FunctionParamConfig';
 import {
     NumberParamConfigDefaults,
     NumberParamStyle,
@@ -131,6 +135,18 @@ export const settingsParamConfigs: ParamConfig[] = [
     } as NumericArrayParamConfig
 ].map((paramConfig) => {
     // Add the label to each ParamConfig from config/settings.ts
-    paramConfig.name = userSettingsLabels[paramConfig.key];
+    if (paramConfig.name === ParamConfigDefaults.name) {
+        paramConfig.name = userSettingsLabels[paramConfig.key];
+    }
     return paramConfig;
 });
+
+export const recordConfigKey = 'recordFunction';
+export function recordFunctionConfig(isRecording: boolean): FunctionParamConfig {
+    return {
+        ...FunctionParamConfigDefaults,
+        name: 'Canvas Recording',
+        key: recordConfigKey,
+        buttonText: isRecording ? 'Stop' : 'Start'
+    } as FunctionParamConfig;
+}

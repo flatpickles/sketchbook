@@ -1,18 +1,26 @@
 <script lang="ts">
-    import ParamItem from '../ProjectDetailPanel/ParamItem.svelte';
-    import { get } from 'svelte/store';
-    import { settingsStore } from '$lib/base/Util/AppState';
     import { userSettingsLabels } from '$config/settings';
+    import { settingsStore } from '$lib/base/Util/AppState';
+    import { getContext } from 'svelte';
+    import { get } from 'svelte/store';
+    import ParamItem from '../ProjectDetailPanel/ParamItem.svelte';
 
-    import {
-        type ParamValueType,
-        type AnyParamValueType,
-        ParamGuards
-    } from '$lib/base/ConfigModels/ParamTypes';
-    import type { ParamConfig } from '$lib/base/ConfigModels/ParamConfig';
-    import { settingsParamConfigs } from './SettingsParamConfigs';
-    import FunctionInput from '../Inputs/FunctionInput.svelte';
     import { content } from '$config/content';
+    import type { ParamConfig } from '$lib/base/ConfigModels/ParamConfig';
+    import {
+        type AnyParamValueType,
+        ParamGuards,
+        type ParamValueType
+    } from '$lib/base/ConfigModels/ParamTypes';
+    import { CanvasRecorder } from '$lib/base/Util/CanvasRecorder';
+    import FunctionInput from '../Inputs/FunctionInput.svelte';
+    import {
+        recordConfigKey,
+        recordFunctionConfig,
+        settingsParamConfigs
+    } from './SettingsParamConfigs';
+
+    const canvasRecorder: CanvasRecorder = getContext('canvasRecorder');
 
     // Settings value configs are backed by values in the AppStateStore object
     const settingsValueConfigs = Object.keys(userSettingsLabels).map((key) => {
@@ -41,7 +49,9 @@
     // Update settings in the backing app state store when a param is updated
     function paramUpdated(event: CustomEvent) {
         const updatedConfig: ParamConfig = event.detail.config;
-        if (ParamGuards.isFunctionParamConfig(updatedConfig)) {
+        if (updatedConfig.key === recordConfigKey) {
+            toggleRecording();
+        } else if (ParamGuards.isFunctionParamConfig(updatedConfig)) {
             throw new Error("Function params shouldn't be present in the settings panel");
         } else {
             const value = event.detail.value;
@@ -59,6 +69,27 @@
         const currentSettings: Record<string, AnyParamValueType> = get(settingsStore);
         return currentSettings[paramConfig.key] as ParamValueType<T>;
     }
+
+    // Canvas recording stuff!
+    let isRecording = canvasRecorder.isRecording;
+    async function toggleRecording() {
+        isRecording = !isRecording;
+        try {
+            if (isRecording) {
+                canvasRecorder.start();
+            } else {
+                await canvasRecorder.stop();
+            }
+        } catch (e) {
+            console.error('Error toggling recording:', e);
+            alert(
+                `Error ${
+                    isRecording ? 'starting' : 'stopping'
+                } canvas recording. Please check the console.`
+            );
+            isRecording = false;
+        }
+    }
 </script>
 
 <div class="settings-wrapper">
@@ -72,6 +103,13 @@
                 on:update={paramUpdated}
             />
         {/each}
+        <ParamItem
+            config={recordFunctionConfig(isRecording)}
+            value={undefined}
+            even={settingsValueConfigs.length % 2 !== 0}
+            disabled={false}
+            on:update={paramUpdated}
+        />
     </div>
     <div class="settings-footer">
         <div class="reset-wrapper">
