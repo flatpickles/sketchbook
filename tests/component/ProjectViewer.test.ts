@@ -46,7 +46,7 @@ class ProjectNoCanvas extends Project {
     update() {}
 }
 
-describe('CanvasViewer', () => {
+describe('ProjectViewer', () => {
     afterEach(cleanup);
 
     it('renders a canvas', async () => {
@@ -222,7 +222,7 @@ describe('CanvasViewer', () => {
     });
 });
 
-describe('CanvasViewer sizing', () => {
+describe('ProjectViewer sizing', () => {
     afterEach(cleanup);
 
     it('sets canvas size appropriately when not configured', async () => {
@@ -261,6 +261,7 @@ describe('CanvasViewer sizing', () => {
     it('uses default canvas size when not in fullscreen', async () => {
         const proj = new BasicProject();
         settingsStore.set({
+            framerate: 60,
             useFullscreenCanvas: false,
             defaultCanvasSize: [500, 400]
         });
@@ -279,6 +280,7 @@ describe('CanvasViewer sizing', () => {
     it('overrides default canvas size when project is configured', async () => {
         const proj = new BasicProject();
         settingsStore.set({
+            framerate: 60,
             useFullscreenCanvas: false,
             defaultCanvasSize: [500, 400]
         });
@@ -298,6 +300,7 @@ describe('CanvasViewer sizing', () => {
     it('updates canvas size reactively when settings change (project not configured)', async () => {
         const proj = new BasicProject();
         settingsStore.set({
+            framerate: 60,
             useFullscreenCanvas: false,
             defaultCanvasSize: [500, 400]
         });
@@ -313,6 +316,7 @@ describe('CanvasViewer sizing', () => {
         expect(canvas.height).toBe(400);
 
         settingsStore.set({
+            framerate: 60,
             useFullscreenCanvas: false,
             defaultCanvasSize: [1000, 800]
         });
@@ -323,6 +327,7 @@ describe('CanvasViewer sizing', () => {
         expect(canvas.height).toBe(800);
 
         settingsStore.set({
+            framerate: 60,
             useFullscreenCanvas: true
         });
 
@@ -335,6 +340,7 @@ describe('CanvasViewer sizing', () => {
     it('doesnt update canvas size reactively when settings change (project configured)', async () => {
         const proj = new BasicProject();
         settingsStore.set({
+            framerate: 60,
             useFullscreenCanvas: true
         });
 
@@ -350,6 +356,7 @@ describe('CanvasViewer sizing', () => {
         expect(canvas.height).toBe(800);
 
         settingsStore.set({
+            framerate: 60,
             useFullscreenCanvas: false,
             defaultCanvasSize: [500, 400]
         });
@@ -361,7 +368,65 @@ describe('CanvasViewer sizing', () => {
     });
 });
 
-describe('Project update calls from CanvasViewer', () => {
+describe('ProjectViewer updateLoop', () => {
+    afterEach(cleanup);
+
+    it('updates project at 60 fps', async () => {
+        const project = new BasicProject();
+        let callCount = 0;
+        vi.spyOn(project, 'update').mockImplementation(() => {
+            callCount++;
+        });
+
+        settingsStore.set({ framerate: 60 });
+
+        render(ProjectViewer, {
+            project: project
+        });
+
+        await new Promise((r) => setTimeout(r, 1000)); // wait 1 second
+        expect(callCount).toBeGreaterThan(30); // run faster than 30
+        expect(callCount).toBeLessThanOrEqual(61);
+    });
+
+    it('updates project at 30 fps', async () => {
+        const project = new BasicProject();
+        let callCount = 0;
+        vi.spyOn(project, 'update').mockImplementation(() => {
+            callCount++;
+        });
+
+        settingsStore.set({ framerate: 30 });
+
+        render(ProjectViewer, {
+            project: project
+        });
+
+        await new Promise((r) => setTimeout(r, 1000)); // wait 1 second
+        expect(callCount).toBeGreaterThan(15); // run faster than 15
+        expect(callCount).toBeLessThanOrEqual(31);
+    });
+
+    it('updates project at 15 fps', async () => {
+        const project = new BasicProject();
+        let callCount = 0;
+        vi.spyOn(project, 'update').mockImplementation(() => {
+            callCount++;
+        });
+
+        settingsStore.set({ framerate: 15 });
+
+        render(ProjectViewer, {
+            project: project
+        });
+
+        await new Promise((r) => setTimeout(r, 1000)); // wait 1 second
+        expect(callCount).toBeGreaterThan(10); // run faster than 14
+        expect(callCount).toBeLessThanOrEqual(16);
+    });
+});
+
+describe('Project update calls from ProjectViewer', () => {
     afterEach(cleanup);
 
     it('calls proj update multiple times in render loop', async () => {
@@ -466,6 +531,7 @@ describe('Project resize calls from CanvasViewer', () => {
         vi.spyOn(project, 'resized');
 
         settingsStore.set({
+            framerate: 60,
             overlayPanels: false
         });
         render(ProjectViewer, {
@@ -474,6 +540,7 @@ describe('Project resize calls from CanvasViewer', () => {
         await waitFor(() => expect(project.resized).toHaveBeenCalledTimes(0));
 
         settingsStore.set({
+            framerate: 60,
             overlayPanels: true
         });
         await waitFor(() => expect(project.resized).toHaveBeenCalledTimes(1));
@@ -496,6 +563,7 @@ describe('Project resize calls from CanvasViewer', () => {
         vi.spyOn(project, 'resized');
 
         settingsStore.set({
+            framerate: 60,
             overlayPanels: false
         });
         const { getByTestId } = render(ProjectViewer, {
@@ -505,6 +573,7 @@ describe('Project resize calls from CanvasViewer', () => {
         const container = getByTestId('container');
         await waitFor(() => expect(project.resized).toHaveBeenCalledTimes(0));
         settingsStore.set({
+            framerate: 60,
             overlayPanels: true
         });
 

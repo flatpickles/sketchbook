@@ -11,7 +11,7 @@
     export let canvasSizeConfig: [number, number] | undefined = undefined;
     export let pixelRatioConfig: number | undefined = undefined;
 
-    const canvasRecorder: CanvasRecorder = getContext('canvasRecorder');
+    const canvasRecorder: CanvasRecorder | undefined = getContext('canvasRecorder');
 
     let previousProject: Project | undefined;
     let containerElement: HTMLDivElement;
@@ -37,11 +37,8 @@
             if (!staticMode) {
                 const elapsed = timestamp - lastFrameTime;
                 if (elapsed >= frameInterval) {
-                    const framesToUpdate = Math.floor(elapsed / frameInterval);
-                    for (let i = 0; i < framesToUpdate; i++) {
-                        updateProject();
-                    }
-                    lastFrameTime = timestamp - (elapsed % frameInterval);
+                    updateProject((performance.now() - startTime) / 1000);
+                    lastFrameTime = timestamp;
                 }
             }
         }
@@ -93,7 +90,7 @@
                 ...getCurrentDetail()
             });
             for (let key of customEvent.detail) paramsChanged.add(key);
-            if (staticMode) updateProject();
+            if (staticMode) updateProject(0);
         });
 
         // Update the canvas size whenever the window is resized
@@ -104,7 +101,7 @@
     onDestroy(() => {
         if (updateLoopID) cancelAnimationFrame(updateLoopID);
         destroyPreviousProject();
-        canvasRecorder.canvas = undefined;
+        if (canvasRecorder) canvasRecorder.canvas = undefined;
     });
 
     // Initialize and update the project when loading & changing projects
@@ -137,7 +134,7 @@
             if (canvasType !== CanvasType.Unknown) {
                 currentContext = currentCanvas.getContext(project.canvasType as string);
             }
-            canvasRecorder.canvas = currentCanvas;
+            if (canvasRecorder) canvasRecorder.canvas = currentCanvas;
 
             // Set canvas element size, if configured
             if (derivedCanvasSize) {
@@ -149,17 +146,17 @@
             // Add the canvas to the container
             containerElement.appendChild(currentCanvas);
         } else {
-            canvasRecorder.canvas = undefined;
+            if (canvasRecorder) canvasRecorder.canvas = undefined;
         }
     }
 
     // Called to update the project, bumping the frame count and calculating the time
-    function updateProject() {
+    function updateProject(time: number) {
         const currentDetail = getCurrentDetail();
         project.update({
             ...currentDetail,
             frame: frameCount,
-            time: (performance.now() - startTime) / 1000,
+            time,
             width: currentDetail.canvas?.width,
             height: currentDetail.canvas?.height,
             paramsChanged: Array.from(paramsChanged)
@@ -201,12 +198,12 @@
 
         // Update component state
         frameCount = 0;
-        startTime = Date.now();
+        startTime = performance.now();
         paramsChanged.clear();
 
         // Start the update loop after first project load, and call update for static projects
         if (!updateLoopID) updateLoopID = requestAnimationFrame(updateLoop);
-        if (staticMode) updateProject();
+        if (staticMode) updateProject(0);
     }
 
     // Called to reset the canvas size to the container size, or to a configured size
@@ -243,7 +240,7 @@
             ? [currentCanvas.width, currentCanvas.height]
             : undefined;
         project.resized({ containerSize, canvasSize, ...getCurrentDetail() });
-        if (staticMode) updateProject();
+        if (staticMode) updateProject((performance.now() - startTime) / 1000);
     }
 </script>
 

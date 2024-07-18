@@ -141,7 +141,8 @@ export const settingsParamConfigs: ParamConfig[] = [
         options: {
             '24': 24,
             '30': 30,
-            '60': 60
+            '60': 60,
+            '90': 90
         }
     } as NumberParamConfig
 ].map((paramConfig) => {

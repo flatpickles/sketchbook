@@ -23,7 +23,7 @@
         settingsParamConfigs
     } from './SettingsParamConfigs';
 
-    const canvasRecorder: CanvasRecorder = getContext('canvasRecorder');
+    const canvasRecorder: CanvasRecorder | undefined = getContext('canvasRecorder');
 
     // Settings value configs are backed by values in the AppStateStore object
     const settingsValueConfigs = Object.keys(userSettingsLabels).map((key) => {
@@ -55,6 +55,7 @@
         if (updatedConfig.key === captureVideoConfigKey) {
             toggleRecording();
         } else if (updatedConfig.key === captureImageConfigKey) {
+            if (!canvasRecorder) throw new Error('Canvas recorder is undefined');
             canvasRecorder.saveImage();
         } else if (ParamGuards.isFunctionParamConfig(updatedConfig)) {
             throw new Error("Function params shouldn't be present in the settings panel");
@@ -76,10 +77,11 @@
     }
 
     // Canvas recording stuff!
-    let isRecording = canvasRecorder.isRecording;
+    let isRecording = canvasRecorder ? canvasRecorder.isRecording : false;
     async function toggleRecording() {
         isRecording = !isRecording;
         try {
+            if (!canvasRecorder) throw new Error('Canvas recorder is undefined');
             if (isRecording) {
                 canvasRecorder.start();
             } else {

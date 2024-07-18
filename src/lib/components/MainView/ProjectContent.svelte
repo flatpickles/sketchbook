@@ -39,9 +39,9 @@
     $: rightPanelHeaderIcon = headerIconForPanelState($settingsStore.projectDetailPanelState);
 
     // Canvas recorder name should use the project key
-    const canvasRecorder: CanvasRecorder = getContext('canvasRecorder');
+    const canvasRecorder: CanvasRecorder | undefined = getContext('canvasRecorder');
     $: {
-        canvasRecorder.saveName = projectTuple.key;
+        if (canvasRecorder) canvasRecorder.saveName = projectTuple.key;
     }
 
     function toggleRightPanel(showClicked = false) {

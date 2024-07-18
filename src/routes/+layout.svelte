@@ -25,10 +25,10 @@
     });
 
     // Create a canvas recorder and make it available through context
-    const canvasRecorder = new CanvasRecorder($settingsStore.framerate);
+    const canvasRecorder: CanvasRecorder | undefined = new CanvasRecorder($settingsStore.framerate);
     setContext('canvasRecorder', canvasRecorder);
     settingsStore.subscribe((settings) => {
-        canvasRecorder.fps = settings.framerate;
+        if (canvasRecorder) canvasRecorder.fps = settings.framerate;
     });
 </script>
 

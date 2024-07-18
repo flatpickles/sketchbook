@@ -1,4 +1,4 @@
-import Project, { type UpdateDetail2D, type ParamsChangedDetail } from '$lib/base/Project/Project';
+import Project, { type ParamsChangedDetail, type UpdateDetail2D } from '$lib/base/Project/Project';
 
 /***
  * Welcome to Sketchbook! This is a sample project that will help you get a feel for how Sketchbook
