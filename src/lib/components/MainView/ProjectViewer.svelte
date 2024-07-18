@@ -20,18 +20,30 @@
 
     // Local state used when updating project
     let frameCount = 0;
-    let startTime = Date.now();
+    let startTime = performance.now();
     let paramsChanged = new Set<string>();
 
-    // Call the update function each frame when not in static mode
+    // Framerate control variables
+    let lastFrameTime = 0;
     let updateLoopID: number | undefined = undefined;
-    const updateLoop = () => {
+    $: frameInterval = 1000 / $settingsStore.framerate;
+
+    const updateLoop = (timestamp: number) => {
         if (containerElement) {
             // Set the canvas size each frame if the container is actively resizing
             if (containerResizing) setCanvasSize();
 
             // Update the project, if not in static mode
-            if (!staticMode) updateProject();
+            if (!staticMode) {
+                const elapsed = timestamp - lastFrameTime;
+                if (elapsed >= frameInterval) {
+                    const framesToUpdate = Math.floor(elapsed / frameInterval);
+                    for (let i = 0; i < framesToUpdate; i++) {
+                        updateProject();
+                    }
+                    lastFrameTime = timestamp - (elapsed % frameInterval);
+                }
+            }
         }
         updateLoopID = requestAnimationFrame(updateLoop);
     };
@@ -90,6 +102,7 @@
 
     // Destroy the project when destroying the component (e.g. hot update)
     onDestroy(() => {
+        if (updateLoopID) cancelAnimationFrame(updateLoopID);
         destroyPreviousProject();
         canvasRecorder.canvas = undefined;
     });
@@ -146,7 +159,7 @@
         project.update({
             ...currentDetail,
             frame: frameCount,
-            time: (Date.now() - startTime) / 1000,
+            time: (performance.now() - startTime) / 1000,
             width: currentDetail.canvas?.width,
             height: currentDetail.canvas?.height,
             paramsChanged: Array.from(paramsChanged)
@@ -192,7 +205,7 @@
         paramsChanged.clear();
 
         // Start the update loop after first project load, and call update for static projects
-        if (!updateLoopID) updateLoop();
+        if (!updateLoopID) updateLoopID = requestAnimationFrame(updateLoop);
         if (staticMode) updateProject();
     }
 

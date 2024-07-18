@@ -15,6 +15,7 @@
     import { CanvasRecorder } from '$lib/base/Util/CanvasRecorder';
     import FunctionInput from '../Inputs/FunctionInput.svelte';
     import {
+        disableWhileRecording,
         recordConfigKey,
         recordFunctionConfig,
         settingsParamConfigs
@@ -99,7 +100,7 @@
                 config={param}
                 value={initialValueForParam(param)}
                 even={i % 2 === 1}
-                disabled={false}
+                disabled={isRecording && disableWhileRecording.includes(param.key)}
                 on:update={paramUpdated}
             />
         {/each}

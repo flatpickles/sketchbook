@@ -1,13 +1,12 @@
-// Configuration for the canvas recorder:
-const BitsPerPixel = 0.4; // very high
-const FramesPerSecond = 30; // very standard
-
 /**
  * CanvasRecorder is a class that records a canvas to a video file.
  * It uses the MediaRecorder API to record the canvas to a video file.
  */
 export class CanvasRecorder {
     canvas: HTMLCanvasElement | undefined;
+    fps: number;
+
+    #bitsPerPixel: number;
     #useVP9: boolean;
     #recordedChunks: Blob[] = [];
     #recorder: MediaRecorder | null = null;
@@ -16,7 +15,9 @@ export class CanvasRecorder {
         return this.#recorder !== null;
     }
 
-    constructor() {
+    constructor(fps: number, bitsPerPixel = 0.4) {
+        this.fps = fps;
+        this.#bitsPerPixel = bitsPerPixel;
         this.#useVP9 = MediaRecorder.isTypeSupported('video/webm;codecs=vp9');
     }
 
@@ -24,7 +25,7 @@ export class CanvasRecorder {
         if (!this.canvas) {
             throw new Error('CanvasRecorder: no canvas available');
         }
-        return this.canvas.width * this.canvas.height * FramesPerSecond * BitsPerPixel;
+        return this.canvas.width * this.canvas.height * this.fps * this.#bitsPerPixel;
     }
 
     start() {
@@ -33,7 +34,7 @@ export class CanvasRecorder {
         }
 
         this.#recordedChunks = [];
-        const stream = this.canvas.captureStream(FramesPerSecond);
+        const stream = this.canvas.captureStream(this.fps);
         const mimeType = this.#useVP9 ? 'video/webm;codecs=vp9' : 'video/webm;codecs=vp8';
         const videoBitsPerSecond = this.#calculateBitrate();
 
@@ -46,7 +47,7 @@ export class CanvasRecorder {
                 this.#recordedChunks.push(event.data);
             }
         };
-        this.#recorder.start(1000 / FramesPerSecond);
+        this.#recorder.start(1000 / this.fps);
     }
 
     stop(): Promise<void> {

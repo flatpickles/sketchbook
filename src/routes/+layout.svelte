@@ -1,6 +1,7 @@
 <script lang="ts">
     import { goto } from '$app/navigation';
     import { page } from '$app/stores';
+    import { settingsStore } from '$lib/base/Util/AppState';
     import { CanvasRecorder } from '$lib/base/Util/CanvasRecorder';
     import MainView from '$lib/components/MainView/MainView.svelte';
     import 'ress';
@@ -24,8 +25,11 @@
     });
 
     // Create a canvas recorder and make it available through context
-    const canvasRecorder = new CanvasRecorder();
+    const canvasRecorder = new CanvasRecorder($settingsStore.framerate);
     setContext('canvasRecorder', canvasRecorder);
+    settingsStore.subscribe((settings) => {
+        canvasRecorder.fps = settings.framerate;
+    });
 </script>
 
 <MainView projectConfigs={data.projects} {selectedProjectKey}>
