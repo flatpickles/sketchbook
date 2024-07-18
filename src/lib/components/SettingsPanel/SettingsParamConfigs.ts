@@ -152,15 +152,23 @@ export const settingsParamConfigs: ParamConfig[] = [
     return paramConfig;
 });
 
-export const recordConfigKey = 'recordFunction';
-export function recordFunctionConfig(isRecording: boolean): FunctionParamConfig {
+export const captureVideoConfigKey = 'captureVideo';
+export function captureVideoConfig(isRecording: boolean): FunctionParamConfig {
     return {
         ...FunctionParamConfigDefaults,
-        name: 'Canvas Recording',
-        key: recordConfigKey,
+        name: 'Capture Video',
+        key: captureVideoConfigKey,
         buttonText: isRecording ? 'Stop' : 'Start'
     } as FunctionParamConfig;
 }
+
+export const captureImageConfigKey = 'captureImage';
+export const captureImageConfig: FunctionParamConfig = {
+    ...FunctionParamConfigDefaults,
+    name: 'Capture Image',
+    key: captureImageConfigKey,
+    buttonText: 'Save'
+} as FunctionParamConfig;
 
 // Keys for settings param inputs to disable while recording:
 export const disableWhileRecording = ['framerate', 'defaultCanvasSize', 'useFullscreenCanvas'];

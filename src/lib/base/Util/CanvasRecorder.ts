@@ -5,6 +5,7 @@
 export class CanvasRecorder {
     canvas: HTMLCanvasElement | undefined;
     fps: number;
+    saveName = 'skbk-capture';
 
     #bitsPerPixel: number;
     #useVP9: boolean;
@@ -66,7 +67,26 @@ export class CanvasRecorder {
         });
     }
 
+    saveImage() {
+        if (!this.canvas) {
+            throw new Error('CanvasRecorder: no canvas available');
+        }
+
+        const url = this.canvas.toDataURL('image/png');
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        document.body.appendChild(a);
+        a.href = url;
+        a.download = `${this.saveName}.png`;
+        a.click();
+        document.body.removeChild(a);
+    }
+
     #saveVideo() {
+        if (!this.canvas) {
+            throw new Error('CanvasRecorder: no canvas available');
+        }
+
         const blob = new Blob(this.#recordedChunks, {
             type: 'video/webm'
         });
@@ -75,7 +95,7 @@ export class CanvasRecorder {
         document.body.appendChild(a);
         a.style.display = 'none';
         a.href = url;
-        a.download = 'canvas-recording.webm';
+        a.download = `${this.saveName}.webm`;
         a.click();
         window.URL.revokeObjectURL(url);
         document.body.removeChild(a);

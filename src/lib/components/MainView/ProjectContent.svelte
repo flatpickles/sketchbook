@@ -5,6 +5,7 @@
     import { content } from '$config/content';
     import type { ProjectTuple } from '$lib/base/ProjectLoading/ProjectLoader';
     import { settingsStore, stateStore } from '$lib/base/Util/AppState';
+    import { CanvasRecorder } from '$lib/base/Util/CanvasRecorder';
     import { MouseState } from '$lib/base/Util/MouseState';
     import {
         PanelState,
@@ -12,6 +13,7 @@
         panelShown,
         toggledPanelState
     } from '$lib/base/Util/PanelState';
+    import { getContext } from 'svelte';
     import PresetSelector from '../ProjectDetailPanel/PresetSelector.svelte';
 
     export let projectTuple: ProjectTuple;
@@ -35,6 +37,12 @@
             MouseState.RightTrigger
         );
     $: rightPanelHeaderIcon = headerIconForPanelState($settingsStore.projectDetailPanelState);
+
+    // Canvas recorder name should use the project key
+    const canvasRecorder: CanvasRecorder = getContext('canvasRecorder');
+    $: {
+        canvasRecorder.saveName = projectTuple.key;
+    }
 
     function toggleRightPanel(showClicked = false) {
         // Toggle from current state

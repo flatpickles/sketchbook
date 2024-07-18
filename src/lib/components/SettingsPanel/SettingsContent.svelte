@@ -15,9 +15,11 @@
     import { CanvasRecorder } from '$lib/base/Util/CanvasRecorder';
     import FunctionInput from '../Inputs/FunctionInput.svelte';
     import {
+        captureImageConfig,
+        captureImageConfigKey,
+        captureVideoConfig,
+        captureVideoConfigKey,
         disableWhileRecording,
-        recordConfigKey,
-        recordFunctionConfig,
         settingsParamConfigs
     } from './SettingsParamConfigs';
 
@@ -50,8 +52,10 @@
     // Update settings in the backing app state store when a param is updated
     function paramUpdated(event: CustomEvent) {
         const updatedConfig: ParamConfig = event.detail.config;
-        if (updatedConfig.key === recordConfigKey) {
+        if (updatedConfig.key === captureVideoConfigKey) {
             toggleRecording();
+        } else if (updatedConfig.key === captureImageConfigKey) {
+            canvasRecorder.saveImage();
         } else if (ParamGuards.isFunctionParamConfig(updatedConfig)) {
             throw new Error("Function params shouldn't be present in the settings panel");
         } else {
@@ -105,9 +109,16 @@
             />
         {/each}
         <ParamItem
-            config={recordFunctionConfig(isRecording)}
+            config={captureImageConfig}
             value={undefined}
             even={settingsValueConfigs.length % 2 !== 0}
+            disabled={false}
+            on:update={paramUpdated}
+        />
+        <ParamItem
+            config={captureVideoConfig(isRecording)}
+            value={undefined}
+            even={settingsValueConfigs.length % 2 !== 1}
             disabled={false}
             on:update={paramUpdated}
         />
