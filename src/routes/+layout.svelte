@@ -3,6 +3,7 @@
     import { page } from '$app/stores';
     import { settingsStore } from '$lib/base/Util/AppState';
     import { CanvasRecorder } from '$lib/base/Util/CanvasRecorder';
+    import { FrameRecorder } from '$lib/base/Util/FrameRecorder';
     import MainView from '$lib/components/MainView/MainView.svelte';
     import 'ress';
     import { onMount, setContext } from 'svelte';
@@ -25,11 +26,15 @@
     });
 
     // Create a canvas recorder and make it available through context
-    const canvasRecorder: CanvasRecorder | undefined = new CanvasRecorder($settingsStore.framerate);
+    const canvasRecorder: CanvasRecorder = new CanvasRecorder($settingsStore.framerate);
     setContext('canvasRecorder', canvasRecorder);
     settingsStore.subscribe((settings) => {
         if (canvasRecorder) canvasRecorder.fps = settings.framerate;
     });
+
+    // Create a frame recorder and make it available through context
+    const frameRecorder: FrameRecorder = new FrameRecorder();
+    setContext('frameRecorder', frameRecorder);
 </script>
 
 <MainView projectConfigs={data.projects} {selectedProjectKey}>

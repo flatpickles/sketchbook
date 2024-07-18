@@ -29,7 +29,7 @@ export class CanvasRecorder {
         return this.canvas.width * this.canvas.height * this.fps * this.#bitsPerPixel;
     }
 
-    start() {
+    startVideo() {
         if (!this.canvas) {
             throw new Error('CanvasRecorder: no canvas available');
         }
@@ -51,7 +51,7 @@ export class CanvasRecorder {
         this.#recorder.start(1000 / this.fps);
     }
 
-    stop(): Promise<void> {
+    stopVideo(): Promise<void> {
         if (!this.#recorder) return Promise.resolve();
         return new Promise<void>((resolve) => {
             if (this.#recorder) {

@@ -14,6 +14,7 @@
     } from '$lib/base/ConfigModels/ParamTypes';
     import { CanvasRecorder } from '$lib/base/Util/CanvasRecorder';
     import FunctionInput from '../Inputs/FunctionInput.svelte';
+    import FrameRecorderComponent from './FrameRecorderComponent.svelte';
     import {
         captureImageConfig,
         captureImageConfigKey,
@@ -83,9 +84,9 @@
         try {
             if (!canvasRecorder) throw new Error('Canvas recorder is undefined');
             if (isRecording) {
-                canvasRecorder.start();
+                canvasRecorder.startVideo();
             } else {
-                await canvasRecorder.stop();
+                await canvasRecorder.stopVideo();
             }
         } catch (e) {
             console.error('Error toggling recording:', e);
@@ -125,6 +126,7 @@
             on:update={paramUpdated}
         />
     </div>
+    <FrameRecorderComponent />
     <div class="settings-footer">
         <div class="reset-wrapper">
             <FunctionInput

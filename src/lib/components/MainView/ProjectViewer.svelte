@@ -1,8 +1,9 @@
 <script lang="ts">
     import type Project from '$lib/base/Project/Project';
     import { CanvasType, type Detail } from '$lib/base/Project/Project';
-    import { settingsStore } from '$lib/base/Util/AppState';
+    import { frameRecorderStore, settingsStore } from '$lib/base/Util/AppState';
     import { CanvasRecorder } from '$lib/base/Util/CanvasRecorder';
+    import { FrameRecorder } from '$lib/base/Util/FrameRecorder';
     import { getContext, onDestroy, onMount } from 'svelte';
 
     export let project: Project;
@@ -12,6 +13,7 @@
     export let pixelRatioConfig: number | undefined = undefined;
 
     const canvasRecorder: CanvasRecorder | undefined = getContext('canvasRecorder');
+    const frameRecorder: FrameRecorder | undefined = getContext('frameRecorder');
 
     let previousProject: Project | undefined;
     let containerElement: HTMLDivElement;
@@ -28,22 +30,57 @@
     let updateLoopID: number | undefined = undefined;
     $: frameInterval = 1000 / $settingsStore.framerate;
 
+    let frameRecorderTime = 0;
+    $: frameRecordInterval = 1000 / $frameRecorderStore.fps;
+
     const updateLoop = (timestamp: number) => {
         if (containerElement) {
             // Set the canvas size each frame if the container is actively resizing
             if (containerResizing) setCanvasSize();
 
             // Update the project, if not in static mode
-            if (!staticMode) {
-                const elapsed = timestamp - lastFrameTime;
-                if (elapsed >= frameInterval) {
-                    updateProject((performance.now() - startTime) / 1000);
-                    lastFrameTime = timestamp;
-                }
+            if (frameRecorder && frameRecorder.isRecording) {
+                updateProject(frameRecorderTime / 1000);
+                frameRecorder.recordFrame();
+                frameRecorderTime += frameRecordInterval;
+            } else if (!staticMode) {
+                updateProject((performance.now() - startTime) / 1000);
             }
+
+            // todo fps controls mostly removed, finish that
+            // if (!staticMode) {
+            //     const elapsed = timestamp - lastFrameTime;
+            //     if (elapsed >= frameInterval) {
+            //         updateProject((performance.now() - startTime) / 1000);
+            //         lastFrameTime = timestamp;
+            //     }
+            // }
         }
         updateLoopID = requestAnimationFrame(updateLoop);
     };
+
+    function configureFrameRecorder() {
+        // todo: what happens if projects change?
+        if (frameRecorder) {
+            frameRecorder.onStart(() => {
+                if (staticMode) {
+                    alert('Frame sequence recording not supported in static mode');
+                    frameRecorder.cancelRecording();
+                    return;
+                }
+
+                // Reload project & setup recording
+                projectLoaded(project);
+                frameRecorderTime = $frameRecorderStore.startTimeMs;
+            });
+            frameRecorder.onStop((success: boolean) => {
+                if (success) {
+                    projectLoaded(project);
+                }
+                // on no success wassup?
+            });
+        }
+    }
 
     function getCurrentDetail(): Detail<typeof project.canvasType> {
         // Return the detail object, for use with project lifecycle method calls
@@ -95,6 +132,9 @@
 
         // Update the canvas size whenever the window is resized
         window.addEventListener('resize', () => setCanvasSize());
+
+        // Track canvas recording state
+        configureFrameRecorder();
     });
 
     // Destroy the project when destroying the component (e.g. hot update)
@@ -102,6 +142,7 @@
         if (updateLoopID) cancelAnimationFrame(updateLoopID);
         destroyPreviousProject();
         if (canvasRecorder) canvasRecorder.canvas = undefined;
+        if (frameRecorder) frameRecorder.canvas = undefined;
     });
 
     // Initialize and update the project when loading & changing projects
@@ -135,6 +176,7 @@
                 currentContext = currentCanvas.getContext(project.canvasType as string);
             }
             if (canvasRecorder) canvasRecorder.canvas = currentCanvas;
+            if (frameRecorder) frameRecorder.canvas = currentCanvas;
 
             // Set canvas element size, if configured
             if (derivedCanvasSize) {
@@ -147,10 +189,11 @@
             containerElement.appendChild(currentCanvas);
         } else {
             if (canvasRecorder) canvasRecorder.canvas = undefined;
+            if (frameRecorder) frameRecorder.canvas = undefined;
         }
     }
 
-    // Called to update the project, bumping the frame count and calculating the time
+    // Called to update the project, bumping the frame count
     function updateProject(time: number) {
         const currentDetail = getCurrentDetail();
         project.update({

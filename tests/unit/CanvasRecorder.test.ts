@@ -77,13 +77,13 @@ describe('CanvasRecorder', () => {
     });
 
     it('should start recording', () => {
-        recorder.start();
+        recorder.startVideo();
         expect(recorder.isRecording).toBe(true);
     });
 
     it('should stop recording', async () => {
-        recorder.start();
-        const stopPromise = recorder.stop();
+        recorder.startVideo();
+        const stopPromise = recorder.stopVideo();
         await stopPromise;
         expect(recorder.isRecording).toBe(false);
     });
@@ -122,8 +122,8 @@ describe('CanvasRecorder', () => {
             click: clickSpy
         } as unknown as HTMLAnchorElement);
 
-        recorder.start();
-        const stopPromise = recorder.stop();
+        recorder.startVideo();
+        const stopPromise = recorder.stopVideo();
         await stopPromise;
 
         expect(createElementSpy).toHaveBeenCalledWith('a');

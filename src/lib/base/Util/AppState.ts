@@ -16,3 +16,10 @@ const stateDefaults = {
     panelShowButtonsVisible: true
 };
 export const stateStore = writable(stateDefaults);
+
+// Frame recording details
+export const frameRecorderStore = createPersistedStore('recorder', {
+    startTimeMs: 0,
+    durationMs: 5000,
+    fps: 30
+});
