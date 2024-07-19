@@ -1,9 +1,9 @@
-import { CanvasRecorder } from '$lib/base/Util/CanvasRecorder';
+import { VideoRecorder } from '$lib/base/Util/VideoRecorder';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-describe('CanvasRecorder', () => {
+describe('VideoRecorder', () => {
     let canvas: HTMLCanvasElement;
-    let recorder: CanvasRecorder;
+    let recorder: VideoRecorder;
 
     beforeEach(() => {
         // Mocking MediaRecorder and related methods
@@ -66,7 +66,7 @@ describe('CanvasRecorder', () => {
         canvas = document.createElement('canvas');
         canvas.width = 640;
         canvas.height = 480;
-        recorder = new CanvasRecorder(30);
+        recorder = new VideoRecorder(30);
         recorder.canvas = canvas;
     });
 

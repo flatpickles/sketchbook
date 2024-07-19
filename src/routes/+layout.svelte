@@ -1,9 +1,9 @@
 <script lang="ts">
     import { goto } from '$app/navigation';
     import { page } from '$app/stores';
-    import { settingsStore } from '$lib/base/Util/AppState';
-    import { CanvasRecorder } from '$lib/base/Util/CanvasRecorder';
+    import { captureControlStore } from '$lib/base/Util/AppState';
     import { FrameRecorder } from '$lib/base/Util/FrameRecorder';
+    import { VideoRecorder } from '$lib/base/Util/VideoRecorder';
     import MainView from '$lib/components/MainView/MainView.svelte';
     import 'ress';
     import { onMount, setContext } from 'svelte';
@@ -25,16 +25,19 @@
         }
     });
 
-    // Create a canvas recorder and make it available through context
-    const canvasRecorder: CanvasRecorder = new CanvasRecorder($settingsStore.framerate);
-    setContext('canvasRecorder', canvasRecorder);
-    settingsStore.subscribe((settings) => {
-        if (canvasRecorder) canvasRecorder.fps = settings.framerate;
-    });
+    // Create a video recorder and make it available through context
+    const videoRecorder: VideoRecorder = new VideoRecorder();
+    setContext('videoRecorder', videoRecorder);
 
     // Create a frame recorder and make it available through context
     const frameRecorder: FrameRecorder = new FrameRecorder();
     setContext('frameRecorder', frameRecorder);
+    frameRecorder.onStart(() => {
+        $captureControlStore.recordingFrames = true;
+    });
+    frameRecorder.onStop(() => {
+        $captureControlStore.recordingFrames = false;
+    });
 </script>
 
 <MainView projectConfigs={data.projects} {selectedProjectKey}>

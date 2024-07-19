@@ -1,6 +1,6 @@
 <script lang="ts">
     import { userSettingsLabels } from '$config/settings';
-    import { settingsStore } from '$lib/base/Util/AppState';
+    import { captureControlStore, settingsStore } from '$lib/base/Util/AppState';
     import { getContext } from 'svelte';
     import { get } from 'svelte/store';
     import ParamItem from '../ProjectDetailPanel/ParamItem.svelte';
@@ -12,7 +12,8 @@
         ParamGuards,
         type ParamValueType
     } from '$lib/base/ConfigModels/ParamTypes';
-    import { CanvasRecorder } from '$lib/base/Util/CanvasRecorder';
+    import { FrameRecorder } from '$lib/base/Util/FrameRecorder';
+    import { VideoRecorder } from '$lib/base/Util/VideoRecorder';
     import FunctionInput from '../Inputs/FunctionInput.svelte';
     import FrameSeqControls from './FrameSeqControls.svelte';
     import {
@@ -24,7 +25,8 @@
         settingsParamConfigs
     } from './SettingsParamConfigs';
 
-    const canvasRecorder: CanvasRecorder | undefined = getContext('canvasRecorder');
+    const videoRecorder: VideoRecorder | undefined = getContext('videoRecorder');
+    const frameRecorder: FrameRecorder | undefined = getContext('frameRecorder');
 
     // Settings value configs are backed by values in the AppStateStore object
     const settingsValueConfigs = Object.keys(userSettingsLabels).map((key) => {
@@ -54,10 +56,9 @@
     function paramUpdated(event: CustomEvent) {
         const updatedConfig: ParamConfig = event.detail.config;
         if (updatedConfig.key === captureVideoConfigKey) {
-            toggleRecording();
+            toggleVideoRecording();
         } else if (updatedConfig.key === captureImageConfigKey) {
-            if (!canvasRecorder) throw new Error('Canvas recorder is undefined');
-            canvasRecorder.saveImage();
+            $captureControlStore.imgSaveQueued = true;
         } else if (ParamGuards.isFunctionParamConfig(updatedConfig)) {
             throw new Error("Function params shouldn't be present in the settings panel");
         } else {
@@ -77,25 +78,32 @@
         return currentSettings[paramConfig.key] as ParamValueType<T>;
     }
 
-    // Canvas recording stuff!
-    let isRecording = canvasRecorder ? canvasRecorder.isRecording : false;
-    async function toggleRecording() {
-        isRecording = !isRecording;
+    async function toggleVideoRecording() {
         try {
-            if (!canvasRecorder) throw new Error('Canvas recorder is undefined');
-            if (isRecording) {
-                canvasRecorder.startVideo();
+            if (!videoRecorder) throw new Error('Video recorder is undefined');
+            if (!$captureControlStore.recordingVideo) {
+                videoRecorder.startVideo();
+                $captureControlStore.recordingVideo = true;
             } else {
-                await canvasRecorder.stopVideo();
+                await videoRecorder.stopVideo();
+                $captureControlStore.recordingVideo = false;
             }
         } catch (e) {
             console.error('Error toggling recording:', e);
             alert(
                 `Error ${
-                    isRecording ? 'starting' : 'stopping'
-                } canvas recording. Please check the console.`
+                    $captureControlStore.recordingVideo ? 'starting' : 'stopping'
+                } video recording. Please check the console.`
             );
-            isRecording = false;
+        }
+    }
+
+    function startFrameRecording() {
+        // captureControlStore.recordingFrames is managed from +layout.svelte
+        if (frameRecorder) {
+            const framesToRecord =
+                ($captureControlStore.durationMs / 1000) * $captureControlStore.fps;
+            frameRecorder.startRecording(framesToRecord);
         }
     }
 </script>
@@ -107,37 +115,46 @@
                 config={param}
                 value={initialValueForParam(param)}
                 even={i % 2 === 1}
-                disabled={isRecording && disableWhileRecording.includes(param.key)}
+                disabled={($captureControlStore.recordingVideo ||
+                    $captureControlStore.recordingFrames) &&
+                    disableWhileRecording.includes(param.key)}
                 on:update={paramUpdated}
             />
         {/each}
     </div>
-    <div class="recording-header">
-        Canvas Recording
-        <a href="https://skbk.cc/#/necessities?id=exporting-photos-amp-videos" target="_blank">
-            <i class="fa-solid fa-circle-info recording-info" />
-        </a>
-    </div>
-    <div class="settings-grid">
-        <ParamItem
-            config={captureImageConfig}
-            value={undefined}
-            even={false}
-            disabled={false}
-            on:update={paramUpdated}
-        />
-        <ParamItem
-            config={captureVideoConfig(isRecording)}
-            value={undefined}
-            even={true}
-            disabled={false}
-            on:update={paramUpdated}
-        />
-        <div class="frames-label-wrapper">
-            <span class="frames-label">Frame Sequence</span>
+    {#if $settingsStore.showRecordingControls}
+        <div class="recording-header">
+            Canvas Recording
+            <a href="https://skbk.cc/#/necessities?id=exporting-photos-amp-videos" target="_blank">
+                <i class="fa-solid fa-circle-info recording-info" />
+            </a>
         </div>
-        <FrameSeqControls />
-    </div>
+        <div class="settings-grid">
+            <ParamItem
+                config={captureImageConfig}
+                value={undefined}
+                even={false}
+                disabled={$captureControlStore.recordingVideo ||
+                    $captureControlStore.recordingFrames}
+                on:update={paramUpdated}
+            />
+            <ParamItem
+                config={captureVideoConfig($captureControlStore.recordingVideo)}
+                value={undefined}
+                even={true}
+                disabled={$captureControlStore.recordingFrames}
+                on:update={paramUpdated}
+            />
+            <div class="frames-label-wrapper">
+                <span class="frames-label">Frame Sequence</span>
+            </div>
+            <FrameSeqControls
+                on:start={startFrameRecording}
+                disabled={$captureControlStore.recordingVideo ||
+                    $captureControlStore.recordingFrames}
+            />
+        </div>
+    {/if}
     <div class="settings-footer">
         <div class="reset-wrapper">
             <FunctionInput

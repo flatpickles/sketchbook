@@ -1,9 +1,9 @@
 <script lang="ts">
     import type Project from '$lib/base/Project/Project';
     import { CanvasType, type Detail } from '$lib/base/Project/Project';
-    import { frameRecorderStore, settingsStore } from '$lib/base/Util/AppState';
-    import { CanvasRecorder } from '$lib/base/Util/CanvasRecorder';
+    import { captureControlStore, settingsStore } from '$lib/base/Util/AppState';
     import { FrameRecorder } from '$lib/base/Util/FrameRecorder';
+    import { VideoRecorder } from '$lib/base/Util/VideoRecorder';
     import { getContext, onDestroy, onMount } from 'svelte';
 
     export let project: Project;
@@ -12,7 +12,7 @@
     export let canvasSizeConfig: [number, number] | undefined = undefined;
     export let pixelRatioConfig: number | undefined = undefined;
 
-    const canvasRecorder: CanvasRecorder | undefined = getContext('canvasRecorder');
+    const videoRecorder: VideoRecorder | undefined = getContext('videoRecorder');
     const frameRecorder: FrameRecorder | undefined = getContext('frameRecorder');
 
     let previousProject: Project | undefined;
@@ -26,7 +26,7 @@
     let paramsChanged = new Set<string>();
     let updateLoopID: number | undefined = undefined;
     let frameRecorderTime = 0;
-    $: frameRecordInterval = 1000 / $frameRecorderStore.fps;
+    $: frameRecordInterval = 1000 / $captureControlStore.fps;
 
     const updateLoop = (timestamp: number) => {
         if (containerElement) {
@@ -40,6 +40,10 @@
                 frameRecorderTime += frameRecordInterval;
             } else if (!staticMode) {
                 updateProject((performance.now() - startTime) / 1000);
+                if (frameRecorder && $captureControlStore.imgSaveQueued) {
+                    frameRecorder.saveSingleFrame();
+                    $captureControlStore.imgSaveQueued = false;
+                }
             }
         }
         updateLoopID = requestAnimationFrame(updateLoop);
@@ -58,7 +62,7 @@
                 // Reload project & setup recording
                 projectLoaded(project);
                 console.log('start');
-                frameRecorderTime = $frameRecorderStore.startTimeMs;
+                frameRecorderTime = $captureControlStore.startTimeMs;
             });
             frameRecorder.onStop((success: boolean) => {
                 console.log('stop');
@@ -126,7 +130,7 @@
     onDestroy(() => {
         if (updateLoopID) cancelAnimationFrame(updateLoopID);
         destroyPreviousProject();
-        if (canvasRecorder) canvasRecorder.canvas = undefined;
+        if (videoRecorder) videoRecorder.canvas = undefined;
         if (frameRecorder) frameRecorder.canvas = undefined;
     });
 
@@ -160,7 +164,7 @@
             if (canvasType !== CanvasType.Unknown) {
                 currentContext = currentCanvas.getContext(project.canvasType as string);
             }
-            if (canvasRecorder) canvasRecorder.canvas = currentCanvas;
+            if (videoRecorder) videoRecorder.canvas = currentCanvas;
             if (frameRecorder) frameRecorder.canvas = currentCanvas;
 
             // Set canvas element size, if configured
@@ -173,7 +177,7 @@
             // Add the canvas to the container
             containerElement.appendChild(currentCanvas);
         } else {
-            if (canvasRecorder) canvasRecorder.canvas = undefined;
+            if (videoRecorder) videoRecorder.canvas = undefined;
             if (frameRecorder) frameRecorder.canvas = undefined;
         }
     }

@@ -132,7 +132,13 @@ export const settingsParamConfigs: ParamConfig[] = [
         max: 5000,
         step: 1,
         key: 'defaultCanvasSize'
-    } as NumericArrayParamConfig
+    } as NumericArrayParamConfig,
+
+    // showRecordingControls
+    {
+        ...BooleanParamConfigDefaults,
+        key: 'showRecordingControls'
+    } as BooleanParamConfig
 ].map((paramConfig) => {
     // Add the label to each ParamConfig from config/settings.ts
     if (paramConfig.name === ParamConfigDefaults.name) {

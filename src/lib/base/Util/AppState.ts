@@ -18,8 +18,18 @@ const stateDefaults = {
 export const stateStore = writable(stateDefaults);
 
 // Frame recording details
-export const frameRecorderStore = createPersistedStore('recorder', {
-    startTimeMs: 0,
-    durationMs: 5000,
-    fps: 30
-});
+export const captureControlStore = createPersistedStore(
+    'captureControl',
+    {
+        // persisted:
+        startTimeMs: 0,
+        durationMs: 5000,
+        fps: 30,
+
+        // not persisted:
+        imgSaveQueued: false,
+        recordingVideo: false,
+        recordingFrames: false
+    },
+    ['startTimeMs', 'durationMs', 'fps']
+);

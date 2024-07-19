@@ -51,6 +51,9 @@ const enablePresetExport = dev;
 const useFullscreenCanvas = true;
 const defaultCanvasSize = [1080, 1080];
 
+// Show recording controls in the settings panel.
+const showRecordingControls = true;
+
 // Anything listed here will appear in the user settings panel with the given label. Values changed
 // in the settings panel will be persisted in cookies, and values above will be used as defaults.
 export const userSettingsLabels: Record<string, string> = {
@@ -76,5 +79,6 @@ export const config = {
     alwaysShowPresets,
     enablePresetExport,
     defaultCanvasSize,
-    useFullscreenCanvas
+    useFullscreenCanvas,
+    showRecordingControls
 };

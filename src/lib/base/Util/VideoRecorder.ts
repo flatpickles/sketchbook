@@ -1,8 +1,8 @@
 /**
- * CanvasRecorder is a class that records a canvas to a video file.
+ * VideoRecorder is a class that records a canvas to a video file.
  * It uses the MediaRecorder API to record the canvas to a video file.
  */
-export class CanvasRecorder {
+export class VideoRecorder {
     canvas: HTMLCanvasElement | undefined;
     fps: number;
     saveName = 'skbk-capture';
@@ -16,7 +16,7 @@ export class CanvasRecorder {
         return this.#recorder !== null;
     }
 
-    constructor(fps: number, bitsPerPixel = 0.4) {
+    constructor(fps = 60, bitsPerPixel = 0.4) {
         this.fps = fps;
         this.#bitsPerPixel = bitsPerPixel;
         this.#useVP9 = MediaRecorder.isTypeSupported('video/webm;codecs=vp9');
@@ -24,14 +24,14 @@ export class CanvasRecorder {
 
     #calculateBitrate(): number {
         if (!this.canvas) {
-            throw new Error('CanvasRecorder: no canvas available');
+            throw new Error('VideoRecorder: no canvas available');
         }
         return this.canvas.width * this.canvas.height * this.fps * this.#bitsPerPixel;
     }
 
     startVideo() {
         if (!this.canvas) {
-            throw new Error('CanvasRecorder: no canvas available');
+            throw new Error('VideoRecorder: no canvas available');
         }
 
         this.#recordedChunks = [];
@@ -69,7 +69,7 @@ export class CanvasRecorder {
 
     saveImage() {
         if (!this.canvas) {
-            throw new Error('CanvasRecorder: no canvas available');
+            throw new Error('VideoRecorder: no canvas available');
         }
 
         const url = this.canvas.toDataURL('image/png');
@@ -84,7 +84,7 @@ export class CanvasRecorder {
 
     #saveVideo() {
         if (!this.canvas) {
-            throw new Error('CanvasRecorder: no canvas available');
+            throw new Error('VideoRecorder: no canvas available');
         }
 
         const blob = new Blob(this.#recordedChunks, {
@@ -95,7 +95,7 @@ export class CanvasRecorder {
         document.body.appendChild(a);
         a.style.display = 'none';
         a.href = url;
-        a.download = `${this.saveName}.webm`;
+        a.download = `${this.saveName}-${Date.now()}.webm`;
         a.click();
         window.URL.revokeObjectURL(url);
         document.body.removeChild(a);

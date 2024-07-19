@@ -10,6 +10,7 @@ import JSZip from 'jszip';
 
 export class FrameRecorder {
     canvas: HTMLCanvasElement | undefined;
+    saveName = 'skbk-capture';
 
     #frameCount = 0;
     #framesToRecord = 3600;
@@ -76,6 +77,21 @@ export class FrameRecorder {
         }
     }
 
+    saveSingleFrame() {
+        if (!this.canvas) {
+            throw new Error('FrameRecorder: no canvas available');
+        }
+
+        const url = this.canvas.toDataURL('image/png');
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        document.body.appendChild(a);
+        a.href = url;
+        a.download = `${this.saveName}-${Date.now()}.png`;
+        a.click();
+        document.body.removeChild(a);
+    }
+
     cancelRecording() {
         console.log('canceled frame recording');
         this.#stopRecording(true);
@@ -101,7 +117,7 @@ export class FrameRecorder {
         this.#zip
             .generateAsync({ type: 'blob' })
             .then((content) => {
-                const zipFilename = `canvas_frames_${new Date().toISOString()}.zip`;
+                const zipFilename = `${this.saveName}-${Date.now()}.zip`;
                 const link = document.createElement('a');
                 link.href = URL.createObjectURL(content);
                 link.download = zipFilename;

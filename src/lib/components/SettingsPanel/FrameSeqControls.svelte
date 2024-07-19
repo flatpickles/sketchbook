@@ -1,31 +1,11 @@
 <script lang="ts">
-    import { frameRecorderStore } from '$lib/base/Util/AppState';
-    import { FrameRecorder } from '$lib/base/Util/FrameRecorder';
-    import { getContext, onMount } from 'svelte';
+    import { captureControlStore } from '$lib/base/Util/AppState';
+    import { createEventDispatcher } from 'svelte';
     import FunctionInput from '../Inputs/FunctionInput.svelte';
     import NumberInput from '../Inputs/NumberInput.svelte';
 
-    const frameRecorder: FrameRecorder | undefined = getContext('frameRecorder');
-
-    $: framesToRecord = ($frameRecorderStore.durationMs / 1000) * $frameRecorderStore.fps;
-    let recording = false;
-
-    onMount(() => {
-        if (frameRecorder) {
-            frameRecorder.onStart(() => {
-                recording = true;
-            });
-            frameRecorder.onStop(() => {
-                recording = false;
-            });
-        }
-    });
-
-    function start() {
-        if (frameRecorder) {
-            frameRecorder.startRecording(framesToRecord);
-        }
-    }
+    export let disabled = false;
+    const dispatch = createEventDispatcher();
 </script>
 
 <div class="frame-recorder-container">
@@ -40,8 +20,8 @@
                     max={1000000}
                     step={1}
                     showSlider={false}
-                    disabled={recording}
-                    bind:value={$frameRecorderStore.startTimeMs}
+                    {disabled}
+                    bind:value={$captureControlStore.startTimeMs}
                 />
             </div>
         </div>
@@ -55,8 +35,8 @@
                     max={1000000}
                     step={1}
                     showSlider={false}
-                    disabled={recording}
-                    bind:value={$frameRecorderStore.durationMs}
+                    {disabled}
+                    bind:value={$captureControlStore.durationMs}
                 />
             </div>
         </div>
@@ -70,8 +50,8 @@
                     max={100}
                     step={1}
                     showSlider={false}
-                    disabled={recording}
-                    bind:value={$frameRecorderStore.fps}
+                    {disabled}
+                    bind:value={$captureControlStore.fps}
                 />
             </div>
         </div>
@@ -79,9 +59,9 @@
             <FunctionInput
                 id="frame-recorder-function"
                 name="Frame Recorder Function"
-                disabled={recording}
-                on:click={start}
-                buttonText="Go!"
+                {disabled}
+                on:click={() => dispatch('start')}
+                buttonText="Start"
             />
         </div>
     </div>
