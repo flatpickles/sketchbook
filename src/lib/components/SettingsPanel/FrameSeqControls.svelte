@@ -31,7 +31,7 @@
 <div class="frame-recorder-container">
     <div class="frame-recorder-controls">
         <div class="frame-recorder-control">
-            <div class="frame-recorder-control-label">Start:</div>
+            <div class="frame-recorder-control-label">Start (ms):</div>
             <div>
                 <NumberInput
                     id="start-time"
@@ -117,5 +117,8 @@
     .frame-recorder-control-label {
         @include parameter-label;
         font-size: $xs-text-size;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 </style>

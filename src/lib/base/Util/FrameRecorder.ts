@@ -77,6 +77,7 @@ export class FrameRecorder {
     }
 
     cancelRecording() {
+        console.log('canceled frame recording');
         this.#stopRecording(true);
     }
 

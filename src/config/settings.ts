@@ -51,9 +51,6 @@ const enablePresetExport = dev;
 const useFullscreenCanvas = true;
 const defaultCanvasSize = [1080, 1080];
 
-// Target framerate for rendering & recording.
-const framerate = 60;
-
 // Anything listed here will appear in the user settings panel with the given label. Values changed
 // in the settings panel will be persisted in cookies, and values above will be used as defaults.
 export const userSettingsLabels: Record<string, string> = {
@@ -61,8 +58,7 @@ export const userSettingsLabels: Record<string, string> = {
     showExperiments: 'Show Experiments',
     overlayPanels: 'Overlay Panels',
     useFullscreenCanvas: 'Fullscreen Canvas',
-    defaultCanvasSize: 'Default Canvas Size',
-    framerate: 'Target Framerate'
+    defaultCanvasSize: 'Default Canvas Size'
 };
 
 // Export all settings for use elsewhere in the app.
@@ -80,6 +76,5 @@ export const config = {
     alwaysShowPresets,
     enablePresetExport,
     defaultCanvasSize,
-    useFullscreenCanvas,
-    framerate
+    useFullscreenCanvas
 };

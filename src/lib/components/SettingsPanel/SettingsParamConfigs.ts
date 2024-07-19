@@ -132,19 +132,7 @@ export const settingsParamConfigs: ParamConfig[] = [
         max: 5000,
         step: 1,
         key: 'defaultCanvasSize'
-    } as NumericArrayParamConfig,
-
-    // framerate
-    {
-        ...NumberParamConfigDefaults,
-        key: 'framerate',
-        options: {
-            '24': 24,
-            '30': 30,
-            '60': 60,
-            '90': 90
-        }
-    } as NumberParamConfig
+    } as NumericArrayParamConfig
 ].map((paramConfig) => {
     // Add the label to each ParamConfig from config/settings.ts
     if (paramConfig.name === ParamConfigDefaults.name) {
@@ -172,4 +160,4 @@ export const captureImageConfig: FunctionParamConfig = {
 } as FunctionParamConfig;
 
 // Keys for settings param inputs to disable while recording:
-export const disableWhileRecording = ['framerate', 'defaultCanvasSize', 'useFullscreenCanvas'];
+export const disableWhileRecording = ['defaultCanvasSize', 'useFullscreenCanvas'];

@@ -24,12 +24,7 @@
     let frameCount = 0;
     let startTime = performance.now();
     let paramsChanged = new Set<string>();
-
-    // Framerate control variables
-    let lastFrameTime = 0;
     let updateLoopID: number | undefined = undefined;
-    $: frameInterval = 1000 / $settingsStore.framerate;
-
     let frameRecorderTime = 0;
     $: frameRecordInterval = 1000 / $frameRecorderStore.fps;
 
@@ -46,15 +41,6 @@
             } else if (!staticMode) {
                 updateProject((performance.now() - startTime) / 1000);
             }
-
-            // todo fps controls mostly removed, finish that
-            // if (!staticMode) {
-            //     const elapsed = timestamp - lastFrameTime;
-            //     if (elapsed >= frameInterval) {
-            //         updateProject((performance.now() - startTime) / 1000);
-            //         lastFrameTime = timestamp;
-            //     }
-            // }
         }
         updateLoopID = requestAnimationFrame(updateLoop);
     };
@@ -71,13 +57,12 @@
 
                 // Reload project & setup recording
                 projectLoaded(project);
+                console.log('start');
                 frameRecorderTime = $frameRecorderStore.startTimeMs;
             });
             frameRecorder.onStop((success: boolean) => {
-                if (success) {
-                    projectLoaded(project);
-                }
-                // on no success wassup?
+                console.log('stop');
+                if (success) projectLoaded(project);
             });
         }
     }

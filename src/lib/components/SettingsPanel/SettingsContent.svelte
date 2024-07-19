@@ -122,14 +122,14 @@
         <ParamItem
             config={captureImageConfig}
             value={undefined}
-            even={settingsValueConfigs.length % 2 !== 0}
+            even={false}
             disabled={false}
             on:update={paramUpdated}
         />
         <ParamItem
             config={captureVideoConfig(isRecording)}
             value={undefined}
-            even={settingsValueConfigs.length % 2 !== 1}
+            even={true}
             disabled={false}
             on:update={paramUpdated}
         />

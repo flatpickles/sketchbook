@@ -5,7 +5,12 @@
  */
 
 import * as THREE from 'three';
-import Project, { CanvasType, type DetailWebGL2, type ResizedDetailWebGL2 } from './Project';
+import Project, {
+    CanvasType,
+    type DetailWebGL2,
+    type ResizedDetailWebGL2,
+    type UpdateDetail
+} from './Project';
 
 // Uniform names for non-params (i.e. uniforms not specific to a particular project)
 const uniformNames: Record<string, string> = {
@@ -48,6 +53,11 @@ const vertexShader = `
         gl_Position = projectionMatrix * mvPosition;
     }`;
 
+type ScaledTimeUpdater = {
+    update: (time: number) => void;
+    reset: () => void;
+};
+
 export default class FragShaderProject extends Project {
     canvasType = CanvasType.WebGL2;
 
@@ -65,8 +75,9 @@ export default class FragShaderProject extends Project {
         [uniform: string]: THREE.IUniform<any>;
     } = {};
     #nextAnimationFrame: number | null = null;
-    #scaledTimeUpdaters: (() => void)[] = [];
+    #scaledTimeUpdaters: ScaledTimeUpdater[] = [];
     #paramUniformNames: string[] = [];
+    #lastRenderedTime = 0;
 
     constructor(fragShader: string) {
         super();
@@ -118,7 +129,14 @@ export default class FragShaderProject extends Project {
 
     init(detail: DetailWebGL2) {
         if (!this.canvas) throw new Error('Canvas not initialized');
-        this.#renderer = new THREE.WebGLRenderer({ canvas: this.canvas, antialias: true });
+        this.#renderer = new THREE.WebGLRenderer({
+            canvas: this.canvas,
+            antialias: true,
+            preserveDrawingBuffer: true
+        });
+
+        // Reset scaled time updaters
+        this.#scaledTimeUpdaters.map((updater) => updater.reset());
 
         // Get canvas size & set initial uniforms
         const size = [detail.canvas.width, detail.canvas.height];
@@ -160,9 +178,6 @@ export default class FragShaderProject extends Project {
         });
         this.#quad = new THREE.Mesh(geometry, shaderMaterial);
         this.#scene.add(this.#quad);
-
-        // Get it started
-        requestAnimationFrame(this.#renderLoop.bind(this));
     }
 
     resized(detail: ResizedDetailWebGL2): void {
@@ -173,7 +188,7 @@ export default class FragShaderProject extends Project {
         this.#renderTargets.forEach((renderTarget) => {
             renderTarget.setSize(size[0], size[1]);
         });
-        this.#render(performance.now());
+        this.#render(this.#lastRenderedTime);
     }
 
     destroy(detail: DetailWebGL2): void {
@@ -186,13 +201,8 @@ export default class FragShaderProject extends Project {
         }
     }
 
-    /**
-     * Continue a frame render loop, utilizing the #render method
-     * @param time - The current time in milliseconds
-     */
-    #renderLoop(time: number) {
-        this.#render(time);
-        this.#nextAnimationFrame = requestAnimationFrame(this.#renderLoop.bind(this));
+    update(detail: UpdateDetail<CanvasType>): void {
+        this.#render(detail.time);
     }
 
     /**
@@ -205,8 +215,8 @@ export default class FragShaderProject extends Project {
         }
 
         // Update uniforms
-        this.#uniforms[uniformNames.time].value = time / 1000; // seconds
-        this.#scaledTimeUpdaters.map((updater) => updater());
+        this.#uniforms[uniformNames.time].value = time; // seconds
+        this.#scaledTimeUpdaters.map((updater) => updater.update(time));
         for (const uniformName of this.#paramUniformNames) {
             const paramValue = Object.getOwnPropertyDescriptor(this, uniformName)?.value;
             this.#uniforms[uniformName].value = paramValue;
@@ -226,6 +236,7 @@ export default class FragShaderProject extends Project {
         this.#quad.material = this.#finalPassMaterial;
         this.#renderer.setRenderTarget(null);
         this.#renderer.render(this.#scene, this.#camera);
+        this.#lastRenderedTime = time;
     }
 
     /**
@@ -233,9 +244,9 @@ export default class FragShaderProject extends Project {
      * added timeScale parameter. This is useful for animations with a configurable motion rate that
      * should be continuous as the time scale changes.
      */
-    #generateScaledTimeUpdater(uniformName: string): () => void {
+    #generateScaledTimeUpdater(uniformName: string): ScaledTimeUpdater {
         // These variables are used to calculate the scaled time, and updated in a JS closure below
-        let lastFrameTime = Date.now();
+        let lastFrameTime = 0;
         let totalScaledTime = 0;
 
         // Create the parameter property
@@ -251,16 +262,22 @@ export default class FragShaderProject extends Project {
         this.#uniforms[uniformName] = { value: 0 };
 
         // Return a function that updates the uniform when called
-        return () => {
-            const scaleParamValue = Object.getOwnPropertyDescriptor(
-                this,
-                scaledTimeParamKey
-            )?.value;
-            const curTime = Date.now();
-            const elapsed = lastFrameTime - curTime;
-            lastFrameTime = curTime;
-            totalScaledTime += (elapsed * scaleParamValue) / 1000;
-            this.#uniforms[uniformName].value = totalScaledTime;
+        return {
+            update: (time: number) => {
+                const scaleParamValue = Object.getOwnPropertyDescriptor(
+                    this,
+                    scaledTimeParamKey
+                )?.value;
+                const elapsed = time - lastFrameTime;
+                lastFrameTime = time;
+                totalScaledTime += elapsed * scaleParamValue;
+                this.#uniforms[uniformName].value = totalScaledTime;
+            },
+            reset: () => {
+                lastFrameTime = 0;
+                totalScaledTime = 0;
+                this.#uniforms[uniformName] = { value: 0 };
+            }
         };
     }
 }
