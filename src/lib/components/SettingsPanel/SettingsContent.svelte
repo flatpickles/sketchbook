@@ -14,7 +14,7 @@
     } from '$lib/base/ConfigModels/ParamTypes';
     import { CanvasRecorder } from '$lib/base/Util/CanvasRecorder';
     import FunctionInput from '../Inputs/FunctionInput.svelte';
-    import FrameRecorderComponent from './FrameRecorderComponent.svelte';
+    import FrameSeqControls from './FrameSeqControls.svelte';
     import {
         captureImageConfig,
         captureImageConfigKey,
@@ -111,6 +111,14 @@
                 on:update={paramUpdated}
             />
         {/each}
+    </div>
+    <div class="recording-header">
+        Canvas Recording
+        <a href="https://skbk.cc/#/necessities?id=exporting-photos-amp-videos" target="_blank">
+            <i class="fa-solid fa-circle-info recording-info" />
+        </a>
+    </div>
+    <div class="settings-grid">
         <ParamItem
             config={captureImageConfig}
             value={undefined}
@@ -125,8 +133,11 @@
             disabled={false}
             on:update={paramUpdated}
         />
+        <div class="frames-label-wrapper">
+            <span class="frames-label">Frame Sequence</span>
+        </div>
+        <FrameSeqControls />
     </div>
-    <FrameRecorderComponent />
     <div class="settings-footer">
         <div class="reset-wrapper">
             <FunctionInput
@@ -182,6 +193,43 @@
         grid-template-columns: 1fr 1fr;
         row-gap: $param-spacing;
         align-items: center;
+    }
+
+    .recording-header {
+        width: 100%;
+        display: flex;
+        gap: $panel-section-spacing;
+        font-size: $large-text-size;
+        font-weight: bold;
+        padding-left: $panel-content-inset;
+    }
+
+    .recording-info {
+        color: rgba($panel-fg-color, 0.5);
+    }
+
+    .frames-label-wrapper {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: left;
+        overflow: hidden;
+
+        @include parameter-item;
+        padding-right: calc($param-inner-spacing / 2);
+        margin-right: 0;
+        border-radius: $param-border-radius 0 0 $param-border-radius;
+        background-color: rgba($panel-fg-color, $param-bg-opacity-odd);
+    }
+
+    .frames-label {
+        white-space: nowrap;
+        text-align: left;
+        pointer-events: none;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        @include parameter-label;
     }
 
     .settings-footer {

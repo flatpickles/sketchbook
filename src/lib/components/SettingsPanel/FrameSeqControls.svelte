@@ -29,13 +29,9 @@
 </script>
 
 <div class="frame-recorder-container">
-    <div class="frame-recorder-title">
-        Capture Frame Sequence
-        <i class="fa-solid fa-circle-info" />
-    </div>
     <div class="frame-recorder-controls">
         <div class="frame-recorder-control">
-            <div class="frame-recorder-control-label">Start (ms):</div>
+            <div class="frame-recorder-control-label">Start:</div>
             <div>
                 <NumberInput
                     id="start-time"
@@ -65,7 +61,7 @@
             </div>
         </div>
         <div class="frame-recorder-control">
-            <div class="frame-recorder-control-label">Framerate:</div>
+            <div class="frame-recorder-control-label">FPS:</div>
             <div>
                 <NumberInput
                     id="framerate"
@@ -85,6 +81,7 @@
                 name="Frame Recorder Function"
                 disabled={recording}
                 on:click={start}
+                buttonText="Go!"
             />
         </div>
     </div>
@@ -96,21 +93,19 @@
         flex-direction: column;
         align-items: center;
         gap: $panel-header-spacing;
-        border: 1px solid;
-        border-radius: 5px;
-        padding: 10px;
-    }
 
-    .frame-recorder-title {
-        font-size: $large-text-size;
-        font-weight: bold;
+        @include parameter-item;
+        padding-left: calc($param-inner-spacing / 2);
+        margin-left: 0;
+        border-radius: 0 $param-border-radius $param-border-radius 0;
+        background-color: rgba($panel-fg-color, $param-bg-opacity-odd);
     }
 
     .frame-recorder-controls {
         display: flex;
         flex-direction: row;
         align-items: flex-end;
-        gap: 10px;
+        gap: $param-padding;
     }
 
     .frame-recorder-control {
@@ -121,5 +116,6 @@
 
     .frame-recorder-control-label {
         @include parameter-label;
+        font-size: $xs-text-size;
     }
 </style>

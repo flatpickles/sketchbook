@@ -157,7 +157,7 @@ export const captureVideoConfigKey = 'captureVideo';
 export function captureVideoConfig(isRecording: boolean): FunctionParamConfig {
     return {
         ...FunctionParamConfigDefaults,
-        name: 'Capture Video',
+        name: 'Video Recording',
         key: captureVideoConfigKey,
         buttonText: isRecording ? 'Stop' : 'Start'
     } as FunctionParamConfig;
@@ -166,7 +166,7 @@ export function captureVideoConfig(isRecording: boolean): FunctionParamConfig {
 export const captureImageConfigKey = 'captureImage';
 export const captureImageConfig: FunctionParamConfig = {
     ...FunctionParamConfigDefaults,
-    name: 'Capture Image',
+    name: 'Image Capture',
     key: captureImageConfigKey,
     buttonText: 'Save'
 } as FunctionParamConfig;
