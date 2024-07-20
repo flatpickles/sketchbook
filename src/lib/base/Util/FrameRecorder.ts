@@ -19,8 +19,14 @@ export class FrameRecorder {
     #startCallbacks: (() => void)[] = [];
     #stopCallbacks: ((success: boolean) => void)[] = [];
 
+    constructor(private zipCreator: () => JSZip = () => new JSZip()) {}
+
     get isRecording() {
         return this.#zip !== undefined;
+    }
+
+    get currentFrameCount() {
+        return this.#frameCount;
     }
 
     onStart(callback: () => void) {
@@ -42,7 +48,7 @@ export class FrameRecorder {
             return;
         }
 
-        this.#zip = new JSZip();
+        this.#zip = this.zipCreator();
         this.#frameCount = 0;
         this.#framesToRecord = numFrames;
         this.#startCallbacks.forEach((callback) => callback());
@@ -93,7 +99,6 @@ export class FrameRecorder {
     }
 
     cancelRecording() {
-        console.log('canceled frame recording');
         this.#stopRecording(true);
     }
 
@@ -110,8 +115,7 @@ export class FrameRecorder {
 
     #createZipAndDownload() {
         if (!this.#zip) {
-            console.error('No zip file to download');
-            return;
+            throw new Error('No zip file to create content from');
         }
 
         this.#zip
@@ -119,10 +123,13 @@ export class FrameRecorder {
             .then((content) => {
                 const zipFilename = `${this.saveName}-${Date.now()}.zip`;
                 const link = document.createElement('a');
+                link.style.display = 'none';
+                document.body.appendChild(link);
                 link.href = URL.createObjectURL(content);
                 link.download = zipFilename;
                 link.click();
                 URL.revokeObjectURL(link.href);
+                document.body.removeChild(link);
             })
             .catch((error) => console.error('Error creating zip file:', error));
     }

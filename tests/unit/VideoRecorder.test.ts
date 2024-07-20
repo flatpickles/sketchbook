@@ -88,27 +88,6 @@ describe('VideoRecorder', () => {
         expect(recorder.isRecording).toBe(false);
     });
 
-    it('should save an image', () => {
-        const createElementSpy = vi.spyOn(document, 'createElement');
-        const appendChildSpy = vi.spyOn(document.body, 'appendChild');
-        const removeChildSpy = vi.spyOn(document.body, 'removeChild');
-        const clickSpy = vi.fn();
-
-        createElementSpy.mockReturnValue({
-            style: { display: '' },
-            href: '',
-            download: '',
-            click: clickSpy
-        } as unknown as HTMLAnchorElement);
-
-        recorder.saveImage();
-
-        expect(createElementSpy).toHaveBeenCalledWith('a');
-        expect(appendChildSpy).toHaveBeenCalled();
-        expect(clickSpy).toHaveBeenCalled();
-        expect(removeChildSpy).toHaveBeenCalled();
-    });
-
     it('should save a video', async () => {
         const createElementSpy = vi.spyOn(document, 'createElement');
         const appendChildSpy = vi.spyOn(document.body, 'appendChild');

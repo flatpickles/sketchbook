@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { settingsStore, stateStore } from '$lib/base/Util/AppState';
 import { PanelState } from '$lib/base/Util/PanelState';
 import MainViewWithContent from '$lib/components/TestComponents/MainViewWithContent.svelte';
@@ -43,7 +45,7 @@ describe('Redirect override for project list panel state', () => {
 
         render(MainViewWithContent, {
             context: new Map(Object.entries({ pageRedirected: true }))
-        });
+        } as any);
 
         await waitFor(() =>
             expect(get(settingsStore).projectListPanelState).toBe(PanelState.Visible)
@@ -60,7 +62,7 @@ describe('Redirect override for project list panel state', () => {
 
         render(MainViewWithContent, {
             context: new Map(Object.entries({ pageRedirected: false }))
-        });
+        } as any);
 
         await waitFor(() =>
             expect(get(settingsStore).projectListPanelState).toBe(PanelState.Hidden)
@@ -77,7 +79,7 @@ describe('Redirect override for project list panel state', () => {
 
         render(MainViewWithContent, {
             context: new Map(Object.entries({ pageRedirected: true }))
-        });
+        } as any);
 
         await waitFor(() =>
             expect(get(settingsStore).projectListPanelState).toBe(PanelState.Hidden)

@@ -67,21 +67,6 @@ export class VideoRecorder {
         });
     }
 
-    saveImage() {
-        if (!this.canvas) {
-            throw new Error('VideoRecorder: no canvas available');
-        }
-
-        const url = this.canvas.toDataURL('image/png');
-        const a = document.createElement('a');
-        a.style.display = 'none';
-        document.body.appendChild(a);
-        a.href = url;
-        a.download = `${this.saveName}.png`;
-        a.click();
-        document.body.removeChild(a);
-    }
-
     #saveVideo() {
         if (!this.canvas) {
             throw new Error('VideoRecorder: no canvas available');

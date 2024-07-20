@@ -28,7 +28,7 @@
     let frameRecorderTime = 0;
     $: frameRecordInterval = 1000 / $captureControlStore.fps;
 
-    const updateLoop = (timestamp: number) => {
+    const updateLoop = () => {
         if (containerElement) {
             // Set the canvas size each frame if the container is actively resizing
             if (containerResizing) setCanvasSize();
@@ -61,11 +61,9 @@
 
                 // Reload project & setup recording
                 projectLoaded(project);
-                console.log('start');
                 frameRecorderTime = $captureControlStore.startTimeMs;
             });
             frameRecorder.onStop((success: boolean) => {
-                console.log('stop');
                 if (success) projectLoaded(project);
             });
         }
