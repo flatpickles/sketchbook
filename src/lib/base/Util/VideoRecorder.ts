@@ -1,3 +1,7 @@
+// Configure default settings here!
+const DefaultFPS = 30;
+const DefaultQualityFactor = 0.4;
+
 /**
  * VideoRecorder is a class that records a canvas to a video file.
  * It uses the MediaRecorder API to record the canvas to a video file.
@@ -7,7 +11,7 @@ export class VideoRecorder {
     fps: number;
     saveName = 'skbk-capture';
 
-    #bitsPerPixel: number;
+    #qualityFactor: number;
     #useVP9: boolean;
     #recordedChunks: Blob[] = [];
     #recorder: MediaRecorder | null = null;
@@ -16,9 +20,9 @@ export class VideoRecorder {
         return this.#recorder !== null;
     }
 
-    constructor(fps = 60, bitsPerPixel = 0.4) {
+    constructor(fps = DefaultFPS, qualityFactor = DefaultQualityFactor) {
         this.fps = fps;
-        this.#bitsPerPixel = bitsPerPixel;
+        this.#qualityFactor = qualityFactor;
         this.#useVP9 = MediaRecorder.isTypeSupported('video/webm;codecs=vp9');
     }
 
@@ -26,7 +30,7 @@ export class VideoRecorder {
         if (!this.canvas) {
             throw new Error('VideoRecorder: no canvas available');
         }
-        return this.canvas.width * this.canvas.height * this.fps * this.#bitsPerPixel;
+        return this.canvas.width * this.canvas.height * this.fps * this.#qualityFactor;
     }
 
     startVideo() {

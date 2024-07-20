@@ -11,17 +11,17 @@
 <div class="frame-recorder-container">
     <div class="frame-recorder-controls">
         <div class="frame-recorder-control">
-            <div class="frame-recorder-control-label">Start (ms):</div>
+            <div class="frame-recorder-control-label">Start:</div>
             <div>
                 <NumberInput
                     id="start-time"
                     name="Start Time"
                     min={0}
-                    max={1000000}
-                    step={1}
+                    max={10000}
+                    step={0.01}
                     showSlider={false}
                     {disabled}
-                    bind:value={$captureControlStore.startTimeMs}
+                    bind:value={$captureControlStore.startTime}
                 />
             </div>
         </div>
@@ -32,11 +32,11 @@
                     id="duration"
                     name="Duration"
                     min={0}
-                    max={1000000}
-                    step={1}
+                    max={10000}
+                    step={0.01}
                     showSlider={false}
                     {disabled}
-                    bind:value={$captureControlStore.durationMs}
+                    bind:value={$captureControlStore.duration}
                 />
             </div>
         </div>

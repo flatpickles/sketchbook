@@ -481,7 +481,7 @@ describe('ProjectViewer frameRecorder integration', () => {
 
         captureControlStore.set({
             fps: 30,
-            startTimeMs: 0,
+            startTime: 0,
             imgSaveQueued: true
         });
 

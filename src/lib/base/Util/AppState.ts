@@ -22,14 +22,14 @@ export const captureControlStore = createPersistedStore(
     'captureControl',
     {
         // persisted:
-        startTimeMs: 0,
-        durationMs: 5000,
-        fps: 30,
+        startTime: 0,
+        duration: 5,
+        fps: 60,
 
         // not persisted:
         imgSaveQueued: false,
         recordingVideo: false,
         recordingFrames: false
     },
-    ['startTimeMs', 'durationMs', 'fps']
+    ['startTime', 'duration', 'fps']
 );

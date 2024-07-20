@@ -207,7 +207,7 @@ export default class FragShaderProject extends Project {
 
     /**
      * Renders the scene and updates the uniforms
-     * @param time - The current time in milliseconds
+     * @param time - The current time in seconds
      */
     #render(time: number) {
         if (!this.#quad || !this.#finalPassMaterial || !this.#renderer) {
@@ -215,7 +215,7 @@ export default class FragShaderProject extends Project {
         }
 
         // Update uniforms
-        this.#uniforms[uniformNames.time].value = time; // seconds
+        this.#uniforms[uniformNames.time].value = time;
         this.#scaledTimeUpdaters.map((updater) => updater.update(time));
         for (const uniformName of this.#paramUniformNames) {
             const paramValue = Object.getOwnPropertyDescriptor(this, uniformName)?.value;

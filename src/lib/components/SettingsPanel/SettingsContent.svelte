@@ -101,8 +101,9 @@
     function startFrameRecording() {
         // captureControlStore.recordingFrames is managed from +layout.svelte
         if (frameRecorder) {
-            const framesToRecord =
-                ($captureControlStore.durationMs / 1000) * $captureControlStore.fps;
+            const framesToRecord = Math.floor(
+                $captureControlStore.duration * $captureControlStore.fps
+            );
             frameRecorder.startRecording(framesToRecord);
         }
     }
@@ -125,7 +126,7 @@
     {#if $settingsStore.showRecordingControls}
         <div class="recording-header">
             Canvas Recording
-            <a href="https://skbk.cc/#/necessities?id=exporting-photos-amp-videos" target="_blank">
+            <a href="https://skbk.cc/#/canvas-recording" target="_blank">
                 <i class="fa-solid fa-circle-info recording-info" />
             </a>
         </div>

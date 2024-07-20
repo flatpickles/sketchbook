@@ -61,14 +61,6 @@ The `update` function in your `Project` subclass is called continuously in a `re
 
 You can also enable `staticMode` in your [project config](project-config.md), which is effectively a shortcut to the technique described above. With `staticMode` enabled, you can implement your drawing code in `update`, and expect that it will only be called after your project's other lifecycle methods.
 
-## Exporting photos & videos
-
-Sketchbook doesn't yet provide native support for photo and video export. If you're starting a project that you'd like to save photo or video content from, you could consider using a framework within Sketchbook that supports artwork export; [`canvas-sketch`](https://github.com/mattdesl/canvas-sketch/blob/master/docs/exporting-artwork.md) is one great option.
-
-You could also explore using the canvas element's `toDataURL` method (documented [here](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toDataURL)) to grab currently rendered visual content. [This page](https://fjolt.com/article/html-canvas-save-as-image) offers some discussion of related techniques.
-
-Native support for saving photo snapshots is on the Sketchbook [roadmap](https://github.com/flatpickles/sketchbook/issues/65)!
-
 ## Dynamic canvas sizing
 
 If you want to dynamically set the canvas size within your project (e.g. for configurable rendering dimensions), you can accomplish this by setting both the styled size and rendering size of the project's `canvas` reference. Keep in mind that you'll generally need to set both of these simultaneously (probably referencing `window.devicePixelRatio`), and that setting the canvas `width` and `height` will clear the current canvas contents.

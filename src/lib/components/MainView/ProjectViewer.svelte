@@ -26,7 +26,7 @@
     let paramsChanged = new Set<string>();
     let updateLoopID: number | undefined = undefined;
     let frameRecorderTime = 0;
-    $: frameRecordInterval = 1000 / $captureControlStore.fps;
+    $: frameRecordInterval = 1 / $captureControlStore.fps;
 
     const updateLoop = () => {
         if (containerElement) {
@@ -35,7 +35,7 @@
 
             // Update the project, if not in static mode
             if (frameRecorder && frameRecorder.isRecording) {
-                updateProject(frameRecorderTime / 1000);
+                updateProject(frameRecorderTime);
                 frameRecorder.recordFrame();
                 frameRecorderTime += frameRecordInterval;
             } else if (!staticMode) {
@@ -50,7 +50,6 @@
     };
 
     function configureFrameRecorder() {
-        // todo: what happens if projects change?
         if (frameRecorder) {
             frameRecorder.onStart(() => {
                 if (staticMode) {
@@ -61,7 +60,7 @@
 
                 // Reload project & setup recording
                 projectLoaded(project);
-                frameRecorderTime = $captureControlStore.startTimeMs;
+                frameRecorderTime = $captureControlStore.startTime;
             });
             frameRecorder.onStop((success: boolean) => {
                 if (success) projectLoaded(project);

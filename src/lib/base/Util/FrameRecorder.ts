@@ -1,13 +1,8 @@
 import JSZip from 'jszip';
 
 /**
- * Todo:
- * - rip out old video recording & fps stuff
- * - stop when changing projects
- * - naming
- * - tests
+ * A utility for recording a frame sequence from a canvas.
  */
-
 export class FrameRecorder {
     canvas: HTMLCanvasElement | undefined;
     saveName = 'skbk-capture';
@@ -71,7 +66,7 @@ export class FrameRecorder {
 
         // Actually record the frame
         const imageData = this.canvas.toDataURL('image/png').split(',')[1];
-        this.#zip.file(`frame-${this.#frameCount.toString().padStart(5, '0')}.png`, imageData, {
+        this.#zip.file(`${this.#frameCount.toString().padStart(5, '0')}.png`, imageData, {
             base64: true
         });
         this.#frameCount++;
