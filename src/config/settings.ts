@@ -47,7 +47,8 @@ const alwaysShowPresets = false;
 const enablePresetExport = dev;
 
 // Canvas size can be fullscreen, or fixed to defaultCanvasSize. Projects may specify a canvasSize
-// configuration value to avoid fullscreen rendering and override the defaultCanvasSize.
+// configuration value to avoid fullscreen rendering and override the defaultCanvasSize. Note that
+// the default device pixel ratio will be used unless otherwise configured in each project.
 const useFullscreenCanvas = true;
 const defaultCanvasSize = [1080, 1080];
 

@@ -64,6 +64,25 @@ export const settingsParamConfigs: ParamConfig[] = [
         }
     } as StringParamConfig,
 
+    // projectListRedirectOverride
+    {
+        ...BooleanParamConfigDefaults,
+        key: 'projectListRedirectOverride'
+    } as BooleanParamConfig,
+
+    // projectListRedirectOverrideState
+    {
+        ...StringParamConfigDefaults,
+        key: 'projectListRedirectOverrideState',
+        options: {
+            'Visible': 'visible',
+            'Hover (Pinned)': 'mouse-pinned',
+            'Hover (Pinnable)': 'mouse-pinnable',
+            'Hover (Unpinnable)': 'mouse-unpinnable',
+            'Fixed': 'static'
+        }
+    } as StringParamConfig,
+
     // panelMouseTriggerWidth
     {
         ...NumberParamConfigDefaults,
