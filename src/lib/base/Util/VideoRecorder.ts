@@ -15,6 +15,7 @@ export class VideoRecorder {
     #useVP9: boolean;
     #recordedChunks: Blob[] = [];
     #recorder: MediaRecorder | null = null;
+    #isMediaRecorderSupported: boolean;
 
     get isRecording() {
         return this.#recorder !== null;
@@ -23,7 +24,14 @@ export class VideoRecorder {
     constructor(fps = DefaultFPS, qualityFactor = DefaultQualityFactor) {
         this.fps = fps;
         this.#qualityFactor = qualityFactor;
-        this.#useVP9 = MediaRecorder.isTypeSupported('video/webm;codecs=vp9');
+        this.#isMediaRecorderSupported = this.#checkMediaRecorderSupport();
+        this.#useVP9 =
+            this.#isMediaRecorderSupported &&
+            MediaRecorder.isTypeSupported('video/webm;codecs=vp9');
+    }
+
+    #checkMediaRecorderSupport(): boolean {
+        return typeof MediaRecorder !== 'undefined';
     }
 
     #calculateBitrate(): number {
@@ -34,6 +42,11 @@ export class VideoRecorder {
     }
 
     startVideo() {
+        if (!this.#isMediaRecorderSupported) {
+            console.warn('VideoRecorder: MediaRecorder is not supported in this environment');
+            return;
+        }
+
         if (!this.canvas) {
             throw new Error('VideoRecorder: no canvas available');
         }
