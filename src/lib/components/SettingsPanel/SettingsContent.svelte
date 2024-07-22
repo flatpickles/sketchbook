@@ -1,18 +1,32 @@
 <script lang="ts">
-    import ParamItem from '../ProjectDetailPanel/ParamItem.svelte';
-    import { get } from 'svelte/store';
-    import { settingsStore } from '$lib/base/Util/AppState';
     import { userSettingsLabels } from '$config/settings';
+    import { captureControlStore, settingsStore } from '$lib/base/Util/AppState';
+    import { getContext } from 'svelte';
+    import { get } from 'svelte/store';
+    import ParamItem from '../ProjectDetailPanel/ParamItem.svelte';
 
-    import {
-        type ParamValueType,
-        type AnyParamValueType,
-        ParamGuards
-    } from '$lib/base/ConfigModels/ParamTypes';
-    import type { ParamConfig } from '$lib/base/ConfigModels/ParamConfig';
-    import { settingsParamConfigs } from './SettingsParamConfigs';
-    import FunctionInput from '../Inputs/FunctionInput.svelte';
     import { content } from '$config/content';
+    import type { ParamConfig } from '$lib/base/ConfigModels/ParamConfig';
+    import {
+        type AnyParamValueType,
+        ParamGuards,
+        type ParamValueType
+    } from '$lib/base/ConfigModels/ParamTypes';
+    import { FrameRecorder } from '$lib/base/Util/FrameRecorder';
+    import { VideoRecorder } from '$lib/base/Util/VideoRecorder';
+    import FunctionInput from '../Inputs/FunctionInput.svelte';
+    import FrameSeqControls from './FrameSeqControls.svelte';
+    import {
+        captureImageConfig,
+        captureImageConfigKey,
+        captureVideoConfig,
+        captureVideoConfigKey,
+        disableWhileRecording,
+        settingsParamConfigs
+    } from './SettingsParamConfigs';
+
+    const videoRecorder: VideoRecorder | undefined = getContext('videoRecorder');
+    const frameRecorder: FrameRecorder | undefined = getContext('frameRecorder');
 
     // Settings value configs are backed by values in the AppStateStore object
     const settingsValueConfigs = Object.keys(userSettingsLabels).map((key) => {
@@ -41,7 +55,11 @@
     // Update settings in the backing app state store when a param is updated
     function paramUpdated(event: CustomEvent) {
         const updatedConfig: ParamConfig = event.detail.config;
-        if (ParamGuards.isFunctionParamConfig(updatedConfig)) {
+        if (updatedConfig.key === captureVideoConfigKey) {
+            toggleVideoRecording();
+        } else if (updatedConfig.key === captureImageConfigKey) {
+            $captureControlStore.imgSaveQueued = true;
+        } else if (ParamGuards.isFunctionParamConfig(updatedConfig)) {
             throw new Error("Function params shouldn't be present in the settings panel");
         } else {
             const value = event.detail.value;
@@ -59,6 +77,36 @@
         const currentSettings: Record<string, AnyParamValueType> = get(settingsStore);
         return currentSettings[paramConfig.key] as ParamValueType<T>;
     }
+
+    async function toggleVideoRecording() {
+        try {
+            if (!videoRecorder) throw new Error('Video recorder is undefined');
+            if (!$captureControlStore.recordingVideo) {
+                videoRecorder.startVideo();
+                $captureControlStore.recordingVideo = true;
+            } else {
+                await videoRecorder.stopVideo();
+                $captureControlStore.recordingVideo = false;
+            }
+        } catch (e) {
+            console.error('Error toggling recording:', e);
+            alert(
+                `Error ${
+                    $captureControlStore.recordingVideo ? 'starting' : 'stopping'
+                } video recording. Please check the console.`
+            );
+        }
+    }
+
+    function startFrameRecording() {
+        // captureControlStore.recordingFrames is managed from +layout.svelte
+        if (frameRecorder) {
+            const framesToRecord = Math.floor(
+                $captureControlStore.duration * $captureControlStore.fps
+            );
+            frameRecorder.startRecording(framesToRecord);
+        }
+    }
 </script>
 
 <div class="settings-wrapper">
@@ -68,11 +116,46 @@
                 config={param}
                 value={initialValueForParam(param)}
                 even={i % 2 === 1}
-                disabled={false}
+                disabled={($captureControlStore.recordingVideo ||
+                    $captureControlStore.recordingFrames) &&
+                    disableWhileRecording.includes(param.key)}
                 on:update={paramUpdated}
             />
         {/each}
     </div>
+    {#if $settingsStore.showRecordingControls}
+        <div class="recording-header">
+            Canvas Recording
+            <a href="https://skbk.cc/#/canvas-recording" target="_blank">
+                <i class="fa-solid fa-circle-info recording-info" />
+            </a>
+        </div>
+        <div class="settings-grid">
+            <ParamItem
+                config={captureImageConfig}
+                value={undefined}
+                even={false}
+                disabled={$captureControlStore.recordingVideo ||
+                    $captureControlStore.recordingFrames}
+                on:update={paramUpdated}
+            />
+            <ParamItem
+                config={captureVideoConfig($captureControlStore.recordingVideo)}
+                value={undefined}
+                even={true}
+                disabled={$captureControlStore.recordingFrames}
+                on:update={paramUpdated}
+            />
+            <div class="frames-label-wrapper">
+                <span class="frames-label">Frame Sequence</span>
+            </div>
+            <FrameSeqControls
+                on:start={startFrameRecording}
+                disabled={$captureControlStore.recordingVideo ||
+                    $captureControlStore.recordingFrames}
+            />
+        </div>
+    {/if}
     <div class="settings-footer">
         <div class="reset-wrapper">
             <FunctionInput
@@ -128,6 +211,43 @@
         grid-template-columns: 1fr 1fr;
         row-gap: $param-spacing;
         align-items: center;
+    }
+
+    .recording-header {
+        width: 100%;
+        display: flex;
+        gap: $panel-section-spacing;
+        font-size: $large-text-size;
+        font-weight: bold;
+        padding-left: $panel-content-inset;
+    }
+
+    .recording-info {
+        color: rgba($panel-fg-color, 0.5);
+    }
+
+    .frames-label-wrapper {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: left;
+        overflow: hidden;
+
+        @include parameter-item;
+        padding-right: calc($param-inner-spacing / 2);
+        margin-right: 0;
+        border-radius: $param-border-radius 0 0 $param-border-radius;
+        background-color: rgba($panel-fg-color, $param-bg-opacity-odd);
+    }
+
+    .frames-label {
+        white-space: nowrap;
+        text-align: left;
+        pointer-events: none;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        @include parameter-label;
     }
 
     .settings-footer {

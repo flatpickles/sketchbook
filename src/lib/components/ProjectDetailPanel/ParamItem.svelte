@@ -223,6 +223,7 @@
         overflow: hidden;
 
         @include parameter-item;
+        @include parameter-item-even-odd;
         padding-right: calc($param-inner-spacing / 2);
         margin-right: 0;
         border-radius: $param-border-radius 0 0 $param-border-radius;
@@ -248,6 +249,7 @@
         user-select: none;
 
         @include parameter-item;
+        @include parameter-item-even-odd;
 
         // When it's just in the right column...
         &:not(.full-width) {

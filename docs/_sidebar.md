@@ -12,6 +12,7 @@
     -   [Project Subtypes](project-subtypes.md)
     -   [Deploying Sketchbook](deploying.md)
     -   [Updating Sketchbook](updating.md)
+    -   [Canvas Recording](canvas-recording.md)
     -   [Common Necessities (FAQ)](necessities.md)
 
 -   Configuration & Customization

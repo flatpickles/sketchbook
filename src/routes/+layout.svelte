@@ -1,6 +1,9 @@
 <script lang="ts">
     import { goto } from '$app/navigation';
     import { page } from '$app/stores';
+    import { captureControlStore } from '$lib/base/Util/AppState';
+    import { FrameRecorder } from '$lib/base/Util/FrameRecorder';
+    import { VideoRecorder } from '$lib/base/Util/VideoRecorder';
     import MainView from '$lib/components/MainView/MainView.svelte';
     import 'ress';
     import { onMount, setContext } from 'svelte';
@@ -20,6 +23,20 @@
             url.searchParams.delete('redirect');
             goto(url.toString(), { replaceState: true });
         }
+    });
+
+    // Create a video recorder and make it available through context
+    const videoRecorder: VideoRecorder = new VideoRecorder();
+    setContext('videoRecorder', videoRecorder);
+
+    // Create a frame recorder and make it available through context
+    const frameRecorder: FrameRecorder = new FrameRecorder();
+    setContext('frameRecorder', frameRecorder);
+    frameRecorder.onStart(() => {
+        $captureControlStore.recordingFrames = true;
+    });
+    frameRecorder.onStop(() => {
+        $captureControlStore.recordingFrames = false;
     });
 </script>
 

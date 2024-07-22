@@ -1,16 +1,16 @@
+import type { ParamConfig } from './ParamConfig';
 import { isBooleanParamConfig, type BooleanParamConfig } from './ParamConfigs/BooleanParamConfig';
-import { isNumberParamConfig, type NumberParamConfig } from './ParamConfigs/NumberParamConfig';
+import { isFileParamConfig, type FileParamConfig } from './ParamConfigs/FileParamConfig';
 import {
     isFunctionParamConfig,
     type FunctionParamConfig
 } from './ParamConfigs/FunctionParamConfig';
-import { isStringParamConfig, type StringParamConfig } from './ParamConfigs/StringParamConfig';
+import { isNumberParamConfig, type NumberParamConfig } from './ParamConfigs/NumberParamConfig';
 import {
     isNumericArrayParamConfig,
     type NumericArrayParamConfig
 } from './ParamConfigs/NumericArrayParamConfig';
-import { isFileParamConfig, type FileParamConfig } from './ParamConfigs/FileParamConfig';
-import type { ParamConfig } from './ParamConfig';
+import { isStringParamConfig, type StringParamConfig } from './ParamConfigs/StringParamConfig';
 
 /*
     File loading result types vary depending on the parameter configuration's read mode

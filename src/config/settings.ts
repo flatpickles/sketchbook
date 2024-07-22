@@ -47,9 +47,13 @@ const alwaysShowPresets = false;
 const enablePresetExport = dev;
 
 // Canvas size can be fullscreen, or fixed to defaultCanvasSize. Projects may specify a canvasSize
-// configuration value to avoid fullscreen rendering and override the defaultCanvasSize.
+// configuration value to avoid fullscreen rendering and override the defaultCanvasSize. Note that
+// the default device pixel ratio will be used unless otherwise configured in each project.
 const useFullscreenCanvas = true;
 const defaultCanvasSize = [1080, 1080];
+
+// Show recording controls in the settings panel.
+const showRecordingControls = true;
 
 // Anything listed here will appear in the user settings panel with the given label. Values changed
 // in the settings panel will be persisted in cookies, and values above will be used as defaults.
@@ -76,5 +80,6 @@ export const config = {
     alwaysShowPresets,
     enablePresetExport,
     defaultCanvasSize,
-    useFullscreenCanvas
+    useFullscreenCanvas,
+    showRecordingControls
 };

@@ -10,7 +10,6 @@ The full scope of anticipated future development for Sketchbook is tracked and r
 
 -   [**CLI Tool**](https://github.com/flatpickles/sketchbook/issues/157): Sketchbook's current format as a web app that you build within feels a little clunky. Its ideal form is a `skbk` CLI tool to `run` & `deploy` your collection of projects directly, letting you create an equivalent to the current `src/art` directory, but without the surrounding app context.
 -   [**Improved Local Asset Import**](https://github.com/flatpickles/sketchbook/issues/234): The current model for asset parameters is unintuitive and challenging to use well. This should be redesigned.
--   [**Easy Asset Export**](https://github.com/flatpickles/sketchbook/issues/85): Currently you can save an image of a project by right-clicking the canvas (as always), but Sketchbook should offer photo & video export support directly.
 -   [**Expanded & Improved Style System**](https://github.com/flatpickles/sketchbook/issues/123): The current [styling system](theme.md) in Sketchbook could use some work, both to expand the current implementation, and evaluate better approaches.
 -   [**Shader Art Improvements**](https://github.com/flatpickles/sketchbook/issues/146): The current `FragShaderProject` implementation is reasonably well equipped, but could benefit from some additional improvements.
 -   [**Parameter Value Effects**](https://github.com/flatpickles/sketchbook/issues/4): Enable parameter values to influence the visibility of other parameters, to support dynamic sections, project modes, etc.

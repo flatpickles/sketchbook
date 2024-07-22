@@ -1,16 +1,18 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import Project, { CanvasType } from '$lib/base/Project/Project';
 import ProjectViewer from '$lib/components/MainView/ProjectViewer.svelte';
 
 import P5Project from '$lib/base/Project/P5Project';
+import { captureControlStore, settingsStore } from '$lib/base/Util/AppState';
 import { cleanup, fireEvent, render, waitFor } from '@testing-library/svelte';
 import { afterEach, describe, expect, it, vi, type Mock } from 'vitest';
-
-import { settingsStore } from '$lib/base/Util/AppState';
 
 //p5 throws errors when running in unit tests, so we mock it out fully.
 // This precludes more rigorous DOM testing, but it's better than nothing.
 import { NumberParamConfigDefaults } from '$lib/base/ConfigModels/ParamConfigs/NumberParamConfig';
 import * as exportsP5 from 'p5';
+import { get } from 'svelte/store';
 const mockedP5: Mock = vi.spyOn(exportsP5, 'default');
 const mockP5Canvas = {
     parent: vi.fn()
@@ -46,7 +48,7 @@ class ProjectNoCanvas extends Project {
     update() {}
 }
 
-describe('CanvasViewer', () => {
+describe('ProjectViewer', () => {
     afterEach(cleanup);
 
     it('renders a canvas', async () => {
@@ -222,7 +224,7 @@ describe('CanvasViewer', () => {
     });
 });
 
-describe('CanvasViewer sizing', () => {
+describe('ProjectViewer sizing', () => {
     afterEach(cleanup);
 
     it('sets canvas size appropriately when not configured', async () => {
@@ -261,6 +263,7 @@ describe('CanvasViewer sizing', () => {
     it('uses default canvas size when not in fullscreen', async () => {
         const proj = new BasicProject();
         settingsStore.set({
+            framerate: 60,
             useFullscreenCanvas: false,
             defaultCanvasSize: [500, 400]
         });
@@ -279,6 +282,7 @@ describe('CanvasViewer sizing', () => {
     it('overrides default canvas size when project is configured', async () => {
         const proj = new BasicProject();
         settingsStore.set({
+            framerate: 60,
             useFullscreenCanvas: false,
             defaultCanvasSize: [500, 400]
         });
@@ -298,6 +302,7 @@ describe('CanvasViewer sizing', () => {
     it('updates canvas size reactively when settings change (project not configured)', async () => {
         const proj = new BasicProject();
         settingsStore.set({
+            framerate: 60,
             useFullscreenCanvas: false,
             defaultCanvasSize: [500, 400]
         });
@@ -313,6 +318,7 @@ describe('CanvasViewer sizing', () => {
         expect(canvas.height).toBe(400);
 
         settingsStore.set({
+            framerate: 60,
             useFullscreenCanvas: false,
             defaultCanvasSize: [1000, 800]
         });
@@ -323,6 +329,7 @@ describe('CanvasViewer sizing', () => {
         expect(canvas.height).toBe(800);
 
         settingsStore.set({
+            framerate: 60,
             useFullscreenCanvas: true
         });
 
@@ -335,6 +342,7 @@ describe('CanvasViewer sizing', () => {
     it('doesnt update canvas size reactively when settings change (project configured)', async () => {
         const proj = new BasicProject();
         settingsStore.set({
+            framerate: 60,
             useFullscreenCanvas: true
         });
 
@@ -350,6 +358,7 @@ describe('CanvasViewer sizing', () => {
         expect(canvas.height).toBe(800);
 
         settingsStore.set({
+            framerate: 60,
             useFullscreenCanvas: false,
             defaultCanvasSize: [500, 400]
         });
@@ -361,7 +370,142 @@ describe('CanvasViewer sizing', () => {
     });
 });
 
-describe('Project update calls from CanvasViewer', () => {
+describe('ProjectViewer frameRecorder integration', () => {
+    afterEach(cleanup);
+
+    it('starts frame recording and updates project accordingly', async () => {
+        const project = new BasicProject();
+        const mockFrameRecorder = {
+            isRecording: true,
+            recordFrame: vi.fn(),
+            onStart: vi.fn(),
+            onStop: vi.fn(),
+            canvas: undefined
+        };
+
+        vi.spyOn(project, 'update');
+        vi.spyOn(project, 'init');
+        vi.spyOn(project, 'destroy');
+
+        render(ProjectViewer, {
+            props: {
+                project: project
+            },
+            context: new Map(
+                Object.entries({
+                    frameRecorder: mockFrameRecorder
+                })
+            )
+        } as any);
+
+        // Wait a bit and make sure it's inited
+        await new Promise((r) => setTimeout(r, 100)); // wait 0.1 seconds
+        expect(project.init).toHaveBeenCalledTimes(1);
+
+        // Simulate frame recording start
+        mockFrameRecorder.onStart.mock.calls[0][0]();
+        expect(project.init).toHaveBeenCalledTimes(2);
+        expect(mockFrameRecorder.recordFrame).toHaveBeenCalled();
+
+        // Simulate frame recording stop
+        mockFrameRecorder.onStop.mock.calls[0][0](true);
+        expect(project.init).toHaveBeenCalledTimes(3);
+    });
+
+    it('updates project and records frame when frameRecorder is recording', async () => {
+        const project = new BasicProject();
+        const mockFrameRecorder = {
+            isRecording: true,
+            recordFrame: vi.fn(),
+            onStart: vi.fn(),
+            onStop: vi.fn(),
+            canvas: undefined
+        };
+
+        vi.spyOn(project, 'update');
+
+        render(ProjectViewer, {
+            props: {
+                project: project
+            },
+            context: new Map(
+                Object.entries({
+                    frameRecorder: mockFrameRecorder
+                })
+            )
+        } as any);
+
+        await new Promise((r) => setTimeout(r, 100)); // wait 0.1 seconds
+        expect(project.update).toHaveBeenCalled();
+        expect(mockFrameRecorder.recordFrame).toHaveBeenCalled();
+    });
+
+    it('does not record frame when frameRecorder is not recording', async () => {
+        const project = new BasicProject();
+        const mockFrameRecorder = {
+            isRecording: false,
+            recordFrame: vi.fn(),
+            onStart: vi.fn(),
+            onStop: vi.fn(),
+            canvas: undefined
+        };
+
+        vi.spyOn(project, 'update');
+
+        render(ProjectViewer, {
+            props: {
+                project: project
+            },
+            context: new Map(
+                Object.entries({
+                    frameRecorder: mockFrameRecorder
+                })
+            )
+        } as any);
+
+        await new Promise((r) => setTimeout(r, 100)); // wait 0.1 seconds
+        expect(project.update).toHaveBeenCalled();
+        expect(mockFrameRecorder.recordFrame).not.toHaveBeenCalled();
+    });
+
+    it('saves single frame when imgSaveQueued is true', async () => {
+        const project = new BasicProject();
+        const mockFrameRecorder = {
+            isRecording: false,
+            recordFrame: vi.fn(),
+            saveSingleFrame: vi.fn(),
+            onStart: vi.fn(),
+            onStop: vi.fn(),
+            canvas: undefined
+        };
+
+        captureControlStore.set({
+            fps: 30,
+            startTime: 0,
+            imgSaveQueued: true
+        });
+
+        vi.spyOn(project, 'update');
+
+        render(ProjectViewer, {
+            props: {
+                project: project
+            },
+            context: new Map(
+                Object.entries({
+                    frameRecorder: mockFrameRecorder
+                })
+            )
+        } as any);
+
+        await new Promise((r) => setTimeout(r, 100)); // wait 0.1 seconds
+        expect(project.update).toHaveBeenCalled();
+        expect(mockFrameRecorder.saveSingleFrame).toHaveBeenCalled();
+        expect(get(captureControlStore).imgSaveQueued).toBe(false);
+    });
+});
+
+describe('Project update calls from ProjectViewer', () => {
     afterEach(cleanup);
 
     it('calls proj update multiple times in render loop', async () => {
@@ -466,6 +610,7 @@ describe('Project resize calls from CanvasViewer', () => {
         vi.spyOn(project, 'resized');
 
         settingsStore.set({
+            framerate: 60,
             overlayPanels: false
         });
         render(ProjectViewer, {
@@ -474,6 +619,7 @@ describe('Project resize calls from CanvasViewer', () => {
         await waitFor(() => expect(project.resized).toHaveBeenCalledTimes(0));
 
         settingsStore.set({
+            framerate: 60,
             overlayPanels: true
         });
         await waitFor(() => expect(project.resized).toHaveBeenCalledTimes(1));
@@ -496,6 +642,7 @@ describe('Project resize calls from CanvasViewer', () => {
         vi.spyOn(project, 'resized');
 
         settingsStore.set({
+            framerate: 60,
             overlayPanels: false
         });
         const { getByTestId } = render(ProjectViewer, {
@@ -505,6 +652,7 @@ describe('Project resize calls from CanvasViewer', () => {
         const container = getByTestId('container');
         await waitFor(() => expect(project.resized).toHaveBeenCalledTimes(0));
         settingsStore.set({
+            framerate: 60,
             overlayPanels: true
         });
 

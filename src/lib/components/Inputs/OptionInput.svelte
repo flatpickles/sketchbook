@@ -30,6 +30,7 @@
     select {
         appearance: auto; // system default
         width: 100%;
+        max-width: calc($param-input-item-partial-width * 2);
         @include string-parameter-input;
     }
 

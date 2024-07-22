@@ -1,9 +1,13 @@
 import { userSettingsLabels } from '$config/settings';
-import type { ParamConfig } from '$lib/base/ConfigModels/ParamConfig';
+import { ParamConfigDefaults, type ParamConfig } from '$lib/base/ConfigModels/ParamConfig';
 import {
     BooleanParamConfigDefaults,
     type BooleanParamConfig
 } from '$lib/base/ConfigModels/ParamConfigs/BooleanParamConfig';
+import {
+    FunctionParamConfigDefaults,
+    type FunctionParamConfig
+} from '$lib/base/ConfigModels/ParamConfigs/FunctionParamConfig';
 import {
     NumberParamConfigDefaults,
     NumberParamStyle,
@@ -57,6 +61,25 @@ export const settingsParamConfigs: ParamConfig[] = [
             'Hover (Unpinnable)': 'mouse-unpinnable',
             'Fixed': 'static',
             'Unavailable': 'unavailable'
+        }
+    } as StringParamConfig,
+
+    // projectListRedirectOverride
+    {
+        ...BooleanParamConfigDefaults,
+        key: 'projectListRedirectOverride'
+    } as BooleanParamConfig,
+
+    // projectListRedirectOverrideState
+    {
+        ...StringParamConfigDefaults,
+        key: 'projectListRedirectOverrideState',
+        options: {
+            'Visible': 'visible',
+            'Hover (Pinned)': 'mouse-pinned',
+            'Hover (Pinnable)': 'mouse-pinnable',
+            'Hover (Unpinnable)': 'mouse-unpinnable',
+            'Fixed': 'static'
         }
     } as StringParamConfig,
 
@@ -128,9 +151,38 @@ export const settingsParamConfigs: ParamConfig[] = [
         max: 5000,
         step: 1,
         key: 'defaultCanvasSize'
-    } as NumericArrayParamConfig
+    } as NumericArrayParamConfig,
+
+    // showRecordingControls
+    {
+        ...BooleanParamConfigDefaults,
+        key: 'showRecordingControls'
+    } as BooleanParamConfig
 ].map((paramConfig) => {
     // Add the label to each ParamConfig from config/settings.ts
-    paramConfig.name = userSettingsLabels[paramConfig.key];
+    if (paramConfig.name === ParamConfigDefaults.name) {
+        paramConfig.name = userSettingsLabels[paramConfig.key];
+    }
     return paramConfig;
 });
+
+export const captureVideoConfigKey = 'captureVideo';
+export function captureVideoConfig(isRecording: boolean): FunctionParamConfig {
+    return {
+        ...FunctionParamConfigDefaults,
+        name: 'Video Recording',
+        key: captureVideoConfigKey,
+        buttonText: isRecording ? 'Stop' : 'Start'
+    } as FunctionParamConfig;
+}
+
+export const captureImageConfigKey = 'captureImage';
+export const captureImageConfig: FunctionParamConfig = {
+    ...FunctionParamConfigDefaults,
+    name: 'Image Capture',
+    key: captureImageConfigKey,
+    buttonText: 'Save'
+} as FunctionParamConfig;
+
+// Keys for settings param inputs to disable while recording:
+export const disableWhileRecording = ['defaultCanvasSize', 'useFullscreenCanvas'];
