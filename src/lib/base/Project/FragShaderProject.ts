@@ -135,8 +135,15 @@ export default class FragShaderProject extends Project {
             preserveDrawingBuffer: true
         });
 
-        // Reset scaled time updaters
+        // Reset previous state
         this.#scaledTimeUpdaters.map((updater) => updater.reset());
+        this.#passMaterials = [];
+        this.#renderTargets = [];
+        this.#scene.children.forEach((child) => {
+            if (child instanceof THREE.Mesh) {
+                this.#scene.remove(child);
+            }
+        });
 
         // Get canvas size & set initial uniforms
         const size = [detail.canvas.width, detail.canvas.height];

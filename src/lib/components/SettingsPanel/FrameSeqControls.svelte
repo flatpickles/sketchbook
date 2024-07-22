@@ -11,7 +11,7 @@
 <div class="frame-recorder-container">
     <div class="frame-recorder-controls">
         <div class="frame-recorder-control">
-            <div class="frame-recorder-control-label">Start:</div>
+            <div class="frame-recorder-control-label" class:disabled>Start:</div>
             <div>
                 <NumberInput
                     id="start-time"
@@ -26,7 +26,7 @@
             </div>
         </div>
         <div class="frame-recorder-control">
-            <div class="frame-recorder-control-label">Duration:</div>
+            <div class="frame-recorder-control-label" class:disabled>Duration:</div>
             <div>
                 <NumberInput
                     id="duration"
@@ -41,7 +41,7 @@
             </div>
         </div>
         <div class="frame-recorder-control">
-            <div class="frame-recorder-control-label">FPS:</div>
+            <div class="frame-recorder-control-label" class:disabled>FPS:</div>
             <div>
                 <NumberInput
                     id="framerate"
@@ -100,5 +100,9 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+    }
+
+    .frame-recorder-control-label.disabled {
+        @include parameter-input-disabled;
     }
 </style>

@@ -29,3 +29,7 @@ Exporting frame sequences also gives you full control over video encoding. After
 ```
 ffmpeg -framerate 30 -i %05d.png -c:v libx264 -pix_fmt yuv420p -crf 23 -preset slow -tune animation -movflags +faststart -profile:v high -level 4.2 output.mp4
 ```
+
+## Supported Projects
+
+Canvas recording is available for all projects that use Sketchbook's native canvas support, i.e. have their `canvasType` set to anything other than `CanvasType.None`. This means that any subclasses of [`P5Project`](https://skbk.cc/#/project-subtypes?id=p5project) cannot use Sketchbook's native recording tools, nor can any other projects that manage their own canvas instance. While these projects are loaded, the canvas recording controls will be disabled.
