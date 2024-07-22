@@ -136,14 +136,16 @@
                 value={undefined}
                 even={false}
                 disabled={$captureControlStore.recordingVideo ||
-                    $captureControlStore.recordingFrames}
+                    $captureControlStore.recordingFrames ||
+                    frameRecorder?.canvas === undefined}
                 on:update={paramUpdated}
             />
             <ParamItem
                 config={captureVideoConfig($captureControlStore.recordingVideo)}
                 value={undefined}
                 even={true}
-                disabled={$captureControlStore.recordingFrames}
+                disabled={$captureControlStore.recordingFrames ||
+                    videoRecorder?.canvas === undefined}
                 on:update={paramUpdated}
             />
             <div class="frames-label-wrapper">
@@ -152,7 +154,8 @@
             <FrameSeqControls
                 on:start={startFrameRecording}
                 disabled={$captureControlStore.recordingVideo ||
-                    $captureControlStore.recordingFrames}
+                    $captureControlStore.recordingFrames ||
+                    frameRecorder?.canvas === undefined}
             />
         </div>
     {/if}
