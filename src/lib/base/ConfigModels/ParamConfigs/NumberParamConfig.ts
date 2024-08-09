@@ -23,7 +23,8 @@ export const NumberParamConfigDefaults: NumberParamConfig = {
     step: 0.01,
     style: NumberParamStyle.Combo,
     default: undefined,
-    options: undefined
+    options: undefined,
+    connectable: true
 } as const;
 
 export function isNumberParamConfig(param: ParamConfig): param is NumberParamConfig {

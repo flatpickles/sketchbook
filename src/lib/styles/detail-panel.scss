@@ -64,3 +64,10 @@
         }
     }
 }
+
+@mixin connection-dot {
+    color: rgba($panel-fg-color, $preset-selector-button-fg-opacity-disabled);
+    &.connected {
+        color: $panel-highlight-color;
+    }
+}

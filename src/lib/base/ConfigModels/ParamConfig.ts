@@ -18,6 +18,7 @@ export interface ParamConfig {
     section: string | undefined;
     hoverText?: string;
     applyDuringInput: boolean;
+    connectable: boolean;
 }
 
 export const ParamConfigDefaults: ParamConfig = {
@@ -27,7 +28,8 @@ export const ParamConfigDefaults: ParamConfig = {
     fullWidthInput: false,
     section: undefined,
     hoverText: undefined,
-    applyDuringInput: ProjectConfigDefaults.paramsApplyDuringInput
+    applyDuringInput: ProjectConfigDefaults.paramsApplyDuringInput,
+    connectable: false
 } as const;
 
 export type ParamSection = {
