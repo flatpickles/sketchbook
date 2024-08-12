@@ -15,6 +15,7 @@
     } from '$lib/base/Util/PanelState';
     import { VideoRecorder } from '$lib/base/Util/VideoRecorder';
     import { getContext } from 'svelte';
+    import ModPanel from '../ModPanel/ModPanel.svelte';
     import PresetSelector from '../ProjectDetailPanel/PresetSelector.svelte';
 
     export let projectTuple: ProjectTuple;
@@ -86,6 +87,17 @@
             class:rightClosed={!rightPanelShown}
             class:overlaid={$settingsStore.overlayPanels}
         >
+            <div
+                class="mod-panel-wrapper"
+                class:modClosed={!$stateStore.modPanelPresented || !rightPanelShown}
+                class:overlaid={$settingsStore.overlayPanels}
+            >
+                <ModPanel
+                    on:headeraction={() => {
+                        $stateStore.modPanelPresented = false;
+                    }}
+                />
+            </div>
             <ProjectDetailPanel
                 {projectTuple}
                 headerButtonIcon={rightPanelHeaderIcon}

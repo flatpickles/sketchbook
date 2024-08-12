@@ -11,6 +11,7 @@ export const settingsStore = createPersistedStore('settings', config);
 // The stateStore is not persisted, and maintains the state of the app
 const stateDefaults = {
     settingsPresented: false,
+    modPanelPresented: false,
     currentMouseState: MouseState.NoTrigger,
     panelResizing: false,
     panelShowButtonsVisible: true

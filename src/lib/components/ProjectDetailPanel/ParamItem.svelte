@@ -13,6 +13,7 @@
         isNumericArray
     } from '$lib/base/ConfigModels/ParamConfigs/NumericArrayParamConfig';
     import { StringParamStyle } from '$lib/base/ConfigModels/ParamConfigs/StringParamConfig';
+    import { stateStore } from '$lib/base/Util/AppState';
     import ColorInput from '../Inputs/ColorInput.svelte';
     import FileInput from '../Inputs/FileInput.svelte';
     import OptionInput from '../Inputs/OptionInput.svelte';
@@ -222,7 +223,9 @@
             class="connection-dot fa-solid fa-circle-dot connected"
             class:connected
             on:click={() => {
+                // debug:
                 connected = !connected;
+                $stateStore.modPanelPresented = connected;
             }}
         />
     {/if}

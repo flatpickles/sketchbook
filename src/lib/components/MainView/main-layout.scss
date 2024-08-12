@@ -60,6 +60,33 @@
     }
 }
 
+.mod-panel-wrapper {
+    position: absolute;
+    z-index: -1;
+
+    right: calc($panel-width);
+    width: $panel-width;
+    height: 100%;
+    opacity: 1;
+    transition:
+        right $panel-animation-quick ease-in-out,
+        opacity $panel-animation-quick ease-in-out;
+
+    &.overlaid {
+        right: calc($panel-width + $overlay-panel-edge-inset);
+        width: calc($panel-width - $overlay-panel-edge-inset);
+        height: auto;
+    }
+
+    &.modClosed {
+        right: calc(0);
+        &.overlaid {
+            opacity: 0;
+            right: calc($overlay-panel-edge-inset);
+        }
+    }
+}
+
 /* Show buttons */
 
 @mixin show-button-wrapper {
